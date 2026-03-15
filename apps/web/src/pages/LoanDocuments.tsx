@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 // Enhanced University Data for Autofilling
 const UNIVERSITIES = [
@@ -409,3 +409,4 @@ const LoanDocuments = () => {
 };
 
 export default LoanDocuments;
+

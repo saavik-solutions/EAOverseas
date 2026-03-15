@@ -1,8 +1,8 @@
 import React from 'react';
-import PageHeader from '../components/PageHeader';
-import { useAuthAction } from '../hooks/useAuthAction';
-import { useAuth } from '../context/AuthContext';
-import LoginModal from '../components/LoginModal';
+import PageHeader from '@/components/layout/PageHeader';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import LoginModal from '@/features/auth/LoginModal';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -297,3 +297,4 @@ const TestPrep = () => {
 };
 
 export default TestPrep;
+

@@ -166,11 +166,11 @@ const universitiesData = [
 
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useSavedItems } from '../context/SavedItemsContext';
-import { useAuthAction } from '../hooks/useAuthAction';
-import { useAuth } from '../context/AuthContext';
-import LoginModal from '../components/LoginModal';
+import PageHeader from '@/components/layout/PageHeader';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import LoginModal from '@/features/auth/LoginModal';
 
 const CollegeFinder = () => {
     // State
@@ -529,3 +529,4 @@ const CollegeFinder = () => {
 };
 
 export default CollegeFinder;
+

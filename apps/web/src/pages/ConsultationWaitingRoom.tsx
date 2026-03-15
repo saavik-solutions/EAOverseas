@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 const ConsultationWaitingRoom = () => {
     const location = useLocation();
@@ -336,3 +336,4 @@ const ConsultationWaitingRoom = () => {
 };
 
 export default ConsultationWaitingRoom;
+

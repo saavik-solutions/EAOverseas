@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { useAuth } from '../context/AuthContext';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import { useAuth } from '@/shared/contexts/AuthContext';
 import universityImg from '../features/landing/assets/university_modern_building.png';
 
 const CountryDetails = () => {
@@ -636,3 +636,4 @@ const CountryDetails = () => {
 };
 
 export default CountryDetails;
+

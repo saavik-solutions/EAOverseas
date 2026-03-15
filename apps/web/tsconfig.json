@@ -8,6 +8,12 @@
             ],
             "@workspace/ui/*": [
                 "../../packages/ui/src/*"
+            ],
+            "@workspace/common": [
+                "../../packages/common/src/index.ts"
+            ],
+            "@workspace/common/*": [
+                "../../packages/common/src/*"
             ]
         }
     },

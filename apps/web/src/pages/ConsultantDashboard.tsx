@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import NotificationBanner from '../components/NotificationBanner';
-import { getDailyCount } from '../utils/dailyCounter';
+import PageHeader from '@/components/layout/PageHeader';
+import NotificationBanner from '@/features/notifications/NotificationBanner';
+import { getDailyCount } from '@/shared/utils/dailyCounter';
 
 const ConsultantDashboard = () => {
     // State for dynamically loaded sessions
@@ -218,3 +218,4 @@ const ConsultantDashboard = () => {
 };
 
 export default ConsultantDashboard;
+

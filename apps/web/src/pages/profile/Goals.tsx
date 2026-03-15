@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserProfile } from '../../context/UserProfileContext';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
 
 const Goals = () => {
     const navigate = useNavigate();
@@ -180,3 +180,4 @@ const Goals = () => {
 };
 
 export default Goals;
+

@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logo from '../assets/logo.jpg';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 interface SuperAdminLayoutProps {
     children: ReactNode;
@@ -20,7 +20,17 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title }) 
         { name: 'Consultants', icon: 'support_agent', path: '/Superadmin/consultants' },
         { name: 'Students', icon: 'group', path: '/Superadmin/students' },
         { name: 'Revenue', icon: 'payments', path: '/Superadmin/revenue' },
+        {
+            name: 'Data Intelligence',
+            icon: 'analytics',
+            isDropdown: true,
+            children: [
+                { name: 'University Scraper', icon: 'data_exploration', path: '/Superadmin/scraper' }
+            ]
+        }
     ];
+
+    const [isDataIntelOpen, setIsDataIntelOpen] = useState(location.pathname.startsWith('/Superadmin/scraper'));
 
     return (
         <div className="flex h-screen bg-[#f8f6f6] flex-col lg:flex-row">
@@ -52,31 +62,79 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title }) 
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
                 <div className="p-6">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-[#2b6cee] size-10 rounded-lg flex items-center justify-center text-white shadow-lg shadow-[#2b6cee]/20">
-                            <span className="material-symbols-outlined">school</span>
-                        </div>
+                    <div className="flex flex-col gap-4">
+                        <img src={logo} alt="EAOverseas" className="h-9 w-auto object-contain self-start" />
                         <div className="flex flex-col">
-                            <h1 className="text-[#111318] text-lg font-bold leading-none">Super Admin</h1>
-                            <p className="text-slate-500 text-xs font-medium uppercase tracking-wider">Management</p>
+                            <h1 className="text-[#111318] text-sm font-black leading-none uppercase tracking-tighter">Super Admin</h1>
+                            <p className="text-[#2b6cee] text-[10px] font-black uppercase tracking-[0.15em] mt-1">Management</p>
                         </div>
                     </div>
                 </div>
 
                 <nav className="flex-1 px-4 py-4 flex flex-col gap-1">
                     {menuItems.map((item) => (
-                        <Link
-                            key={item.name}
-                            to={item.path}
-                            onClick={() => setIsSidebarOpen(false)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${(location.pathname === item.path || (item.name === 'Universities' && location.pathname.startsWith('/Superadmin/university')))
-                                ? 'bg-[#2b6cee]/10 text-[#2b6cee] font-semibold'
-                                : 'text-slate-600 hover:bg-slate-50 font-medium'
-                                }`}
-                        >
-                            <span className="material-symbols-outlined">{item.icon}</span>
-                            <span className="text-sm">{item.name}</span>
-                        </Link>
+                        <div key={item.name} className="w-full">
+                            {item.isDropdown ? (
+                                <>
+                                    <button
+                                        onClick={() => setIsDataIntelOpen(!isDataIntelOpen)}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors ${location.pathname.startsWith('/Superadmin/scraper')
+                                            ? 'bg-[#2b6cee]/10 text-[#2b6cee] font-semibold'
+                                            : 'text-slate-600 hover:bg-slate-50 font-medium'
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <span className="material-symbols-outlined">{item.icon}</span>
+                                            <span className="text-sm">{item.name}</span>
+                                        </div>
+                                        <span className={`material-symbols-outlined text-[20px] transition-transform duration-300 ${isDataIntelOpen ? 'rotate-180' : ''}`}>
+                                            expand_more
+                                        </span>
+                                    </button>
+
+                                    <div className={`overflow-hidden transition-all duration-300 ${isDataIntelOpen ? 'max-h-40 mt-1 opacity-100' : 'max-h-0 opacity-0'}`}>
+                                        <div className="pl-12 pr-4 py-1 flex flex-col gap-1 border-l-2 border-slate-100 ml-7">
+                                            {item.children?.map(child => (
+                                                <Link
+                                                    key={child.name}
+                                                    to={child.path}
+                                                    onClick={() => setIsSidebarOpen(false)}
+                                                    className={`flex items-center gap-3 py-2 rounded-lg transition-colors ${location.pathname === child.path
+                                                        ? 'text-[#2b6cee] font-semibold'
+                                                        : 'text-slate-500 hover:text-[#2b6cee] font-medium'
+                                                        }`}
+                                                >
+                                                    <span className="material-symbols-outlined text-[18px]">{child.icon}</span>
+                                                    <span className="text-xs">{child.name}</span>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <Link
+                                    to={item.path}
+                                    onClick={() => setIsSidebarOpen(false)}
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${(location.pathname === item.path ||
+                                        (item.name === 'Universities' && (
+                                            location.pathname.startsWith('/Superadmin/university') ||
+                                            location.pathname.startsWith('/Superadmin/applications') ||
+                                            location.pathname.startsWith('/Superadmin/active-partners') ||
+                                            location.pathname.startsWith('/Superadmin/top-performers')
+                                        )) ||
+                                        (item.name === 'Consultants' && (
+                                            location.pathname.startsWith('/Superadmin/counsellors') ||
+                                            location.pathname.startsWith('/Superadmin/active-today')
+                                        )))
+                                        ? 'bg-[#2b6cee]/10 text-[#2b6cee] font-semibold'
+                                        : 'text-slate-600 hover:bg-slate-50 font-medium'
+                                        }`}
+                                >
+                                    <span className="material-symbols-outlined">{item.icon}</span>
+                                    <span className="text-sm">{item.name}</span>
+                                </Link>
+                            )}
+                        </div>
                     ))}
                 </nav>
 
@@ -145,3 +203,4 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title }) 
 };
 
 export default SuperAdminLayout;
+

@@ -50,3 +50,4 @@ const ImpactSection = () => {
 };
 
 export default ImpactSection;
+

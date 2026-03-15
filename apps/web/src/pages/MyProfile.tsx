@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useUserProfile } from '../context/UserProfileContext';
-import ConnectionsPopup from '../components/ConnectionsPopup';
+import PageHeader from '@/components/layout/PageHeader';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
+import ConnectionsPopup from '@/features/community/ConnectionsPopup';
 
 const MyProfile = () => {
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ const MyProfile = () => {
 
     // Context
     const { userProfile, updatePreferences, updateIdentity, getConnectionDetails } = useUserProfile();
-    const { preferences, identity = {}, academics = {}, readiness = {} } = userProfile;
+    const { preferences, identity, academics, readiness } = userProfile;
 
     // State
     const [isEditingPreferences, setIsEditingPreferences] = useState(false);
@@ -98,8 +98,66 @@ const MyProfile = () => {
     const profileStrength = identity.profileStrength || 0;
     const progressValue = `${profileStrength}, 100`;
 
+    // Welcome Popup State
+    const [showWelcomePopup, setShowWelcomePopup] = useState(searchParams.get('firstLogin') === 'true');
+
     return (
         <div className="flex flex-col flex-1 h-full overflow-hidden bg-[#f8f9fc]">
+            {/* Welcome Popup */}
+            {showWelcomePopup && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-blue-900/40 backdrop-blur-md p-4 animate-fadeIn">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-scaleIn border border-blue-100">
+                        <div className="bg-gradient-to-br from-[#0d6cf2] to-indigo-600 p-8 text-white text-center relative">
+                            <button
+                                onClick={() => setShowWelcomePopup(false)}
+                                className="absolute top-4 right-4 p-1 hover:bg-white/20 rounded-full transition-colors"
+                            >
+                                <span className="material-symbols-outlined text-white text-[20px]">close</span>
+                            </button>
+                            <div className="size-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/30">
+                                <span className="material-symbols-outlined text-4xl text-white">celebration</span>
+                            </div>
+                            <h2 className="text-2xl font-black mb-2">Welcome, {identity.name.split(' ')[0]}!</h2>
+                            <p className="text-blue-100 text-sm leading-relaxed">
+                                Your account is verified! Let's get your profile ready to help you find the best universities.
+                            </p>
+                        </div>
+                        <div className="p-8">
+                            <div className="space-y-4 mb-8">
+                                <div className="flex items-start gap-4">
+                                    <div className="size-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                        <span className="material-symbols-outlined text-[20px]">check_circle</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-slate-900 text-sm">Identity Verified</p>
+                                        <p className="text-xs text-slate-500">Your email is confirmed and secure.</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="size-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                        <span className="material-symbols-outlined text-[20px]">edit_note</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-slate-900 text-sm">Complete Your Profile</p>
+                                        <p className="text-xs text-slate-500">Add your academics and preferences.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setShowWelcomePopup(false);
+                                    setIsEditingPreferences(true);
+                                }}
+                                className="w-full bg-[#0d6cf2] hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2"
+                            >
+                                Get Started
+                                <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div className="hidden lg:block">
                 <PageHeader title="My Profile" />
@@ -164,8 +222,8 @@ const MyProfile = () => {
                             </div>
 
                             <div className="text-center z-10 mb-5 md:mb-6 w-full relative">
-                                <h2 className="text-[#111418] text-lg md:text-xl font-bold mb-0.5 md:mb-1 truncate px-4" title={identity.name}>{identity.name || 'Set Your Name'}</h2>
-                                <p className="text-[#60728a] text-xs md:text-sm font-normal truncate px-4 mb-2" title={identity.email}>{identity.email || 'No email provided'}</p>
+                                <h2 className="text-[#111418] text-lg md:text-xl font-bold mb-0.5 md:mb-1 truncate px-4" title={identity.name}>{identity.name || 'Student Account'}</h2>
+                                <p className="text-[#60728a] text-xs md:text-sm font-normal truncate px-4 mb-2" title={identity.email}>{identity.email}</p>
 
                                 <div className="relative inline-block">
                                     <button
@@ -193,7 +251,7 @@ const MyProfile = () => {
                                         <span className="text-xs font-bold text-blue-600">{profileStrength}%</span>
                                     </div>
                                 </div>
-                                <div className="flex flex-col">
+                                <div className="flex flex-col text-left">
                                     <span className="text-sm font-semibold text-[#111418]">Profile Strength</span>
                                     <span className="text-xs text-[#60728a]">{profileStrength < 100 ? 'Almost there! Add activity.' : 'Excellent! Profile complete.'}</span>
                                 </div>
@@ -520,3 +578,4 @@ const MyProfile = () => {
 };
 
 export default MyProfile;
+

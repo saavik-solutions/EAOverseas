@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 const Referrals = () => {
     const [referralCode] = useState('ALEX2024');
@@ -176,3 +176,4 @@ const Referrals = () => {
 };
 
 export default Referrals;
+

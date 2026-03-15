@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useNotification } from '../context/NotificationContext';
+import PageHeader from '@/components/layout/PageHeader';
+import { useNotification } from '@/shared/contexts/NotificationContext';
 
 const VisaPrep = () => {
     const navigate = useNavigate();
@@ -198,3 +198,4 @@ const VisaPrep = () => {
 };
 
 export default VisaPrep;
+

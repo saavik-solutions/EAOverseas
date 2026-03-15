@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useAuthAction } from '../hooks/useAuthAction';
-import LoginModal from '../components/LoginModal';
+import PageHeader from '@/components/layout/PageHeader';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import LoginModal from '@/features/auth/LoginModal';
 
-import { universitiesData } from '../data/universities';
+import { universitiesData } from '@/data/universities';
 
 const UniversityDirectory = () => {
     const navigate = useNavigate();
@@ -301,3 +301,4 @@ const UniversityDirectory = () => {
 };
 
 export default UniversityDirectory;
+

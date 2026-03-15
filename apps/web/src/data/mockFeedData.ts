@@ -34,7 +34,7 @@ export const postsData = {
         grid: [
             { label: 'Applications Open', value: 'Sep 01, 2024' },
             { label: 'Deadline', value: 'Dec 03, 2024' },
-            { label: 'Term Starts', value: 'Sep 2025' },
+            { label: 'Course Level', value: 'Postgraduate' },
             { label: 'GRE', value: 'Optional', color: 'text-green-600' }
         ],
         about: '<p>Stanford University School of Engineering is accepting applications for MS and PhD programs for the Fall 2025 intake. The school is known for its entrepreneurial spirit and cutting-edge research facilities.</p>'
@@ -161,7 +161,7 @@ export const postsData = {
     },
     'aus_parttime': {
         id: 'aus_parttime',
-        label: 'Visas',
+        label: 'Policy Update',
         labelColor: 'text-purple-700 border-purple-100 bg-purple-50',
         banner: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=2000&auto=format&fit=crop',
         logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Coat_of_arms_of_Australia.svg/1200px-Coat_of_arms_of_Australia.svg.png',
@@ -181,8 +181,8 @@ export const postsData = {
     },
     'career_cv': {
         id: 'career_cv',
-        label: 'Career Advice',
-        labelColor: 'text-teal-700 border-teal-100 bg-teal-50',
+        label: 'Policy Update',
+        labelColor: 'text-purple-700 border-purple-100 bg-purple-50',
         banner: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=2000&auto=format&fit=crop',
         logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDTTkOWBBs14BDjyomcFOZrSqTFNsIKq1hGK41JYb45t_iVLVGNb_T9TdqRb1Y6SagUz_gZhagIczn35zHA-noKYcYq6DUANRbm46AL9woslklLLfbNQPVGHHUfsFTCzAsH2pQKQDpkFWk2pA4IclpFL0jJHkkUlEuy6Fnble8cGPq7kvYS9UeISnbFwa4jX73NlzII9653Lim3eGqwAjNKkWosAmVux3UeERBKgKvCcdjyw7QSAtcnOEPCZqVnH2nxClKsycqO8SB_',
         title: 'Crafting the Perfect Resume for US Tech Internships',
@@ -241,8 +241,8 @@ export const postsData = {
     },
     'toronto_housing': {
         id: 'toronto_housing',
-        label: 'Accomodation',
-        labelColor: 'text-orange-700 border-orange-100 bg-orange-50',
+        label: 'Policy Update',
+        labelColor: 'text-purple-700 border-purple-100 bg-purple-50',
         banner: 'https://images.unsplash.com/photo-1580041065738-e72023775cdc?q=80&w=2000&auto=format&fit=crop',
         logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Utoronto_coa.svg/1200px-Utoronto_coa.svg.png',
         title: 'UofT Residence Guarantee for First Years',
@@ -261,8 +261,8 @@ export const postsData = {
     },
     'ielts_update': {
         id: 'ielts_update',
-        label: 'Routine',
-        labelColor: 'text-gray-700 border-gray-100 bg-gray-50',
+        label: 'Policy Update',
+        labelColor: 'text-purple-700 border-purple-100 bg-purple-50',
         banner: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2000&auto=format&fit=crop',
         logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/IELTS_logo.svg/1200px-IELTS_logo.svg.png',
         title: 'IELTS One Skill Retake Now Global',

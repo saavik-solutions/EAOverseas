@@ -1,25 +1,43 @@
 import React, { useMemo, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { postsData } from '../data/mockFeedData';
-import ShareModal from '../components/ShareModal';
-import { useAuth } from '../context/AuthContext';
-import { useSavedItems } from '../context/SavedItemsContext';
+import ShareModal from '@/features/shared-modals/ShareModal';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
+import { usePosts, Post } from '@/shared/contexts/PostsContext';
 
 const FeedDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { requireAuth } = useAuth();
     const { togglePost, isPostSaved } = useSavedItems();
-    const data = useMemo(() => postsData[id || ''] || postsData['daad'], [id]);
+    const { posts } = usePosts();
+
+    const data = useMemo(() => {
+        const post = posts.find(p => p.id.toString() === id?.toString());
+        return post || null;
+    }, [id, posts]);
 
     // Share Modal State
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+    if (!data) {
+        return (
+            <div className="flex flex-col flex-1 h-screen items-center justify-center bg-gray-50 p-6 text-center">
+                <span className="material-symbols-outlined text-gray-300 text-[64px] mb-4">find_in_page</span>
+                <h1 className="text-xl font-bold text-gray-900 mb-2">Post Not Found</h1>
+                <p className="text-gray-500 mb-6 max-w-xs">The post you are looking for might have been deleted or is no longer available.</p>
+                <Link to="/feed" className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-all">
+                    Back to Global Feed
+                </Link>
+            </div>
+        );
+    }
+
     // Dynamic Label Class
     const getLabelClass = () => {
-        if (data.id === 'stanford') return 'bg-green-50 backdrop-blur rounded-full px-3 py-1 text-xs font-semibold text-green-700 border border-green-100 shadow-sm';
-        if (data.id === 'uk_psw') return 'bg-purple-50 backdrop-blur rounded-full px-3 py-1 text-xs font-semibold text-purple-700 border border-purple-100 shadow-sm';
-        return 'bg-white/95 backdrop-blur rounded-full px-3 py-1 text-xs font-semibold text-primary border border-gray-100 shadow-sm';
+        if (data.id === 'stanford' || data.labelColor?.includes('blue')) return 'bg-blue-50 backdrop-blur rounded-full px-3 py-1 text-xs font-semibold text-blue-700 border border-blue-100 shadow-sm';
+        if (data.id === 'uk_psw' || data.labelColor?.includes('purple')) return 'bg-purple-50 backdrop-blur rounded-full px-3 py-1 text-xs font-semibold text-purple-700 border border-purple-100 shadow-sm';
+        return 'bg-green-50 backdrop-blur rounded-full px-3 py-1 text-xs font-semibold text-green-700 border border-green-100 shadow-sm';
     };
 
     const handleApply = () => {
@@ -79,7 +97,7 @@ Good luck!
                         <span className="material-symbols-outlined !text-[16px]">chevron_right</span>
                         <Link to="/feed" className="text-gray-500 hover:text-gray-900 cursor-pointer">Global Feed</Link>
                         <span className="material-symbols-outlined !text-[16px]">chevron_right</span>
-                        <span className="text-gray-900 font-medium">Scholarship Details</span>
+                        <span className="text-gray-900 font-medium">Post Details</span>
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="relative hidden lg:block">
@@ -88,10 +106,6 @@ Good luck!
                                 className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary w-64 placeholder-gray-400"
                                 placeholder="Search..." type="text" />
                         </div>
-                        <button className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors hidden md:block">
-                            <span className="material-symbols-outlined">notifications</span>
-                            <span className="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
-                        </button>
                     </div>
                 </header>
 
@@ -99,7 +113,7 @@ Good luck!
                     <div className="max-w-5xl mx-auto pb-20">
                         <article className="flex flex-col bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
                             <div className="h-36 md:h-64 w-full relative group bg-gray-100">
-                                <img src={data.banner} alt="Banner" className="w-full h-full object-cover" />
+                                <img src={data.banner || data.image} alt="Banner" className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
                                 <div className="absolute top-2 right-2 md:top-4 md:right-4">
                                     <span className={getLabelClass()}>{data.label}</span>
@@ -153,9 +167,9 @@ Good luck!
                                                 </span>
                                                 {isPostSaved(data) ? 'Saved' : 'Save'}
                                             </button>
-                                            {data.applyLink && data.applyLink !== '#' && (
+                                            {(data.applyLink && data.applyLink !== '#') && (
                                                 <button onClick={handleApply} className="px-4 py-1.5 md:px-6 md:py-2.5 bg-blue-600 text-white font-medium rounded-lg flex items-center gap-1.5 md:gap-2 text-xs md:text-sm flex-1 md:flex-none justify-center">
-                                                    {data.id === 'stanford' ? 'View Programs' : 'Apply Now'}
+                                                    {(data.id === 'stanford' || data.category === 'Admissions') ? 'View Programs' : 'Apply Now'}
                                                     <span className="material-symbols-outlined text-[16px] md:text-[18px]">open_in_new</span>
                                                 </button>
                                             )}
@@ -164,20 +178,22 @@ Good luck!
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 md:grid-cols-4 border-t border-gray-200 bg-gray-50/50 divide-x divide-y md:divide-y-0 divide-gray-200">
-                                {data.grid.map((item, index) => (
-                                    <div key={index} className="p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1">
-                                        <span className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wider">{item.label}</span>
-                                        <span className={`text-xs md:text-sm font-bold flex items-center gap-1 ${item.color || 'text-gray-900'} ${item.alert ? 'text-red-600' : ''}`}>
-                                            {item.value}
-                                            {item.alert && <span className="material-symbols-outlined text-[14px] md:text-[16px]">warning</span>}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
+                            {data.grid && data.grid.length > 0 && (
+                                <div className="grid grid-cols-2 md:grid-cols-4 border-t border-gray-200 bg-gray-50/50 divide-x divide-y md:divide-y-0 divide-gray-200">
+                                    {data.grid.map((item, index) => (
+                                        <div key={index} className="p-3 md:p-4 flex flex-col items-center justify-center text-center gap-1">
+                                            <span className="text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wider">{item.label}</span>
+                                            <span className={`text-xs md:text-sm font-bold flex items-center gap-1 ${item.color || 'text-gray-900'} ${item.alert ? 'text-red-600' : ''}`}>
+                                                {item.value}
+                                                {item.alert && <span className="material-symbols-outlined text-[14px] md:text-[16px]">warning</span>}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
 
                             <div className="px-4 py-6 md:px-6 md:py-8 flex flex-col gap-6 md:gap-8">
-                                <section dangerouslySetInnerHTML={{ __html: data.about }} />
+                                <section dangerouslySetInnerHTML={{ __html: data.about || `<p>${data.title}</p>` }} />
 
                                 {data.eligibility && data.eligibility.length > 0 && (
                                     <section className="bg-blue-50/40 border border-blue-100 rounded-xl p-6">
@@ -216,33 +232,88 @@ Good luck!
                                         </section>
                                     )}
 
-                                    {/* Document Section - Always show or conditionally */}
+                                    {/* Document Section - Conditional for Events */}
                                     <section>
                                         <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-base font-bold text-gray-900">Required Documents</h3>
+                                            <h3 className="text-base font-bold text-gray-900">
+                                                {data.category === 'Event & Webinar' ? 'Event Details' : 'Required Documents'}
+                                            </h3>
                                         </div>
-                                        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                                            <ul className="space-y-3 text-sm text-gray-700">
-                                                <li className="flex items-center gap-3">
-                                                    <span className="material-symbols-outlined text-gray-400 text-[18px]">description</span>
-                                                    Completed application form
-                                                </li>
-                                                <li className="flex items-center gap-3">
-                                                    <span className="material-symbols-outlined text-gray-400 text-[18px]">description</span>
-                                                    CV / Resume
-                                                </li>
-                                                <li className="flex items-center gap-3">
-                                                    <span className="material-symbols-outlined text-gray-400 text-[18px]">description</span>
-                                                    Transcripts
-                                                </li>
-                                            </ul>
-                                            <div className="mt-4 pt-4 border-t border-gray-200">
-                                                <button onClick={downloadGuide} className="w-full py-2 text-primary text-sm font-medium hover:bg-white rounded-lg border border-transparent hover:border-blue-100 transition-all flex items-center justify-center gap-2">
-                                                    <span className="material-symbols-outlined text-[18px]">download</span>
-                                                    Download Guide
-                                                </button>
+                                        {data.category === 'Event & Webinar' ? (
+                                            <div className="bg-blue-50/50 rounded-xl p-6 border border-blue-100 shadow-sm">
+                                                <div className="space-y-5">
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="size-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary shrink-0 border border-blue-50">
+                                                            <span className="material-symbols-outlined">schedule</span>
+                                                        </div>
+                                                        <div>
+                                                            <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Start Timing</span>
+                                                            <span className="text-[15px] font-bold text-gray-900 leading-tight">
+                                                                {data.eventDate ? new Date(data.eventDate).toLocaleString('en-US', {
+                                                                    weekday: 'long',
+                                                                    month: 'long',
+                                                                    day: 'numeric',
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit',
+                                                                    hour12: true
+                                                                }).replace(/\s?[AP]M$/, (match) => match.toLowerCase()) : 'Not Scheduled'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    {(data.eventLink || data.eventVenue) && (
+                                                        <div className="flex items-start gap-4">
+                                                            <div className="size-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary shrink-0 border border-blue-50">
+                                                                <span className="material-symbols-outlined">
+                                                                    {data.eventLink ? 'video_camera_front' : 'location_on'}
+                                                                </span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">
+                                                                    {data.eventLink ? 'Virtual Meeting' : 'Physical Venue'}
+                                                                </span>
+                                                                {data.eventLink ? (
+                                                                    <a
+                                                                        href={data.eventLink.startsWith('http') ? data.eventLink : `https://${data.eventLink}`}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="text-[15px] font-bold text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1.5 transition-colors"
+                                                                    >
+                                                                        Join Virtual Meeting
+                                                                        <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                                                                    </a>
+                                                                ) : (
+                                                                    <span className="text-[15px] font-bold text-gray-900 leading-tight">{data.eventVenue}</span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
+                                        ) : (
+                                            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                                                <ul className="space-y-3 text-sm text-gray-700">
+                                                    <li className="flex items-center gap-3">
+                                                        <span className="material-symbols-outlined text-gray-400 text-[18px]">description</span>
+                                                        Completed application form
+                                                    </li>
+                                                    <li className="flex items-center gap-3">
+                                                        <span className="material-symbols-outlined text-gray-400 text-[18px]">description</span>
+                                                        CV / Resume
+                                                    </li>
+                                                    <li className="flex items-center gap-3">
+                                                        <span className="material-symbols-outlined text-gray-400 text-[18px]">description</span>
+                                                        Transcripts
+                                                    </li>
+                                                </ul>
+                                                <div className="mt-4 pt-4 border-t border-gray-200">
+                                                    <button onClick={downloadGuide} className="w-full py-2 text-primary text-sm font-medium hover:bg-white rounded-lg border border-transparent hover:border-blue-100 transition-all flex items-center justify-center gap-2">
+                                                        <span className="material-symbols-outlined text-[18px]">download</span>
+                                                        Download Guide
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </section>
                                 </div>
 
@@ -362,12 +433,12 @@ Good luck!
             <ShareModal
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
-                title="Share Scholarship"
+                title="Share Post"
                 shareUrl={`https://eaoverseas.com/feed-details/${data.id}`}
                 preview={{
                     title: data.title,
                     subtitle: data.institution,
-                    image: data.banner
+                    image: data.banner || data.image
                 }}
             />
         </div>
@@ -375,3 +446,4 @@ Good luck!
 };
 
 export default FeedDetails;
+

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.jpg';
+import logo from '@/assets/logo.jpg';
 
 const UniversityVerification = () => {
     const [formData, setFormData] = useState({
@@ -21,7 +21,7 @@ const UniversityVerification = () => {
         accurate: false
     });
 
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Refs for hidden file inputs
@@ -44,7 +44,7 @@ const UniversityVerification = () => {
         ref.current.click();
     };
 
-    const handleFileChange = (e, fileName) => {
+    const handleFileChange = (e, fileName: 'proofOfRecognition' | 'authorizationLetter') => {
         const file = e.target.files[0];
         if (file) {
             setFiles(prev => ({
@@ -65,7 +65,7 @@ const UniversityVerification = () => {
     };
 
     const validateForm = () => {
-        const newErrors = {};
+        const newErrors: Record<string, string> = {};
 
         if (!files.proofOfRecognition) newErrors.proofOfRecognition = "Proof of Recognition is required";
         if (!files.authorizationLetter) newErrors.authorizationLetter = "Authorization Letter is required";
@@ -327,3 +327,4 @@ const UniversityVerification = () => {
 };
 
 export default UniversityVerification;
+

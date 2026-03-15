@@ -29,11 +29,7 @@ const Documents = () => {
     const isCourseApplication = !!searchParams.get('title');
 
     const handleNext = () => {
-        if (isCourseApplication) {
-            navigate(`/application/review?${searchParams.toString()}`);
-        } else {
-            navigate(`/application/payment?${searchParams.toString()}`);
-        }
+        navigate(`/application/review?${searchParams.toString()}`);
     };
 
     const handleBack = () => {
@@ -134,7 +130,7 @@ const Documents = () => {
                         onClick={handleNext}
                         className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-lg shadow-lg shadow-blue-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
                     >
-                        {isCourseApplication ? 'Continue to Review' : 'Continue to Payment'}
+                        Continue to Review
                         <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-[20px]">arrow_forward</span>
                     </button>
                 </div>
@@ -144,3 +140,4 @@ const Documents = () => {
 };
 
 export default Documents;
+

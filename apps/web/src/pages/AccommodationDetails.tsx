@@ -1,61 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import BookingModal from '../components/BookingModal';
-import EnquireModal from '../components/EnquireModal';
-import { useSavedItems } from '../context/SavedItemsContext';
-
-const ShareModal = ({ isOpen, onClose, title }) => {
-    if (!isOpen) return null;
-
-    const shareUrl = window.location.href;
-
-    const handleCopy = () => {
-        navigator.clipboard.writeText(shareUrl);
-        alert('Link copied to clipboard!');
-        onClose();
-    };
-
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-sm relative z-10 animate-in zoom-in-95 duration-200 p-6">
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-bold text-[#111418]">Share Accommodation</h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-                        <span className="material-symbols-outlined">close</span>
-                    </button>
-                </div>
-                <p className="text-sm text-gray-600 mb-4">Share <span className="font-semibold">{title}</span> with your friends.</p>
-
-                <div className="flex gap-4 justify-center mb-6">
-                    <button className="flex flex-col items-center gap-2 text-gray-600 hover:text-[#0d6cf2] transition-colors">
-                        <div className="size-12 rounded-full bg-blue-50 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-blue-600">content_copy</span>
-                        </div>
-                        <span className="text-xs font-medium">Copy Link</span>
-                    </button>
-                    <button className="flex flex-col items-center gap-2 text-gray-600 hover:text-[#25D366] transition-colors">
-                        <div className="size-12 rounded-full bg-green-50 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-green-600">chat</span>
-                        </div>
-                        <span className="text-xs font-medium">WhatsApp</span>
-                    </button>
-                    <button className="flex flex-col items-center gap-2 text-gray-600 hover:text-[#1DA1F2] transition-colors">
-                        <div className="size-12 rounded-full bg-sky-50 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-sky-600">send</span>
-                        </div>
-                        <span className="text-xs font-medium">Twitter</span>
-                    </button>
-                </div>
-
-                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-200">
-                    <span className="text-xs text-gray-500 truncate flex-1">{shareUrl}</span>
-                    <button onClick={handleCopy} className="text-xs font-bold text-[#0d6cf2] hover:underline">Copy</button>
-                </div>
-            </div>
-        </div>
-    );
-};
+import { accommodationData } from '@workspace/common';
+import ShareModal from '@/features/shared-modals/ShareModal';
+import LoginModal from '@/features/auth/LoginModal';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
+import BookingModal from '@/features/shared-modals/BookingModal';
+import EnquireModal from '@/features/shared-modals/EnquireModal';
 
 const AccommodationDetails = () => {
     const navigate = useNavigate();
@@ -104,6 +54,12 @@ const AccommodationDetails = () => {
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
                 title={title}
+                shareUrl={window.location.href}
+                preview={{
+                    title: title,
+                    subtitle: accLocation,
+                    image: displayImages[0]
+                }}
             />
 
             <div className="flex flex-1 justify-center py-5 px-4 md:px-10">
@@ -186,7 +142,7 @@ const AccommodationDetails = () => {
                                         <div key={catIdx}>
                                             <h4 className="text-[#111418] text-lg font-bold mb-4">{category}</h4>
                                             <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-4">
-                                                {items.map((item, idx) => (
+                                                {(items as any[]).map((item, idx) => (
                                                     <div key={idx} className="flex items-center gap-3 text-[#60728a]">
                                                         <span className="material-symbols-outlined text-[22px] shrink-0">{item.icon}</span>
                                                         <span className="text-sm font-medium">{item.label}</span>
@@ -320,9 +276,6 @@ const AccommodationDetails = () => {
                                         </button>
                                     </div>
                                 </div>
-
-                                {/* Support Card */}
-
                             </div>
                         </div>
                     </div>

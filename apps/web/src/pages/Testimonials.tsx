@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import { longFormStories } from '../data/studentStories';
 
 const Testimonials = () => {
@@ -219,3 +219,4 @@ const Testimonials = () => {
 };
 
 export default Testimonials;
+

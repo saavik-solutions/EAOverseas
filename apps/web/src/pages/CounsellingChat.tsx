@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 const CounsellingChat = () => {
     const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -365,3 +365,4 @@ const CounsellingChat = () => {
 };
 
 export default CounsellingChat;
+

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar';
+import Sidebar from '@/components/layout/Sidebar';
 
 const ApplicationSubmitted = () => {
     const navigate = useNavigate();
@@ -81,3 +81,4 @@ const ApplicationSubmitted = () => {
 };
 
 export default ApplicationSubmitted;
+

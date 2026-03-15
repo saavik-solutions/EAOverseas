@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserProfile } from '../context/UserProfileContext';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
 
 const DocumentsDashboard = () => {
     const navigate = useNavigate();
@@ -327,3 +327,4 @@ const DocumentsDashboard = () => {
 };
 
 export default DocumentsDashboard;
+

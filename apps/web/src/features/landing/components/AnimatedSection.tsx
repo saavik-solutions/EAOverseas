@@ -1,5 +1,5 @@
 import React from 'react';
-import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { useScrollAnimation } from '@/shared/hooks/useScrollAnimation';
 
 const AnimatedSection = ({ children, animation = 'fade-in', threshold = 0.1 }) => {
     const [ref, isVisible] = useScrollAnimation(threshold);
@@ -12,3 +12,4 @@ const AnimatedSection = ({ children, animation = 'fade-in', threshold = 0.1 }) =
 };
 
 export default AnimatedSection;
+

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import PageHeader from '../components/PageHeader';
-import BookingModal from '../components/ConsultationBookingModal';
-import ConsultationSuccessModal from '../components/ConsultationSuccessModal';
+import PageHeader from '@/components/layout/PageHeader';
+import BookingModal from '@/features/consultant/ConsultationBookingModal';
+import ConsultationSuccessModal from '@/features/consultant/ConsultationSuccessModal';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useAuthAction } from '../hooks/useAuthAction';
-import LoginModal from '../components/LoginModal';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import LoginModal from '@/features/auth/LoginModal';
 
 const Consultant = () => {
     // State for form interaction (basic mock state)
@@ -308,3 +308,4 @@ const Consultant = () => {
 };
 
 export default Consultant;
+

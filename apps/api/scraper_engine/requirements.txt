@@ -1,0 +1,9 @@
+scrapy
+beautifulsoup4
+playwright
+selenium
+requests
+lxml
+pymongo
+python-dotenv
+cryptography

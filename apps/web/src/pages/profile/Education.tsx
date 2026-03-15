@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserProfile } from '../../context/UserProfileContext';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
 
 const Education = () => {
     const navigate = useNavigate();
@@ -137,3 +137,4 @@ const Education = () => {
 };
 
 export default Education;
+

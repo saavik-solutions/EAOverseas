@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useUserProfile } from '../context/UserProfileContext';
+import PageHeader from '@/components/layout/PageHeader';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
 
 const EditProfile = () => {
     const navigate = useNavigate();
@@ -442,3 +442,4 @@ const EditProfile = () => {
 };
 
 export default EditProfile;
+

@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { useSearchParams, useNavigate, Link, useLocation } from 'react-router-dom';
-import { useSavedItems } from '../context/SavedItemsContext';
-import { useNotification } from '../context/NotificationContext';
-import { useAuthAction } from '../hooks/useAuthAction';
-import LoginModal from '../components/LoginModal';
+import { useSavedItems, Course } from '@/shared/contexts/SavedItemsContext';
+import { useNotification } from '@/shared/contexts/NotificationContext';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import LoginModal from '@/features/auth/LoginModal';
 
 const CourseDetails = () => {
     const [searchParams] = useSearchParams();
@@ -18,7 +18,7 @@ const CourseDetails = () => {
 
     // Mock Data - In a real app, this would come from an API or shared context
     // Merging recommendedCourses and allCourses from Courses.jsx structure
-    const coursesDB = [
+    const coursesDB: Course[] = [
         {
             title: "MS in Computer Science",
             university: "Arizona State University",
@@ -104,7 +104,7 @@ const CourseDetails = () => {
         { uni: "University of Amsterdam", loc: "Netherlands", intake: "Sep 2024", tuition: "€18,000", match: 82, matchLabel: "High Match", logo: "history_edu" },
     ];
 
-    const course = useMemo(() => {
+    const course = useMemo((): Course => {
         // 1. Use State Data if available (from SavedCourses)
         if (stateCourse) {
             // Attempt to merge with DB data if possible for richer details
@@ -598,3 +598,4 @@ const CourseDetails = () => {
 };
 
 export default CourseDetails;
+

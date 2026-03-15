@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSavedItems } from '../context/SavedItemsContext';
-import { useAuthAction } from '../hooks/useAuthAction';
-import { useAuth } from '../context/AuthContext';
-import LoginModal from '../components/LoginModal';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import LoginModal from '@/features/auth/LoginModal';
 
 const Accommodation = () => {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Accommodation = () => {
     // 2. Mock Data for Accommodations (Expanded)
     const accommodations = [
         {
-            id: 1,
+            id: "1",
             title: "Maple Leaf Residences",
             university: "University of Toronto",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBgal1M-tWKc_S3qFG158VjGJ5ouyJc6b6pAbJq9Mkm4SsYyycm38qcA_KusiY5WDnd1gdsOk8-QG8L7LetDJ8IqFg3osPu-kCKPL7Ygl1Vy2PJkcliKxd-Jq7qhomQEtSp8wlhDD-5-xDBTVnQQ-5Cl6EZbdbnHssrgPbyauuaYVrsFwF-SOyj2qQJMmtN4deSdq6WXc2WAf9Sj-WalzGyl6svQTLCInOByCnY1kTclplEyKlWYWMyT4S4fCIFVfyYiVqJzRZv60s",
@@ -69,7 +69,7 @@ const Accommodation = () => {
             categorizedAmenities: { "Amenities": [{ icon: "wifi", label: "WiFi" }] }
         },
         {
-            id: 2,
+            id: "2",
             title: "King's Court Residence",
             university: "King's College London",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCr5a-hzIW08rz2sGCkXBcA6E_FZYI82axze0EEZgb-35Xkxqf5O0bdG-S-t_5vA4pCXTirZVq9JhZl6bmT_wsGxpCOvaRobBo1-LAEOH1pehrfKnpvLvjly4JLiqdlI7Q2HC_kYTJPRDFCkeX4bWWGqUm3whOZW0pwa0SVrmS5A6_0ECar6qo_yfE8WZETuT8lFWMZVeLnaG6TBQLGKL41A__oswnEn9mFD1qyDAZITwbf3BNPq5LnTHsae2iCm4wqR2y0H8JSnPs",
@@ -104,7 +104,7 @@ const Accommodation = () => {
             categorizedAmenities: { "Amenities": [{ icon: "wifi", label: "WiFi" }] }
         },
         {
-            id: 3,
+            id: "3",
             title: "Camden Flat Share",
             university: "UCL",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuColJxQTr37JtMjJ0X2AvohM6Wi5Q0TifthNHvFPvHNKIzEqRbHrK_sO7U_xRF37eQzMzRZTwNKJgjstwNr9Cl0FW-5tIvh5F1cV3Xf52ZG9bclNGVuW2Y1HPMsA7vNk1Pf9rDqqqc5ajTuUMoC21MGL6pxfACf6HLe7RozJFoxUeRsOciBKTRd-fQGYxybZdNezZcmEYPlpGgivMV7ZQ6EVC8bDIoTK1WEK7dO40PiKDKUwZhagn8gBv-vrxwR4f48g16wiXFV9hc",
@@ -139,7 +139,7 @@ const Accommodation = () => {
             categorizedAmenities: { "Amenities": [{ icon: "deck", label: "Terrace Access" }] }
         },
         {
-            id: 4,
+            id: "4",
             title: "The Hive - Bethnal Green",
             university: "Queen Mary University",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCSqktYlN1jZAXfmY3PmmJrPthXzol8JWERJG79Uh7uDCa3yHs0je9PEXl9R0B9mOMboT0LdZunHQ6DIah7l-lYlXQtF8a570ui4LyNy7RghWleNM-jRaR687Y_jQgNU6BBU2Qg6NGXdPJV8Dsh0UmJIxW21ig_rNJ8L5fJ6wvGEIC0TPHl7mhtSVS1NIHNbSugvl7Jb0b7H0jXNDsujR0_dmJBYaEmZmnLu_pViYSTqpWvu8WFox4AEPan3xA4KqVCz9pQ1I7yK0A",
@@ -174,7 +174,7 @@ const Accommodation = () => {
             categorizedAmenities: { "Amenities": [{ icon: "deck", label: "Roof Terrace" }] }
         },
         {
-            id: 5,
+            id: "5",
             title: "Chapter Spitalfields",
             university: "Imperial College",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAz1QWXQyjz2HHcii8juUV11qrWFIGKDPkS-Z9uILdhwuZgOnXVaSZORyzbAbCihnLx0bSCUYsZg9Tq1FXUYvoRYOSgFAyE4rtRpVyXi72EzCA_Up4ZB4gLXbV9CJUY6fhf0pOYoLp6O5FoUKSFIBQcbCZ-ygyb22adovndWtfKDYYEs3Rkpbm_Qtin2uZHAELCyDVEx8jXBnZEyptClBFfhQKch9ZbLa9QFB6OB24JIIh_4FMeBrzXy8_mhX4SzQfl4-uRYsbhPlY",
@@ -209,7 +209,7 @@ const Accommodation = () => {
             categorizedAmenities: { "Amenities": [{ icon: "theaters", label: "Cinema" }] }
         },
         {
-            id: 6,
+            id: "6",
             title: "Great Dover Street Apts",
             university: "King's College London",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCAoBW6VLSuh0Xm-elYcAJbtn8CO9TzdE1pyg_whzNiootVBQsdPRnaSFgQJuDDuCAvxkepH1FjoF19HwwGqVGKwyW6tAn9Ys072fsb525fioYPmKwQ5eeDCLadDaCOCzYSG8-ZdkUq9HrUAKPxczXYxZ9Pkpp3QZv6DSLnoUvAagmwViGpiVJn_JLFWeYQ1enQM1UcV6jl9lau6goPsNKONN-QfdBD4_kZ1mMnH8EHbdZj4WZ5qmpPy9fs4ZXGNh_3XhhGVTPfEfM",
@@ -244,7 +244,7 @@ const Accommodation = () => {
             categorizedAmenities: { "Amenities": [{ icon: "local_laundry_service", label: "Laundry" }] }
         },
         {
-            id: 7,
+            id: "7",
             title: "Victoria Hall",
             university: "Manchester Metropolitan",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAw65C_k7kOXo3W2sK5qR_t1Qx4zL9Jp6yE8_wB6A5zO9uR7vX3d2s1t0y6x4f5v9w8A7b6C5d4e3f2g1h0i9j8k7l6m5n4o3p2q1",
@@ -265,7 +265,7 @@ const Accommodation = () => {
             categorizedAmenities: { "Amenities": [{ icon: "wifi", label: "Wifi" }] }
         },
         {
-            id: 8,
+            id: "8",
             title: "New York Student Housing",
             university: "NYU",
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBgal1M-tWKc_S3qFG158VjGJ5ouyJc6b6pAbJq9Mkm4SsYyycm38qcA_KusiY5WDnd1gdsOk8-QG8L7LetDJ8IqFg3osPu-kCKPL7Ygl1Vy2PJkcliKxd-Jq7qhomQEtSp8wlhDD-5-xDBTVnQQ-5Cl6EZbdbnHssrgPbyauuaYVrsFwF-SOyj2qQJMmtN4deSdq6WXc2WAf9Sj-WalzGyl6svQTLCInOByCnY1kTclplEyKlWYWMyT4S4fCIFVfyYiVqJzRZv60s",
@@ -875,3 +875,4 @@ const Accommodation = () => {
 };
 
 export default Accommodation;
+

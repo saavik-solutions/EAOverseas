@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { useUserProfile } from '../../context/UserProfileContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
 
 const BasicInfo = () => {
     const navigate = useNavigate();
@@ -174,3 +174,4 @@ const BasicInfo = () => {
 };
 
 export default BasicInfo;
+

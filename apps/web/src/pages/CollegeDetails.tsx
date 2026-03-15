@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { useSearchParams, useNavigate, Link, useLocation } from 'react-router-dom';
-import { useNotification } from '../context/NotificationContext';
-import { useAuthAction } from '../hooks/useAuthAction';
-import LoginModal from '../components/LoginModal';
+import { useNotification } from '@/shared/contexts/NotificationContext';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import LoginModal from '@/features/auth/LoginModal';
 
 const CollegeDetails = () => {
     const [searchParams] = useSearchParams();
@@ -247,9 +247,9 @@ const CollegeDetails = () => {
                     message: `You started an application for ${uni.name}`,
                     type: 'info',
                     icon: 'school',
-                    actionUrl: `/application/payment?name=${encodeURIComponent(uni.name)}`
+                    actionUrl: `/application/details?name=${encodeURIComponent(uni.name)}`
                 });
-                navigate(`/application/payment?name=${encodeURIComponent(uni.name)}`);
+                navigate(`/application/details?name=${encodeURIComponent(uni.name)}`);
             }
         });
     };
@@ -628,3 +628,4 @@ const CollegeDetails = () => {
 };
 
 export default CollegeDetails;
+

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 const ConsultantTasks = () => {
     // State
@@ -394,3 +394,4 @@ const ConsultantTasks = () => {
 };
 
 export default ConsultantTasks;
+

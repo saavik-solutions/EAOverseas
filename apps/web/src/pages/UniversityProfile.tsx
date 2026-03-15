@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useAuthAction } from '../hooks/useAuthAction';
-import LoginModal from '../components/LoginModal';
-import PageHeader from '../components/PageHeader';
-import { postsData } from '../data/mockFeedData';
+import ShareModal from '@/features/shared-modals/ShareModal';
+import LoginModal from '@/features/auth/LoginModal';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import PageHeader from '@/components/layout/PageHeader';
+import { postsData } from '@workspace/common';
 
 interface Post {
     id: string;
@@ -216,3 +217,4 @@ const UniversityProfile = () => {
 };
 
 export default UniversityProfile;
+

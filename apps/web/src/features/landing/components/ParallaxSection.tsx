@@ -29,3 +29,4 @@ const ParallaxSection = ({ children, speed = 0.5, className = '' }) => {
 };
 
 export default ParallaxSection;
+

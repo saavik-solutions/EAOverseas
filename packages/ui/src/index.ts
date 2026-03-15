@@ -1,2 +1,3 @@
-export * from "./components/ui/button";
-export * from "./lib/utils";
+export * from './components/ui/button';
+export * from './components/ui/ScrollToTop';
+export * from './lib/utils';

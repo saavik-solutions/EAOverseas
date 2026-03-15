@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import ConsultantSidebar from '../components/ConsultantSidebar';
-import logo from '../assets/logo.jpg';
-import { useAuth } from '../context/AuthContext';
+import ConsultantSidebar from '@/features/consultant/ConsultantSidebar';
+import logo from '@/assets/logo.jpg';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 const ConsultantLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,7 +22,7 @@ const ConsultantLayout = () => {
                 </button>
             </div>
 
-            <ConsultantSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} user={user} />
+            <ConsultantSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             {/* Main Content Area */}
             <Outlet />
@@ -31,3 +31,4 @@ const ConsultantLayout = () => {
 };
 
 export default ConsultantLayout;
+

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SuperAdminLayout from '../layouts/SuperAdminLayout';
+import SuperAdminLayout from '@/layouts/SuperAdminLayout';
 
 const Superadmin = () => {
     const navigate = useNavigate();
@@ -292,3 +292,4 @@ const Superadmin = () => {
 };
 
 export default Superadmin;
+

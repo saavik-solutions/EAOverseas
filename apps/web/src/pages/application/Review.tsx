@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useOutletContext, Link } from 'react-router-dom';
-import { useSavedItems } from '../../context/SavedItemsContext';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
+import { useApplications, Application as GlobalApplication } from '@/shared/contexts/ApplicationsContext';
 
 const Review = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const { uniName, courseName } = useOutletContext();
-    const { submitApplication } = useSavedItems();
+    const { uniName, courseName } = useOutletContext<{ uniName: string, courseName: string | null }>();
+    const { submitApplication: submitToSavedItems, userProfile, profileDocuments } = useSavedItems();
+    const { submitApplication: submitToGlobalPool } = useApplications();
     const isCourseApplication = !!searchParams.get('title');
     const [agreed, setAgreed] = useState(false);
 
@@ -15,11 +17,44 @@ const Review = () => {
             alert("Please agree to the Terms & Conditions and Privacy Policy to submit your application.");
             return;
         }
-        submitApplication({
+
+        // Submit to student's local saved items
+        submitToSavedItems({
             universityName: uniName,
             courseName: courseName,
-            // You might want to pass more details here if available from context or params
         });
+
+        // Submit to global applications pool for consultants/universities
+        const newGlobalId = `${isCourseApplication ? 'APP' : 'UNI'}-${Date.now().toString().slice(-4)}-${Math.floor(Math.random() * 900) + 100}`;
+
+        const newGlobalApplication: GlobalApplication = {
+            id: newGlobalId,
+            studentName: userProfile?.fullName || "Alex Morgan",
+            studentInitials: (userProfile?.fullName || "Alex Morgan").split(' ').map(n => n[0]).join('').toUpperCase(),
+            studentColor: 'blue',
+            type: isCourseApplication ? 'Program' : 'University',
+            targetName: courseName || 'General Admission',
+            institution: uniName,
+            status: 'Pending',
+            dateApplied: new Date().toISOString().split('T')[0],
+            studentCountry: userProfile?.residence || "United States",
+            priority: 'High',
+            mobileNumber: userProfile?.phone || "+1 (555) 123-4567",
+            email: userProfile?.email || "alex.morgan@example.com",
+            courseMajor: userProfile?.education?.major || "Computer Science",
+            gpa: userProfile?.education?.gpa || "3.8",
+            achievements: "Submitted via online portal.",
+            statement: "I am highly interested in this program/university.",
+            documents: {
+                transcript: profileDocuments?.find(d => d.type === 'transcripts' || d.name.toLowerCase().includes('transcript'))?.name,
+                passport: profileDocuments?.find(d => d.type === 'passport' || d.name.toLowerCase().includes('passport'))?.name,
+                sop: profileDocuments?.find(d => d.type === 'sop' || d.name.toLowerCase().includes('sop'))?.name,
+                cv: profileDocuments?.find(d => d.type === 'cv' || d.name.toLowerCase().includes('cv'))?.name,
+            }
+        };
+
+        submitToGlobalPool(newGlobalApplication);
+
         navigate(`/application/submitted?${searchParams.toString()}`);
     };
 
@@ -27,8 +62,6 @@ const Review = () => {
         // Go back to documents
         navigate(-1);
     };
-
-    const { userProfile, profileDocuments } = useSavedItems();
 
     // Merge context docs with any local docs functionality if needed, for now just use context
     const displayDocs = profileDocuments || [];
@@ -210,3 +243,4 @@ const Review = () => {
 };
 
 export default Review;
+

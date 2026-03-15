@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import { Link, useNavigate } from 'react-router-dom';
-import ApplicationSubmittedModal from '../components/ApplicationSubmittedModal';
+import ApplicationSubmittedModal from '@/features/application/ApplicationSubmittedModal';
 
 const LenderSelection = () => {
     const navigate = useNavigate();
@@ -229,3 +229,4 @@ const LenderSelection = () => {
 };
 
 export default LenderSelection;
+

@@ -90,3 +90,4 @@ const HeroCarousel = ({ slides, interval = 3000 }: HeroCarouselProps) => {
 };
 
 export default HeroCarousel;
+

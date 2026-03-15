@@ -1,12 +1,13 @@
 import React from 'react';
 import { Outlet, useLocation, useSearchParams, Link } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar';
+import Sidebar from '@/components/layout/Sidebar';
 
 const ApplicationLayout = () => {
     const location = useLocation();
     const [searchParams] = useSearchParams();
     const uniName = searchParams.get('university') || 'University';
     const courseName = searchParams.get('title');
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
     // Determine current step based on path
     const getCurrentStep = () => {
@@ -14,8 +15,7 @@ const ApplicationLayout = () => {
         if (path.includes('details')) return 1;
         if (path.includes('academic')) return 2;
         if (path.includes('documents')) return 3;
-        if (path.includes('payment')) return 4;
-        if (path.includes('review')) return courseName ? 4 : 5;
+        if (path.includes('review')) return 4;
         return 1;
     };
 
@@ -50,7 +50,7 @@ const ApplicationLayout = () => {
 
     return (
         <div className="flex h-screen w-full bg-background-light overflow-hidden">
-            <Sidebar />
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <div className="flex flex-col flex-1 h-full overflow-hidden">
                 {/* Header */}
@@ -114,8 +114,7 @@ const ApplicationLayout = () => {
                                 {renderStepperItem(1, 'Details')}
                                 {renderStepperItem(2, 'Academic')}
                                 {renderStepperItem(3, 'Documents')}
-                                {!courseName && renderStepperItem(4, 'Payment')}
-                                {renderStepperItem(courseName ? 4 : 5, 'Review')}
+                                {renderStepperItem(4, 'Review')}
                             </div>
                         </div>
 
@@ -134,3 +133,4 @@ const ApplicationLayout = () => {
 };
 
 export default ApplicationLayout;
+

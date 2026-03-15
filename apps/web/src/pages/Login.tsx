@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -13,32 +13,68 @@ const Login = () => {
     const [selectedRole, setSelectedRole] = useState('Student');
     const [showRoleDropdown, setShowRoleDropdown] = useState(false);
 
-    const demoCredentials = {
+    useEffect(() => {
+        const autoFillData = localStorage.getItem('ea_auto_fill');
+        if (autoFillData) {
+            try {
+                const { email: savedEmail, password: savedPassword, role: savedRole, university: savedUniversity, country: savedCountry } = JSON.parse(autoFillData);
+                if (savedEmail) setEmail(savedEmail);
+                if (savedPassword) setPassword(savedPassword);
+                if (savedRole) setSelectedRole(savedRole);
+                if (savedUniversity) {
+                    // Store for AuthContext to pick up if needed, though search in registeredUsers is primary
+                    localStorage.setItem('ea_auto_fill_university', savedUniversity);
+                }
+                if (savedCountry) {
+                    localStorage.setItem('ea_auto_fill_country', savedCountry);
+                }
+
+                // Clear the data after consumption for security
+                localStorage.removeItem('ea_auto_fill');
+            } catch (err) {
+                console.error("Failed to parse auto-fill data", err);
+            }
+        }
+    }, [setSelectedRole, setEmail, setPassword]);
+
+    const demoCredentials: Record<string, { email: string; pass: string }> = {
         'Student': { email: 'alex.j@example.com', pass: '5678' },
-        'University': { email: 'admin@university.edu', pass: 'UNIV2026' },
         'Counsellor': { email: 'partner@counsellor.com', pass: 'COUNSELLOR2026' },
         'Vendors': { email: 'vendor@services.com', pass: 'VENDOR2026' },
         'Chief Counsel': { email: 'chief@counsel.com', pass: 'CHIEF2026' }
     };
 
-    const handleLogin = async (e) => {
+    useEffect(() => {
+        if (location.state?.email) {
+            setEmail(location.state.email);
+        }
+    }, [location.state?.email]);
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
-        if (selectedRole !== 'Student' && selectedRole !== 'Counsellor') {
+        const allowedRoles = ['Student', 'University', 'Counsellor', 'Vendors', 'Chief Counsel'];
+        if (!allowedRoles.includes(selectedRole)) {
             return;
         }
 
         try {
             const user = await login(email, password);
-            if (user.role === 'Counsellor' || selectedRole === 'Counsellor') {
+            if (user.role === 'University' || selectedRole === 'University') {
+                navigate('/university/dashboard');
+            } else if (user.role === 'Counsellor' || selectedRole === 'Counsellor') {
                 navigate('/counsellor-dashboard');
             } else {
-                // Check if there's a redirect destination in state, otherwise go to feed
-                const from = location.state?.from || '/feed';
-                navigate(from, { replace: true });
+                // If coming fresh from verification, go to profile for onboarding
+                if (location.state?.verified) {
+                    navigate('/profile?firstLogin=true', { replace: true });
+                } else {
+                    const from = location.state?.from || '/feed';
+                    navigate(from, { replace: true });
+                }
             }
-        } catch (err) {
+        } catch (err: any) {
             setError(err.message);
         }
     };
@@ -225,7 +261,7 @@ const Login = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full h-10 lg:h-12 px-3 rounded-lg bg-gray-50 border-gray-200 border focus:bg-white focus:border-[#0d6cf2] focus:ring-2 focus:ring-[#0d6cf2]/10 transition-all outline-none text-slate-900 text-sm lg:text-base font-medium placeholder:text-gray-400"
-                                    placeholder={demoCredentials[selectedRole].email}
+                                    placeholder={demoCredentials[selectedRole] ? demoCredentials[selectedRole].email : 'Enter your email'}
                                     required
                                     autoComplete="username"
                                 />
@@ -268,49 +304,53 @@ const Login = () => {
                             Sign in
                         </button>
 
-                        <div className="relative flex py-1 items-center">
-                            <div className="flex-grow border-t border-gray-200"></div>
-                            <span className="flex-shrink-0 mx-3 text-gray-400 text-[10px] lg:text-xs uppercase font-bold tracking-wider">Or continue with</span>
-                            <div className="flex-grow border-t border-gray-200"></div>
-                        </div>
+                        {selectedRole === 'Student' && (
+                            <>
+                                <div className="relative flex py-1 items-center">
+                                    <div className="flex-grow border-t border-gray-200"></div>
+                                    <span className="flex-shrink-0 mx-3 text-gray-400 text-[10px] lg:text-xs uppercase font-bold tracking-wider">Or continue with</span>
+                                    <div className="flex-grow border-t border-gray-200"></div>
+                                </div>
 
+                                {/* Social Login */}
+                                <div className="grid grid-cols-3 gap-2">
+                                    <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700">
+                                        <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
+                                        <span className="hidden sm:inline">Google</span>
+                                    </button>
+                                    <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.418 1.44-1.13 3.536-1.13 3.536s2.157.485 3.558-1.07c1.198-1.372 1.053-3.265 1.053-3.265s-1.036-.075-1.156-.373zm-3.633 4.673c-.09-.036-1.319-1.636-2.583-1.636-1.065 0-2.31 1.042-3.033 1.943-2.618 3.327-2.336 8.356 1.147 11.59 1.157 1.078 2.22 1.066 3.018.665.798-.401 2.019-.401 2.951 0 .932.401 2.169.293 3.197-.736 1.706-1.706 2.373-4.008 2.384-4.053-.011-.059-1.972-.516-2.39-2.09-.43-1.603 1.196-2.67 1.196-2.67s-1.688-2.607-3.64-2.835c-.443-.052-1.928-.215-2.246-.078z" />
+                                        </svg>
+                                        <span className="hidden sm:inline">Apple</span>
+                                    </button>
+                                    <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0077b5" viewBox="0 0 16 16">
+                                            <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+                                        </svg>
+                                        <span className="hidden sm:inline">LinkedIn</span>
+                                    </button>
+                                </div>
 
+                                <button
+                                    type="button"
+                                    onClick={() => navigate('/explore/feed')}
+                                    className="w-full mt-2 h-10 lg:h-12 border-2 border-[#0d6cf2] text-[#0d6cf2] hover:bg-[#0d6cf2] hover:text-white text-sm lg:text-base font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm"
+                                >
+                                    Continue as Guest
+                                </button>
+                            </>
+                        )}
 
-                        {/* Social Login */}
-                        <div className="grid grid-cols-3 gap-2">
-                            <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700">
-                                <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
-                                <span className="hidden sm:inline">Google</span>
-                            </button>
-                            <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.418 1.44-1.13 3.536-1.13 3.536s2.157.485 3.558-1.07c1.198-1.372 1.053-3.265 1.053-3.265s-1.036-.075-1.156-.373zm-3.633 4.673c-.09-.036-1.319-1.636-2.583-1.636-1.065 0-2.31 1.042-3.033 1.943-2.618 3.327-2.336 8.356 1.147 11.59 1.157 1.078 2.22 1.066 3.018.665.798-.401 2.019-.401 2.951 0 .932.401 2.169.293 3.197-.736 1.706-1.706 2.373-4.008 2.384-4.053-.011-.059-1.972-.516-2.39-2.09-.43-1.603 1.196-2.67 1.196-2.67s-1.688-2.607-3.64-2.835c-.443-.052-1.928-.215-2.246-.078z" />
-                                </svg>
-                                <span className="hidden sm:inline">Apple</span>
-                            </button>
-                            <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0077b5" viewBox="0 0 16 16">
-                                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
-                                </svg>
-                                <span className="hidden sm:inline">LinkedIn</span>
-                            </button>
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={() => navigate('/explore/feed')}
-                            className="w-full mt-2 h-10 lg:h-12 border-2 border-[#0d6cf2] text-[#0d6cf2] hover:bg-[#0d6cf2] hover:text-white text-sm lg:text-base font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm"
-                        >
-                            Continue as Guest
-                        </button>
-
-                        <div className="p-2.5 lg:p-4 bg-blue-50 rounded-lg border border-blue-100 text-center transition-all">
-                            <p className="text-[10px] lg:text-xs text-blue-600 font-bold uppercase tracking-wider mb-0 lg:mb-1">Demo Access</p>
-                            <div className="flex justify-center gap-2 lg:gap-4 mt-1 lg:mt-2">
-                                <span className="text-[10px] lg:text-xs text-slate-600">Email: <span className="font-mono font-bold">{demoCredentials[selectedRole].email}</span></span>
-                                <span className="text-[10px] lg:text-xs text-slate-600">Pass: <span className="font-mono font-bold">{demoCredentials[selectedRole].pass}</span></span>
+                        {selectedRole !== 'University' && (
+                            <div className="p-2.5 lg:p-4 bg-blue-50 rounded-lg border border-blue-100 text-center transition-all">
+                                <p className="text-[10px] lg:text-xs text-blue-600 font-bold uppercase tracking-wider mb-0 lg:mb-1">Demo Access</p>
+                                <div className="flex justify-center gap-2 lg:gap-4 mt-1 lg:mt-2">
+                                    <span className="text-[10px] lg:text-xs text-slate-600">Email: <span className="font-mono font-bold">{demoCredentials[selectedRole].email}</span></span>
+                                    <span className="text-[10px] lg:text-xs text-slate-600">Pass: <span className="font-mono font-bold">{demoCredentials[selectedRole].pass}</span></span>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <p className="text-center text-xs lg:text-sm font-medium text-slate-600">
                             Don't have an account? <Link to="/signup" className="text-[#0d6cf2] font-bold hover:underline">Create account</Link>
@@ -323,3 +363,4 @@ const Login = () => {
 };
 
 export default Login;
+

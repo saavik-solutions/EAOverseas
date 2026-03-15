@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 const CounsellorProfile = () => {
     return (
@@ -273,3 +273,4 @@ const CounsellorProfile = () => {
 };
 
 export default CounsellorProfile;
+

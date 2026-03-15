@@ -1,9 +1,118 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 
-const UserProfileContext = createContext();
+interface UserIdentity {
+    name: string;
+    email: string;
+    phone: string;
+    whatsapp: string;
+    dob: string;
+    nationality: string;
+    address: string;
+    currentCountry: string;
+    country: string;
+    image: string | null;
+    banner: string | null;
+    profileStrength: number;
+}
 
-export const useUserProfile = () => useContext(UserProfileContext);
+interface GuardianInfo {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    relationship: string;
+    nationality: string;
+    country: string;
+    state: string;
+    city: string;
+    address: string;
+    postalCode: string;
+}
+
+interface AcademicInfo {
+    gpa: string;
+    ielts: string;
+    gre: string;
+    degree: string;
+    major: string;
+    institution: string;
+    universityBoard: string;
+    gradYear: string;
+}
+
+interface UserPreferences {
+    countries: string[];
+    intakes: string[];
+    programType: string;
+    budget: string;
+    timeline: string;
+    factors: string[];
+}
+
+interface UserReadiness {
+    visaStatus: string;
+    applicationsDraft: number;
+    loanStatus: string;
+}
+
+interface DocumentInfo {
+    id: number;
+    name: string;
+    date: string;
+    size: string;
+    type: string;
+    error?: string;
+}
+
+interface UserDocuments {
+    academic: DocumentInfo[];
+    financial: DocumentInfo[];
+    identity: DocumentInfo[];
+}
+
+interface UserApplicationSummary {
+    id: number;
+    university: string;
+    status: string;
+}
+
+interface UserProfile {
+    identity: UserIdentity;
+    guardian: GuardianInfo;
+    academics: AcademicInfo;
+    preferences: UserPreferences;
+    readiness: UserReadiness;
+    documents: UserDocuments;
+    applications: UserApplicationSummary[];
+    connections: Record<string, string>;
+    incomingRequests: string[];
+}
+
+interface UserProfileContextType {
+    userProfile: UserProfile;
+    updatePreferences: (newPreferences: Partial<UserPreferences>) => void;
+    updateIdentity: (newIdentity: Partial<UserIdentity>) => void;
+    updateDocuments: (section: keyof UserDocuments, newDocs: DocumentInfo[]) => void;
+    updateAcademics: (newAcademics: Partial<AcademicInfo>) => void;
+    updateGuardian: (newGuardian: Partial<GuardianInfo>) => void;
+    sendConnectionRequest: (targetUsername: string) => void;
+    acceptConnectionRequest: (targetUsername: string) => void;
+    declineConnectionRequest: (targetUsername: string) => void;
+    removeConnection: (targetUsername: string) => void;
+    getConnectionDetails: () => { connected: any[]; incoming: any[] };
+    setUserProfile: React.Dispatch<React.SetStateAction<UserProfile>>;
+}
+
+const UserProfileContext = createContext<UserProfileContextType | null>(null);
+
+export const useUserProfile = () => {
+    const context = useContext(UserProfileContext);
+    if (!context) {
+        throw new Error('useUserProfile must be used within a UserProfileProvider');
+    }
+    return context;
+};
 
 const MOCK_USERS_DB = [
     { username: 'chamia', name: 'Chamia', email: 'chamia@k.com', image: 'https://ui-avatars.com/api/?name=Chamia&background=0D8ABC&color=fff', role: 'Student' },
@@ -13,11 +122,11 @@ const MOCK_USERS_DB = [
     { username: 'michael_b', name: 'Michael Brown', email: 'michael.b@example.com', image: 'https://ui-avatars.com/api/?name=Michael+Brown&background=random', role: 'Student' }
 ];
 
-export const UserProfileProvider = ({ children }) => {
+export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { user } = useAuth();
 
     // Factory function to ensure fresh object references every time
-    const getEmptyProfile = () => ({
+    const getEmptyProfile = (): UserProfile => ({
         identity: {
             name: '',
             email: '',
@@ -27,6 +136,7 @@ export const UserProfileProvider = ({ children }) => {
             nationality: '',
             address: '',
             currentCountry: '',
+            country: '',
             image: null,
             banner: null,
             profileStrength: 0
@@ -56,7 +166,11 @@ export const UserProfileProvider = ({ children }) => {
         },
         preferences: {
             countries: [],
-            intakes: []
+            intakes: [],
+            programType: '',
+            budget: '',
+            timeline: '',
+            factors: []
         },
         readiness: {
             visaStatus: 'Not Started',
@@ -69,10 +183,11 @@ export const UserProfileProvider = ({ children }) => {
             identity: []
         },
         applications: [],
-        connections: {}
+        connections: {},
+        incomingRequests: []
     });
 
-    const mockProfile = {
+    const mockProfile: UserProfile = {
         identity: {
             name: 'Alex Johnson',
             email: 'alex.j@example.com',
@@ -82,6 +197,7 @@ export const UserProfileProvider = ({ children }) => {
             nationality: 'Indian',
             address: '123 Main St, Apt 4B',
             currentCountry: 'India',
+            country: 'India',
             image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwOf0s3pAzKqObTWJ9nRCMKaHDRDwvbDhO9sFXL0JQPG24TX6Z_QyJf55dIzkQoAgus8p8gE38nhnMt-PtfxoIMmzdNxhbDqCbPOz3cJuQoDrXO3I2wPvGsHzn8GfsBCJjHLcJR6SWs04u4ihpPaW9VUI-XlrPhYvmL9DsG3dAwc-Z__Zgxhq892QgjQtEKSwUpVnOD_0jhVBEl-K53XBePLsXdfX5R9f-sto6ECHWwMTa-erfA_QfrmenNf9BKHj7OrZp-7cdMZ4',
             banner: null,
             profileStrength: 85
@@ -111,7 +227,11 @@ export const UserProfileProvider = ({ children }) => {
         },
         preferences: {
             countries: ['United Kingdom', 'Canada', 'Germany'],
-            intakes: ['Fall 2024', 'Spring 2025']
+            intakes: ['Fall 2024', 'Spring 2025'],
+            programType: 'Masters',
+            budget: '30k_50k',
+            timeline: '3_6_months',
+            factors: ['scholarships', 'ranking']
         },
         readiness: {
             visaStatus: 'On Track',
@@ -141,32 +261,28 @@ export const UserProfileProvider = ({ children }) => {
             'chamia': 'connected',
             'emily_r': 'connected',
             'sarah_m': 'connected'
-        }
+        },
+        incomingRequests: ['michael_b']
     };
 
-    const [userProfile, setUserProfile] = useState(getEmptyProfile());
+    const [userProfile, setUserProfile] = useState<UserProfile>(getEmptyProfile());
 
     // Calculate Profile Strength
-    const calculateStrength = (profile) => {
+    const calculateStrength = (profile: UserProfile) => {
         let score = 0;
 
-        // Debug Log
-        // console.log("Calculating Strength for:", profile.identity?.email);
-
         // 1. Basic Identity (30%)
-        const identityFields = ['name', 'email', 'phone', 'dob', 'nationality', 'address', 'currentCountry'];
+        const identityFields: (keyof UserIdentity)[] = ['name', 'email', 'phone', 'dob', 'nationality', 'address', 'currentCountry'];
         const filledIdentity = identityFields.filter(f => profile.identity?.[f] && String(profile.identity[f]).trim() !== '').length;
         score += (filledIdentity / identityFields.length) * 30;
-        // console.log("Identity Score:", (filledIdentity / identityFields.length) * 30);
 
         // 2. Academics (30%)
-        const academicFields = ['institution', 'degree', 'major', 'gradYear'];
+        const academicFields: (keyof AcademicInfo)[] = ['institution', 'degree', 'major', 'gradYear'];
         const filledAcademics = academicFields.filter(f => profile.academics?.[f] && String(profile.academics[f]).trim() !== '').length;
         score += (filledAcademics / academicFields.length) * 30;
-        // console.log("Academics Score:", (filledAcademics / academicFields.length) * 30);
 
         // 3. Guardian (20%)
-        const guardianFields = ['firstName', 'lastName', 'phone', 'relationship'];
+        const guardianFields: (keyof GuardianInfo)[] = ['firstName', 'lastName', 'phone', 'relationship'];
         const filledGuardian = guardianFields.filter(f => profile.guardian?.[f] && String(profile.guardian[f]).trim() !== '').length;
         score += (filledGuardian / guardianFields.length) * 20;
 
@@ -235,21 +351,40 @@ export const UserProfileProvider = ({ children }) => {
                         return prev;
                     }
 
-                    // 3. Fallback: Initialize fresh
+                    // 3. Fallback: Initialize fresh but WITH Auth Context data
                     const freshProfile = getEmptyProfile();
                     return {
                         ...freshProfile,
                         identity: {
                             ...freshProfile.identity,
-                            name: user.name,
+                            name: user.name || user.fullName || '',
                             email: user.email,
-                            image: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=random'
+                            image: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || user.fullName || 'User') + '&background=random'
                         }
                     };
                 });
             }
         }
-    }, [user?.email]);
+    }, [user?.email, user?.name, user?.fullName]);
+
+    // Proactive sync Effect: If Auth user changes (e.g. name update), push to Profile Identity
+    useEffect(() => {
+        if (user && !user.isDemo) {
+            setUserProfile(prev => {
+                if (prev.identity.name !== (user.name || user.fullName) || prev.identity.email !== user.email) {
+                    return {
+                        ...prev,
+                        identity: {
+                            ...prev.identity,
+                            name: user.name || user.fullName || prev.identity.name,
+                            email: user.email || prev.identity.email
+                        }
+                    };
+                }
+                return prev;
+            });
+        }
+    }, [user?.name, user?.fullName, user?.email]);
 
     // Save to LocalStorage whenever profile changes (if it's a real user)
     useEffect(() => {
@@ -258,50 +393,58 @@ export const UserProfileProvider = ({ children }) => {
         }
     }, [userProfile, user]);
 
-    const updateDocuments = (section, newDocs) => {
+    const updateDocuments = (section: keyof UserDocuments, newDocs: DocumentInfo[]) => {
         setUserProfile(prev => ({
             ...prev,
             documents: { ...prev.documents, [section]: newDocs }
         }));
     };
 
-    const updatePreferences = (newPreferences) => {
+    const updatePreferences = (newPreferences: Partial<UserPreferences>) => {
         setUserProfile(prev => ({
             ...prev,
             preferences: { ...prev.preferences, ...newPreferences }
         }));
     };
 
-    const updateAcademics = (newAcademics) => {
+    const updateAcademics = (newAcademics: Partial<AcademicInfo>) => {
         setUserProfile(prev => ({
             ...prev,
             academics: { ...prev.academics, ...newAcademics }
         }));
     };
 
-    const updateIdentity = (newIdentity) => {
+    const updateIdentity = (newIdentity: Partial<UserIdentity>) => {
         setUserProfile(prev => ({ ...prev, identity: { ...prev.identity, ...newIdentity } }));
     };
 
-    const updateGuardian = (newGuardian) => {
+    const updateGuardian = (newGuardian: Partial<GuardianInfo>) => {
         setUserProfile(prev => ({ ...prev, guardian: { ...prev.guardian, ...newGuardian } }));
     };
 
-    const sendConnectionRequest = (targetUsername) => {
+    const sendConnectionRequest = (targetUsername: string) => {
         setUserProfile(prev => ({
             ...prev,
             connections: { ...prev.connections, [targetUsername]: 'pending' }
         }));
     };
 
-    const acceptConnectionRequest = (targetUsername) => {
+    const acceptConnectionRequest = (targetUsername: string) => {
         setUserProfile(prev => ({
             ...prev,
-            connections: { ...prev.connections, [targetUsername]: 'connected' }
+            connections: { ...prev.connections, [targetUsername]: 'connected' },
+            incomingRequests: prev.incomingRequests.filter(u => u !== targetUsername)
         }));
     };
 
-    const removeConnection = (targetUsername) => {
+    const declineConnectionRequest = (targetUsername: string) => {
+        setUserProfile(prev => ({
+            ...prev,
+            incomingRequests: prev.incomingRequests.filter(u => u !== targetUsername)
+        }));
+    };
+
+    const removeConnection = (targetUsername: string) => {
         setUserProfile(prev => {
             const newConnections = { ...prev.connections };
             delete newConnections[targetUsername];
@@ -317,17 +460,23 @@ export const UserProfileProvider = ({ children }) => {
             .filter(([_, status]) => status === 'connected')
             .map(([username]) => username);
 
-        // Return details from DB or generate a placeholder if not found
-        return connectedUsernames.map(username => {
+        const incomingUsernames = userProfile.incomingRequests || [];
+
+        const mapUser = (username: string) => {
             const user = MOCK_USERS_DB.find(u => u.username === username);
             return user || {
                 username,
-                name: username, // Fallback
+                name: username,
                 email: 'hidden',
                 image: `https://ui-avatars.com/api/?name=${username}&background=random`,
                 role: 'User'
             };
-        });
+        };
+
+        return {
+            connected: connectedUsernames.map(mapUser),
+            incoming: incomingUsernames.map(mapUser)
+        };
     };
 
     return (
@@ -340,6 +489,7 @@ export const UserProfileProvider = ({ children }) => {
             updateGuardian,
             sendConnectionRequest,
             acceptConnectionRequest,
+            declineConnectionRequest,
             removeConnection,
             getConnectionDetails,
             setUserProfile
@@ -348,3 +498,4 @@ export const UserProfileProvider = ({ children }) => {
         </UserProfileContext.Provider>
     );
 };
+

@@ -182,3 +182,4 @@ const AcademicDetails = () => {
 };
 
 export default AcademicDetails;
+

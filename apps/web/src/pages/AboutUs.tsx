@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import blogDestinations from '../features/landing/assets/blog_destinations.png';
 import blogIelts from '../features/landing/assets/blog_ielts.png';
 import blogVisa from '../features/landing/assets/blog_visa.png';
@@ -413,3 +413,4 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
+

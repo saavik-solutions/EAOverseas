@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
 const ConsultantSchedule = () => {
     // UI State
@@ -44,6 +44,9 @@ const ConsultantSchedule = () => {
     // Leave Management State
     const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
     const [selectedLeaveDate, setSelectedLeaveDate] = useState(null);
+
+    // Mobile UI State
+    const [showMobileStats, setShowMobileStats] = useState(false);
 
     const handleDayHeaderClick = (date) => {
         if (date.getDay() === 0) return; // Ignore Sunday
@@ -423,7 +426,17 @@ const ConsultantSchedule = () => {
         <div className="flex flex-col flex-1 h-full overflow-hidden bg-gray-50/50">
             <PageHeader
                 title="Manage My Availability"
-                actions={headerActions}
+                actions={
+                    <button
+                        onClick={() => setShowMobileStats(!showMobileStats)}
+                        className="xl:hidden flex items-center gap-2 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-sm font-bold border border-blue-100 active:scale-95 transition-all"
+                    >
+                        <span className="material-symbols-outlined text-[20px]">
+                            {showMobileStats ? 'close' : 'bar_chart'}
+                        </span>
+                        {showMobileStats ? 'Close Stats' : 'View Availability'}
+                    </button>
+                }
             />
 
             <main className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
@@ -432,9 +445,9 @@ const ConsultantSchedule = () => {
                     {/* Main Grid Layout */}
                     <div className="flex flex-col xl:flex-row gap-6 h-full flex-1 min-h-[600px]">
                         {/* Left Column: Calendar */}
-                        <div className="flex-1 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200 flex flex-col overflow-hidden">
+                        <div className="flex-1 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200 flex flex-col overflow-hidden w-full">
                             {/* Calendar Toolbar */}
-                            <div className="p-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4 bg-white">
+                            <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white">
                                 <div className="flex items-center gap-2 bg-gray-50 p-1 rounded-lg">
                                     <button
                                         onClick={() => setView('week')}
@@ -460,24 +473,24 @@ const ConsultantSchedule = () => {
                                         <span className="text-lg font-bold text-gray-900 min-w-[140px] text-center">Year {currentDate.getFullYear()} Stats</span>
                                     )}
                                 </div>
-                                <div className="flex gap-4 text-sm font-medium">
+                                <div className="flex flex-wrap gap-4 text-sm font-medium">
                                     {view === 'week' && (
                                         <>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-yellow-100 border border-yellow-500"></span>
-                                                <span className="text-gray-400">Lunch</span>
+                                                <span className="text-gray-400 whitespace-nowrap">Lunch</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-orange-100 border border-orange-500"></span>
-                                                <span className="text-gray-400">Pending</span>
+                                                <span className="text-gray-400 whitespace-nowrap">Pending</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-gray-100 border border-gray-400"></span>
-                                                <span className="text-gray-400">Booked</span>
+                                                <span className="text-gray-400 whitespace-nowrap">Booked</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-red-50 border border-red-400"></span>
-                                                <span className="text-gray-400">Blocked</span>
+                                                <span className="text-gray-400 whitespace-nowrap">Blocked</span>
                                             </div>
                                         </>
                                     )}
@@ -486,176 +499,203 @@ const ConsultantSchedule = () => {
 
                             {/* Calendar Views */}
                             {view === 'week' ? (
-                                <div className="flex-1 overflow-y-auto relative bg-white">
-                                    {/* Header Row (Days) */}
-                                    <div className="grid grid-cols-8 border-b border-gray-200 sticky top-0 bg-white z-30 shadow-sm">
-                                        <div className="p-3 text-xs font-semibold text-gray-500 text-center border-r border-gray-200 flex items-center justify-center">Time</div>
+                                <div className="flex-1 overflow-auto relative bg-white">
+                                    <div className="min-w-[650px] h-full flex flex-col">
+                                        {/* Header Row (Days) */}
+                                        <div className="grid grid-cols-8 border-b border-gray-200 sticky top-0 bg-white z-30 shadow-sm w-full">
+                                            <div className="p-3 text-xs font-semibold text-gray-500 text-center border-r border-gray-200 flex items-center justify-center">Time</div>
 
-                                        {weekDates.map((date, index) => {
-                                            const today = new Date();
-                                            const isToday = date.getDate() === today.getDate() &&
-                                                date.getMonth() === today.getMonth() &&
-                                                date.getFullYear() === today.getFullYear();
-                                            const isSunday = date.getDay() === 0;
+                                            {weekDates.map((date, index) => {
+                                                const today = new Date();
+                                                const isToday = date.getDate() === today.getDate() &&
+                                                    date.getMonth() === today.getMonth() &&
+                                                    date.getFullYear() === today.getFullYear();
+                                                const isSunday = date.getDay() === 0;
 
-                                            const daysMap = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-                                            const dayName = daysMap[date.getDay()];
+                                                const daysMap = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                                                const dayName = daysMap[date.getDay()];
 
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    onClick={() => handleDayHeaderClick(date)}
-                                                    className={`p-3 text-center border-r border-gray-200 transition-colors ${!isSunday ? 'cursor-pointer hover:bg-gray-50' : ''} ${isToday ? 'bg-blue-600/5' : ''} ${isSunday ? 'bg-green-50/50' : ''}`}
-                                                    title={!isSunday ? "Click to set Leave" : "Holiday"}
-                                                >
-                                                    <div className={`text-xs font-medium ${isToday ? 'text-blue-600' : isSunday ? 'text-green-600' : 'text-gray-500'}`}>{dayName}</div>
-                                                    <div className={`text-sm font-bold ${isToday ? 'text-blue-600 bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-1' : isSunday ? 'text-green-600 mt-1' : 'text-gray-900 mt-1'}`}>
-                                                        {date.getDate()}
-                                                    </div>
-                                                    {isSunday && (
-                                                        <div className="mt-1">
-                                                            <span className="text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-full border border-green-200">
-                                                                Holiday
-                                                            </span>
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        onClick={() => handleDayHeaderClick(date)}
+                                                        className={`p-3 text-center border-r border-gray-200 transition-colors ${!isSunday ? 'cursor-pointer hover:bg-gray-50' : ''} ${isToday ? 'bg-blue-600/5' : ''} ${isSunday ? 'bg-green-50/50' : ''}`}
+                                                        title={!isSunday ? "Click to set Leave" : "Holiday"}
+                                                    >
+                                                        <div className={`text-xs font-medium ${isToday ? 'text-blue-600' : isSunday ? 'text-green-600' : 'text-gray-500'}`}>{dayName}</div>
+                                                        <div className={`text-sm font-bold ${isToday ? 'text-blue-600 bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-1' : isSunday ? 'text-green-600 mt-1' : 'text-gray-900 mt-1'}`}>
+                                                            {date.getDate()}
                                                         </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-
-
-                                    {/* Time Slots Grid */}
-                                    <div className="grid grid-cols-8 relative h-[800px]">
-                                        {/* Time Labels */}
-                                        <div className="col-span-1 border-r border-gray-200">
-                                            {['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'].map(time => (
-                                                <div key={time} className="h-20 border-b border-gray-100 relative">
-                                                    <span className="absolute top-2 right-2 text-xs text-gray-400 bg-white px-1">{time}</span>
-                                                </div>
-                                            ))}
+                                                        {isSunday && (
+                                                            <div className="mt-1">
+                                                                <span className="text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-full border border-green-200">
+                                                                    Holiday
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
 
-                                        {/* Columns container */}
-                                        <div className="col-span-7 grid grid-cols-7 relative">
-                                            {/* Background Lines */}
-                                            <div className="absolute inset-0 flex flex-col pointer-events-none z-0">
-                                                {[...Array(8)].map((_, i) => <div key={i} className="h-20 border-b border-gray-100 w-full border-dashed"></div>)}
+
+                                        {/* Time Slots Grid */}
+                                        <div className="grid grid-cols-8 relative h-[800px] w-full">
+                                            {/* Time Labels */}
+                                            <div className="col-span-1 border-r border-gray-200">
+                                                {['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'].map(time => (
+                                                    <div key={time} className="h-20 border-b border-gray-100 relative">
+                                                        <span className="absolute top-2 right-2 text-xs text-gray-400 bg-white px-1">{time}</span>
+                                                    </div>
+                                                ))}
                                             </div>
 
-                                            {/* Day Columns */}
-                                            {weekDates.map((date, colIndex) => (
-                                                <div
-                                                    key={colIndex}
-                                                    className="border-r border-gray-100 h-full relative group/col"
-                                                    onClick={(e) => handleGridClick(e, date)}
-                                                >
-                                                    {/* Hover effect for adding slot */}
-                                                    <div className="absolute inset-0 bg-blue-50/0 group-hover/col:bg-blue-50/10 transition-colors pointer-events-none"></div>
+                                            {/* Columns container */}
+                                            <div className="col-span-7 grid grid-cols-7 relative">
+                                                {/* Background Lines */}
+                                                <div className="absolute inset-0 flex flex-col pointer-events-none z-0">
+                                                    {[...Array(8)].map((_, i) => <div key={i} className="h-20 border-b border-gray-100 w-full border-dashed"></div>)}
+                                                </div>
 
-                                                    {/* Events for this day */}
-                                                    {scheduleItems
-                                                        .filter(item => item.dayIndex === date.getDay())
-                                                        .map(item => {
-                                                            const top = getPositionFromTime(item.startTime);
-                                                            const height = getHeightFromDuration(item.startTime, item.endTime);
+                                                {/* Day Columns */}
+                                                {weekDates.map((date, colIndex) => (
+                                                    <div
+                                                        key={colIndex}
+                                                        className="border-r border-gray-100 h-full relative group/col"
+                                                        onClick={(e) => handleGridClick(e, date)}
+                                                    >
+                                                        {/* Hover effect for adding slot */}
+                                                        <div className="absolute inset-0 bg-blue-50/0 group-hover/col:bg-blue-50/10 transition-colors pointer-events-none"></div>
 
-                                                            let bgClass = "bg-emerald-50 border-emerald-500 text-emerald-700";
-                                                            let iconName = "";
+                                                        {/* Events for this day */}
+                                                        {scheduleItems
+                                                            .filter(item => item.dayIndex === date.getDay())
+                                                            .map(item => {
+                                                                const top = getPositionFromTime(item.startTime);
+                                                                const height = getHeightFromDuration(item.startTime, item.endTime);
 
-                                                            if (item.type === 'booked') {
-                                                                bgClass = "bg-gray-100 border-gray-500 text-gray-700";
-                                                                iconName = "lock";
-                                                            } else if (item.type === 'blocked') {
-                                                                // Check if it's a lunch break
-                                                                if (item.title === 'Lunch Break') {
-                                                                    bgClass = "bg-yellow-50 border-yellow-500 text-yellow-700 opacity-90";
-                                                                    iconName = "restaurant";
-                                                                } else {
-                                                                    // Check status: pending (orange) vs approved (red)
-                                                                    if (item.status === 'pending') {
-                                                                        bgClass = "bg-orange-50 border-orange-500 text-orange-700 opacity-90";
-                                                                        iconName = "schedule";
+                                                                let bgClass = "bg-emerald-50 border-emerald-500 text-emerald-700";
+                                                                let iconName = "";
+
+                                                                if (item.type === 'booked') {
+                                                                    bgClass = "bg-gray-100 border-gray-500 text-gray-700";
+                                                                    iconName = "lock";
+                                                                } else if (item.type === 'blocked') {
+                                                                    // Check if it's a lunch break
+                                                                    if (item.title === 'Lunch Break') {
+                                                                        bgClass = "bg-yellow-50 border-yellow-500 text-yellow-700 opacity-90";
+                                                                        iconName = "restaurant";
                                                                     } else {
-                                                                        bgClass = "bg-red-50 border-red-500 text-red-700 opacity-80 striped-background";
-                                                                        iconName = "block";
+                                                                        // @ts-ignore - status exists on leave items
+                                                                        if (item.status === 'pending') {
+                                                                            bgClass = "bg-orange-50 border-orange-500 text-orange-700 opacity-90";
+                                                                            iconName = "schedule";
+                                                                        } else {
+                                                                            bgClass = "bg-red-50 border-red-500 text-red-700 opacity-80 striped-background";
+                                                                            iconName = "block";
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
 
-                                                            return (
-                                                                <div
-                                                                    key={item.id}
-                                                                    className={`absolute w-[95%] left-[2.5%] border-l-4 rounded px-2 py-1 cursor-pointer hover:shadow-md transition-all z-10 flex flex-col justify-between group/event ${bgClass}`}
-                                                                    style={{ top: `${top}px`, height: `${height}px` }}
-                                                                    onClick={(e) => {
-                                                                        // Prevent deletion of lunch breaks
-                                                                        if (item.type === 'blocked' && item.title !== 'Lunch Break') {
-                                                                            handleRemoveSlot(e, item.id);
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <div>
-                                                                        <div className="flex items-center gap-1">
-                                                                            {iconName && <span className="material-symbols-outlined text-[14px]">{iconName}</span>}
-                                                                            <span className="text-xs font-bold">{item.title}</span>
+                                                                return (
+                                                                    <div
+                                                                        key={item.id}
+                                                                        className={`absolute w-[95%] left-[2.5%] border-l-4 rounded px-2 py-1 cursor-pointer hover:shadow-md transition-all z-10 flex flex-col justify-between group/event ${bgClass}`}
+                                                                        style={{ top: `${top}px`, height: `${height}px` }}
+                                                                        onClick={(e) => {
+                                                                            // Prevent deletion of lunch breaks
+                                                                            if (item.type === 'blocked' && item.title !== 'Lunch Break') {
+                                                                                handleRemoveSlot(e, item.id);
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        <div>
+                                                                            <div className="flex items-center gap-1">
+                                                                                {iconName && <span className="material-symbols-outlined text-[14px]">{iconName}</span>}
+                                                                                <span className="text-xs font-bold">{item.title}</span>
+                                                                            </div>
+                                                                            <div className="text-[10px] opacity-80">{item.startTime} - {item.endTime}</div>
+                                                                            {item.details && <div className="text-[10px] mt-1 font-medium">{item.details}</div>}
                                                                         </div>
-                                                                        <div className="text-[10px] opacity-80">{item.startTime} - {item.endTime}</div>
-                                                                        {item.details && <div className="text-[10px] mt-1 font-medium">{item.details}</div>}
+
+                                                                        {/* Delete/Edit Action - only for non-lunch blocked slots */}
+                                                                        {item.type === 'blocked' && item.title !== 'Lunch Break' && (
+                                                                            <div className="flex justify-end opacity-0 group-hover/event:opacity-100 transition-opacity">
+                                                                                <button className="hover:bg-black/5 p-0.5 rounded"><span className="material-symbols-outlined text-[16px]">close</span></button>
+                                                                            </div>
+                                                                        )}
                                                                     </div>
+                                                                );
+                                                            })}
+                                                    </div>
+                                                ))}
 
-                                                                    {/* Delete/Edit Action - only for non-lunch blocked slots */}
-                                                                    {item.type === 'blocked' && item.title !== 'Lunch Break' && (
-                                                                        <div className="flex justify-end opacity-0 group-hover/event:opacity-100 transition-opacity">
-                                                                            <button className="hover:bg-black/5 p-0.5 rounded"><span className="material-symbols-outlined text-[16px]">close</span></button>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            );
-                                                        })}
-                                                </div>
-                                            ))}
-
-                                            {/* Current Time Indicator logic could go here attached to correct column */}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex-1 overflow-y-auto bg-white p-6">
-                                    <table className="w-full text-left border-collapse">
-                                        <thead>
-                                            <tr className="border-b border-gray-200">
-                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm">Month ({currentDate.getFullYear()})</th>
-                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Working Hours</th>
-                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Meetings Joined</th>
-                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Time Blocked</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {monthlyStats.map((month, idx) => (
-                                                <tr
-                                                    key={idx}
-                                                    className={`border-b border-gray-50 hover:bg-gray-50 transition-colors
-                                                        ${month.isCurrent ? 'bg-blue-50/50' : ''}
-                                                        ${month.isPast ? 'opacity-60 grayscale' : ''}
-                                                    `}
-                                                >
-                                                    <td className="py-3 px-4 font-semibold text-gray-800 flex items-center gap-2">
-                                                        {month.name}
-                                                        {month.isCurrent && <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">CURRENT</span>}
-                                                    </td>
-                                                    <td className="py-3 px-4 text-right font-medium text-emerald-600">{month.workingHours}h</td>
-                                                    <td className="py-3 px-4 text-right font-medium text-gray-700">{month.bookedCount}</td>
-                                                    <td className="py-3 px-4 text-right font-medium text-red-500">{month.blockedHours}h</td>
+                                <div className="flex-1 overflow-auto bg-white p-4 sm:p-6">
+                                    <div className="min-w-[700px]">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr className="border-b border-gray-200">
+                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm">Month ({currentDate.getFullYear()})</th>
+                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Working Hours</th>
+                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Meetings Joined</th>
+                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Time Blocked</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {monthlyStats.map((month, idx) => (
+                                                    <tr
+                                                        key={idx}
+                                                        className={`border-b border-gray-50 hover:bg-gray-50 transition-colors
+                                                            ${month.isCurrent ? 'bg-blue-50/50' : ''}
+                                                            ${month.isPast ? 'opacity-60 grayscale' : ''}
+                                                        `}
+                                                    >
+                                                        <td className="py-3 px-4 font-semibold text-gray-800 flex items-center gap-2">
+                                                            {month.name}
+                                                            {month.isCurrent && <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">CURRENT</span>}
+                                                        </td>
+                                                        <td className="py-3 px-4 text-right font-medium text-emerald-600">{month.workingHours}h</td>
+                                                        <td className="py-3 px-4 text-right font-medium text-gray-700">{month.bookedCount}</td>
+                                                        <td className="py-3 px-4 text-right font-medium text-red-500">{month.blockedHours}h</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             )}
                         </div>
                         {/* Right Column: Settings & Summary */}
-                        <div className="w-full xl:w-[320px] flex flex-col gap-6 shrink-0 md:hidden xl:flex">
+                        {/* Mobile Drawer Overlay */}
+                        {showMobileStats && (
+                            <div
+                                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[80] xl:hidden animate-in fade-in duration-200"
+                                onClick={() => setShowMobileStats(false)}
+                            />
+                        )}
+
+                        <div className={`
+                            xl:w-[320px] flex flex-col gap-6 shrink-0
+                            ${showMobileStats
+                                ? 'fixed bottom-0 left-0 right-0 z-[90] bg-gray-50 border-t border-gray-200 p-6 max-h-[80vh] overflow-y-auto animate-in slide-in-from-bottom duration-300 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)]'
+                                : 'hidden xl:flex'
+                            }
+                        `}>
+                            {/* Stats Header for Mobile Drawer */}
+                            <div className="xl:hidden flex items-center justify-between mb-2">
+                                <h3 className="text-xl font-bold text-gray-900">Availability Insights</h3>
+                                <button
+                                    onClick={() => setShowMobileStats(false)}
+                                    className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                                >
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
                             {/* Dynamic Stats Card */}
                             <div className="bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200 p-5">
                                 {view === 'week' ? (
@@ -674,7 +714,7 @@ const ConsultantSchedule = () => {
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(stat.available / 8) * 100}%` }}></div>
+                                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(parseFloat(stat.available) / 8) * 100}%` }}></div>
                                                         </div>
                                                         <span className="w-8 text-right font-medium">{stat.available}h</span>
                                                     </div>
@@ -802,3 +842,4 @@ const ConsultantSchedule = () => {
 };
 
 export default ConsultantSchedule;
+

@@ -1,13 +1,47 @@
 import React, { useState } from 'react';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
-const PerformanceRatingOverview = () => {
-    const [activeFilter, setActiveFilter] = useState('30d');
+interface PerformanceRatingOverviewProps {
+    selectedCounsellor?: {
+        id: number;
+        name: string;
+        role: string;
+        image: string;
+    } | null;
+    onBack?: () => void;
+}
+
+const PerformanceRatingOverview: React.FC<PerformanceRatingOverviewProps> = ({ selectedCounsellor, onBack }) => {
+    const [activeFilter, setActiveFilter] = useState('7d');
 
     const dataByFilter = {
+        '7d': {
+            avgRating: selectedCounsellor ? (4.5 + (selectedCounsellor.id % 5) / 10) : 4.9,
+            reviewCount: 42,
+            studentsConsulted: 28,
+            consultationGrowth: '+15%',
+            distribution: [
+                { label: '5 star', percent: 85, color: 'bg-blue-600' },
+                { label: '4 star', percent: 10, color: 'bg-blue-500' },
+                { label: '3 star', percent: 3, color: 'bg-blue-400' },
+                { label: '2 star', percent: 1, color: 'bg-blue-300' },
+                { label: '1 star', percent: 1, color: 'bg-blue-200' }
+            ],
+            trend: [
+                { label: 'MON', height: '45%' },
+                { label: 'TUE', height: '62%' },
+                { label: 'WED', height: '58%' },
+                { label: 'THU', height: '75%' },
+                { label: 'FRI', height: '82%' },
+                { label: 'SAT', height: '94%' }
+            ],
+            growth: '+0.5 Growth'
+        },
         '30d': {
-            avgRating: 4.8,
+            avgRating: selectedCounsellor ? (4.4 + (selectedCounsellor.id % 6) / 10) : 4.8,
             reviewCount: 186,
+            studentsConsulted: 112,
+            consultationGrowth: '+8%',
             distribution: [
                 { label: '5 star', percent: 74, color: 'bg-blue-600' },
                 { label: '4 star', percent: 18, color: 'bg-blue-500' },
@@ -28,6 +62,8 @@ const PerformanceRatingOverview = () => {
         '3m': {
             avgRating: 4.7,
             reviewCount: 542,
+            studentsConsulted: 420,
+            consultationGrowth: '+12%',
             distribution: [
                 { label: '5 star', percent: 68, color: 'bg-blue-600' },
                 { label: '4 star', percent: 22, color: 'bg-blue-500' },
@@ -48,6 +84,8 @@ const PerformanceRatingOverview = () => {
         '1y': {
             avgRating: 4.9,
             reviewCount: 1240,
+            studentsConsulted: 1450,
+            consultationGrowth: '+22%',
             distribution: [
                 { label: '5 star', percent: 82, color: 'bg-blue-600' },
                 { label: '4 star', percent: 12, color: 'bg-blue-500' },
@@ -70,8 +108,8 @@ const PerformanceRatingOverview = () => {
     const currentData = dataByFilter[activeFilter as keyof typeof dataByFilter];
 
     return (
-        <div className="flex flex-col flex-1 h-full overflow-hidden bg-[#f5f7f8]">
-            <PageHeader title="Performance & Rating Overview" />
+        <div className={`flex flex-col flex-1 h-full overflow-hidden ${onBack ? 'bg-transparent' : 'bg-[#f5f7f8]'}`}>
+            {!onBack && <PageHeader title="Performance & Rating Overview" />}
 
             <main className="flex-1 overflow-y-auto p-4 lg:p-10 no-scrollbar">
                 <div className="max-w-[1200px] mx-auto w-full flex flex-col gap-8">
@@ -79,28 +117,43 @@ const PerformanceRatingOverview = () => {
                     {/* Page Header & Actions */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in">
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-slate-900 text-3xl font-extrabold tracking-tight">Performance & Rating Overview</h1>
-                            <p className="text-slate-500 text-base">Track your performance based on verified student feedback and case outcomes.</p>
+                            {onBack && (
+                                <button
+                                    onClick={onBack}
+                                    className="flex items-center gap-2 text-blue-600 font-bold text-xs mb-2 hover:bg-blue-50 w-fit px-2 py-1 rounded transition-colors"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+                                    BACK TO COUNSELLORS
+                                </button>
+                            )}
+                            <h1 className="text-slate-900 text-3xl font-extrabold tracking-tight">
+                                {selectedCounsellor ? `${selectedCounsellor.name}'s Performance` : 'Performance & Rating Overview'}
+                            </h1>
+                            <p className="text-slate-500 text-base">
+                                {selectedCounsellor
+                                    ? `Detailed performance analysis for ${selectedCounsellor.role}.`
+                                    : 'Track performance based on verified student feedback and case outcomes.'}
+                            </p>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm">
                                 <button
-                                    onClick={() => setActiveFilter('30d')}
-                                    className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeFilter === '30d' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-50'}`}
+                                    onClick={() => setActiveFilter('7d')}
+                                    className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeFilter === '7d' ? 'bg-blue-600 text-white shadow-md font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}
                                 >
-                                    Last 30 days
+                                    Weekly
                                 </button>
                                 <button
-                                    onClick={() => setActiveFilter('3m')}
-                                    className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeFilter === '3m' ? 'bg-blue-600 text-white shadow-md font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}
+                                    onClick={() => setActiveFilter('30d')}
+                                    className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeFilter === '30d' ? 'bg-blue-600 text-white shadow-md font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}
                                 >
-                                    3 Months
+                                    Monthly
                                 </button>
                                 <button
                                     onClick={() => setActiveFilter('1y')}
                                     className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${activeFilter === '1y' ? 'bg-blue-600 text-white shadow-md font-bold' : 'text-slate-600 hover:bg-slate-50 font-medium'}`}
                                 >
-                                    1 Year
+                                    Yearly
                                 </button>
                             </div>
                             <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm font-bold hover:bg-slate-50 transition-all shadow-sm">
@@ -110,8 +163,27 @@ const PerformanceRatingOverview = () => {
                         </div>
                     </div>
 
+                    {/* Performance Metrics Section */}
+                    <div className="flex animate-slide-up">
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4 w-full md:max-w-sm">
+                            <div className="flex justify-between items-start">
+                                <div className="size-12 rounded-lg bg-blue-50 flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-blue-600 text-[24px]">group</span>
+                                </div>
+                                <div className="flex items-center gap-1 text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-full">
+                                    <span className="material-symbols-outlined text-[14px]">trending_up</span>
+                                    <span>{currentData.consultationGrowth}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Total Students Consulted</h4>
+                                <p className="text-2xl font-black text-slate-900 tracking-tight">{currentData.studentsConsulted}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Overall Rating Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-slide-up">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
                         <div className="lg:col-span-12 xl:col-span-5 bg-white p-8 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center text-center">
                             <div className="relative size-48 flex items-center justify-center rounded-full mb-6"
                                 style={{ background: `conic-gradient(#0d6cf2 ${currentData.avgRating * 20}%, #e5e7eb 0)` }}>
@@ -257,3 +329,4 @@ const PerformanceRatingOverview = () => {
 };
 
 export default PerformanceRatingOverview;
+

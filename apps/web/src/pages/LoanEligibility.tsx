@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useNotification } from '../context/NotificationContext';
+import PageHeader from '@/components/layout/PageHeader';
+import { useNotification } from '@/shared/contexts/NotificationContext';
 
 // Custom Popup Component
 const EligibilityPopup = ({ isOpen, type, message, onClose }) => {
@@ -449,3 +449,4 @@ const LoanEligibility = () => {
 };
 
 export default LoanEligibility;
+

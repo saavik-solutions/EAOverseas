@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
@@ -215,3 +215,4 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
+

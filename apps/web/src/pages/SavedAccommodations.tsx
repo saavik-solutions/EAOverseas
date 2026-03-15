@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useSavedItems } from '../context/SavedItemsContext';
+import PageHeader from '@/components/layout/PageHeader';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
 
 const SavedAccommodations = () => {
     const navigate = useNavigate();
@@ -116,3 +116,4 @@ const SavedAccommodations = () => {
 };
 
 export default SavedAccommodations;
+

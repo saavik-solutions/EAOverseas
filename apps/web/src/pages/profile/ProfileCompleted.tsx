@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 const ProfileCompleted = () => {
     const navigate = useNavigate();
@@ -54,3 +54,4 @@ const ProfileCompleted = () => {
 };
 
 export default ProfileCompleted;
+

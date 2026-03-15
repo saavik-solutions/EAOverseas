@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useSavedItems } from '../context/SavedItemsContext';
-import { useAuth } from '../context/AuthContext';
-import { useUserProfile } from '../context/UserProfileContext';
-import { incrementCount, decrementCount } from '../utils/dailyCounter';
+import PageHeader from '@/components/layout/PageHeader';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
+import { incrementCount, decrementCount } from '@/shared/utils/dailyCounter';
 
 const HomeDashboard = () => {
     const navigate = useNavigate();
@@ -391,7 +391,10 @@ const HomeDashboard = () => {
                         </div>
 
                         {/* Scholarships */}
-                        <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm flex flex-col h-full relative overflow-hidden">
+                        <div
+                            onClick={() => requireAuth(() => navigate('/scholarships'))}
+                            className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm flex flex-col h-full relative overflow-hidden cursor-pointer group hover:shadow-md transition-all"
+                        >
                             <div className="flex items-center gap-2 mb-4 relative z-10">
                                 <span className="material-symbols-outlined text-blue-600 !text-[20px] md:!text-[24px]">savings</span>
                                 <h3 className="font-bold text-sm md:text-base text-gray-900">Scholarships</h3>
@@ -645,4 +648,5 @@ const HomeDashboard = () => {
 };
 
 export default HomeDashboard;
+
 

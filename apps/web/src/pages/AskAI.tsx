@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import { generateAIResponse } from '../services/aiService';
-import { useUserProfile } from '../context/UserProfileContext';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
 
 const AskAI = () => {
     const [inputValue, setInputValue] = useState('');
@@ -521,3 +521,4 @@ ${docsList || "None"}
 };
 
 export default AskAI;
+

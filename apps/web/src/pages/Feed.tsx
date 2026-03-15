@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import PageHeader from '../components/PageHeader';
-import { postsData } from '../data/mockFeedData';
-import { useAuthAction } from '../hooks/useAuthAction';
-import { useAuth } from '../context/AuthContext';
-import { useSavedItems } from '../context/SavedItemsContext';
-import LoginModal from '../components/LoginModal';
-import ShareModal from '../components/ShareModal';
+import Sidebar from '@/components/layout/Sidebar';
+import PageHeader from '@/components/layout/PageHeader';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
+import { usePosts, Post } from '@/shared/contexts/PostsContext';
+import LoginModal from '@/features/auth/LoginModal';
+import ShareModal from '@/features/shared-modals/ShareModal';
 
 const Feed = () => {
+    const { posts } = usePosts();
     const navigate = useNavigate();
     // State for Filter Bar
     const [activeCountry, setActiveCountry] = useState('All Countries');
@@ -23,72 +24,79 @@ const Feed = () => {
     const [shareData, setShareData] = useState(null);
 
     const countries = ['All Countries', 'USA', 'UK', 'Canada', 'Germany', 'Australia', 'Europe', 'Global'];
-    const topics = ['All Topics', 'Admissions', 'Scholarships', 'Visas', 'Accomodation', 'Career Advice', 'Routine'];
+    const topics = ['All Topics', 'Admissions', 'Policy Update', 'Scholarship', 'Event & Webinar'];
 
     // Helper to get country from location string
-    const getCountryFromLocation = (location) => {
+    const getCountryFromLocation = (location: string) => {
         if (!location) return 'Global';
-        if (location.includes('USA') || location.includes('US')) return 'USA';
-        if (location.includes('UK') || location.includes('United Kingdom') || location.includes('London')) return 'UK';
-        if (location.includes('Canada') || location.includes('Toronto')) return 'Canada';
-        if (location.includes('Germany') || location.includes('Berlin') || location.includes('Munich')) return 'Germany';
-        if (location.includes('Australia') || location.includes('Melbourne') || location.includes('Sydney')) return 'Australia';
-        if (location.includes('Switzerland') || location.includes('Europe')) return 'Europe';
+        const loc = location.toUpperCase();
+        if (loc.includes('USA') || loc.includes('US') || loc.includes('UNITED STATES') || loc.includes('HARVARD') || loc.includes('STANFORD') || loc.includes('MIT') || loc.includes('COLUMBIA') || loc.includes('NEW YORK')) return 'USA';
+        if (loc.includes('UK') || loc.includes('UNITED KINGDOM') || loc.includes('LONDON') || loc.includes('OXFORD') || loc.includes('CAMBRIDGE') || loc.includes('MANCHESTER')) return 'UK';
+        if (loc.includes('CANADA') || loc.includes('TORONTO') || loc.includes('VANCOUVER') || loc.includes('MCGILL')) return 'Canada';
+        if (loc.includes('GERMANY') || loc.includes('BERLIN') || loc.includes('MUNICH') || loc.includes('TUM ')) return 'Germany';
+        if (loc.includes('AUSTRALIA') || loc.includes('MELBOURNE') || loc.includes('SYDNEY') || loc.includes('UNSW')) return 'Australia';
+        if (loc.includes('SWITZERLAND') || loc.includes('EUROPE') || loc.includes('ETH')) return 'Europe';
         return 'Global';
     };
 
-    const filteredPosts = Object.values(postsData).filter(post => {
+    const filteredPosts = posts.filter(post => {
         // 1. Filter by Country
         const postCountry = getCountryFromLocation(post.location);
         const matchesCountry = activeCountry === 'All Countries' || postCountry === activeCountry || (activeCountry === 'Europe' && post.tags.includes('#Europe'));
 
-        // 2. Filter by Post Type (Label) - REMOVED
-
-
-        // 3. Filter by Topic (Pills)
-        // Ensure robust topic matching
+        // 2. Filter by Topic (Pills)
         let matchesTopic = true;
         if (activeTopic !== 'All Topics') {
-            if (activeTopic === 'Admissions') matchesTopic = post.label.includes('Admission');
-            else if (activeTopic === 'Scholarships') matchesTopic = post.label.includes('Scholarship');
-            else if (activeTopic === 'Visas') matchesTopic = post.label.includes('Visa') || post.label.includes('Policy') || post.tags.includes('#VisaUpdate');
-            else if (activeTopic === 'Accomodation') matchesTopic = post.label.includes('Accomodation') || post.tags.includes('#Housing');
-            else if (activeTopic === 'Career Advice') matchesTopic = post.label.includes('Career') || post.tags.includes('#Resume');
-            else if (activeTopic === 'Routine') matchesTopic = post.label.includes('Routine') || post.tags.includes('#Exams');
-            else matchesTopic = post.tags.some(tag => tag.toLowerCase().includes(activeTopic.toLowerCase()));
+            const lTopic = activeTopic.toLowerCase().replace(/s$/, ''); // singularize
+            const postLabel = post.label.toLowerCase().replace(/s$/, '');
+            const postTags = (post.tags || []).map(t => t.toLowerCase().replace(/s$/, ''));
+
+            if (activeTopic === 'Admissions') matchesTopic = postLabel.includes('admission');
+            else if (activeTopic === 'Scholarship') matchesTopic = postLabel.includes('scholarship');
+            else if (activeTopic === 'Policy Update') matchesTopic = postLabel.includes('policy');
+            else if (activeTopic === 'Event & Webinar') matchesTopic = postLabel.includes('event') || postLabel.includes('webinar');
+            else matchesTopic = postTags.some(tag => tag.includes(lTopic) || lTopic.includes(tag));
         }
 
-        return matchesCountry && matchesTopic;
+        // 3. Filter by Status (Only show published)
+        const matchesStatus = !post.status || post.status === 'Published';
+
+        return matchesCountry && matchesTopic && matchesStatus;
     }).sort((a, b) => {
-        if (sortBy === 'Most Saved') return ((b as any).votes || 0) - ((a as any).votes || 0); // Mock logic for votes
-        return 0; // Default order (mock data order)
+        // Try to sort by ID descending (since our IDs are currently Date.now() for new posts)
+        // Mock posts like 'daad' will sort lower than numeric timestamps
+        const idA = isNaN(Number(a.id)) ? 0 : Number(a.id);
+        const idB = isNaN(Number(b.id)) ? 0 : Number(b.id);
+
+        if (idA !== idB) return idB - idA;
+        return 0; // Default order
     });
 
 
-    const openShareModal = (postId) => {
+    const openShareModal = (postId: string | number) => {
         requireAuth(() => {
-            const post = postsData[postId];
-            setShareData(post);
+            const post = posts.find(p => p.id.toString() === postId.toString());
+            setShareData(post || null);
             setIsShareModalOpen(true);
         });
     };
 
-    const handleSave = (post) => {
+    const handleSave = (post: Post) => {
         requireAuth(() => {
             togglePost(post);
         });
     };
 
 
-    const handleCountryChange = (e) => {
+    const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setActiveCountry(e.target.value);
     };
 
-    const handleTopicChange = (topic) => {
+    const handleTopicChange = (topic: string) => {
         setActiveTopic(activeTopic === topic ? 'All Topics' : topic);
     };
 
-    const handleSortChange = (e) => {
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSortBy(e.target.value);
     };
 
@@ -405,3 +413,4 @@ const Feed = () => {
 };
 
 export default Feed;
+

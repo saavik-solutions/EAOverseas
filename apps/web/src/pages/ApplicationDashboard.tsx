@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSavedItems } from '../context/SavedItemsContext';
+import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
 
 const ApplicationDashboard = () => {
     const navigate = useNavigate();
@@ -270,3 +270,4 @@ const ApplicationDashboard = () => {
 };
 
 export default ApplicationDashboard;
+

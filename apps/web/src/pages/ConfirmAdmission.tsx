@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useAuth } from '../context/AuthContext';
+import PageHeader from '@/components/layout/PageHeader';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 // Mock Data for Offer Letters
 const MOCK_OFFERS = [
@@ -294,3 +294,4 @@ const ConfirmAdmission = () => {
 };
 
 export default ConfirmAdmission;
+

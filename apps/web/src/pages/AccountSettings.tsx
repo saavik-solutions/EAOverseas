@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useUserProfile } from '../context/UserProfileContext';
-import { useAuth } from '../context/AuthContext';
+import PageHeader from '@/components/layout/PageHeader';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 const AccountSettings = () => {
     const navigate = useNavigate();
@@ -309,3 +309,4 @@ const AccountSettings = () => {
 };
 
 export default AccountSettings;
+

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { useAuth } from '../context/AuthContext';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import { useAuth } from '@/shared/contexts/AuthContext';
 
 const Countries = () => {
     const navigate = useNavigate();
@@ -282,3 +282,4 @@ const Countries = () => {
 };
 
 export default Countries;
+

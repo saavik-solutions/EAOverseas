@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 
-import { useUserProfile } from '../context/UserProfileContext';
+import { useUserProfile } from '@/shared/contexts/UserProfileContext';
 
 const AcademicSnapshotDetails = () => {
     const { userProfile } = useUserProfile();
@@ -323,3 +323,4 @@ const AcademicInfoCard = ({ label, value, onEdit }) => (
 );
 
 export default AcademicSnapshotDetails;
+

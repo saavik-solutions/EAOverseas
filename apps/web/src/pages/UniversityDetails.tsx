@@ -1,10 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import { jsPDF } from 'jspdf';
-import { universitiesData } from '../data/universities';
-import { useAuthAction } from '../hooks/useAuthAction';
-import { useAuth } from '../context/AuthContext';
-import LoginModal from '../components/LoginModal';
+import { universitiesData } from '@workspace/common';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
+import { useAuth } from '@/shared/contexts/AuthContext';
+import LoginModal from '@/features/auth/LoginModal';
 
 const UniversityDetails = () => {
     const { id } = useParams();
@@ -347,3 +347,4 @@ const UniversityDetails = () => {
 };
 
 export default UniversityDetails;
+

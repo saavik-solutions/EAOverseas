@@ -795,18 +795,15 @@ const CommunityFeed = () => {
                                                     {translations[post._id]?.isLoading ? 'Translating...' : (translations[post._id]?.title || post.title)}
                                                 </h3>
 
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="text-[8px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded-full font-black uppercase tracking-tighter shrink-0 animate-pulse">Beta</span>
-                                                    <select
-                                                        className="text-[10px] bg-slate-50 border-none rounded p-1 text-slate-500 font-bold focus:ring-0 cursor-pointer"
-                                                        value={translations[post._id]?.lang || 'en'}
-                                                        onChange={(e) => handleTranslate(post._id, post.title, post.content, e.target.value)}
-                                                    >
-                                                        {SUPPORTED_LANGUAGES.map(l => (
-                                                            <option key={l.code} value={l.code}>{l.name}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
+                                                <select
+                                                    className="text-[10px] bg-slate-50 border-none rounded p-1 text-slate-500 font-bold focus:ring-0 cursor-pointer"
+                                                    value={translations[post._id]?.lang || 'en'}
+                                                    onChange={(e) => handleTranslate(post._id, post.title, post.content, e.target.value)}
+                                                >
+                                                    {SUPPORTED_LANGUAGES.map(l => (
+                                                        <option key={l.code} value={l.code}>{l.name}</option>
+                                                    ))}
+                                                </select>
                                             </div>
 
                                             {post.content && (

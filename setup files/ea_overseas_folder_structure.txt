@@ -1,0 +1,326 @@
+ea-overseas/                          ← Turborepo monorepo root
+├── turbo.json                        ← Pipeline: build/test/lint task order + remote cache
+├── pnpm-workspace.yaml               ← Declares apps/* and packages/* as workspaces
+├── package.json                      ← Root scripts: dev, build, lint, test
+├── .env.example                      ← Template for all env vars (never commit real values)
+├── .gitignore
+├── docker-compose.yml                ← Local dev: Postgres 16, Redis 7, LocalStack (S3), MailHog
+│
+├── apps/
+│   │
+│   ├── web/                          ← Next.js 14 (App Router) — Student + Admin UI → Vercel
+│   │   ├── next.config.ts            ← Image domains, CSP headers, PWA, bundle analyser
+│   │   ├── middleware.ts             ← Edge: JWT verify, role guard, redirect logic
+│   │   ├── tailwind.config.ts
+│   │   ├── tsconfig.json
+│   │   ├── public/
+│   │   │   └── icons/ fonts/ images/
+│   │   │
+│   │   └── src/
+│   │       │
+│   │       ├── app/                  ← Next.js App Router root
+│   │       │   │
+│   │       │   ├── layout.tsx        ← Root HTML shell, global fonts, providers
+│   │       │   ├── not-found.tsx
+│   │       │   ├── error.tsx
+│   │       │   │
+│   │       │   ├── (auth)/           ← Unauthenticated shell (full-screen centered card)
+│   │       │   │   ├── layout.tsx
+│   │       │   │   ├── register/
+│   │       │   │   │   └── page.tsx  ← Step 1: name+email+pass → Step 2: OTP verify
+│   │       │   │   ├── login/
+│   │       │   │   │   └── page.tsx  ← Email/pass + Google OAuth button
+│   │       │   │   ├── verify-email/
+│   │       │   │   │   └── page.tsx  ← 6-digit OTP input, resend timer
+│   │       │   │   ├── forgot-password/
+│   │       │   │   │   └── page.tsx  ← Email → OTP → new password
+│   │       │   │   └── google/callback/
+│   │       │   │       └── page.tsx  ← Google OAuth redirect handler
+│   │       │   │
+│   │       │   ├── (main)/           ← Authenticated student shell (top nav + sidebar)
+│   │       │   │   ├── layout.tsx
+│   │       │   │   │
+│   │       │   │   ├── dashboard/
+│   │       │   │   │   └── page.tsx  ← Student home: profile strength, saved colleges, recent comparisons
+│   │       │   │   │
+│   │       │   │   ├── profile/                ← MODULE 2: Profile Builder
+│   │       │   │   │   ├── page.tsx            ← Overview: strength meter, section cards, public link toggle
+│   │       │   │   │   ├── [slug]/
+│   │       │   │   │   │   └── page.tsx        ← Public shareable profile page
+│   │       │   │   │   ├── documents/
+│   │       │   │   │   │   └── page.tsx        ← Document vault: upload CV, SOP drafts, scorecards
+│   │       │   │   │   └── edit/
+│   │       │   │   │       ├── basic/
+│   │       │   │   │       │   └── page.tsx    ← Section 1: name, photo, city, level, stream
+│   │       │   │   │       ├── academic/
+│   │       │   │   │       │   └── page.tsx    ← Section 2: 10th/12th %, UG CGPA, education history
+│   │       │   │   │       ├── scores/
+│   │       │   │   │       │   └── page.tsx    ← Section 3: IELTS/GRE/GMAT cards + sub-scores
+│   │       │   │   │       └── goals/
+│   │       │   │   │           └── page.tsx    ← Section 4: target degree, countries, budget, work exp
+│   │       │   │   │
+│   │       │   │   ├── feed/                   ← MODULE 3: Global Feed
+│   │       │   │   │   ├── page.tsx            ← Infinite scroll, category filter tabs, pinned posts
+│   │       │   │   │   └── [slug]/
+│   │       │   │   │       └── page.tsx        ← Full post: content, tags, like/bookmark
+│   │       │   │   │
+│   │       │   │   ├── colleges/               ← MODULE 4: College Feed
+│   │       │   │   │   ├── page.tsx            ← University listing: search, filters, card grid
+│   │       │   │   │   ├── saved/
+│   │       │   │   │   │   └── page.tsx        ← Saved list bucketed by reach/match/safety
+│   │       │   │   │   ├── compare/
+│   │       │   │   │   │   └── page.tsx        ← AI result: score ring, dimension bars, action plan CTA
+│   │       │   │   │   └── [slug]/
+│   │       │   │   │       ├── page.tsx        ← University detail: overview, deadlines, courses
+│   │       │   │   │       └── courses/
+│   │       │   │   │           └── [courseSlug]/
+│   │       │   │   │               └── page.tsx ← Course detail: requirements table, fee breakdown, AI CTA
+│   │       │   │   │
+│   │       │   │   └── applications/           ← Application Tracker
+│   │       │   │       ├── page.tsx            ← All applications: status pipeline view
+│   │       │   │       └── [id]/
+│   │       │   │           └── page.tsx        ← Application detail: timeline, documents, status history
+│   │       │   │
+│   │       │   ├── (admin)/          ← MODULE 5: Admin Panel (role-gated shell)
+│   │       │   │   ├── layout.tsx    ← Admin nav — only accessible to admin/super_admin roles
+│   │       │   │   ├── dashboard/
+│   │       │   │   │   └── page.tsx  ← Stats: signups chart, recent applications, post metrics
+│   │       │   │   ├── universities/
+│   │       │   │   │   ├── page.tsx          ← University CRUD table
+│   │       │   │   │   └── [id]/
+│   │       │   │   │       └── edit/
+│   │       │   │   │           └── page.tsx  ← Edit form: details, courses, requirements, fees
+│   │       │   │   ├── feed/
+│   │       │   │   │   ├── page.tsx          ← Post list: draft/published/archived tabs
+│   │       │   │   │   └── new/
+│   │       │   │   │       └── page.tsx      ← Rich text editor (Tiptap) + category + tags
+│   │       │   │   ├── users/
+│   │       │   │   │   └── page.tsx          ← User list: filter by role, view profile, block/unblock
+│   │       │   │   └── applications/
+│   │       │   │       └── page.tsx          ← Application queue: filter, priority, assign counsellor
+│   │       │   │
+│   │       │   └── api/              ← Next.js BFF route handlers (proxy to backend API)
+│   │       │       ├── auth/[...nextauth]/route.ts
+│   │       │       └── upload/presign/route.ts  ← Generate S3 presigned upload URLs
+│   │       │
+│   │       ├── components/           ← Shared UI component library
+│   │       │   ├── ui/               ← Primitives (Button, Input, Badge, Modal, Spinner, Toast)
+│   │       │   ├── layout/           ← Navbar, Sidebar, Footer, PageHeader
+│   │       │   ├── profile/          ← ProfileStrengthMeter, TestScoreCard, EducationRow
+│   │       │   ├── colleges/         ← UniversityCard, FilterDrawer, CourseRequirementsTable
+│   │       │   ├── feed/             ← PostCard, CategoryFilter, LikeButton, BookmarkButton
+│   │       │   ├── ai/               ← MatchScoreRing, DimensionBar, StrengthWeaknessList
+│   │       │   └── applications/     ← StatusPipeline, DocumentUpload, StatusTimeline
+│   │       │
+│   │       ├── hooks/                ← Custom React hooks
+│   │       │   ├── useAuth.ts        ← Session state, login/logout helpers
+│   │       │   ├── useProfile.ts     ← Profile data + strength computation
+│   │       │   ├── useInfiniteScroll.ts  ← Intersection Observer + React Query cursor pagination
+│   │       │   ├── useDebounce.ts
+│   │       │   └── useOptimistic.ts  ← Optimistic mutation wrapper (like/bookmark)
+│   │       │
+│   │       ├── lib/                  ← Frontend-side utilities and API client
+│   │       │   ├── api/
+│   │       │   │   ├── client.ts     ← Axios/fetch wrapper with JWT injection + refresh logic
+│   │       │   │   ├── auth.ts       ← Auth API calls
+│   │       │   │   ├── profile.ts    ← Profile API calls
+│   │       │   │   ├── universities.ts
+│   │       │   │   ├── feed.ts
+│   │       │   │   ├── ai.ts
+│   │       │   │   └── applications.ts
+│   │       │   ├── query-client.ts   ← React Query client config (stale times, retry policy)
+│   │       │   └── utils.ts          ← cn(), formatDate(), formatCurrency()
+│   │       │
+│   │       ├── store/                ← Zustand global state (minimal — prefer React Query)
+│   │       │   ├── auth.store.ts     ← Current user session
+│   │       │   └── ui.store.ts       ← Sidebar open, toast queue
+│   │       │
+│   │       └── styles/
+│   │           └── globals.css       ← Tailwind base + CSS variables
+│   │
+│   └── api/                          ← Node.js 20 + Fastify REST API → AWS ECS Fargate
+│       ├── package.json
+│       ├── tsconfig.json
+│       ├── Dockerfile                ← Multi-stage: node:20-alpine builder → slim runtime (~120MB)
+│       ├── .env                      ← Runtime secrets (DATABASE_URL, REDIS_URL, JWT_SECRET, etc.)
+│       │
+│       └── src/
+│           ├── server.ts             ← Entry point: registers plugins, routes, starts listening
+│           ├── app.ts                ← App factory (used by server.ts and tests separately)
+│           │
+│           ├── modules/              ← Domain modules — each is fully self-contained
+│           │   │
+│           │   ├── auth/             ← MODULE 1: Authentication
+│           │   │   ├── auth.routes.ts       ← POST /register /login /logout /refresh /otp /reset-password
+│           │   │   ├── auth.service.ts      ← Business logic: hash, compare, token generation
+│           │   │   ├── auth.repository.ts   ← DB queries: create user, upsert OTP, store refresh token
+│           │   │   ├── auth.schema.ts       ← Zod schemas for all auth request/response bodies
+│           │   │   ├── auth.types.ts        ← TypeScript types local to this module
+│           │   │   └── strategies/
+│           │   │       ├── jwt.strategy.ts  ← JWT verify + payload extraction
+│           │   │       └── google.strategy.ts ← Google OAuth2 token exchange
+│           │   │
+│           │   ├── profile/          ← MODULE 2: Profile Builder
+│           │   │   ├── profile.routes.ts    ← GET/PUT /profile, POST /scores, POST /education, GET /documents
+│           │   │   ├── profile.service.ts   ← Orchestrates updates + calls computeProfileStrength()
+│           │   │   ├── profile.repository.ts
+│           │   │   ├── profile.schema.ts
+│           │   │   ├── profile.types.ts
+│           │   │   └── profile-strength.ts  ← Pure function: profile object → 0-100 score
+│           │   │
+│           │   ├── universities/     ← MODULE 4: University + Course data
+│           │   │   ├── universities.routes.ts  ← GET /universities, GET /universities/:slug, GET /courses/:slug
+│           │   │   ├── universities.service.ts
+│           │   │   ├── universities.repository.ts ← Full-text search, filter, paginate queries
+│           │   │   ├── universities.schema.ts
+│           │   │   └── universities.types.ts
+│           │   │
+│           │   ├── ai/               ← AI Match Engine (core differentiator)
+│           │   │   ├── ai.routes.ts         ← POST /ai/compare, GET /ai/compare/:courseId, POST /ai/action-plan
+│           │   │   ├── ai.service.ts        ← Orchestrator: scoring → explanation → cache → upsert DB
+│           │   │   ├── ai.repository.ts     ← Upsert ai_comparisons, save action_plans
+│           │   │   ├── ai.schema.ts         ← Zod: CompareRequest, CompareResponse, ActionPlanResponse
+│           │   │   ├── ai.types.ts
+│           │   │   ├── scoring.ts           ← Pure deterministic function: profile + requirements → 0-100/dimension
+│           │   │   ├── explanation.ts       ← GPT-4o prompt builder + API caller → Markdown narrative
+│           │   │   ├── action-plan.ts       ← Generates milestone array from weaknesses + suggestions
+│           │   │   ├── cache.ts             ← Redis key builders + TTL constants for AI results
+│           │   │   └── prompts/
+│           │   │       ├── compare-v1.ts    ← Prompt template v1
+│           │   │       └── compare-v2.ts    ← Prompt template v2 (A/B test against v1)
+│           │   │
+│           │   ├── feed/             ← MODULE 3: Global Feed
+│           │   │   ├── feed.routes.ts       ← GET /feed, GET /feed/:slug, POST /feed/:id/like, /bookmark
+│           │   │   ├── feed.service.ts
+│           │   │   ├── feed.repository.ts   ← Cursor pagination, category filter, interaction upsert
+│           │   │   ├── feed.schema.ts
+│           │   │   └── feed.types.ts
+│           │   │
+│           │   ├── applications/     ← Application Tracking
+│           │   │   ├── applications.routes.ts   ← Full CRUD + POST /status, POST /documents
+│           │   │   ├── applications.service.ts  ← Status transition logic + audit log write
+│           │   │   ├── applications.repository.ts
+│           │   │   ├── applications.schema.ts
+│           │   │   └── applications.types.ts
+│           │   │
+│           │   ├── admin/            ← MODULE 5: Admin operations
+│           │   │   ├── admin.routes.ts      ← University CRUD, user management, feed publish, stats
+│           │   │   ├── admin.service.ts
+│           │   │   ├── admin.repository.ts
+│           │   │   ├── admin.schema.ts
+│           │   │   └── admin.types.ts
+│           │   │
+│           │   └── notifications/    ← Email + Push notification jobs
+│           │       ├── notifications.routes.ts  ← Internal: POST /notify (called by other services)
+│           │       ├── notifications.service.ts ← Enqueues jobs to BullMQ
+│           │       ├── jobs/
+│           │       │   ├── welcome-email.job.ts
+│           │       │   ├── otp-email.job.ts
+│           │       │   ├── application-update.job.ts
+│           │       │   └── deadline-reminder.job.ts
+│           │       └── templates/              ← HTML email templates (Handlebars)
+│           │
+│           ├── infrastructure/       ← Technical plumbing — NO business logic here
+│           │   ├── database/
+│           │   │   ├── prisma.ts     ← Singleton Prisma client with connection pool + query logging
+│           │   │   ├── schema.prisma ← Prisma schema (mirrors SQL schema from Phase 1 DB doc)
+│           │   │   └── migrations/   ← Auto-generated by `prisma migrate dev` — never edit manually
+│           │   ├── redis/
+│           │   │   ├── client.ts     ← ioredis singleton. Lazy connect.
+│           │   │   └── keys.ts       ← All Redis key constants: ai:compare:{userId}:{courseId} etc.
+│           │   ├── storage/
+│           │   │   └── s3.ts         ← AWS S3 wrapper: getPresignedUploadUrl(), getPresignedReadUrl(), delete()
+│           │   ├── email/
+│           │   │   └── mailer.ts     ← Nodemailer/SES wrapper: sendOtp(), sendWelcome(), sendUpdate()
+│           │   └── queue/
+│           │       ├── bullmq.ts     ← Queue definitions: email-queue, ai-queue, notification-queue
+│           │       └── workers/      ← Worker processes — run as separate ECS task in production
+│           │           ├── email.worker.ts
+│           │           └── ai.worker.ts
+│           │
+│           ├── common/               ← Cross-cutting concerns used by every module
+│           │   ├── middleware/
+│           │   │   ├── authenticate.ts  ← Fastify preHandler: verify JWT, attach req.user
+│           │   │   ├── authorize.ts     ← Role guard: authorize(['admin','super_admin'])
+│           │   │   ├── rate-limit.ts    ← Per-route limits (AI: 10/day free, normal: 100/min)
+│           │   │   └── request-id.ts    ← Inject X-Correlation-ID on every request
+│           │   ├── errors/
+│           │   │   ├── AppError.ts      ← Base: extends Error with statusCode + machine-readable code
+│           │   │   ├── HttpErrors.ts    ← NotFoundError, UnauthorizedError, ConflictError, ValidationError
+│           │   │   └── handler.ts       ← Global Fastify error handler → consistent JSON shape
+│           │   ├── responses/
+│           │   │   └── success.ts       ← { success: true, data: T, meta?: PaginationMeta }
+│           │   └── validation/
+│           │       └── zod.ts           ← Fastify-Zod bridge: Zod schema → Fastify JSON Schema
+│           │
+│           └── config/
+│               └── env.ts             ← Zod-validated env parser — crashes on startup if vars missing
+│
+├── packages/                         ← Shared workspace packages (no npm publish needed)
+│   ├── types/                        ← @ea/types
+│   │   ├── package.json
+│   │   └── src/
+│   │       ├── index.ts
+│   │       ├── entities/             ← User, Profile, University, Course, AIComparison, Application
+│   │       ├── api/                  ← Request/Response DTOs shared by web + api
+│   │       └── ai/                   ← ScoreBreakdown, Milestone, Suggestion interfaces
+│   │
+│   ├── utils/                        ← @ea/utils (pure functions, zero side effects)
+│   │   ├── package.json
+│   │   └── src/
+│   │       ├── index.ts
+│   │       ├── slug.ts               ← slugify()
+│   │       ├── currency.ts           ← formatCurrency(), convertUSD()
+│   │       ├── profile-strength.ts   ← computeProfileStrength() — shared with API module
+│   │       └── paginate.ts           ← buildCursorMeta(), offsetToPage()
+│   │
+│   ├── config/                       ← @ea/config
+│   │   ├── package.json
+│   │   └── src/
+│   │       └── env.schema.ts         ← Zod env schema — both apps extend this base schema
+│   │
+│   ├── ui/                           ← @ea/ui (shared React components)
+│   │   ├── package.json
+│   │   └── src/
+│   │       ├── index.ts
+│   │       ├── Button.tsx
+│   │       ├── Input.tsx
+│   │       ├── Badge.tsx
+│   │       ├── Spinner.tsx
+│   │       └── Toast.tsx
+│   │
+│   ├── eslint-config/                ← Shared ESLint rules
+│   │   ├── package.json
+│   │   └── index.js
+│   │
+│   └── tsconfig/                     ← Shared TypeScript configs
+│       ├── base.json                 ← Strict mode, path aliases, ES2022 target
+│       ├── nextjs.json               ← Extends base, adds Next.js-specific settings
+│       └── node.json                 ← Extends base, adds Node.js module resolution
+│
+└── infra/                            ← Infrastructure-as-Code + CI/CD
+    ├── terraform/
+    │   ├── main.tf                   ← Root: wires VPC, ECS, RDS, Redis, S3, CloudFront
+    │   ├── variables.tf
+    │   ├── outputs.tf
+    │   └── modules/
+    │       ├── ecs/                  ← ECS Fargate task defs for api + bullmq worker
+    │       ├── rds/                  ← Postgres 16 Multi-AZ, automated backups, parameter group
+    │       ├── redis/                ← ElastiCache Redis 7, at-rest encryption
+    │       ├── s3/                   ← User document bucket + CloudFront CDN
+    │       └── vpc/                  ← VPC, public/private subnets, NAT gateway, security groups
+    │
+    ├── .github/
+    │   └── workflows/
+    │       ├── deploy-api.yml        ← lint → typecheck → test → Docker build → ECR push → ECS deploy
+    │       ├── deploy-web.yml        ← Vercel deploy via CLI (preview on PR, production on main)
+    │       └── pr-checks.yml        ← Runs on every PR: lint, type-check, unit tests, affected packages only
+    │
+    └── scripts/
+        ├── seed/
+        │   ├── seed-universities.ts  ← Seeds 300+ universities with courses, requirements, fees
+        │   ├── seed-users.ts         ← Sample student + admin accounts for staging
+        │   └── seed-feed.ts          ← Sample feed posts across all categories
+        └── db/
+            ├── backup.sh             ← pg_dump to S3 — run by cron on RDS
+            └── restore.sh            ← Restore from S3 snapshot (disaster recovery)

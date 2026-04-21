@@ -1,0 +1,1128 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); color: var(--color-text-primary); }
+
+  .doc-shell { display: flex; min-height: 700px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; background: var(--color-background-primary); }
+
+  .sidebar { width: 220px; flex-shrink: 0; background: var(--color-background-secondary); border-right: 0.5px solid var(--color-border-tertiary); padding: 0; overflow-y: auto; }
+
+  .sidebar-header { padding: 14px 16px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .sidebar-header h1 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .sidebar-header p { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+
+  .nav-section { padding: 10px 0 4px; }
+  .nav-label { font-size: 10px; font-weight: 500; color: var(--color-text-tertiary); letter-spacing: .06em; text-transform: uppercase; padding: 0 16px 6px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary); transition: all .15s; border-left: 2px solid transparent; }
+  .nav-item:hover { background: var(--color-background-primary); color: var(--color-text-primary); }
+  .nav-item.active { background: var(--color-background-primary); color: var(--color-text-primary); border-left-color: #534AB7; font-weight: 500; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .content { flex: 1; overflow-y: auto; padding: 28px 32px; max-width: 100%; }
+
+  .doc-page { display: none; }
+  .doc-page.active { display: block; }
+
+  .doc-title { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+  .doc-subtitle { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+
+  .meta-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+  .badge-v { background: #EEEDFE; color: #3C3489; }
+  .badge-s { background: #EAF3DE; color: #27500A; }
+  .badge-w { background: #FAEEDA; color: #633806; }
+  .badge-d { background: #E6F1FB; color: #0C447C; }
+
+  h2 { font-size: 15px; font-weight: 500; margin: 24px 0 10px; padding-bottom: 6px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  h3 { font-size: 13px; font-weight: 500; margin: 16px 0 8px; color: var(--color-text-primary); }
+  p { font-size: 13px; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 10px; }
+  ul, ol { font-size: 13px; color: var(--color-text-secondary); padding-left: 18px; margin-bottom: 10px; }
+  li { margin-bottom: 4px; line-height: 1.6; }
+  strong { font-weight: 500; color: var(--color-text-primary); }
+
+  .info-box { background: var(--color-background-info); border: 0.5px solid var(--color-border-info); border-radius: var(--border-radius-md); padding: 12px 14px; margin: 14px 0; }
+  .info-box p { color: var(--color-text-info); margin: 0; font-size: 12px; }
+  .warn-box { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); border-radius: var(--border-radius-md); padding: 12px 14px; margin: 14px 0; }
+  .warn-box p { color: var(--color-text-warning); margin: 0; font-size: 12px; }
+  .danger-box { background: var(--color-background-danger); border: 0.5px solid var(--color-border-danger); border-radius: var(--border-radius-md); padding: 12px 14px; margin: 14px 0; }
+  .danger-box p { color: var(--color-text-danger); margin: 0; font-size: 12px; }
+  .success-box { background: var(--color-background-success); border: 0.5px solid var(--color-border-success); border-radius: var(--border-radius-md); padding: 12px 14px; margin: 14px 0; }
+  .success-box p { color: var(--color-text-success); margin: 0; font-size: 12px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+  .card { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 14px; }
+  .card h4 { font-size: 12px; font-weight: 500; margin-bottom: 6px; }
+  .card p { font-size: 12px; margin: 0; }
+
+  .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; text-align: center; }
+  .metric .val { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+  .metric .lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--color-background-secondary); font-weight: 500; text-align: left; padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); }
+  td { padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--color-background-secondary); }
+
+  code, .mono { font-family: var(--font-mono); font-size: 11px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 4px; padding: 1px 5px; color: var(--color-text-primary); }
+  pre { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px; font-family: var(--font-mono); font-size: 11px; overflow-x: auto; margin: 12px 0; line-height: 1.6; color: var(--color-text-primary); }
+
+  .phase { border-left: 2px solid #534AB7; padding-left: 14px; margin: 14px 0; }
+  .phase h4 { font-size: 13px; font-weight: 500; color: #534AB7; margin-bottom: 6px; }
+  .phase p { font-size: 12px; margin-bottom: 4px; }
+
+  .role-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 8px; }
+  .role-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
+  .role-info h4 { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .role-info p { font-size: 11px; color: var(--color-text-secondary); margin: 0; }
+
+  .screen-flow { display: flex; gap: 0; overflow-x: auto; padding-bottom: 8px; margin: 14px 0; }
+  .screen-box { flex-shrink: 0; width: 90px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px; text-align: center; font-size: 10px; color: var(--color-text-secondary); position: relative; }
+  .screen-box .screen-num { font-size: 9px; color: var(--color-text-tertiary); margin-bottom: 4px; }
+  .screen-box .screen-name { font-size: 11px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+  .screen-arrow { display: flex; align-items: center; padding: 0 4px; color: var(--color-text-tertiary); font-size: 14px; flex-shrink: 0; }
+
+  .ai-score { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); margin: 8px 0; }
+  .ai-score .dim { font-size: 12px; font-weight: 500; width: 120px; flex-shrink: 0; }
+  .ai-score .bar-wrap { flex: 1; height: 8px; background: var(--color-border-tertiary); border-radius: 4px; overflow: hidden; }
+  .ai-score .bar-fill { height: 100%; border-radius: 4px; transition: width .3s; }
+  .ai-score .pct { font-size: 12px; font-weight: 500; width: 36px; text-align: right; }
+
+  .sprint-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .sprint-label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); width: 70px; flex-shrink: 0; padding-top: 2px; }
+  .sprint-tasks { display: flex; flex-wrap: wrap; gap: 4px; }
+  .task-chip { font-size: 10px; padding: 3px 8px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); background: var(--color-background-secondary); }
+
+  .progress-bar { height: 6px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; margin: 6px 0; }
+  .progress-fill { height: 100%; border-radius: 3px; }
+
+  @media (prefers-color-scheme: dark) {
+    .badge-v { background: #26215C; color: #AFA9EC; }
+    .badge-s { background: #173404; color: #C0DD97; }
+    .badge-w { background: #412402; color: #FAC775; }
+    .badge-d { background: #042C53; color: #B5D4F4; }
+  }
+</style>
+
+<div class="doc-shell">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h1>EA Overseas</h1>
+      <p>Project Documentation v1.0</p>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Strategic</div>
+      <div class="nav-item active" onclick="showPage('prd')"><span class="nav-dot" style="background:#534AB7"></span>Product Req. (PRD)</div>
+      <div class="nav-item" onclick="showPage('scope')"><span class="nav-dot" style="background:#534AB7"></span>Project Scope</div>
+      <div class="nav-item" onclick="showPage('market')"><span class="nav-dot" style="background:#0F6E56"></span>Market Research</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Architecture</div>
+      <div class="nav-item" onclick="showPage('arch')"><span class="nav-dot" style="background:#185FA5"></span>System Architecture</div>
+      <div class="nav-item" onclick="showPage('db')"><span class="nav-dot" style="background:#185FA5"></span>Database Design</div>
+      <div class="nav-item" onclick="showPage('api')"><span class="nav-dot" style="background:#185FA5"></span>API Specification</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">AI & Features</div>
+      <div class="nav-item" onclick="showPage('ai')"><span class="nav-dot" style="background:#BA7517"></span>AI Match Engine</div>
+      <div class="nav-item" onclick="showPage('screens')"><span class="nav-dot" style="background:#BA7517"></span>Screen Inventory</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Execution</div>
+      <div class="nav-item" onclick="showPage('team')"><span class="nav-dot" style="background:#993C1D"></span>Team & Roles</div>
+      <div class="nav-item" onclick="showPage('roadmap')"><span class="nav-dot" style="background:#993C1D"></span>Roadmap & Sprints</div>
+      <div class="nav-item" onclick="showPage('risk')"><span class="nav-dot" style="background:#993C1D"></span>Risk Register</div>
+      <div class="nav-item" onclick="showPage('mono')"><span class="nav-dot" style="background:#3C3489"></span>Monetization</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PRD -->
+    <div class="doc-page active" id="page-prd">
+      <div class="doc-title">Product Requirements Document</div>
+      <div class="doc-subtitle">EA Overseas — AI-Powered Education Decision Platform</div>
+      <div class="meta-row">
+        <span class="badge badge-v">Version 1.0</span>
+        <span class="badge badge-s">Status: Draft</span>
+        <span class="badge badge-d">Owner: Product Head</span>
+        <span class="badge badge-w">Updated: April 2026</span>
+      </div>
+
+      <h2>1. Problem Statement</h2>
+      <p>Every year, over <strong>1.3 million Indian students</strong> attempt to navigate international and domestic higher education decisions with fragmented, unreliable, and generic guidance. Existing platforms are either purely informational (no personalization), consultant-led (expensive, biased), or job-focused (LinkedIn). No dedicated platform exists that gives students a verifiable, AI-powered, data-driven education identity and admission decision engine.</p>
+
+      <div class="danger-box"><p><strong>Core gap:</strong> Students waste months researching colleges they are fundamentally unqualified for, and never apply to ones they actually could get into. The decision is made blind.</p></div>
+
+      <h2>2. Vision & Core Hypothesis</h2>
+      <p>Build the world's first <strong>AI Admission Decision Engine</strong> — a platform where a student's complete education profile is matched against real university requirements, producing an honest, actionable compatibility score with a personalized improvement roadmap.</p>
+
+      <div class="success-box"><p><strong>Core value proposition:</strong> "Tell me exactly what I need to do — and by when — to get into X university."</p></div>
+
+      <h2>3. Target Users</h2>
+      <div class="grid3">
+        <div class="card"><h4>Primary</h4><p>Indian students, Class 12 to PG, aspiring to study abroad (US, UK, Canada, Germany, Australia)</p></div>
+        <div class="card"><h4>Secondary</h4><p>Students targeting Indian institutions (IITs, IIMs, BITS, NIT) needing entrance exam strategy</p></div>
+        <div class="card"><h4>Tertiary</h4><p>Test prep coaches, counselors, and university admission teams wanting student lead generation</p></div>
+      </div>
+
+      <h2>4. MVP Feature Set (Phase 1)</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Priority</th><th>Description</th><th>Success Metric</th></tr>
+          <tr><td><strong>Education Profile Builder</strong></td><td><span class="badge badge-v">P0</span></td><td>Student adds academic history, test scores, budget, goals</td><td>60% profile completion rate</td></tr>
+          <tr><td><strong>University Database</strong></td><td><span class="badge badge-v">P0</span></td><td>500+ universities with requirements, fees, deadlines</td><td>DB coverage of top 90% searched institutions</td></tr>
+          <tr><td><strong>AI Match Score Engine</strong></td><td><span class="badge badge-v">P0</span></td><td>Weighted scoring + GPT explanation layer</td><td>&lt;3s response, 85% accuracy vs counselor benchmark</td></tr>
+          <tr><td><strong>Action Plan Generator</strong></td><td><span class="badge badge-s">P1</span></td><td>Month-by-month improvement roadmap per user</td><td>40% of users revisit after 7 days</td></tr>
+          <tr><td><strong>Global Feed (Education News)</strong></td><td><span class="badge badge-w">P2</span></td><td>Admin-curated admission news, deadlines, updates</td><td>3+ sessions/week per active user</td></tr>
+          <tr><td><strong>Course Marketplace</strong></td><td><span class="badge badge-w">P2</span></td><td>Vendor-listed test prep courses with AI recommendation</td><td>2% conversion on course views</td></tr>
+          <tr><td><strong>Loan Marketplace</strong></td><td><span class="badge badge-d">P3</span></td><td>Partner lender listings, redirect with commission tracking</td><td>Commission revenue from month 6</td></tr>
+          <tr><td><strong>Community Feed</strong></td><td><span class="badge badge-d">P3</span></td><td>Student-to-student posts, Q&A, success stories</td><td>Launch after 10k users</td></tr>
+        </table>
+      </div>
+
+      <h2>5. Non-Goals (Phase 1)</h2>
+      <div class="danger-box"><p>The following are explicitly OUT OF SCOPE for MVP: Social feed, community forum, accommodation calculator, country cost database, visa processing, real-time document verification, native mobile app (web-first). These are deferred to Phase 2+.</p></div>
+
+      <h2>6. User Stories (Critical Path)</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>As a...</th><th>I want to...</th><th>So that...</th></tr>
+          <tr><td>Student (new)</td><td>Complete my profile in under 5 minutes</td><td>I can see relevant college matches immediately</td></tr>
+          <tr><td>Student</td><td>Search universities by country, course, budget</td><td>I can discover options I didn't know existed</td></tr>
+          <tr><td>Student</td><td>Click "Compare with AI" on any university</td><td>I get an honest match score with specific gaps identified</td></tr>
+          <tr><td>Student</td><td>See my personalized action plan</td><td>I know exactly what to improve and by when</td></tr>
+          <tr><td>Admin</td><td>Add/edit university data and feed posts</td><td>The platform stays current and accurate</td></tr>
+          <tr><td>Vendor/Coach</td><td>List my course on the marketplace</td><td>I get discovery from targeted students</td></tr>
+        </table>
+      </div>
+
+      <h2>7. Acceptance Criteria</h2>
+      <ul>
+        <li>User can register, complete basic profile, and get their first AI comparison within <strong>5 minutes of signup</strong></li>
+        <li>AI match score returns in <strong>under 3 seconds</strong> for 95% of requests</li>
+        <li>University database covers <strong>minimum 300 institutions</strong> at launch with complete requirement data</li>
+        <li>Profile completion flow achieves <strong>50%+ completion</strong> in user testing</li>
+        <li>WCAG 2.1 AA accessibility compliance on all core screens</li>
+        <li>Data encrypted at rest (AES-256) and in transit (TLS 1.3)</li>
+      </ul>
+    </div>
+
+    <!-- SCOPE -->
+    <div class="doc-page" id="page-scope">
+      <div class="doc-title">Project Scope Document</div>
+      <div class="doc-subtitle">Boundaries, deliverables, and constraints for EA Overseas v1.0</div>
+      <div class="meta-row">
+        <span class="badge badge-v">Version 1.0</span>
+        <span class="badge badge-w">Duration: 20 weeks (MVP)</span>
+      </div>
+
+      <h2>In-Scope: Phase 1 (Weeks 1–20)</h2>
+      <div class="grid2">
+        <div class="card"><h4>Frontend (Web App)</h4>
+          <ul style="font-size:11px;margin-top:4px;">
+            <li>Onboarding & auth flow</li>
+            <li>Profile builder (10 sections)</li>
+            <li>University search + filters</li>
+            <li>University detail page</li>
+            <li>AI compare screen</li>
+            <li>Action plan screen</li>
+            <li>Dashboard (personal)</li>
+            <li>Basic global feed (read-only)</li>
+            <li>Admin portal (basic)</li>
+          </ul>
+        </div>
+        <div class="card"><h4>Backend & Infrastructure</h4>
+          <ul style="font-size:11px;margin-top:4px;">
+            <li>Node.js REST API (30+ endpoints)</li>
+            <li>PostgreSQL database (15 tables)</li>
+            <li>Redis caching layer</li>
+            <li>OpenAI API integration</li>
+            <li>File upload (S3-compatible)</li>
+            <li>Email notifications (basic)</li>
+            <li>JWT auth system</li>
+            <li>AWS deployment (ECS + RDS)</li>
+            <li>CI/CD pipeline</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Out of Scope: Phase 1</h2>
+      <div class="warn-box"><p>Native iOS/Android apps · Real-time chat/messaging · Document verification system · Visa processing · Accommodation calculator · Loan application processing · Payment gateway · Community/social feed · Video content · Multilingual support (English only at launch)</p></div>
+
+      <h2>Deliverables</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Deliverable</th><th>Owner</th><th>Due (Week)</th><th>Format</th></tr>
+          <tr><td>Figma Design System + All Screens</td><td>Lead Designer</td><td>W4</td><td>Figma file</td></tr>
+          <tr><td>API specification (OpenAPI 3.0)</td><td>Backend Lead</td><td>W3</td><td>YAML + Postman</td></tr>
+          <tr><td>Database schema v1</td><td>Backend Lead</td><td>W2</td><td>SQL + ERD diagram</td></tr>
+          <tr><td>University data pipeline (seed 300+)</td><td>Data Engineer</td><td>W6</td><td>Scripts + DB</td></tr>
+          <tr><td>AI scoring engine v1</td><td>AI/ML Engineer</td><td>W8</td><td>Node module + tests</td></tr>
+          <tr><td>Web app (all MVP screens)</td><td>Frontend Lead</td><td>W14</td><td>React app</td></tr>
+          <tr><td>QA test report</td><td>QA Engineer</td><td>W18</td><td>Test case document</td></tr>
+          <tr><td>Production deployment</td><td>DevOps</td><td>W20</td><td>Live URL</td></tr>
+        </table>
+      </div>
+
+      <h2>Constraints</h2>
+      <div class="grid3">
+        <div class="card"><h4>Technical</h4><p>OpenAI API rate limits, university data availability, no native mobile</p></div>
+        <div class="card"><h4>Legal</h4><p>DPDP Act (India) compliance required. No storing financial documents without explicit consent.</p></div>
+        <div class="card"><h4>Resources</h4><p>Team of 8. No full-time QA until W12. No dedicated data scientist.</p></div>
+      </div>
+
+      <h2>Dependencies</h2>
+      <ul>
+        <li><strong>University data source:</strong> Manual seed data + QS World Rankings API / web scraping pipeline (decided by W2)</li>
+        <li><strong>OpenAI API key:</strong> Production key with rate limit agreement before W6</li>
+        <li><strong>AWS account:</strong> Production environment provisioned by W8</li>
+        <li><strong>Design system:</strong> Finalized tokens before frontend development begins (W4)</li>
+        <li><strong>Legal review:</strong> Privacy policy and terms drafted before beta launch (W16)</li>
+      </ul>
+    </div>
+
+    <!-- MARKET -->
+    <div class="doc-page" id="page-market">
+      <div class="doc-title">Market Research Document</div>
+      <div class="doc-subtitle">Competitive landscape, TAM/SAM/SOM, and positioning</div>
+
+      <h2>Market Size</h2>
+      <div class="metric-row">
+        <div class="metric"><div class="val">$7.5B</div><div class="lbl">India EdTech 2024</div></div>
+        <div class="metric"><div class="val">$5.29B</div><div class="lbl">Study Abroad Platform TAM</div></div>
+        <div class="metric"><div class="val">19% CAGR</div><div class="lbl">India EdTech growth</div></div>
+        <div class="metric"><div class="val">1.3M+</div><div class="lbl">Indian students abroad/yr</div></div>
+      </div>
+
+      <div class="info-box"><p><strong>Opportunity:</strong> The study abroad application platform market is growing at 7.8% CAGR projected to $8.95B by 2033. India sends the highest number of students abroad globally, yet no platform offers a true AI-driven compatibility engine — only information aggregators.</p></div>
+
+      <h2>Competitive Analysis</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Platform</th><th>Core Offering</th><th>AI Feature</th><th>Social Layer</th><th>Our Edge</th></tr>
+          <tr><td><strong>Leverage Edu</strong></td><td>Counselor-led admission help</td><td>Basic course search</td><td>Community posts</td><td>Human-dependent, expensive (₹30k+), biased recommendations</td></tr>
+          <tr><td><strong>Yocket</strong></td><td>Profiles + forum (acquired by Leap)</td><td>Profile comparison</td><td>Strong community</td><td>No real AI match score; community only, not decision engine</td></tr>
+          <tr><td><strong>Shiksha / CollegeDekho</strong></td><td>Indian college directory</td><td>None</td><td>Reviews only</td><td>Zero abroad coverage, no personalization</td></tr>
+          <tr><td><strong>ApplyBoard</strong></td><td>B2B agent platform</td><td>Partner matching</td><td>None</td><td>Agent-gated, not student-direct; no Indian domestic coverage</td></tr>
+          <tr><td><strong>Common App</strong></td><td>US college applications</td><td>None</td><td>None</td><td>US-only, application tool not decision tool</td></tr>
+        </table>
+      </div>
+
+      <h2>Our Differentiated Position</h2>
+      <div class="success-box"><p><strong>Positioning:</strong> EA Overseas is the ONLY platform that gives students a quantified, honest, AI-generated compatibility score against any university in the world — with a personalized action roadmap. We are not a counselor platform, not a college directory, and not a social network. We are a decision engine.</p></div>
+
+      <h2>TAM / SAM / SOM</h2>
+      <div class="grid3">
+        <div class="card"><h4>TAM — $5.3B</h4><p>All students globally considering study abroad + domestic higher education platform market</p></div>
+        <div class="card"><h4>SAM — $420M</h4><p>Indian students (class 12 to PG) actively considering domestic or international universities, digital-first</p></div>
+        <div class="card"><h4>SOM — $8M (Yr 3)</h4><p>Achievable market share: 50,000 active users × ₹1,500/yr average revenue per user</p></div>
+      </div>
+
+      <h2>Go-to-Market Strategy</h2>
+      <ol>
+        <li><strong>Launch in Hyderabad + Bengaluru</strong> — highest density of abroad-aspirant students, tech-savvy</li>
+        <li><strong>College partnerships</strong> — integrate in coaching institutes (IELTS centers, JEE centers) as free tool</li>
+        <li><strong>SEO content strategy</strong> — "How to get into [university]" — capture high-intent search traffic</li>
+        <li><strong>Influencer + YouTube</strong> — target study abroad YouTube community (large in India)</li>
+        <li><strong>Freemium model</strong> — free AI comparison (3/month), paid unlimited + premium features</li>
+      </ol>
+    </div>
+
+    <!-- ARCHITECTURE -->
+    <div class="doc-page" id="page-arch">
+      <div class="doc-title">System Architecture Document</div>
+      <div class="doc-subtitle">Technical stack, service design, and infrastructure topology</div>
+
+      <h2>Tech Stack Decision</h2>
+      <div class="grid2">
+        <div class="card"><h4>Frontend</h4>
+          <ul style="font-size:11px;margin-top:4px;">
+            <li><strong>Framework:</strong> Next.js 14 (App Router)</li>
+            <li><strong>State:</strong> Zustand + React Query</li>
+            <li><strong>UI:</strong> Tailwind CSS + Radix UI</li>
+            <li><strong>Auth:</strong> NextAuth.js</li>
+            <li><strong>Charts:</strong> Recharts</li>
+            <li><strong>Deploy:</strong> Vercel</li>
+          </ul>
+        </div>
+        <div class="card"><h4>Backend</h4>
+          <ul style="font-size:11px;margin-top:4px;">
+            <li><strong>Runtime:</strong> Node.js 20 + Fastify</li>
+            <li><strong>ORM:</strong> Prisma</li>
+            <li><strong>Database:</strong> PostgreSQL 16 (AWS RDS)</li>
+            <li><strong>Cache:</strong> Redis 7 (ElastiCache)</li>
+            <li><strong>Queue:</strong> BullMQ</li>
+            <li><strong>Storage:</strong> AWS S3</li>
+            <li><strong>AI:</strong> OpenAI GPT-4o</li>
+            <li><strong>Deploy:</strong> AWS ECS Fargate</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Service Architecture</h2>
+      <pre>Client (Next.js)
+    │
+    ├── Vercel Edge → Next.js API Routes (BFF)
+    │                    │
+    │                    ├── Auth Service (JWT + refresh tokens)
+    │                    ├── User Profile Service
+    │                    ├── University Service (+ Redis cache)
+    │                    ├── AI Compare Service ────→ OpenAI API
+    │                    │        └── Scoring Engine (deterministic)
+    │                    │        └── Explanation Generator (GPT-4o)
+    │                    ├── Feed Service (curated content)
+    │                    ├── Course Marketplace Service
+    │                    └── Notification Service (BullMQ queue)
+    │
+    └── PostgreSQL (RDS) ← Prisma ORM → All services
+         Redis (ElastiCache) ← University data cache (TTL: 6hrs)</pre>
+
+      <h2>Key Architectural Decisions</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Decision</th><th>Choice</th><th>Rationale</th></tr>
+          <tr><td>Monolith vs Microservices</td><td><strong>Modular Monolith</strong></td><td>Team of 8, MVP — microservices add operational complexity we can't afford. Modular code allows future extraction.</td></tr>
+          <tr><td>SQL vs NoSQL</td><td><strong>PostgreSQL</strong></td><td>Relational data (users → profiles → comparisons → universities) requires joins and transactions. JSONB columns for flexible custom profile sections.</td></tr>
+          <tr><td>AI: Fine-tune vs Prompt</td><td><strong>Prompt Engineering (GPT-4o)</strong></td><td>No training data yet. Structured prompts with scoring context are faster to iterate. Re-evaluate at 100k users.</td></tr>
+          <tr><td>Real-time vs Polling</td><td><strong>Polling (MVP)</strong></td><td>No chat/real-time features in Phase 1. WebSockets add complexity for zero P1 benefit.</td></tr>
+          <tr><td>Mobile: Native vs PWA</td><td><strong>PWA (Phase 1)</strong></td><td>Faster to ship. Next.js generates good PWA. Native apps in Phase 2 after product-market fit.</td></tr>
+        </table>
+      </div>
+
+      <h2>Security Architecture</h2>
+      <ul>
+        <li><strong>Auth:</strong> JWT (15min access) + HTTP-only cookie refresh tokens (7 days)</li>
+        <li><strong>Data encryption:</strong> AES-256 at rest, TLS 1.3 in transit</li>
+        <li><strong>API rate limiting:</strong> 100 req/min per user, 10 AI compare calls/day (free tier)</li>
+        <li><strong>PII handling:</strong> DPDP Act compliant — explicit consent, right to deletion, data residency in India</li>
+        <li><strong>Input validation:</strong> Zod schemas on all API inputs, parameterized queries (no raw SQL)</li>
+        <li><strong>File uploads:</strong> Type validation, max 10MB, virus scan via ClamAV on S3 trigger</li>
+      </ul>
+
+      <h2>Infrastructure (AWS)</h2>
+      <pre>VPC (ap-south-1 — Mumbai)
+├── Public subnet: ALB + NAT Gateway
+├── Private subnet: ECS Fargate tasks (API)
+├── Private subnet: RDS PostgreSQL (Multi-AZ)
+├── Private subnet: ElastiCache Redis
+└── S3 bucket: user documents + media
+
+CloudFront CDN → S3 (static assets)
+Route53 → ALB → ECS
+CloudWatch → Alerts → PagerDuty</pre>
+    </div>
+
+    <!-- DATABASE -->
+    <div class="doc-page" id="page-db">
+      <div class="doc-title">Database Design Document</div>
+      <div class="doc-subtitle">Complete schema, relationships, and indexing strategy</div>
+
+      <h2>Entity Relationship Overview</h2>
+      <pre>users ─────────────────────── user_profiles (1:1)
+  │                              │
+  │                              ├── test_scores (1:N)
+  │                              ├── education_history (1:N)
+  │                              └── custom_sections (1:N)
+  │
+  ├── saved_colleges (1:N) ────→ university_courses (N:1)
+  ├── ai_comparisons (1:N) ────→ university_courses (N:1)
+  ├── action_plans (1:N)
+  └── feed_interactions (1:N) → feed_posts (N:1)
+
+universities (1:N) ──────────→ university_courses (N:1)
+university_courses (1:1) ────→ course_requirements
+university_courses (1:1) ────→ course_fees
+
+vendors (1:N) ───────────────→ marketplace_courses
+marketplace_courses (1:N) ──→ course_enrollments ←── users</pre>
+
+      <h2>Core Tables</h2>
+      <h3>users</h3>
+      <pre>CREATE TABLE users (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email         TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  full_name     TEXT NOT NULL,
+  avatar_url    TEXT,
+  role          TEXT DEFAULT 'student' CHECK (role IN ('student','vendor','admin','super_admin')),
+  email_verified BOOLEAN DEFAULT false,
+  created_at    TIMESTAMPTZ DEFAULT now(),
+  updated_at    TIMESTAMPTZ DEFAULT now(),
+  last_login_at TIMESTAMPTZ,
+  deleted_at    TIMESTAMPTZ  -- soft delete
+);</pre>
+
+      <h3>user_profiles</h3>
+      <pre>CREATE TABLE user_profiles (
+  id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id              UUID UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  current_level        TEXT,  -- 'class_12','ug_year1'...'ug_final','pg','phd'
+  stream               TEXT,  -- 'science','commerce','arts'
+  tenth_percentage     FLOAT,
+  twelfth_percentage   FLOAT,
+  ug_cgpa              FLOAT,
+  ug_institution       TEXT,
+  field_of_study       TEXT,
+  target_degree        TEXT,  -- 'bachelors','masters','phd'
+  target_countries     TEXT[], -- e.g. ['Germany','USA','UK']
+  budget_min_usd       INT,
+  budget_max_usd       INT,
+  city                 TEXT,
+  state                TEXT,
+  financial_aid_needed BOOLEAN DEFAULT false,
+  work_experience_months INT DEFAULT 0,
+  custom_sections      JSONB DEFAULT '{}', -- flexible user-defined sections
+  profile_strength     INT DEFAULT 0,       -- 0-100 computed score
+  created_at           TIMESTAMPTZ DEFAULT now(),
+  updated_at           TIMESTAMPTZ DEFAULT now()
+);</pre>
+
+      <h3>test_scores</h3>
+      <pre>CREATE TABLE test_scores (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID REFERENCES users(id) ON DELETE CASCADE,
+  exam_name   TEXT NOT NULL, -- 'IELTS','TOEFL','SAT','GRE','GMAT','JEE','NEET','GATE'
+  score       FLOAT NOT NULL,
+  max_score   FLOAT NOT NULL,
+  percentile  FLOAT,
+  exam_date   DATE,
+  is_latest   BOOLEAN DEFAULT true,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);</pre>
+
+      <h3>universities + university_courses</h3>
+      <pre>CREATE TABLE universities (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  slug        TEXT UNIQUE NOT NULL,
+  country     TEXT NOT NULL,
+  city        TEXT,
+  type        TEXT, -- 'public','private'
+  qs_ranking  INT,
+  the_ranking INT,
+  website_url TEXT,
+  logo_url    TEXT,
+  description TEXT,
+  acceptance_rate FLOAT,
+  total_students INT,
+  is_active   BOOLEAN DEFAULT true,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE university_courses (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  university_id   UUID REFERENCES universities(id),
+  name            TEXT NOT NULL,
+  degree_type     TEXT NOT NULL, -- 'Bachelors','Masters','PhD'
+  field           TEXT NOT NULL,
+  sub_field       TEXT,
+  duration_years  FLOAT,
+  language        TEXT DEFAULT 'English',
+  intake_months   INT[], -- e.g. [9, 1] for Sept and Jan
+  application_deadline DATE,
+  is_active       BOOLEAN DEFAULT true,
+  created_at      TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE course_requirements (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  course_id       UUID UNIQUE REFERENCES university_courses(id),
+  min_gpa         FLOAT,
+  avg_gpa         FLOAT,  -- CRITICAL for scoring
+  min_ielts       FLOAT,
+  avg_ielts       FLOAT,
+  min_toefl       INT,
+  min_sat         INT,
+  min_gre_verbal  INT,
+  min_gre_quant   INT,
+  min_gmat        INT,
+  work_exp_years  FLOAT,
+  sop_required    BOOLEAN DEFAULT true,
+  lor_count       INT DEFAULT 2,
+  other_notes     TEXT
+);
+
+CREATE TABLE course_fees (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  course_id       UUID UNIQUE REFERENCES university_courses(id),
+  tuition_per_year_usd INT,
+  avg_living_per_year_usd INT,
+  application_fee_usd INT,
+  currency_local  TEXT,
+  scholarship_available BOOLEAN DEFAULT false,
+  scholarship_details TEXT
+);</pre>
+
+      <h3>ai_comparisons (core AI output store)</h3>
+      <pre>CREATE TABLE ai_comparisons (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         UUID REFERENCES users(id),
+  course_id       UUID REFERENCES university_courses(id),
+  match_score     FLOAT NOT NULL,           -- 0-100
+  category        TEXT NOT NULL,            -- 'high','moderate','low','very_low'
+  score_breakdown JSONB NOT NULL,           -- {academic:72, test:85, budget:60...}
+  strengths       TEXT[],                   -- list of positive points
+  weaknesses      TEXT[],                   -- list of gaps
+  suggestions     JSONB,                    -- [{action, priority, timeframe}]
+  alternatives    UUID[],                   -- course_ids of suggested alternatives
+  ai_explanation  TEXT,                     -- GPT-generated narrative
+  model_version   TEXT DEFAULT 'v1.0',
+  created_at      TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(user_id, course_id)               -- upsert on re-compare
+);</pre>
+
+      <h2>Indexes</h2>
+      <pre>-- Performance-critical indexes
+CREATE INDEX idx_university_courses_country ON universities(country);
+CREATE INDEX idx_university_courses_field   ON university_courses(field, degree_type);
+CREATE INDEX idx_comparisons_user           ON ai_comparisons(user_id, created_at DESC);
+CREATE INDEX idx_test_scores_user           ON test_scores(user_id, exam_name, is_latest);
+CREATE INDEX idx_courses_university         ON university_courses(university_id);
+CREATE INDEX idx_saved_user                 ON saved_colleges(user_id);</pre>
+    </div>
+
+    <!-- API -->
+    <div class="doc-page" id="page-api">
+      <div class="doc-title">API Specification</div>
+      <div class="doc-subtitle">REST API — OpenAPI 3.0 compatible. Base URL: /api/v1</div>
+
+      <h2>Authentication</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Auth</th></tr>
+          <tr><td><code>POST</code></td><td><code>/auth/register</code></td><td>New user registration</td><td>None</td></tr>
+          <tr><td><code>POST</code></td><td><code>/auth/login</code></td><td>Email + password login → JWT</td><td>None</td></tr>
+          <tr><td><code>POST</code></td><td><code>/auth/refresh</code></td><td>Refresh access token</td><td>Cookie</td></tr>
+          <tr><td><code>POST</code></td><td><code>/auth/logout</code></td><td>Invalidate refresh token</td><td>Bearer</td></tr>
+          <tr><td><code>POST</code></td><td><code>/auth/forgot-password</code></td><td>Send reset email</td><td>None</td></tr>
+        </table>
+      </div>
+
+      <h2>User Profile</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+          <tr><td><code>GET</code></td><td><code>/profile</code></td><td>Get current user's complete profile</td></tr>
+          <tr><td><code>PUT</code></td><td><code>/profile</code></td><td>Update profile (partial updates allowed)</td></tr>
+          <tr><td><code>POST</code></td><td><code>/profile/test-scores</code></td><td>Add/update test score</td></tr>
+          <tr><td><code>DELETE</code></td><td><code>/profile/test-scores/:id</code></td><td>Remove test score</td></tr>
+          <tr><td><code>POST</code></td><td><code>/profile/documents</code></td><td>Upload document (S3 presigned URL)</td></tr>
+          <tr><td><code>GET</code></td><td><code>/profile/strength</code></td><td>Get profile completion score (0-100)</td></tr>
+          <tr><td><code>GET</code></td><td><code>/users/:id/public</code></td><td>Get another user's public education profile</td></tr>
+        </table>
+      </div>
+
+      <h2>Universities</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+          <tr><td><code>GET</code></td><td><code>/universities</code></td><td>Search with filters: ?country=&degree=&field=&budget_max=&page=</td></tr>
+          <tr><td><code>GET</code></td><td><code>/universities/:id</code></td><td>University detail with all courses</td></tr>
+          <tr><td><code>GET</code></td><td><code>/courses/:id</code></td><td>Course detail: requirements, fees, deadlines</td></tr>
+          <tr><td><code>GET</code></td><td><code>/universities/search/suggest</code></td><td>Autocomplete search suggestions</td></tr>
+          <tr><td><code>GET</code></td><td><code>/universities/featured</code></td><td>Admin-curated featured universities</td></tr>
+        </table>
+      </div>
+
+      <h2>AI Compare — Core Engine</h2>
+      <pre>POST /compare
+Authorization: Bearer {token}
+Content-Type: application/json
+
+Request:
+{
+  "course_id": "uuid",
+  "force_refresh": false  // use cached result if available
+}
+
+Response 200:
+{
+  "match_score": 68,
+  "category": "moderate",
+  "score_breakdown": {
+    "academic": 60,
+    "test_scores": 85,
+    "budget": 50,
+    "profile_strength": 72,
+    "extras": 45
+  },
+  "strengths": [
+    "IELTS score meets and exceeds minimum requirement",
+    "Budget covers tuition, tight on living expenses"
+  ],
+  "weaknesses": [
+    "CGPA 7.2 is below university average of 8.5",
+    "No research publications — highly recommended for this program"
+  ],
+  "suggestions": [
+    {
+      "action": "Improve IELTS from 7.0 to 7.5",
+      "priority": "high",
+      "timeframe": "3 months",
+      "courses": ["course_uuid_1", "course_uuid_2"]
+    },
+    {
+      "action": "Apply for 2 research internships",
+      "priority": "medium",
+      "timeframe": "6 months",
+      "courses": []
+    }
+  ],
+  "alternatives": [
+    { "course_id": "uuid", "name": "TU Munich — CS Masters", "match_score": 79 },
+    { "course_id": "uuid", "name": "Stuttgart Uni — CS Masters", "match_score": 75 }
+  ],
+  "ai_explanation": "Your profile shows strong test performance but your academic GPA...",
+  "cached": false,
+  "generated_at": "2026-04-20T12:00:00Z"
+}</pre>
+
+      <h2>Saved Colleges & Action Plans</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+          <tr><td><code>POST</code></td><td><code>/saved</code></td><td>Save a course to watchlist</td></tr>
+          <tr><td><code>DELETE</code></td><td><code>/saved/:course_id</code></td><td>Remove from watchlist</td></tr>
+          <tr><td><code>GET</code></td><td><code>/saved</code></td><td>Get saved list with latest match scores</td></tr>
+          <tr><td><code>GET</code></td><td><code>/action-plan</code></td><td>Get AI-generated action plan for user</td></tr>
+          <tr><td><code>POST</code></td><td><code>/action-plan/refresh</code></td><td>Regenerate action plan (after profile update)</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- AI ENGINE -->
+    <div class="doc-page" id="page-ai">
+      <div class="doc-title">AI Match Engine — Technical Spec</div>
+      <div class="doc-subtitle">Scoring algorithm, GPT integration, and calibration methodology</div>
+
+      <h2>Architecture: Two-Layer Engine</h2>
+      <div class="info-box"><p><strong>Layer 1 — Deterministic Scoring Engine:</strong> Pure math, weighted formula. Fast (&lt;50ms), consistent, auditable. This is the foundation.<br><strong>Layer 2 — GPT-4o Explanation Layer:</strong> Takes the score breakdown and generates human-readable insights, suggestions, and alternatives. This is the "AI magic" that students see.</p></div>
+
+      <h2>Layer 1: Scoring Formula</h2>
+      <pre>Final Match Score = 
+  (Academic Score   × 0.35) +
+  (Test Score       × 0.25) +
+  (Budget Fit       × 0.15) +
+  (Profile Strength × 0.15) +
+  (Extra Factors    × 0.10)
+
+All component scores are normalized 0–100.</pre>
+
+      <h2>Component Scoring Logic</h2>
+      <h3>1. Academic Score (weight: 35%)</h3>
+      <pre>function academicScore(userGPA, minGPA, avgGPA) {
+  if (userGPA >= avgGPA) return 100;
+  if (userGPA >= minGPA) {
+    return 70 + ((userGPA - minGPA) / (avgGPA - minGPA)) * 30;
+  }
+  if (userGPA >= minGPA * 0.85) {
+    return (userGPA / minGPA) * 70;
+  }
+  return Math.max(0, (userGPA / minGPA) * 50);
+}</pre>
+
+      <h3>2. Test Score (weight: 25%)</h3>
+      <pre>function testScore(userScore, requiredScore, avgScore) {
+  // Test must exist — if required but missing, return 0
+  if (!userScore && requiredScore) return 0;
+  if (!requiredScore) return 75; // Not required — neutral
+
+  const ratio = userScore / requiredScore;
+  if (ratio >= 1.1) return 100;    // Exceeds by 10%+
+  if (ratio >= 1.0) return 90;     // Meets requirement
+  if (ratio >= 0.9) return 70;     // Close
+  if (ratio >= 0.8) return 45;
+  return Math.max(0, ratio * 45);
+}
+// Multi-test: if university requires IELTS + GRE, score each and average</pre>
+
+      <h3>3. Budget Fit (weight: 15%)</h3>
+      <pre>function budgetFit(userBudgetUSD, tuitionUSD, livingUSD) {
+  const totalCost = tuitionUSD + livingUSD;
+  const ratio = userBudgetUSD / totalCost;
+
+  if (ratio >= 1.0) return 100;   // Can fully afford
+  if (ratio >= 0.8) return 80;    // Needs ~20% loan — feasible
+  if (ratio >= 0.6) return 55;    // Significant loan needed
+  if (ratio >= 0.4) return 30;    // Major funding gap
+  return 10;                       // Not viable without scholarship
+}</pre>
+
+      <h3>4. Profile Strength (weight: 15%)</h3>
+      <pre>function profileStrength(profile) {
+  let score = 0;
+  
+  // Completeness bonus (max 40 pts)
+  const completedFields = countCompletedFields(profile);
+  score += (completedFields / totalFields) * 40;
+
+  // Qualitative extras (max 60 pts)
+  score += Math.min(20, profile.internships * 5);
+  score += Math.min(20, profile.researchPapers * 10);
+  score += Math.min(10, profile.certifications * 3);
+  score += profile.hasWorkExperience ? 10 : 0;
+
+  return Math.min(100, score);
+}</pre>
+
+      <h3>5. Extra Factors (weight: 10%)</h3>
+      <pre>function extraFactors(profile, courseRequirements) {
+  let score = 50; // Base neutral
+  
+  // Statement of Purpose signals
+  if (profile.hasUploadedSOP) score += 15;
+  
+  // LOR signals
+  const lorReady = profile.lorCount >= courseRequirements.lorCount;
+  if (lorReady) score += 15;
+
+  // Gap years (mild negative)
+  if (profile.gapYears > 2) score -= 10;
+
+  // Country/language match bonus
+  if (profile.targetCountries.includes(courseRequirements.country)) score += 10;
+
+  return Math.max(0, Math.min(100, score));
+}</pre>
+
+      <h2>Score Categories & UX Display</h2>
+      <div class="ai-score"><div class="dim">High chance</div><div class="bar-wrap"><div class="bar-fill" style="width:90%;background:#639922"></div></div><div class="pct" style="color:#3B6D11">80–100</div></div>
+      <div class="ai-score"><div class="dim">Moderate chance</div><div class="bar-wrap"><div class="bar-fill" style="width:68%;background:#BA7517"></div></div><div class="pct" style="color:#633806">60–79</div></div>
+      <div class="ai-score"><div class="dim">Low chance</div><div class="bar-wrap"><div class="bar-fill" style="width:45%;background:#D85A30"></div></div><div class="pct" style="color:#993C1D">40–59</div></div>
+      <div class="ai-score"><div class="dim">Very low</div><div class="bar-wrap"><div class="bar-fill" style="width:20%;background:#E24B4A"></div></div><div class="pct" style="color:#A32D2D">0–39</div></div>
+
+      <h2>Layer 2: GPT-4o Prompt Template</h2>
+      <pre>SYSTEM: You are an expert university admissions counselor with 20 years of 
+experience across US, UK, Germany, Canada, and Australia admissions. 
+You are DIRECT and HONEST — you do not sugarcoat.
+
+USER: Generate an admissions analysis for this student:
+
+Student Profile:
+- CGPA: {ugCGPA} / 10 (university average: {avgGPA})
+- IELTS: {ielts} (required: {minIelts})
+- Budget: ${userBudget}/yr (total cost: ${totalCost}/yr)
+- Work experience: {workExp} months
+- Research papers: {papers}
+
+Scoring breakdown:
+- Academic: {academicScore}/100
+- Test scores: {testScore}/100
+- Budget: {budgetScore}/100
+- Overall: {matchScore}/100 ({category})
+
+Target: {courseName} at {universityName}, {country}
+
+Generate:
+1. 2-3 specific STRENGTHS (what works in their favor)
+2. 2-3 specific WEAKNESSES (honest gaps, no softening)
+3. 3 prioritized ACTIONS with timeframes
+4. 2-3 ALTERNATIVE universities at similar/lower ranking
+5. One paragraph NARRATIVE (direct, actionable)
+
+Respond in JSON only. No markdown.</pre>
+
+      <h2>Caching Strategy</h2>
+      <ul>
+        <li>University requirement data: cached in Redis, TTL 6 hours</li>
+        <li>AI comparison results: stored in DB, refreshed only when user profile changes</li>
+        <li>GPT calls: queued via BullMQ, results streamed to frontend via SSE</li>
+        <li>Rate limit: 10 AI compares/day (free), unlimited (paid tier)</li>
+      </ul>
+    </div>
+
+    <!-- SCREENS -->
+    <div class="doc-page" id="page-screens">
+      <div class="doc-title">Screen Inventory & UX Flow</div>
+      <div class="doc-subtitle">All app screens, navigation, and key interactions</div>
+
+      <h2>Navigation Structure</h2>
+      <div class="grid3">
+        <div class="card"><h4>Bottom Nav (always visible)</h4><ul style="font-size:11px;margin-top:4px;"><li>Home / Dashboard</li><li>Universities</li><li>My Profile</li><li>Feed</li><li>More (...)</li></ul></div>
+        <div class="card"><h4>More Menu</h4><ul style="font-size:11px;margin-top:4px;"><li>Courses Marketplace</li><li>Saved Colleges</li><li>Action Plan</li><li>Loans</li><li>Settings</li></ul></div>
+        <div class="card"><h4>Admin Panel (separate)</h4><ul style="font-size:11px;margin-top:4px;"><li>University CRUD</li><li>Feed post management</li><li>User management</li><li>Analytics dashboard</li></ul></div>
+      </div>
+
+      <h2>Complete Screen Inventory (29 screens)</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>#</th><th>Screen</th><th>Route</th><th>Key Elements</th><th>Phase</th></tr>
+          <tr><td>1</td><td>Splash / Welcome</td><td>/</td><td>App value prop, CTA to register or login</td><td>P1</td></tr>
+          <tr><td>2</td><td>Goal Selection</td><td>/onboard/goal</td><td>India / Abroad toggle, Degree level buttons</td><td>P1</td></tr>
+          <tr><td>3</td><td>Register</td><td>/auth/register</td><td>Name, email, password, OTP verify</td><td>P1</td></tr>
+          <tr><td>4</td><td>Login</td><td>/auth/login</td><td>Email/password, Google OAuth, forgot password</td><td>P1</td></tr>
+          <tr><td>5</td><td>Dashboard</td><td>/dashboard</td><td>Match score summary, suggested unis, next action, profile % bar</td><td>P1</td></tr>
+          <tr><td>6</td><td>Profile Builder — Basic</td><td>/profile/basic</td><td>Name, city, current level, stream</td><td>P1</td></tr>
+          <tr><td>7</td><td>Profile — Academic</td><td>/profile/academic</td><td>10th%, 12th%, UG CGPA, institution, field</td><td>P1</td></tr>
+          <tr><td>8</td><td>Profile — Test Scores</td><td>/profile/tests</td><td>Add IELTS/TOEFL/SAT/GRE/GMAT/JEE etc. with score + date</td><td>P1</td></tr>
+          <tr><td>9</td><td>Profile — Preferences</td><td>/profile/preferences</td><td>Target country, degree type, budget range slider</td><td>P1</td></tr>
+          <tr><td>10</td><td>Profile — Extras</td><td>/profile/extras</td><td>Work exp, internships, research, certifications, SOP/LOR status</td><td>P1</td></tr>
+          <tr><td>11</td><td>Profile — Documents</td><td>/profile/documents</td><td>Upload transcripts, certificates, SOP draft</td><td>P1</td></tr>
+          <tr><td>12</td><td>Public Profile View</td><td>/u/:username</td><td>Education timeline (nursery → current), all credentials, shareable link</td><td>P1</td></tr>
+          <tr><td>13</td><td>University Search</td><td>/universities</td><td>Filters (country, field, degree, budget, ranking), list + map view</td><td>P1</td></tr>
+          <tr><td>14</td><td>University Detail</td><td>/universities/:slug</td><td>Overview, courses list, ranking, photos, "Compare with AI" CTA</td><td>P1</td></tr>
+          <tr><td>15</td><td>Course Detail</td><td>/courses/:id</td><td>Requirements, fees, deadlines, similar courses, "Compare with AI" CTA</td><td>P1</td></tr>
+          <tr><td>16</td><td>AI Compare Screen</td><td>/compare/:courseId</td><td>Match score ring, breakdown bars, strengths, weaknesses, action items, alternatives</td><td>P1</td></tr>
+          <tr><td>17</td><td>Action Plan</td><td>/action-plan</td><td>Timeline view, month-by-month tasks, priority labels, linked courses</td><td>P1</td></tr>
+          <tr><td>18</td><td>Saved Colleges</td><td>/saved</td><td>Bookmarked list with match scores, quick compare, remove</td><td>P1</td></tr>
+          <tr><td>19</td><td>Global Feed</td><td>/feed</td><td>Admin-curated education news, admission alerts, deadline reminders</td><td>P1</td></tr>
+          <tr><td>20</td><td>Feed Post Detail</td><td>/feed/:postId</td><td>Full article view, related posts</td><td>P1</td></tr>
+          <tr><td>21</td><td>Courses Marketplace</td><td>/courses/market</td><td>Test prep courses, filters, AI-recommended, buy CTA</td><td>P2</td></tr>
+          <tr><td>22</td><td>Course Marketplace Detail</td><td>/courses/market/:id</td><td>Course overview, trainer profile, syllabus, buy</td><td>P2</td></tr>
+          <tr><td>23</td><td>Community Feed</td><td>/community</td><td>Student posts, Q&A, success stories, filter by topic</td><td>P3</td></tr>
+          <tr><td>24</td><td>Post Creator</td><td>/community/create</td><td>Text + image + video post composer</td><td>P3</td></tr>
+          <tr><td>25</td><td>Loans Page</td><td>/loans</td><td>Partner lenders, filter by country/amount, redirect to lender</td><td>P2</td></tr>
+          <tr><td>26</td><td>Country Explorer</td><td>/explore/country</td><td>Cost of living, job market, visa info per country</td><td>P2</td></tr>
+          <tr><td>27</td><td>Notifications</td><td>/notifications</td><td>Deadline alerts, profile nudges, comparison updates</td><td>P1</td></tr>
+          <tr><td>28</td><td>Settings</td><td>/settings</td><td>Privacy, notifications, delete account, subscription</td><td>P1</td></tr>
+          <tr><td>29</td><td>Subscription / Upgrade</td><td>/upgrade</td><td>Free vs Premium feature compare, payment (Razorpay)</td><td>P2</td></tr>
+        </table>
+      </div>
+
+      <h2>Critical User Flow: First AI Compare</h2>
+      <div class="screen-flow">
+        <div class="screen-box"><div class="screen-num">S1</div><div class="screen-name">Splash</div>Register CTA</div>
+        <div class="screen-arrow">→</div>
+        <div class="screen-box"><div class="screen-num">S2</div><div class="screen-name">Goal Select</div>India/Abroad</div>
+        <div class="screen-arrow">→</div>
+        <div class="screen-box"><div class="screen-num">S6-10</div><div class="screen-name">Profile Build</div>5 sections</div>
+        <div class="screen-arrow">→</div>
+        <div class="screen-box"><div class="screen-num">S5</div><div class="screen-name">Dashboard</div>First match shown</div>
+        <div class="screen-arrow">→</div>
+        <div class="screen-box"><div class="screen-num">S13</div><div class="screen-name">Search Uni</div>Filter + browse</div>
+        <div class="screen-arrow">→</div>
+        <div class="screen-box"><div class="screen-num">S15</div><div class="screen-name">Course Detail</div>Requirements</div>
+        <div class="screen-arrow">→</div>
+        <div class="screen-box" style="border-color:#534AB7;"><div class="screen-num">S16</div><div class="screen-name">AI Compare</div>Match score!</div>
+        <div class="screen-arrow">→</div>
+        <div class="screen-box"><div class="screen-num">S17</div><div class="screen-name">Action Plan</div>What to do next</div>
+      </div>
+      <p style="font-size:12px;color:var(--color-text-tertiary);margin-top:4px;">Target: User reaches first AI compare within 7 minutes of signup</p>
+    </div>
+
+    <!-- TEAM -->
+    <div class="doc-page" id="page-team">
+      <div class="doc-title">Team Structure & Responsibilities</div>
+      <div class="doc-subtitle">Roles, ownership areas, and RACI matrix</div>
+
+      <h2>Core Team (8 people, Phase 1)</h2>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#EEEDFE;color:#534AB7;">PH</div>
+        <div class="role-info"><h4>Product Head (1)</h4><p>Owns PRD, roadmap, sprint priorities, stakeholder communication, user research, acceptance criteria</p></div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#E1F5EE;color:#0F6E56;">BL</div>
+        <div class="role-info"><h4>Backend Lead Engineer (1)</h4><p>API architecture, database schema, auth system, DevOps setup, code reviews, technical decisions</p></div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#EEEDFE;color:#534AB7;">AI</div>
+        <div class="role-info"><h4>AI/ML Engineer (1)</h4><p>Scoring engine implementation, OpenAI prompt engineering, result calibration, AI feature testing</p></div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#E6F1FB;color:#185FA5;">FL</div>
+        <div class="role-info"><h4>Frontend Lead Engineer (1)</h4><p>Next.js app architecture, component library, state management, performance optimization</p></div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#E6F1FB;color:#185FA5;">FE</div>
+        <div class="role-info"><h4>Frontend Engineer (1)</h4><p>UI implementation, screen builds, responsive design, API integration</p></div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#FAEEDA;color:#633806;">DS</div>
+        <div class="role-info"><h4>UI/UX Designer (1)</h4><p>Figma designs, design system tokens, user flows, usability testing, handoff to frontend</p></div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#EAF3DE;color:#27500A;">DE</div>
+        <div class="role-info"><h4>Data Engineer (1)</h4><p>University data pipeline, web scraping / API integrations, data cleaning, seed scripts, admin data tools</p></div>
+      </div>
+      <div class="role-card">
+        <div class="role-avatar" style="background:#FAECE7;color:#712B13;">QA</div>
+        <div class="role-info"><h4>QA Engineer (1, starts W12)</h4><p>Test case writing, regression testing, API testing, UAT coordination, bug reports</p></div>
+      </div>
+
+      <h2>RACI Matrix (Key Decisions)</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Decision</th><th>PH</th><th>Backend Lead</th><th>AI Eng.</th><th>FE Lead</th><th>Designer</th></tr>
+          <tr><td>Feature prioritization</td><td><strong>R/A</strong></td><td>C</td><td>C</td><td>C</td><td>C</td></tr>
+          <tr><td>DB schema changes</td><td>C</td><td><strong>R/A</strong></td><td>C</td><td>I</td><td>I</td></tr>
+          <tr><td>AI scoring weights</td><td>A</td><td>C</td><td><strong>R</strong></td><td>I</td><td>I</td></tr>
+          <tr><td>UI design approval</td><td>A</td><td>I</td><td>I</td><td>C</td><td><strong>R</strong></td></tr>
+          <tr><td>Tech stack changes</td><td>A</td><td><strong>R</strong></td><td>C</td><td>C</td><td>I</td></tr>
+          <tr><td>Go-live decision</td><td><strong>R/A</strong></td><td>C</td><td>C</td><td>C</td><td>I</td></tr>
+        </table>
+      </div>
+      <p style="font-size:11px;color:var(--color-text-tertiary);">R = Responsible, A = Accountable, C = Consulted, I = Informed</p>
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="doc-page" id="page-roadmap">
+      <div class="doc-title">Roadmap & Sprint Plan</div>
+      <div class="doc-subtitle">20-week MVP delivery plan broken into 2-week sprints</div>
+
+      <div class="metric-row">
+        <div class="metric"><div class="val">20</div><div class="lbl">Total weeks</div></div>
+        <div class="metric"><div class="val">10</div><div class="lbl">Sprints</div></div>
+        <div class="metric"><div class="val">W16</div><div class="lbl">Beta launch</div></div>
+        <div class="metric"><div class="val">W20</div><div class="lbl">Public launch</div></div>
+      </div>
+
+      <h2>Phase 1: Foundation (Weeks 1–4)</h2>
+      <div class="phase">
+        <h4>Sprint 1 (W1-2) — Architecture & Design</h4>
+        <div class="sprint-row"><div class="sprint-label">Backend</div><div class="sprint-tasks"><span class="task-chip">DB schema v1</span><span class="task-chip">Auth API (register/login/refresh)</span><span class="task-chip">AWS setup</span><span class="task-chip">CI/CD pipeline</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Frontend</div><div class="sprint-tasks"><span class="task-chip">Next.js project setup</span><span class="task-chip">Design system tokens</span><span class="task-chip">Component library start</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Design</div><div class="sprint-tasks"><span class="task-chip">All wireframes</span><span class="task-chip">Onboarding flow HiFi</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Data</div><div class="sprint-tasks"><span class="task-chip">Data source research</span><span class="task-chip">Scraping scripts start</span></div></div>
+      </div>
+
+      <div class="phase">
+        <h4>Sprint 2 (W3-4) — Core Profile APIs + Design Complete</h4>
+        <div class="sprint-row"><div class="sprint-label">Backend</div><div class="sprint-tasks"><span class="task-chip">Profile CRUD APIs</span><span class="task-chip">Test scores API</span><span class="task-chip">File upload (S3)</span><span class="task-chip">University seed (100)</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Frontend</div><div class="sprint-tasks"><span class="task-chip">Auth screens built</span><span class="task-chip">Onboarding flow</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Design</div><div class="sprint-tasks"><span class="task-chip">University search HiFi</span><span class="task-chip">AI compare screen</span><span class="task-chip">Profile screens</span></div></div>
+      </div>
+
+      <h2>Phase 2: Core Features (Weeks 5–10)</h2>
+      <div class="phase">
+        <h4>Sprint 3 (W5-6) — University Database + Search</h4>
+        <div class="sprint-row"><div class="sprint-label">Backend</div><div class="sprint-tasks"><span class="task-chip">University APIs + search</span><span class="task-chip">Course APIs</span><span class="task-chip">Redis caching</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Frontend</div><div class="sprint-tasks"><span class="task-chip">Profile builder screens</span><span class="task-chip">Dashboard shell</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Data</div><div class="sprint-tasks"><span class="task-chip">300 universities seeded</span><span class="task-chip">Requirements data</span></div></div>
+      </div>
+
+      <div class="phase">
+        <h4>Sprint 4 (W7-8) — AI Scoring Engine v1</h4>
+        <div class="sprint-row"><div class="sprint-label">AI Eng.</div><div class="sprint-tasks"><span class="task-chip">Scoring formula implemented</span><span class="task-chip">GPT prompt v1</span><span class="task-chip">Compare API</span><span class="task-chip">Unit tests</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Frontend</div><div class="sprint-tasks"><span class="task-chip">University search screen</span><span class="task-chip">University detail page</span></div></div>
+      </div>
+
+      <div class="phase">
+        <h4>Sprint 5 (W9-10) — AI Compare Screen + Action Plan</h4>
+        <div class="sprint-row"><div class="sprint-label">Backend</div><div class="sprint-tasks"><span class="task-chip">Action plan generator</span><span class="task-chip">Saved colleges API</span><span class="task-chip">Notifications (basic)</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Frontend</div><div class="sprint-tasks"><span class="task-chip">AI compare screen</span><span class="task-chip">Action plan screen</span><span class="task-chip">Saved colleges</span></div></div>
+      </div>
+
+      <h2>Phase 3: Polish & Feed (Weeks 11–16)</h2>
+      <div class="phase">
+        <h4>Sprint 6 (W11-12) — Dashboard + Feed</h4>
+        <div class="sprint-row"><div class="sprint-label">Backend</div><div class="sprint-tasks"><span class="task-chip">Feed CMS API</span><span class="task-chip">Admin panel API</span><span class="task-chip">Email notifications</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">Frontend</div><div class="sprint-tasks"><span class="task-chip">Dashboard complete</span><span class="task-chip">Global feed screen</span><span class="task-chip">Public profile page</span></div></div>
+      </div>
+
+      <div class="phase">
+        <h4>Sprint 7-8 (W13-16) — QA, Polish, Beta</h4>
+        <div class="sprint-row"><div class="sprint-label">QA</div><div class="sprint-tasks"><span class="task-chip">Test cases written</span><span class="task-chip">Regression testing</span><span class="task-chip">Bug fixes</span></div></div>
+        <div class="sprint-row"><div class="sprint-label">All</div><div class="sprint-tasks"><span class="task-chip">Performance optimization</span><span class="task-chip">WCAG audit</span><span class="task-chip">Beta with 50 users</span><span class="task-chip">Security audit</span></div></div>
+      </div>
+
+      <h2>Phase 4: Launch (Weeks 17–20)</h2>
+      <div class="phase">
+        <h4>Sprint 9-10 (W17-20) — Launch</h4>
+        <div class="sprint-row"><div class="sprint-label">All</div><div class="sprint-tasks"><span class="task-chip">Beta feedback fixes</span><span class="task-chip">Legal review (T&C, Privacy)</span><span class="task-chip">Production deployment</span><span class="task-chip">Monitoring setup</span><span class="task-chip">Public launch 🚀</span></div></div>
+      </div>
+    </div>
+
+    <!-- RISK -->
+    <div class="doc-page" id="page-risk">
+      <div class="doc-title">Risk Register</div>
+      <div class="doc-subtitle">Identified risks, impact assessment, and mitigation strategies</div>
+
+      <h2>Risk Matrix</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Risk</th><th>Category</th><th>Probability</th><th>Impact</th><th>Score</th><th>Mitigation</th></tr>
+          <tr><td><strong>University data inaccuracy</strong></td><td>Data</td><td>High</td><td>High</td><td style="color:#A32D2D;font-weight:500;">Critical</td><td>Manual verification by data team; clear "last updated" timestamps; user error reporting; partnership with official sources</td></tr>
+          <tr><td><strong>Low profile completion</strong></td><td>Product</td><td>High</td><td>High</td><td style="color:#A32D2D;font-weight:500;">Critical</td><td>Progressive disclosure (not all at once); immediate value shown after 3 fields; gamified completion bar; email nudges</td></tr>
+          <tr><td><strong>OpenAI API costs at scale</strong></td><td>Financial</td><td>Medium</td><td>High</td><td style="color:#993C1D;font-weight:500;">High</td><td>Aggressive caching; rate limits on free tier; move to fine-tuned local model after 100k users</td></tr>
+          <tr><td><strong>AI score accuracy / trust</strong></td><td>Product</td><td>Medium</td><td>High</td><td style="color:#993C1D;font-weight:500;">High</td><td>Benchmark against real admissions data; show counselor validation badge; add confidence intervals; user feedback loop</td></tr>
+          <tr><td><strong>DPDP Act non-compliance</strong></td><td>Legal</td><td>Low</td><td>Critical</td><td style="color:#993C1D;font-weight:500;">High</td><td>Legal review by W16; consent management system; data residency in India; right-to-delete implementation</td></tr>
+          <tr><td><strong>Cold start (no users = no value)</strong></td><td>Growth</td><td>High</td><td>Medium</td><td style="color:#BA7517;font-weight:500;">Medium</td><td>Launch with curated university data so platform has value before users exist; seed with partner coaching centers</td></tr>
+          <tr><td><strong>Competitor copies AI feature</strong></td><td>Market</td><td>Medium</td><td>Medium</td><td style="color:#BA7517;font-weight:500;">Medium</td><td>First mover + data moat (richer student profiles); network effects from community (Phase 3); speed of improvement</td></tr>
+          <tr><td><strong>Key engineer attrition</strong></td><td>Team</td><td>Low</td><td>High</td><td style="color:#BA7517;font-weight:500;">Medium</td><td>Documentation culture; code reviews; no single point of failure; knowledge sharing sessions</td></tr>
+        </table>
+      </div>
+
+      <h2>Technical Risks Specifically</h2>
+      <div class="grid2">
+        <div class="card"><h4>OpenAI Rate Limits</h4><p>GPT-4o has rate limits that may throttle during high load. Mitigation: BullMQ queue with retry logic, Redis result cache, fallback to GPT-3.5 for explanation layer only.</p></div>
+        <div class="card"><h4>Data Quality</h4><p>University requirement data is messy and frequently changes. Mitigation: structured validation on ingest, quarterly manual review cycle, "Report data error" button on every university page.</p></div>
+        <div class="card"><h4>Fake Profile Data</h4><p>Students may inflate scores to game the system. Mitigation: document upload for verification, flag profiles with suspicious patterns, show "unverified" badge.</p></div>
+        <div class="card"><h4>RDS Cost Blowout</h4><p>PostgreSQL at scale on RDS is expensive. Mitigation: read replicas for search queries, aggressive indexing, query monitoring from W8, budget alerts on AWS.</p></div>
+      </div>
+    </div>
+
+    <!-- MONETIZATION -->
+    <div class="doc-page" id="page-mono">
+      <div class="doc-title">Monetization Strategy</div>
+      <div class="doc-subtitle">Revenue streams, pricing, and financial projections</div>
+
+      <h2>Revenue Streams</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Stream</th><th>Model</th><th>Phase</th><th>Est. Revenue (Yr 1)</th><th>Notes</th></tr>
+          <tr><td><strong>Premium Subscription</strong></td><td>₹499/mo or ₹3,999/yr</td><td>P1 (W18+)</td><td>₹15–40L</td><td>Unlimited AI compares, priority support, application tracker</td></tr>
+          <tr><td><strong>Course Marketplace Commission</strong></td><td>20–30% commission on course sales</td><td>P2</td><td>₹8–20L</td><td>Avg course price ₹2,000–8,000; AI recommended → high conversion</td></tr>
+          <tr><td><strong>University Lead Generation</strong></td><td>₹500–2,000 per qualified lead</td><td>P2</td><td>₹20–50L</td><td>Universities pay per student who completes full application via platform</td></tr>
+          <tr><td><strong>Education Loan Referral</strong></td><td>0.5–1.5% of loan amount</td><td>P2</td><td>₹10–25L</td><td>Partner with Avanse, HDFC Credila, Leap Finance</td></tr>
+          <tr><td><strong>Counselor/Coach Listings</strong></td><td>₹2,000–5,000/mo listing fee</td><td>P3</td><td>₹5–12L</td><td>Verified counselors get profile + student access</td></tr>
+        </table>
+      </div>
+
+      <h2>Freemium Model</h2>
+      <div class="grid2">
+        <div class="card"><h4>Free Tier</h4>
+          <ul style="font-size:11px;margin-top:4px;">
+            <li>3 AI comparisons per month</li>
+            <li>Save up to 5 universities</li>
+            <li>Basic profile (no document upload)</li>
+            <li>Global feed access</li>
+            <li>Course marketplace browsing</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:#534AB7;"><h4>Premium — ₹499/month</h4>
+          <ul style="font-size:11px;margin-top:4px;">
+            <li>Unlimited AI comparisons</li>
+            <li>Unlimited saved universities</li>
+            <li>Document upload + verification badge</li>
+            <li>Full action plan with deadlines</li>
+            <li>Pathway simulator (change score → see impact)</li>
+            <li>Priority notifications (deadline reminders)</li>
+            <li>Export profile as PDF</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Year 1 Financial Model</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Quarter</th><th>Target Users</th><th>Paid Conversion</th><th>Revenue Est.</th><th>Key Milestone</th></tr>
+          <tr><td>Q1 (post-launch)</td><td>1,000</td><td>2%</td><td>₹1–2L</td><td>Product-market fit signal</td></tr>
+          <tr><td>Q2</td><td>8,000</td><td>5%</td><td>₹10–15L</td><td>Course marketplace live</td></tr>
+          <tr><td>Q3</td><td>25,000</td><td>7%</td><td>₹35–45L</td><td>University lead gen live</td></tr>
+          <tr><td>Q4</td><td>60,000</td><td>8%</td><td>₹80–100L</td><td>Loan referral live, Series A prep</td></tr>
+        </table>
+      </div>
+
+      <div class="warn-box"><p><strong>Investor note:</strong> These are internal projections assuming 20% month-over-month user growth post-launch. Conservative scenario: 50% of above. Aggressive scenario: 2× above with B2B university partnerships secured by Q2.</p></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.doc-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+}
+</script>

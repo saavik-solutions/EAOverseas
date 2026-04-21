@@ -1,0 +1,1183 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.shell{display:flex;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;min-height:720px;background:var(--color-background-primary)}
+.nav{width:210px;flex-shrink:0;background:var(--color-background-secondary);border-right:0.5px solid var(--color-border-tertiary);overflow-y:auto}
+.nav-head{padding:14px 16px 10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.nav-head h1{font-size:13px;font-weight:500}
+.nav-head p{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.nav-sec{padding:8px 0 2px}
+.nav-lbl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.06em;text-transform:uppercase;padding:0 14px 5px}
+.ni{display:flex;align-items:center;gap:7px;padding:6px 14px;font-size:12px;cursor:pointer;color:var(--color-text-secondary);border-left:2px solid transparent;transition:all .12s}
+.ni:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
+.ni.on{background:var(--color-background-primary);color:var(--color-text-primary);border-left-color:#534AB7;font-weight:500}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.body{flex:1;overflow-y:auto;padding:26px 30px}
+.pg{display:none}.pg.on{display:block}
+h2{font-size:15px;font-weight:500;margin:22px 0 9px;padding-bottom:5px;border-bottom:0.5px solid var(--color-border-tertiary)}
+h3{font-size:13px;font-weight:500;margin:14px 0 7px}
+p{font-size:13px;line-height:1.7;color:var(--color-text-secondary);margin-bottom:9px}
+ul,ol{font-size:13px;color:var(--color-text-secondary);padding-left:17px;margin-bottom:9px}
+li{margin-bottom:3px;line-height:1.6}
+strong{font-weight:500;color:var(--color-text-primary)}
+.tit{font-size:20px;font-weight:500;margin-bottom:3px}
+.sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px;padding-bottom:14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.badges{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.b{font-size:11px;padding:2px 9px;border-radius:20px;font-weight:500}
+.bv{background:#EEEDFE;color:#3C3489}.bs{background:#EAF3DE;color:#27500A}.bw{background:#FAEEDA;color:#633806}.bd{background:#E6F1FB;color:#0C447C}
+.info{background:var(--color-background-info);border:0.5px solid var(--color-border-info);border-radius:var(--border-radius-md);padding:11px 13px;margin:12px 0}
+.info p{color:var(--color-text-info);margin:0;font-size:12px}
+.warn{background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:11px 13px;margin:12px 0}
+.warn p{color:var(--color-text-warning);margin:0;font-size:12px}
+.ok{background:var(--color-background-success);border:0.5px solid var(--color-border-success);border-radius:var(--border-radius-md);padding:11px 13px;margin:12px 0}
+.ok p{color:var(--color-text-success);margin:0;font-size:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}
+.card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 13px}
+.card h4{font-size:12px;font-weight:500;margin-bottom:5px}
+.card p{font-size:12px;margin:0}
+.card ul{font-size:11px;margin:4px 0 0;padding-left:14px}
+.met{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px;text-align:center}
+.met .v{font-size:20px;font-weight:500}
+.met .l{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+pre{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:13px;font-family:var(--font-mono);font-size:11px;overflow-x:auto;margin:10px 0;line-height:1.65;color:var(--color-text-primary)}
+code{font-family:var(--font-mono);font-size:11px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:1px 5px;color:var(--color-text-primary)}
+.tw{overflow-x:auto;margin:11px 0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--color-background-secondary);font-weight:500;text-align:left;padding:7px 9px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+td{padding:7px 9px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--color-background-secondary)}
+.mod{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin:10px 0;overflow:hidden}
+.mod-head{background:var(--color-background-secondary);padding:9px 13px;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.mod-head h4{font-size:12px;font-weight:500;margin:0}
+.mod-head .tag{font-size:10px;padding:2px 7px;border-radius:20px}
+.mod-body{padding:11px 13px}
+.mod-body p{font-size:12px;margin-bottom:6px}
+.mod-body ul{font-size:11px;margin:0;padding-left:14px}
+.sprint{border-left:2px solid #534AB7;padding-left:12px;margin:12px 0}
+.sprint h4{font-size:12px;font-weight:500;color:#534AB7;margin-bottom:5px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.chip{font-size:10px;padding:2px 7px;border-radius:20px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);background:var(--color-background-secondary)}
+.chip.be{border-color:#185FA5;color:#0C447C;background:#E6F1FB}
+.chip.fe{border-color:#534AB7;color:#3C3489;background:#EEEDFE}
+.chip.ds{border-color:#854F0B;color:#633806;background:#FAEEDA}
+.chip.da{border-color:#3B6D11;color:#27500A;background:#EAF3DE}
+.chip.ai{border-color:#993C1D;color:#712B13;background:#FAECE7}
+.file-tree{font-family:var(--font-mono);font-size:11px;line-height:1.9;color:var(--color-text-secondary);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:13px;margin:10px 0;overflow-x:auto}
+.file-tree .dir{color:var(--color-text-primary);font-weight:500}
+.file-tree .file{color:var(--color-text-secondary)}
+.file-tree .comment{color:var(--color-text-tertiary)}
+@media(prefers-color-scheme:dark){.bv{background:#26215C;color:#AFA9EC}.bs{background:#173404;color:#C0DD97}.bw{background:#412402;color:#FAC775}.bd{background:#042C53;color:#B5D4F4}.chip.be{background:#042C53;color:#B5D4F4}.chip.fe{background:#26215C;color:#AFA9EC}.chip.ds{background:#412402;color:#FAC775}.chip.da{background:#173404;color:#C0DD97}.chip.ai{background:#4A1B0C;color:#F0997B}}
+</style>
+
+<div class="shell">
+<div class="nav">
+  <div class="nav-head"><h1>EA Overseas — Phase 1</h1><p>Implementation docs</p></div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Overview</div>
+    <div class="ni on" onclick="go('scope')"><span class="dot" style="background:#534AB7"></span>Phase 1 scope</div>
+    <div class="ni" onclick="go('arch')"><span class="dot" style="background:#185FA5"></span>Modular architecture</div>
+    <div class="ni" onclick="go('folder')"><span class="dot" style="background:#185FA5"></span>Folder structure</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Modules</div>
+    <div class="ni" onclick="go('mod-auth')"><span class="dot" style="background:#3B6D11"></span>Auth module</div>
+    <div class="ni" onclick="go('mod-profile')"><span class="dot" style="background:#3B6D11"></span>Profile module</div>
+    <div class="ni" onclick="go('mod-feed')"><span class="dot" style="background:#3B6D11"></span>Global feed module</div>
+    <div class="ni" onclick="go('mod-college')"><span class="dot" style="background:#3B6D11"></span>College feed module</div>
+    <div class="ni" onclick="go('mod-admin')"><span class="dot" style="background:#3B6D11"></span>Admin panel module</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Database</div>
+    <div class="ni" onclick="go('db')"><span class="dot" style="background:#854F0B"></span>Schema (Phase 1)</div>
+    <div class="ni" onclick="go('api')"><span class="dot" style="background:#854F0B"></span>API contracts</div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-lbl">Delivery</div>
+    <div class="ni" onclick="go('env')"><span class="dot" style="background:#993C1D"></span>Env & infra setup</div>
+    <div class="ni" onclick="go('sprint')"><span class="dot" style="background:#993C1D"></span>Sprint plan (8 wks)</div>
+    <div class="ni" onclick="go('dod')"><span class="dot" style="background:#993C1D"></span>Definition of done</div>
+    <div class="ni" onclick="go('task')"><span class="dot" style="background:#993C1D"></span>Day-1 task list</div>
+  </div>
+</div>
+
+<div class="body">
+
+<!-- SCOPE -->
+<div class="pg on" id="pg-scope">
+  <div class="tit">Phase 1 — Scope & boundaries</div>
+  <div class="sub">What we build, what we skip, and why</div>
+  <div class="badges"><span class="b bv">8 weeks</span><span class="b bs">4 modules</span><span class="b bd">Vercel + Render</span><span class="b bw">Web only</span></div>
+
+  <div class="ok"><p><strong>Phase 1 goal:</strong> Ship a working product with user registration, education profile builder, global feed (education news), college feed (university listings), and admin panel — all on modular architecture that scales cleanly into Phase 2.</p></div>
+
+  <h2>What Phase 1 includes</h2>
+  <div class="g2">
+    <div class="card"><h4>Module 1 — Auth</h4><ul><li>Register / login / logout</li><li>JWT + refresh tokens</li><li>Email OTP verification</li><li>Google OAuth (optional W3)</li><li>Password reset flow</li></ul></div>
+    <div class="card"><h4>Module 2 — Profile builder</h4><ul><li>Basic info section</li><li>Academic history section</li><li>Test scores section</li><li>Goals & preferences section</li><li>Document upload (S3/R2)</li><li>Public profile page (shareable)</li><li>Profile strength meter (0–100)</li></ul></div>
+    <div class="card"><h4>Module 3 — Global feed</h4><ul><li>Education news / updates feed</li><li>Admin creates + publishes posts</li><li>Categories: admissions, scholarships, exams, news</li><li>Like + bookmark posts</li><li>Infinite scroll pagination</li></ul></div>
+    <div class="card"><h4>Module 4 — College feed</h4><ul><li>University listing cards</li><li>Search by name / country / field</li><li>Filter by degree type</li><li>University detail page</li><li>Save / bookmark universities</li><li>Admin manages university data</li></ul></div>
+    <div class="card"><h4>Module 5 — Admin panel</h4><ul><li>Separate admin app (same repo)</li><li>Create / edit / delete feed posts</li><li>Create / edit / delete universities</li><li>Manage university courses + fees</li><li>User management (view, block)</li><li>Role management (admin / super admin)</li></ul></div>
+  </div>
+
+  <h2>Explicitly out of scope — Phase 1</h2>
+  <div class="warn"><p>AI match engine · Course marketplace · Loan marketplace · Community feed · Accommodation calculator · Notifications (push) · Native mobile app · Payment gateway · Document verification · Visa info · Social follows / connections</p></div>
+
+  <h2>Success metrics — Phase 1 launch</h2>
+  <div class="g4">
+    <div class="met"><div class="v">60%</div><div class="l">Profile completion rate (target)</div></div>
+    <div class="met"><div class="v">&lt;2s</div><div class="l">Feed page load time</div></div>
+    <div class="met"><div class="v">100+</div><div class="l">Universities at launch</div></div>
+    <div class="met"><div class="v">W8</div><div class="l">Production launch date</div></div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="pg" id="pg-arch">
+  <div class="tit">Modular architecture</div>
+  <div class="sub">How modules are structured, communicate, and stay decoupled</div>
+
+  <div class="info"><p><strong>Principle:</strong> Each module owns its own routes, controllers, services, and DB queries. Modules never import from each other's internals — only through a shared <code>lib/</code> layer. This means any module can be extracted into a separate service later with zero refactoring.</p></div>
+
+  <h2>Backend module structure</h2>
+  <p>Every module follows the exact same internal shape. This is non-negotiable — consistent structure means any engineer can navigate any module instantly.</p>
+  <pre>src/modules/{module-name}/
+  ├── {module}.routes.ts       ← Fastify route definitions
+  ├── {module}.controller.ts   ← Request/response handling only
+  ├── {module}.service.ts      ← All business logic lives here
+  ├── {module}.repository.ts   ← All DB queries (Prisma calls)
+  ├── {module}.schema.ts       ← Zod validation schemas
+  ├── {module}.types.ts        ← TypeScript interfaces for this module
+  └── {module}.test.ts         ← Unit tests</pre>
+
+  <h2>The 4-layer rule (strict)</h2>
+  <div class="g2">
+    <div class="card"><h4>Route layer</h4><p>Only: register path, attach middleware, call controller. Zero business logic. Zero DB access.</p></div>
+    <div class="card"><h4>Controller layer</h4><p>Only: parse request, call service, return response. Zero business logic. Zero DB access.</p></div>
+    <div class="card"><h4>Service layer</h4><p>All business logic here. Calls repository for data. May call other services via shared lib only.</p></div>
+    <div class="card"><h4>Repository layer</h4><p>Only Prisma/DB calls. Returns plain data objects. No business logic. No HTTP concepts.</p></div>
+  </div>
+
+  <h2>Shared library (<code>src/lib/</code>)</h2>
+  <p>Cross-cutting concerns that every module can import from. Nothing in here knows about any specific module.</p>
+  <div class="g3">
+    <div class="card"><h4>lib/db.ts</h4><p>Single Prisma client instance. Imported by all repositories.</p></div>
+    <div class="card"><h4>lib/auth.ts</h4><p>JWT sign/verify, token utilities. Used by auth middleware.</p></div>
+    <div class="card"><h4>lib/storage.ts</h4><p>Cloudflare R2 upload/delete/presign helpers.</p></div>
+    <div class="card"><h4>lib/email.ts</h4><p>Resend email client. Send OTP, welcome, reset.</p></div>
+    <div class="card"><h4>lib/errors.ts</h4><p>AppError class, error codes, HTTP status mapping.</p></div>
+    <div class="card"><h4>lib/middleware/</h4><p>authenticate, requireRole, rateLimiter, requestLogger.</p></div>
+  </div>
+
+  <h2>Frontend module structure</h2>
+  <p>Next.js App Router — each module maps to a route group. Shared components live in <code>components/ui/</code>.</p>
+  <pre>src/app/
+  ├── (auth)/              ← Auth module pages
+  │   ├── login/page.tsx
+  │   ├── register/page.tsx
+  │   └── reset-password/page.tsx
+  ├── (student)/           ← Student-facing pages
+  │   ├── dashboard/page.tsx
+  │   ├── profile/
+  │   ├── feed/
+  │   └── colleges/
+  └── (admin)/             ← Admin panel pages
+      ├── posts/
+      ├── universities/
+      └── users/
+
+src/modules/              ← Frontend module logic
+  ├── auth/               ← hooks, api calls, types
+  ├── profile/
+  ├── feed/
+  ├── colleges/
+  └── admin/</pre>
+
+  <h2>Communication between modules</h2>
+  <div class="tw">
+    <table>
+      <tr><th>From</th><th>To</th><th>Method</th><th>Example</th></tr>
+      <tr><td>Controller</td><td>Service</td><td>Direct call (same module)</td><td><code>profileService.updateProfile(userId, data)</code></td></tr>
+      <tr><td>Service → Service</td><td>Different module</td><td>Via lib/ only — never cross-import services</td><td><code>lib/auth.verifyToken()</code> not <code>authService.verify()</code></td></tr>
+      <tr><td>Frontend module</td><td>Backend</td><td>REST API via <code>api/</code> client layer</td><td><code>feedApi.getPosts(page)</code></td></tr>
+      <tr><td>Admin module</td><td>Student data</td><td>Same API, different role guard</td><td><code>requireRole('admin')</code> middleware</td></tr>
+    </table>
+  </div>
+
+  <h2>Deployment topology (Vercel + Render)</h2>
+  <pre>Vercel                          Render
+─────────────────────           ──────────────────────────────────
+Next.js (student app)    ──→    Node.js + Fastify API  ──→  PostgreSQL
+Next.js (admin app)      ──→    (same API, /admin/*)        (Render managed)
+                                                       ──→  Redis
+                                                            (Render managed)
+                         ──→    Cloudflare R2 (file uploads, direct from frontend)
+
+Environment: .env.local (Vercel) + .env (Render)
+Secrets: Render env vars (API keys, DB URL, JWT secret)</pre>
+</div>
+
+<!-- FOLDER STRUCTURE -->
+<div class="pg" id="pg-folder">
+  <div class="tit">Complete folder structure</div>
+  <div class="sub">Full monorepo layout — copy this exactly on day 1</div>
+
+  <h2>Monorepo root</h2>
+  <div class="file-tree">
+<span class="dir">ea-overseas/</span>
+├── <span class="dir">apps/</span>
+│   ├── <span class="dir">web/</span>               <span class="comment"># Next.js — student-facing app</span>
+│   └── <span class="dir">admin/</span>             <span class="comment"># Next.js — admin panel</span>
+├── <span class="dir">backend/</span>             <span class="comment"># Fastify API server</span>
+├── <span class="dir">packages/</span>
+│   └── <span class="dir">shared-types/</span>      <span class="comment"># Shared TypeScript types</span>
+├── package.json           <span class="comment"># Root workspace (pnpm workspaces)</span>
+├── pnpm-workspace.yaml
+├── turbo.json             <span class="comment"># Turborepo build config</span>
+├── .gitignore
+└── README.md
+  </div>
+
+  <h2>Backend structure (<code>backend/</code>)</h2>
+  <div class="file-tree">
+<span class="dir">backend/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">modules/</span>
+│   │   ├── <span class="dir">auth/</span>
+│   │   │   ├── auth.routes.ts
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.repository.ts
+│   │   │   ├── auth.schema.ts
+│   │   │   ├── auth.types.ts
+│   │   │   └── auth.test.ts
+│   │   ├── <span class="dir">profile/</span>
+│   │   │   ├── profile.routes.ts
+│   │   │   ├── profile.controller.ts
+│   │   │   ├── profile.service.ts
+│   │   │   ├── profile.repository.ts
+│   │   │   ├── profile.schema.ts
+│   │   │   ├── profile.types.ts
+│   │   │   └── profile.test.ts
+│   │   ├── <span class="dir">feed/</span>           <span class="comment"># global feed module</span>
+│   │   │   ├── feed.routes.ts
+│   │   │   ├── feed.controller.ts
+│   │   │   ├── feed.service.ts
+│   │   │   ├── feed.repository.ts
+│   │   │   ├── feed.schema.ts
+│   │   │   └── feed.types.ts
+│   │   ├── <span class="dir">colleges/</span>       <span class="comment"># college feed module</span>
+│   │   │   ├── colleges.routes.ts
+│   │   │   ├── colleges.controller.ts
+│   │   │   ├── colleges.service.ts
+│   │   │   ├── colleges.repository.ts
+│   │   │   ├── colleges.schema.ts
+│   │   │   └── colleges.types.ts
+│   │   └── <span class="dir">admin/</span>
+│   │       ├── admin.routes.ts
+│   │       ├── admin.controller.ts
+│   │       ├── admin.service.ts
+│   │       └── admin.schema.ts
+│   ├── <span class="dir">lib/</span>
+│   │   ├── db.ts             <span class="comment"># Prisma client singleton</span>
+│   │   ├── auth.ts           <span class="comment"># JWT helpers</span>
+│   │   ├── storage.ts        <span class="comment"># R2 helpers</span>
+│   │   ├── email.ts          <span class="comment"># Resend client</span>
+│   │   ├── errors.ts         <span class="comment"># AppError + error codes</span>
+│   │   ├── logger.ts         <span class="comment"># Pino logger</span>
+│   │   └── <span class="dir">middleware/</span>
+│   │       ├── authenticate.ts
+│   │       ├── require-role.ts
+│   │       ├── rate-limit.ts
+│   │       └── validate.ts
+│   ├── <span class="dir">prisma/</span>
+│   │   ├── schema.prisma     <span class="comment"># DB schema</span>
+│   │   └── <span class="dir">migrations/</span>
+│   ├── app.ts                <span class="comment"># Fastify app + plugin registration</span>
+│   └── server.ts             <span class="comment"># Entry point</span>
+├── .env.example
+├── package.json
+└── tsconfig.json
+  </div>
+
+  <h2>Web app structure (<code>apps/web/</code>)</h2>
+  <div class="file-tree">
+<span class="dir">apps/web/src/</span>
+├── <span class="dir">app/</span>
+│   ├── <span class="dir">(auth)/</span>
+│   │   ├── login/page.tsx
+│   │   ├── register/page.tsx
+│   │   └── reset-password/page.tsx
+│   ├── <span class="dir">(student)/</span>
+│   │   ├── layout.tsx        <span class="comment"># Nav + auth guard</span>
+│   │   ├── dashboard/page.tsx
+│   │   ├── <span class="dir">profile/</span>
+│   │   │   ├── page.tsx      <span class="comment"># My profile view</span>
+│   │   │   ├── edit/page.tsx
+│   │   │   └── [username]/page.tsx <span class="comment"># Public profile</span>
+│   │   ├── <span class="dir">feed/</span>
+│   │   │   ├── page.tsx      <span class="comment"># Global feed</span>
+│   │   │   └── [postId]/page.tsx
+│   │   └── <span class="dir">colleges/</span>
+│   │       ├── page.tsx      <span class="comment"># College feed / search</span>
+│   │       └── [slug]/page.tsx <span class="comment"># College detail</span>
+│   ├── layout.tsx            <span class="comment"># Root layout</span>
+│   └── globals.css
+├── <span class="dir">modules/</span>             <span class="comment"># Frontend module logic</span>
+│   ├── <span class="dir">auth/</span>
+│   │   ├── hooks/useAuth.ts
+│   │   ├── api/auth.api.ts
+│   │   └── types/auth.types.ts
+│   ├── <span class="dir">profile/</span>
+│   │   ├── hooks/useProfile.ts
+│   │   ├── api/profile.api.ts
+│   │   ├── components/ProfileForm.tsx
+│   │   ├── components/ProfileStrengthBar.tsx
+│   │   └── types/profile.types.ts
+│   ├── <span class="dir">feed/</span>
+│   │   ├── hooks/useFeed.ts
+│   │   ├── api/feed.api.ts
+│   │   ├── components/FeedCard.tsx
+│   │   └── components/FeedList.tsx
+│   └── <span class="dir">colleges/</span>
+│       ├── hooks/useColleges.ts
+│       ├── api/colleges.api.ts
+│       ├── components/CollegeCard.tsx
+│       └── components/CollegeFilters.tsx
+├── <span class="dir">components/</span>
+│   ├── <span class="dir">ui/</span>              <span class="comment"># Shared primitives</span>
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Card.tsx
+│   │   ├── Badge.tsx
+│   │   ├── Avatar.tsx
+│   │   └── Spinner.tsx
+│   └── <span class="dir">layout/</span>
+│       ├── Navbar.tsx
+│       ├── Sidebar.tsx
+│       └── BottomNav.tsx
+├── <span class="dir">lib/</span>
+│   ├── api-client.ts        <span class="comment"># Axios instance + interceptors</span>
+│   ├── auth-store.ts        <span class="comment"># Zustand auth state</span>
+│   └── query-client.ts      <span class="comment"># React Query config</span>
+└── .env.local.example
+  </div>
+</div>
+
+<!-- AUTH MODULE -->
+<div class="pg" id="pg-mod-auth">
+  <div class="tit">Module — Auth</div>
+  <div class="sub">Registration, login, token management, OTP verification</div>
+
+  <h2>Scope</h2>
+  <div class="mod">
+    <div class="mod-head"><h4>auth module</h4><span class="tag bs">backend</span></div>
+    <div class="mod-body">
+      <p><strong>Endpoints this module owns:</strong></p>
+      <ul>
+        <li><code>POST /api/v1/auth/register</code> — create user, send OTP</li>
+        <li><code>POST /api/v1/auth/verify-otp</code> — verify email OTP</li>
+        <li><code>POST /api/v1/auth/login</code> — returns access + refresh tokens</li>
+        <li><code>POST /api/v1/auth/refresh</code> — rotate refresh token</li>
+        <li><code>POST /api/v1/auth/logout</code> — invalidate refresh token</li>
+        <li><code>POST /api/v1/auth/forgot-password</code> — send reset link</li>
+        <li><code>POST /api/v1/auth/reset-password</code> — set new password</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Token strategy</h2>
+  <pre>Access token:  JWT, 15 min expiry, signed with ACCESS_SECRET
+Refresh token: JWT, 7 days expiry, signed with REFRESH_SECRET
+               stored in DB (refresh_tokens table) so it can be revoked
+               sent as HTTP-only cookie to frontend
+
+Flow:
+1. Login → issue both tokens → access in JSON body, refresh in cookie
+2. Every request → frontend sends access token in Authorization: Bearer header
+3. Access token expired → frontend calls /auth/refresh → gets new pair
+4. Logout → delete refresh token from DB → cookie cleared</pre>
+
+  <h2>Auth service (key methods)</h2>
+  <pre>// auth.service.ts
+class AuthService {
+  async register(data: RegisterDto): Promise&lt;User&gt; {
+    // 1. Check email not already taken
+    // 2. Hash password with bcrypt (rounds: 12)
+    // 3. Create user in DB (email_verified: false)
+    // 4. Generate 6-digit OTP, store with 10min TTL in Redis
+    // 5. Send OTP via email (Resend)
+    // 6. Return user (no tokens yet — must verify first)
+  }
+
+  async verifyOtp(email: string, otp: string): Promise&lt;TokenPair&gt; {
+    // 1. Get OTP from Redis
+    // 2. Compare (constant-time)
+    // 3. Mark user email_verified: true
+    // 4. Delete OTP from Redis
+    // 5. Issue access + refresh tokens
+  }
+
+  async login(email: string, password: string): Promise&lt;TokenPair&gt; {
+    // 1. Find user by email
+    // 2. bcrypt.compare(password, hash)
+    // 3. Check email_verified — if not, resend OTP
+    // 4. Issue tokens
+  }
+
+  async refresh(refreshToken: string): Promise&lt;TokenPair&gt; {
+    // 1. Verify refresh JWT signature
+    // 2. Look up in DB — reject if not found (invalidated)
+    // 3. Delete old refresh token row
+    // 4. Issue new token pair (rotation)
+  }
+}</pre>
+
+  <h2>Zod validation schemas</h2>
+  <pre>// auth.schema.ts
+export const registerSchema = z.object({
+  full_name: z.string().min(2).max(100),
+  email: z.string().email(),
+  password: z.string()
+    .min(8)
+    .regex(/[A-Z]/, 'Must contain uppercase')
+    .regex(/[0-9]/, 'Must contain number'),
+})
+
+export const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+})
+
+export const resetPasswordSchema = z.object({
+  token: z.string(),
+  new_password: z.string().min(8),
+})</pre>
+
+  <h2>Frontend — auth module</h2>
+  <pre>// modules/auth/hooks/useAuth.ts
+export function useAuth() {
+  const { user, setUser, clearUser } = useAuthStore()
+
+  async function login(email: string, password: string) {
+    const res = await authApi.login({ email, password })
+    setUser(res.user)
+    // access token stored in memory (Zustand)
+    // refresh token in HTTP-only cookie — browser handles it
+  }
+
+  async function logout() {
+    await authApi.logout()
+    clearUser()
+    router.push('/login')
+  }
+
+  return { user, login, logout, isAuthenticated: !!user }
+}</pre>
+
+  <h2>Screens (auth module)</h2>
+  <div class="tw"><table>
+    <tr><th>Screen</th><th>Route</th><th>Key elements</th></tr>
+    <tr><td>Register</td><td>/register</td><td>Name, email, password, strength meter, submit</td></tr>
+    <tr><td>Verify OTP</td><td>/verify</td><td>6-digit OTP input, resend button, countdown timer</td></tr>
+    <tr><td>Login</td><td>/login</td><td>Email, password, forgot password link, Google OAuth</td></tr>
+    <tr><td>Forgot password</td><td>/forgot-password</td><td>Email input, submit</td></tr>
+    <tr><td>Reset password</td><td>/reset-password?token=</td><td>New password, confirm password</td></tr>
+  </table></div>
+</div>
+
+<!-- PROFILE MODULE -->
+<div class="pg" id="pg-mod-profile">
+  <div class="tit">Module — Profile builder</div>
+  <div class="sub">Education identity — the core value proposition of Phase 1</div>
+
+  <div class="info"><p><strong>Design principle:</strong> Profile completion is the #1 retention driver. Show the strength meter prominently, celebrate every section completed, and make the public profile URL shareable immediately after onboarding.</p></div>
+
+  <h2>Profile sections (7 sections)</h2>
+  <div class="tw"><table>
+    <tr><th>#</th><th>Section</th><th>Key fields</th><th>Required?</th></tr>
+    <tr><td>1</td><td>Basic info</td><td>Full name, city, state, country, bio (200 chars)</td><td>Yes (onboarding)</td></tr>
+    <tr><td>2</td><td>Academic history</td><td>10th %, board; 12th %, board, stream; UG institution, CGPA, field, graduation year</td><td>Yes</td></tr>
+    <tr><td>3</td><td>Test scores</td><td>Exam name (IELTS/TOEFL/SAT/GRE/GMAT/JEE/NEET/GATE), score, date, max score</td><td>Optional</td></tr>
+    <tr><td>4</td><td>Goals</td><td>Target degree (B/M/PhD), target countries (multi-select), field of interest, timeline</td><td>Yes</td></tr>
+    <tr><td>5</td><td>Budget</td><td>Budget range (USD/yr), financial aid needed toggle</td><td>Optional</td></tr>
+    <tr><td>6</td><td>Extras</td><td>Work experience (months), internships count, research papers, certifications, achievements</td><td>Optional</td></tr>
+    <tr><td>7</td><td>Documents</td><td>Transcripts upload, certificates, SOP draft — PDF/JPG, max 5MB each</td><td>Optional</td></tr>
+  </table></div>
+
+  <h2>Profile strength calculation</h2>
+  <pre>// profile.service.ts — computeStrength()
+const weights = {
+  basic_info:    20,  // name, city, bio complete
+  academics:     25,  // at least 12th + one qualification added
+  test_scores:   15,  // at least one test score added
+  goals:         15,  // degree + country selected
+  budget:        10,  // budget range set
+  extras:         5,  // at least one extra added
+  documents:     10,  // at least one document uploaded
+}
+// strength = sum of weights for completed sections → 0–100</pre>
+
+  <h2>Backend endpoints</h2>
+  <pre>GET    /api/v1/profile              → full profile (authenticated user)
+PUT    /api/v1/profile/basic         → update basic info
+PUT    /api/v1/profile/academics     → update academic section
+POST   /api/v1/profile/test-scores   → add test score
+PUT    /api/v1/profile/test-scores/:id → update score
+DELETE /api/v1/profile/test-scores/:id → remove score
+PUT    /api/v1/profile/goals         → update goals + preferences
+PUT    /api/v1/profile/budget        → update budget
+PUT    /api/v1/profile/extras        → update extras
+POST   /api/v1/profile/documents     → get R2 presigned upload URL
+DELETE /api/v1/profile/documents/:id → delete document
+GET    /api/v1/profile/strength      → get strength score + breakdown
+GET    /api/v1/users/:username/profile → public profile view (no auth)</pre>
+
+  <h2>Profile service (key logic)</h2>
+  <pre>// profile.service.ts
+class ProfileService {
+  async updateAcademics(userId: string, data: AcademicsDto) {
+    await this.profileRepo.upsertAcademics(userId, data)
+    await this.recomputeStrength(userId)  // always after any update
+  }
+
+  async getPresignedUrl(userId: string, fileType: string) {
+    const key = `profiles/${userId}/${uuid()}.${ext(fileType)}`
+    const url = await storage.getPresignedPut(key, fileType, 3600)
+    // Store the key in documents table
+    await this.profileRepo.createDocument(userId, key, fileType)
+    return { upload_url: url, document_id: key }
+  }
+
+  async getPublicProfile(username: string) {
+    const user = await this.profileRepo.findByUsername(username)
+    if (!user) throw new AppError('USER_NOT_FOUND', 404)
+    // Return only public fields — no budget, no documents
+    return this.toPublicView(user)
+  }
+}</pre>
+
+  <h2>Screens (profile module)</h2>
+  <div class="tw"><table>
+    <tr><th>Screen</th><th>Route</th><th>Notes</th></tr>
+    <tr><td>Onboarding wizard</td><td>/onboard</td><td>Step 1: goal select → Step 2: basic → Step 3: academics. 3 steps max before dashboard.</td></tr>
+    <tr><td>My profile</td><td>/profile</td><td>Full profile view with strength meter, all sections, edit buttons per section</td></tr>
+    <tr><td>Edit section</td><td>/profile/edit/[section]</td><td>Each section has its own edit page, save returns to /profile</td></tr>
+    <tr><td>Public profile</td><td>/u/[username]</td><td>Education timeline display. Shareable. No edit. Shows verified badge for doc uploads.</td></tr>
+    <tr><td>Documents</td><td>/profile/documents</td><td>Upload UI, file list, delete. Direct-to-R2 upload (presigned URL).</td></tr>
+  </table></div>
+</div>
+
+<!-- FEED MODULE -->
+<div class="pg" id="pg-mod-feed">
+  <div class="tit">Module — Global feed</div>
+  <div class="sub">Education news, admission alerts, scholarship updates — curated by admin</div>
+
+  <h2>What the feed shows</h2>
+  <div class="g2">
+    <div class="card"><h4>Post categories</h4><ul><li>Admission alerts (opening dates)</li><li>Scholarship announcements</li><li>Exam notifications (IELTS, JEE dates)</li><li>Education news (policy, rankings)</li><li>Tips & guides (SOP writing etc.)</li></ul></div>
+    <div class="card"><h4>Post types</h4><ul><li>Text post (up to 2000 chars)</li><li>Text + image</li><li>Text + link (external article)</li><li>Pinned post (sticky at top)</li><li>Deadline alert (special card design)</li></ul></div>
+  </div>
+
+  <h2>Backend endpoints</h2>
+  <pre>GET  /api/v1/feed                  → paginated feed (public, 20/page)
+     ?page=1&category=admissions
+GET  /api/v1/feed/:postId          → single post
+POST /api/v1/feed/:postId/like     → like / unlike (toggle, auth required)
+POST /api/v1/feed/:postId/bookmark → bookmark / unbookmark (toggle)
+GET  /api/v1/feed/bookmarks        → user's bookmarked posts
+
+ADMIN only:
+POST   /api/v1/admin/feed          → create post
+PUT    /api/v1/admin/feed/:postId  → update post
+DELETE /api/v1/admin/feed/:postId  → delete post
+PUT    /api/v1/admin/feed/:postId/pin → pin/unpin post</pre>
+
+  <h2>Feed repository (pagination pattern)</h2>
+  <pre>// feed.repository.ts
+async getPosts(params: { page: number; category?: string; userId?: string }) {
+  const limit = 20
+  const offset = (params.page - 1) * limit
+
+  return prisma.feedPost.findMany({
+    where: {
+      published: true,
+      ...(params.category && { category: params.category }),
+    },
+    include: {
+      _count: { select: { likes: true } },
+      // If userId provided, check if this user liked/bookmarked
+      likes: params.userId
+        ? { where: { user_id: params.userId } }
+        : false,
+      bookmarks: params.userId
+        ? { where: { user_id: params.userId } }
+        : false,
+    },
+    orderBy: [
+      { pinned: 'desc' },       // pinned posts always first
+      { published_at: 'desc' }, // then latest
+    ],
+    take: limit,
+    skip: offset,
+  })
+}</pre>
+
+  <h2>Feed post DB schema</h2>
+  <pre>model FeedPost {
+  id           String   @id @default(uuid())
+  title        String
+  body         String
+  category     String   // 'admission','scholarship','exam','news','guide'
+  type         String   // 'text','text_image','text_link','deadline'
+  image_url    String?
+  external_url String?
+  deadline_date DateTime?  // for deadline alert posts
+  pinned       Boolean  @default(false)
+  published    Boolean  @default(false)
+  published_at DateTime?
+  author_id    String   // admin user id
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  likes        FeedLike[]
+  bookmarks    FeedBookmark[]
+}</pre>
+
+  <h2>Screens (feed module)</h2>
+  <div class="tw"><table>
+    <tr><th>Screen</th><th>Route</th><th>Key UX</th></tr>
+    <tr><td>Feed home</td><td>/feed</td><td>Category filter tabs, infinite scroll, like + bookmark on each card</td></tr>
+    <tr><td>Post detail</td><td>/feed/[postId]</td><td>Full post, like/bookmark, external link CTA, related posts</td></tr>
+    <tr><td>My bookmarks</td><td>/feed/saved</td><td>User's bookmarked posts list</td></tr>
+  </table></div>
+</div>
+
+<!-- COLLEGE FEED MODULE -->
+<div class="pg" id="pg-mod-college">
+  <div class="tit">Module — College feed</div>
+  <div class="sub">University listings, search, filters, and detail pages</div>
+
+  <h2>What this module does</h2>
+  <p>The college feed is the primary discovery surface. Students search, filter, browse universities, view their details, and save the ones they want to track. Admin populates and manages all university data via the admin panel.</p>
+
+  <h2>Search & filter spec</h2>
+  <div class="g2">
+    <div class="card"><h4>Filter parameters</h4><ul><li>Country (multi-select)</li><li>Degree type (Bachelors/Masters/PhD)</li><li>Field of study (CS/MBA/Engineering etc.)</li><li>QS ranking range (e.g. Top 100)</li><li>Tuition budget max (USD/yr)</li><li>Language of instruction</li></ul></div>
+    <div class="card"><h4>Sort options</h4><ul><li>Relevance (default — based on user profile goals)</li><li>QS ranking (ascending)</li><li>Tuition (low to high)</li><li>Acceptance rate (high to low)</li><li>Recently added</li></ul></div>
+  </div>
+
+  <h2>Backend endpoints</h2>
+  <pre>GET  /api/v1/colleges
+     ?country=Germany&degree=Masters&field=Computer+Science
+     &qs_max=200&budget_max=15000&page=1&sort=ranking
+     → paginated list (20/page), cached in Redis 6hr TTL
+
+GET  /api/v1/colleges/:slug        → full university detail
+GET  /api/v1/colleges/:slug/courses → courses for this university
+GET  /api/v1/colleges/countries    → distinct list of countries (for filter UI)
+GET  /api/v1/colleges/fields       → distinct list of fields (for filter UI)
+POST /api/v1/colleges/:slug/save   → save/unsave (toggle, auth required)
+GET  /api/v1/colleges/saved        → user's saved colleges
+
+ADMIN only:
+POST   /api/v1/admin/colleges       → create university
+PUT    /api/v1/admin/colleges/:id   → update university
+DELETE /api/v1/admin/colleges/:id   → delete university
+POST   /api/v1/admin/colleges/:id/courses → add course
+PUT    /api/v1/admin/courses/:id    → update course + requirements + fees</pre>
+
+  <h2>Caching strategy for colleges</h2>
+  <pre>// colleges.service.ts
+async getColleges(filters: CollegeFilters) {
+  const cacheKey = `colleges:${JSON.stringify(filters)}`
+
+  // Try Redis first
+  const cached = await redis.get(cacheKey)
+  if (cached) return JSON.parse(cached)
+
+  // DB query
+  const results = await this.collegeRepo.search(filters)
+
+  // Cache for 6 hours (college data changes rarely)
+  await redis.set(cacheKey, JSON.stringify(results), 'EX', 21600)
+
+  return results
+}
+
+// Cache invalidation: when admin updates any college,
+// flush all college:* keys
+async invalidateCollegeCache() {
+  const keys = await redis.keys('colleges:*')
+  if (keys.length) await redis.del(...keys)
+}</pre>
+
+  <h2>Screens (college module)</h2>
+  <div class="tw"><table>
+    <tr><th>Screen</th><th>Route</th><th>Key UX</th></tr>
+    <tr><td>College search</td><td>/colleges</td><td>Filter sidebar, search bar, university cards (name, country, ranking, avg tuition), save button per card</td></tr>
+    <tr><td>College detail</td><td>/colleges/[slug]</td><td>Hero banner, overview, courses list, fees, requirements summary, save button</td></tr>
+    <tr><td>Course detail</td><td>/colleges/[slug]/[courseId]</td><td>Full requirements, fee breakdown, application deadlines, intake dates</td></tr>
+    <tr><td>Saved colleges</td><td>/colleges/saved</td><td>List of saved universities with quick-view details</td></tr>
+  </table></div>
+</div>
+
+<!-- ADMIN MODULE -->
+<div class="pg" id="pg-mod-admin">
+  <div class="tit">Module — Admin panel</div>
+  <div class="sub">Separate Next.js app at admin.eaoverseas.com — protected by role</div>
+
+  <div class="warn"><p><strong>Separate deployment:</strong> Admin panel is a separate Next.js app in <code>apps/admin/</code>. It hits the same backend API but all endpoints require <code>role: 'admin'</code> or <code>'super_admin'</code>. Never expose admin routes to the student app.</p></div>
+
+  <h2>Admin app screens</h2>
+  <div class="tw"><table>
+    <tr><th>Screen</th><th>Route</th><th>Actions</th></tr>
+    <tr><td>Dashboard</td><td>/</td><td>Stats: total users, posts, universities, today's signups</td></tr>
+    <tr><td>Feed posts list</td><td>/posts</td><td>All posts, filter by status/category, search, create new</td></tr>
+    <tr><td>Create / edit post</td><td>/posts/new, /posts/[id]</td><td>Rich text editor (Tiptap), image upload, category, schedule, publish toggle</td></tr>
+    <tr><td>Universities list</td><td>/universities</td><td>All universities, search, filter by country, create new</td></tr>
+    <tr><td>Create / edit university</td><td>/universities/new, /universities/[id]</td><td>All university fields, logo upload, active toggle</td></tr>
+    <tr><td>Courses for university</td><td>/universities/[id]/courses</td><td>Course list, add course, edit requirements + fees inline</td></tr>
+    <tr><td>Users list</td><td>/users</td><td>All users, filter by date/role, view profile, block user</td></tr>
+    <tr><td>Admins</td><td>/admins</td><td>Super admin only: promote user to admin, revoke admin role</td></tr>
+  </table></div>
+
+  <h2>Role hierarchy</h2>
+  <pre>super_admin  → full access including admin management
+admin        → manage posts, universities, view users (cannot manage admins)
+student      → default role for all registered users</pre>
+
+  <h2>Admin middleware</h2>
+  <pre>// lib/middleware/require-role.ts
+export function requireRole(...roles: UserRole[]) {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
+    // authenticate() must run first
+    const user = request.user
+    if (!roles.includes(user.role)) {
+      throw new AppError('FORBIDDEN', 403)
+    }
+  }
+}
+
+// Usage in admin routes:
+fastify.post('/admin/feed',
+  { preHandler: [authenticate, requireRole('admin', 'super_admin')] },
+  feedController.createPost
+)</pre>
+
+  <h2>University data entry — required fields</h2>
+  <div class="tw"><table>
+    <tr><th>Section</th><th>Fields admin must fill</th></tr>
+    <tr><td>Basic</td><td>Name, country, city, type (public/private), website, description, logo</td></tr>
+    <tr><td>Rankings</td><td>QS ranking, THE ranking, acceptance rate</td></tr>
+    <tr><td>Course (per course)</td><td>Course name, degree type, field, duration, language, intake months, application deadline</td></tr>
+    <tr><td>Requirements</td><td>Min GPA, avg GPA, min IELTS, min TOEFL, SOP required, LOR count</td></tr>
+    <tr><td>Fees</td><td>Tuition/year (USD), avg living cost/year (USD), application fee, scholarship available</td></tr>
+  </table></div>
+</div>
+
+<!-- DATABASE -->
+<div class="pg" id="pg-db">
+  <div class="tit">Phase 1 database schema</div>
+  <div class="sub">Only what Phase 1 needs — no premature tables</div>
+
+  <div class="info"><p><strong>ORM:</strong> Prisma. DB: PostgreSQL (Render managed). All UUIDs. Soft deletes where needed via <code>deleted_at</code>. Timestamps on every table.</p></div>
+
+  <h2>Complete Prisma schema</h2>
+  <pre>// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── AUTH ─────────────────────────────────────
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  password_hash  String
+  full_name      String
+  username       String   @unique  // auto-generated from name
+  avatar_url     String?
+  role           Role     @default(STUDENT)
+  email_verified Boolean  @default(false)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  deleted_at     DateTime?
+
+  profile        UserProfile?
+  test_scores    TestScore[]
+  documents      UserDocument[]
+  refresh_tokens RefreshToken[]
+  feed_likes     FeedLike[]
+  feed_bookmarks FeedBookmark[]
+  saved_colleges SavedCollege[]
+
+  @@index([email])
+  @@index([username])
+}
+
+enum Role { STUDENT ADMIN SUPER_ADMIN }
+
+model RefreshToken {
+  id         String   @id @default(uuid())
+  user_id    String
+  token_hash String   @unique
+  expires_at DateTime
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
+  @@index([user_id])
+}
+
+// ─── PROFILE ──────────────────────────────────
+model UserProfile {
+  id                   String   @id @default(uuid())
+  user_id              String   @unique
+  bio                  String?  @db.VarChar(200)
+  city                 String?
+  state                String?
+  country              String?
+  current_level        String?
+  stream               String?
+  tenth_percentage     Float?
+  tenth_board          String?
+  twelfth_percentage   Float?
+  twelfth_board        String?
+  ug_institution       String?
+  ug_cgpa              Float?
+  ug_field             String?
+  ug_grad_year         Int?
+  target_degree        String?
+  target_countries     String[]
+  field_of_interest    String?
+  target_timeline      String?
+  budget_min_usd       Int?
+  budget_max_usd       Int?
+  financial_aid_needed Boolean  @default(false)
+  work_exp_months      Int      @default(0)
+  internships_count    Int      @default(0)
+  research_papers      Int      @default(0)
+  certifications       Int      @default(0)
+  profile_strength     Int      @default(0)
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model TestScore {
+  id         String   @id @default(uuid())
+  user_id    String
+  exam_name  String   // IELTS, TOEFL, SAT, GRE, GMAT, JEE, NEET, GATE
+  score      Float
+  max_score  Float
+  percentile Float?
+  exam_date  DateTime?
+  is_latest  Boolean  @default(true)
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
+  @@index([user_id, exam_name])
+}
+
+model UserDocument {
+  id          String   @id @default(uuid())
+  user_id     String
+  file_key    String   // R2 storage key
+  file_name   String
+  file_type   String   // transcript, certificate, sop
+  mime_type   String
+  size_bytes  Int
+  created_at  DateTime @default(now())
+  user        User     @relation(fields: [user_id], references: [id])
+}
+
+// ─── FEED ─────────────────────────────────────
+model FeedPost {
+  id            String    @id @default(uuid())
+  title         String
+  body          String    @db.Text
+  category      FeedCategory
+  type          PostType  @default(TEXT)
+  image_url     String?
+  external_url  String?
+  deadline_date DateTime?
+  pinned        Boolean   @default(false)
+  published     Boolean   @default(false)
+  published_at  DateTime?
+  author_id     String
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  likes     FeedLike[]
+  bookmarks FeedBookmark[]
+
+  @@index([published, published_at(sort: Desc)])
+  @@index([category, published])
+}
+
+enum FeedCategory { ADMISSION SCHOLARSHIP EXAM NEWS GUIDE }
+enum PostType { TEXT TEXT_IMAGE TEXT_LINK DEADLINE }
+
+model FeedLike {
+  id      String   @id @default(uuid())
+  user_id String
+  post_id String
+  created_at DateTime @default(now())
+  user    User     @relation(fields: [user_id], references: [id])
+  post    FeedPost @relation(fields: [post_id], references: [id])
+  @@unique([user_id, post_id])
+}
+
+model FeedBookmark {
+  id      String   @id @default(uuid())
+  user_id String
+  post_id String
+  created_at DateTime @default(now())
+  user    User     @relation(fields: [user_id], references: [id])
+  post    FeedPost @relation(fields: [post_id], references: [id])
+  @@unique([user_id, post_id])
+}
+
+// ─── COLLEGES ─────────────────────────────────
+model University {
+  id              String    @id @default(uuid())
+  name            String
+  slug            String    @unique
+  country         String
+  city            String?
+  type            String?   // public, private
+  qs_ranking      Int?
+  the_ranking     Int?
+  acceptance_rate Float?
+  website_url     String?
+  logo_url        String?
+  description     String?   @db.Text
+  is_active       Boolean   @default(true)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  courses         UniversityCourse[]
+  saved_by        SavedCollege[]
+
+  @@index([country])
+  @@index([qs_ranking])
+}
+
+model UniversityCourse {
+  id              String    @id @default(uuid())
+  university_id   String
+  name            String
+  degree_type     String    // Bachelors, Masters, PhD
+  field           String
+  sub_field       String?
+  duration_years  Float
+  language        String    @default("English")
+  intake_months   Int[]
+  deadline        DateTime?
+  is_active       Boolean   @default(true)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  university  University         @relation(fields: [university_id], references: [id])
+  requirements CourseRequirement?
+  fees        CourseFee?
+
+  @@index([university_id])
+  @@index([field, degree_type])
+}
+
+model CourseRequirement {
+  id             String  @id @default(uuid())
+  course_id      String  @unique
+  min_gpa        Float?
+  avg_gpa        Float?
+  min_ielts      Float?
+  min_toefl      Int?
+  min_sat        Int?
+  min_gre_verbal Int?
+  min_gre_quant  Int?
+  sop_required   Boolean @default(true)
+  lor_count      Int     @default(2)
+  other_notes    String?
+  course UniversityCourse @relation(fields: [course_id], references: [id])
+}
+
+model CourseFee {
+  id                      String  @id @default(uuid())
+  course_id               String  @unique
+  tuition_per_year_usd    Int?
+  living_per_year_usd     Int?
+  application_fee_usd     Int?
+  scholarship_available   Boolean @default(false)
+  scholarship_details     String?
+  course UniversityCourse @relation(fields: [course_id], references: [id])
+}
+
+model SavedCollege {
+  id            String   @id @default(uuid())
+  user_id       String
+  university_id String
+  created_at    DateTime @default(now())
+  user          User       @relation(fields: [user_id], references: [id])
+  university    University @relation(fields: [university_id], references: [id])
+  @@unique([user_id, university_id])
+}</pre>
+</div>
+
+<!-- API CONTRACTS -->
+<div class="pg" id="pg-api">
+  <div class="tit">API contracts — Phase 1</div>
+  <div class="sub">Request/response shapes for every endpoint. Base URL: /api/v1</div>
+
+  <h2>Standard response envelope</h2>
+  <pre>// All responses follow this shape
+{
+  "success": true,
+  "data": { ... },         // the actual payload
+  "meta": {                // pagination (list endpoints only)
+    "page": 1,
+    "per_page": 20,
+    "total": 342,
+    "total_pages": 18
+  }
+}
+
+// Errors
+{
+  "success": false,
+  "error": {
+    "code": "INVALID_CREDENTIALS",  // machine-readable
+    "message": "Email or password is incorrect",  // human-readable
+    "field": "email"  // optional — for validation errors
+  }
+}</pre>
+
+  <h2>Auth endpoints</h2>
+  <pre>POST /auth/register
+Body:  { full_name, email, password }
+200:   { data: { user: { id, email, full_name, username } } }
+409:   EMAIL_ALREADY_EXISTS
+
+POST /auth/verify-otp
+Body:  { email, otp }
+200:   { data: { access_token, user } } + Set-Cookie: refresh_token
+400:   INVALID_OTP / OTP_EXPIRED
+
+POST /auth/login
+Body:  { email, password }
+200:   { data: { access_token, user } } + Set-Cookie: refresh_token
+401:   INVALID_CREDENTIALS
+403:   EMAIL_NOT_VERIFIED
+
+POST /auth/refresh
+Cookie: refresh_token (HTTP-only)
+200:   { data: { access_token } } + new Set-Cookie: refresh_token
+401:   INVALID_REFRESH_TOKEN</pre>
+
+  <h2>Profile endpoints</h2>
+  <pre>GET /profile
+Headers: Authorization: Bearer {token}
+200: { data: { user, profile, test_scores, documents, strength } }
+
+PUT /profile/academics
+Body: {
+  tenth_percentage, tenth_board,
+  twelfth_percentage, twelfth_board, stream,
+  ug_institution, ug_cgpa, ug_field, ug_grad_year
+}
+200: { data: { profile, strength } }
+
+POST /profile/test-scores
+Body: { exam_name, score, max_score, percentile?, exam_date? }
+201: { data: { test_score } }
+
+POST /profile/documents
+Body: { file_name, file_type, mime_type, size_bytes }
+200: {
+  data: {
+    upload_url: "https://r2.cloudflare.com/...",  // PUT to this directly
+    document_id: "uuid"
+  }
+}
+
+GET /users/:username/profile
+200: { data: {
+  full_name, username, avatar_url, bio, city, country,
+  profile: { current_level, academics, test_scores, goals, extras },
+  profile_strength,
+  documents: []  // names only, no URLs
+}}</pre>
+
+  <h2>Feed endpoints</h2>
+  <pre>GET /feed?page=1&category=ADMISSION
+200: {
+  data: [
+    {
+      id, title, body, category, type,
+      image_url, external_url, deadline_date,
+      pinned, published_at,
+      likes_count: 42,
+      is_liked: true,      // only if authenticated
+      is_bookmarked: false // only if authenticated
+    }
+  ],
+  meta: { page, per_page, total, total_pages }
+}
+
+POST /feed/:postId/like
+200: { data: { is_liked: true, likes_count: 43 } }
+
+GET /feed/bookmarks
+200: { data: [...posts] }</pre>
+
+  <h2>College endpoints</h2>
+  <pre>GET /colleges?country=Germany&degree=Masters&field=CS&page=1
+200: {
+  data: [
+    {
+      id, name, slug, country, city,
+      qs_ranking, acceptance_rate,
+      logo_url,
+      cheapest_tuition_usd: 8500,  // min across all courses
+      is_saved: false
+    }
+  ],
+  meta: { page, per_page, total }
+}
+
+GET /colleges/:slug
+200: {
+  data: {
+    id, name, slug, country, city, type,
+    qs_ranking, the_ranking, acceptance_rate,
+    website_url, logo_url, description,
+    courses: [
+      {
+        id, name, degree_type, field, duration_years,
+        language, intake_months, deadline,
+        requirements: { min_gpa, avg_gpa, min_ielts, ... },
+        fees: { tuition_per_year_usd, living_per_year_usd, ... }
+      }
+    ],
+    is_saved: true
+  }
+}</pre>
+</div>
+
+<!-- ENV & INFRA -->
+<div class="pg" id="pg-env">
+  <div class="tit">Environment & infra setup</div>
+  <div class="sub">Everything needed to go from zero to running locally and deployed</div>
+
+  <h2>Prerequisites (install these first)</h2>
+  <ul>
+    <li>Node.js 20+ (<code>nvm install 20</code>)</li>
+    <li>pnpm 9+ (<code>npm i -g pnpm</code>)</li>
+    <li>Docker Desktop (for local PostgreSQL + Redis)</li>
+    

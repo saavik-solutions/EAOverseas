@@ -17,7 +17,8 @@ export default defineConfig({
         items: [
           { text: 'Local Setup', link: '/guide/setup' },
           { text: 'Architecture Overview', link: '/architecture/overview' },
-          { text: 'Folder Structure', link: '/architecture/folders' }
+          { text: 'Folder Structure', link: '/architecture/folders' },
+          { text: 'Security & RBAC', link: '/guide/rbac' }
         ]
       },
       {

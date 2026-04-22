@@ -41,6 +41,7 @@ enum PostStatus {
 
 enum InteractionType {
   like
+  dislike
   bookmark
   view
 }
@@ -354,6 +355,7 @@ model FeedPost {
   isPinned      Boolean      @default(false) @map("is_pinned")
   viewCount     Int          @default(0) @map("view_count")
   likeCount     Int          @default(0) @map("like_count")
+  dislikeCount  Int          @default(0) @map("dislike_count")
   bookmarkCount Int          @default(0) @map("bookmark_count")
   metadata      Json?        @default("{}")
   publishedAt   DateTime?    @map("published_at")

@@ -1,0 +1,129 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+}
+
+.hero-content {
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.hero-title {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 80px;
+    line-height: 1.1;
+    color: #0F172A;
+    margin: 0;
+}
+
+.hero-subtitle {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.7;
+    color: #212939;
+    max-width: 760px;
+}
+
+.btn-explore {
+    background: #2D83F2;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.hero-partners {
+    display: flex;
+    gap: 4rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.partner-logo {
+    font-weight: 700;
+    font-size: 24px;
+    transition: color 0.3s;
+}
+
+/* Center item (3rd) is darkest/cleanest */
+.partner-logo:nth-child(3) {
+    color: #64748B;
+    /* Darker Slate */
+}
+
+/* 2nd and 4th items are lighter */
+.partner-logo:nth-child(2),
+.partner-logo:nth-child(4) {
+    color: #94A3B8;
+    /* Medium Slate */
+}
+
+/* 1st and 5th items are brightest/lightest */
+.partner-logo:nth-child(1),
+.partner-logo:nth-child(5) {
+    color: #CBD5E1;
+    /* Light Slate */
+}
+
+.floating-icons {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 100;
+}
+
+.icon-chat,
+.icon-whatsapp {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+}
+
+.icon-chat:hover,
+.icon-whatsapp:hover {
+    transform: translateY(-3px);
+}
+
+.icon-chat img,
+.icon-whatsapp img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 48px;
+    }
+
+    .navbar {
+        padding: 1rem;
+    }
+}

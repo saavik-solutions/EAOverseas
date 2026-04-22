@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../prisma'; // Base prisma client
-import { Role } from '@prisma/client';
+import { prisma, Role } from '../prisma';
 
 export interface AuthUser {
   id: string;
@@ -10,9 +9,11 @@ export interface AuthUser {
   isServiceAccount: boolean;
 }
 
-declare module 'fastify' {
-  interface FastifyRequest {
-    user?: AuthUser;
+import '@fastify/jwt';
+
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    user: AuthUser;
   }
 }
 
@@ -53,12 +54,19 @@ export const authenticate = async (request: FastifyRequest, reply: FastifyReply)
     const token = authHeader.split(' ')[1];
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecret') as any;
-      
-      const user = await prisma.user.findUnique({
-        where: { id: decoded.sub || decoded.id }
+      const userId = decoded.sub || decoded.id;
+
+      // Guard: only query if userId is a valid non-empty string
+      if (!userId || typeof userId !== 'string') {
+        return reply.status(401).send({ error: 'Unauthorized', message: 'Invalid token payload' });
+      }
+
+      // Use findFirst with composite filter to avoid Prisma strict unique-argument validation
+      const user = await prisma.user.findFirst({
+        where: { id: userId, isActive: true }
       });
 
-      if (user && user.isActive) {
+      if (user) {
         request.user = {
           id: user.id,
           email: user.email,

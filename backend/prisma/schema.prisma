@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./client"
 }
 
 datasource db {
@@ -40,6 +41,7 @@ enum PostStatus {
 
 enum InteractionType {
   like
+  dislike
   bookmark
   view
 }
@@ -156,6 +158,7 @@ model User {
   role            Role          @default(student)
   emailVerified   Boolean       @default(false) @map("email_verified")
   googleId        String?       @unique @map("google_id")
+  studentId       String?       @unique @map("student_id")
   authProvider    String        @default("email") @map("auth_provider")
   isActive        Boolean       @default(true) @map("is_active")
   deletedAt       DateTime?     @map("deleted_at")
@@ -169,12 +172,16 @@ model User {
   testScores      TestScore[]
   educationHistory EducationHistory[]
   documents       UserDocument[]
+  feedPosts       FeedPost[]
   feedInteractions FeedInteraction[]
   savedColleges   SavedCollege[]
   aiComparisons   AIComparison[]
   actionPlans     ActionPlan[]
   applications    Application[]
   apiKeys         ApiKey[]
+  communityPosts    CommunityPost[]    @relation("CommunityAuthor")
+  communityComments CommunityComment[] @relation("CommunityCommenter")
+  communityVotes    CommunityVote[]    @relation("CommunityVoter")
 
   @@map("users")
 }
@@ -224,6 +231,19 @@ model EmailOTP {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("email_otps")
+}
+
+model PhoneOTP {
+  id         String    @id @default(uuid()) @db.Uuid
+  phone      String    @unique @map("phone")
+  purpose    String
+  otpHash    String    @map("otp_hash")
+  attempts   Int       @default(0) @db.SmallInt
+  expiresAt  DateTime  @default(dbgenerated("(now() + '00:10:00'::interval)")) @map("expires_at")
+  usedAt     DateTime? @map("used_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@map("phone_otps")
 }
 
 model UserProfile {
@@ -331,15 +351,19 @@ model FeedPost {
   category      FeedCategory
   tags          String[]     @default([])
   status        PostStatus   @default(draft)
+  universityId  String?      @db.Uuid @map("university_id")
   isPinned      Boolean      @default(false) @map("is_pinned")
   viewCount     Int          @default(0) @map("view_count")
   likeCount     Int          @default(0) @map("like_count")
+  dislikeCount  Int          @default(0) @map("dislike_count")
   bookmarkCount Int          @default(0) @map("bookmark_count")
+  metadata      Json?        @default("{}")
   publishedAt   DateTime?    @map("published_at")
   createdAt     DateTime     @default(now()) @map("created_at")
   updatedAt     DateTime     @updatedAt @map("updated_at")
 
   author       User              @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  university   University?       @relation(fields: [universityId], references: [id], onDelete: Cascade)
   interactions FeedInteraction[]
 
   @@map("feed_posts")
@@ -385,6 +409,7 @@ model University {
   updatedAt        DateTime        @updatedAt @map("updated_at")
 
   courses UniversityCourse[]
+  feedPosts FeedPost[]
 
   @@map("universities")
 }
@@ -556,4 +581,84 @@ model Application {
 
   @@unique([userId, courseId])
   @@map("applications")
+}
+
+// --- COMMUNITY FEED ---
+
+enum CommunityCategory {
+  admissions
+  scholarships
+  visas
+  accommodation
+  career_advice
+  routine
+  general
+}
+
+enum VoteValue {
+  up
+  down
+}
+
+model CommunityPost {
+  id           String            @id @default(uuid()) @db.Uuid
+  authorId     String            @db.Uuid @map("author_id")
+  title        String
+  content      String?           @db.Text
+  imageUrl     String?           @map("image_url")
+  category     CommunityCategory @default(general)
+  tags         String[]          @default([])
+  isQuestion   Boolean           @default(false) @map("is_question")
+  isAnonymous  Boolean           @default(false) @map("is_anonymous")
+  voteScore    Int               @default(0) @map("vote_score")
+  commentCount Int               @default(0) @map("comment_count")
+  isPinned     Boolean           @default(false) @map("is_pinned")
+  isDeleted    Boolean           @default(false) @map("is_deleted")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  author   User               @relation("CommunityAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  comments CommunityComment[]
+  votes    CommunityVote[]
+
+  @@map("community_posts")
+}
+
+model CommunityComment {
+  id         String   @id @default(uuid()) @db.Uuid
+  postId     String   @db.Uuid @map("post_id")
+  authorId   String   @db.Uuid @map("author_id")
+  parentId   String?  @db.Uuid @map("parent_id")
+  text       String   @db.Text
+  isAnswer   Boolean  @default(false) @map("is_answer")
+  isBest     Boolean  @default(false) @map("is_best")
+  voteScore  Int      @default(0) @map("vote_score")
+  isDeleted  Boolean  @default(false) @map("is_deleted")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  post     CommunityPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author   User               @relation("CommunityCommenter", fields: [authorId], references: [id], onDelete: Cascade)
+  parent   CommunityComment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  CommunityComment[] @relation("CommentReplies")
+  votes    CommunityVote[]
+
+  @@map("community_comments")
+}
+
+model CommunityVote {
+  id          String     @id @default(uuid()) @db.Uuid
+  userId      String     @db.Uuid @map("user_id")
+  postId      String?    @db.Uuid @map("post_id")
+  commentId   String?    @db.Uuid @map("comment_id")
+  value       VoteValue
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  user      User              @relation("CommunityVoter", fields: [userId], references: [id], onDelete: Cascade)
+  post      CommunityPost?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment   CommunityComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
+  @@map("community_votes")
 }

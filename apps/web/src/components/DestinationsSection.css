@@ -1,0 +1,330 @@
+.destinations-section {
+    padding: 0 2rem 4rem 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    min-height: 800px;
+    /* ensure space */
+}
+
+/* ... skipped ... */
+
+
+
+.destinations-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.destinations-title {
+    font-weight: 700;
+    font-size: 40px;
+    color: #000000;
+    margin: 0 0 0.5rem 0;
+}
+
+.destinations-subtitle {
+    font-weight: 400;
+    font-size: 16px;
+    color: #555;
+    margin: 0;
+}
+
+.search-pill {
+    background: #F5F5F5;
+    border-radius: 50px;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 350px;
+}
+
+.search-icon {
+    font-size: 18px;
+    color: #888;
+}
+
+.search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+}
+
+.filters-row {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid #E0E0E0;
+    padding-bottom: 1rem;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    font-weight: 500;
+    font-size: 16px;
+    color: #888;
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.filter-btn.active {
+    color: #2D83F2;
+    font-weight: 700;
+}
+
+.filter-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1.1rem;
+    /* Align with border-bottom of row */
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #2D83F2;
+    border-radius: 3px 3px 0 0;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.destination-card {
+    height: 420px;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.destination-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Gradient Overlay - Dark at bottom */
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.9) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    color: white;
+}
+
+.card-top {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.uni-location {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.card-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.uni-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.uni-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat-val {
+    font-weight: 700;
+    color: #FFD700;
+    /* Gold color for highlights */
+}
+
+.btn-talk {
+    background: white;
+    color: black;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.btn-talk:hover {
+    background: #f0f0f0;
+}
+
+.arrow-icon {
+    font-weight: 300;
+}
+
+.explore-all-container {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-explore-all {
+    background: transparent;
+    border: 1px solid #000;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-explore-all:hover {
+    background: #000;
+    color: white;
+}
+
+@media (max-width: 1024px) {
+    .destinations-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .search-pill {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 640px) {
+    .destinations-section {
+        padding: 0 1rem 3rem 1rem;
+        min-height: auto;
+    }
+
+    .destinations-title {
+        font-size: 28px;
+        line-height: 1.2;
+    }
+
+    .destinations-subtitle {
+        font-size: 14px;
+    }
+
+    .filters-row {
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+        border: none;
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-btn {
+        font-size: 14px;
+        padding-bottom: 0.2rem;
+    }
+
+    .filter-btn.active::after {
+        bottom: -0.5rem;
+    }
+
+    .search-pill {
+        width: 100%;
+    }
+
+    /* Horizontal Scroll Layout for Cards */
+    .cards-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        width: 100%;
+        scroll-snap-type: x mandatory;
+        /* Hide scrollbar */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .cards-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .destination-card {
+        min-width: 260px;
+        width: 260px;
+        height: 380px;
+        scroll-snap-align: center;
+    }
+
+    .card-overlay {
+        padding: 1rem;
+        height: 60%;
+        top: auto;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 20%, rgba(0, 0, 0, 0.95) 100%);
+    }
+
+    .uni-name {
+        font-size: 20px;
+    }
+
+    .uni-stats {
+        flex-wrap: wrap;
+        font-size: 13px;
+    }
+
+    .btn-talk {
+        font-size: 14px;
+        padding: 0.6rem;
+    }
+
+    .explore-all-container {
+        margin-top: 1rem;
+    }
+
+    .btn-explore-all {
+        font-size: 14px;
+        padding: 0.6rem 1.5rem;
+    }
+}

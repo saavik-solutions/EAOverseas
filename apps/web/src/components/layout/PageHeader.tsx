@@ -1,0 +1,89 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useNotification } from '../../context/NotificationContext';
+import { useAuth } from '../../context/AuthContext';
+// import NotificationDropdown from '../features/notifications/NotificationDropdown';
+
+interface Breadcrumb {
+    label: string;
+    link?: string;
+}
+
+interface PageHeaderProps {
+    title?: React.ReactNode;
+    actions?: React.ReactNode;
+    breadcrumbs?: Breadcrumb[];
+    hideSignOut?: boolean;
+}
+
+const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [], hideSignOut = false }) => {
+    const navigate = useNavigate();
+    const { unreadCount } = useNotification();
+    const { logout, user } = useAuth();
+    const [showNotifications, setShowNotifications] = useState(false);
+    const notificationRef = useRef(null);
+
+    const toggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+    };
+
+    // Close on click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+                setShowNotifications(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    return (
+        <header className="sticky top-0 h-16 bg-white flex items-center justify-between px-4 lg:px-8 shrink-0 z-40 shadow-sm border-b border-gray-100">
+            <div className="flex flex-col justify-center">
+                {breadcrumbs && (
+                    <div className={`flex items-center gap-2 font-medium text-gray-500 mb-0.5 ${!title ? 'text-sm' : 'text-xs'}`}>
+                        {breadcrumbs.map((b, i) => (
+                            <React.Fragment key={i}>
+                                {i > 0 && <span className="text-gray-300">/</span>}
+                                {b.link ? (
+                                    <Link to={b.link} className="hover:text-blue-600 transition-colors">{b.label}</Link>
+                                ) : (
+                                    <span className={!title ? 'text-gray-900 font-bold' : 'text-blue-600'}>{b.label}</span>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                )}
+                {title && <h2 className={`text-xl font-bold text-gray-900 leading-tight ${breadcrumbs ? 'text-lg' : ''}`}>{title}</h2>}
+            </div>
+            <div className="flex items-center gap-4">
+                {/* Custom Actions */}
+                {actions && (
+                    <div className="flex items-center gap-3">
+                        {actions}
+                    </div>
+                )}
+
+                {/* Global Sign Out Button (Except forms) */}
+                {user && !hideSignOut && (
+                    <div className="hidden lg:flex items-center">
+                        <div className="h-6 w-px bg-slate-100 mx-1"></div>
+                        <button
+                            onClick={() => logout()}
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-all shadow-sm"
+                        >
+                            <span className="material-symbols-outlined !text-[16px]">logout</span>
+                            Sign Out
+                        </button>
+                    </div>
+                )}
+            </div>
+        </header>
+    );
+};
+
+export default PageHeader;

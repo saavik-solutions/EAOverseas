@@ -1,5 +1,5 @@
-import { PrismaClient, Role, DegreeType, UniversityType, FeedCategory, PostStatus } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { PrismaClient, Role, DegreeType, UniversityType, FeedCategory, PostStatus } from './client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 

@@ -1,0 +1,179 @@
+.about-us-section {
+    padding: 5rem 2rem 1rem 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    display: flex;
+    justify-content: center;
+}
+
+.about-content {
+    display: flex;
+    align-items: center;
+    /* Vertically center the columns */
+    gap: 6rem;
+    max-width: 100%;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Left Column */
+.about-text-column {
+    flex: 1;
+    /* Grow to fill space */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.about-tag {
+    background: #C8E0FF;
+    color: #0053BE;
+    padding: 5px 20px;
+    border-radius: 38px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.about-title {
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1.2;
+    color: #000000;
+    margin: 0;
+    max-width: 550px;
+}
+
+.about-description {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.about-description p {
+    margin: 0;
+}
+
+.btn-explore-about {
+    background: #2D83F2;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+/* Right Column */
+.about-image-column {
+    flex: 1;
+    /* Grow to fill space */
+    display: flex;
+    justify-content: center;
+    /* or flex-end to push to edge? Let's keep center/stretch */
+    width: 100%;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 550px;
+}
+
+.about-grid-img {
+    width: 268px;
+    /* based on Figma width */
+    height: 268px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+@media (max-width: 1024px) {
+    .about-content {
+        flex-direction: column;
+        gap: 3rem;
+        text-align: center;
+    }
+
+    .about-text-column {
+        align-items: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .about-us-section {
+        padding: 2.5rem 1rem 0;
+    }
+
+    .about-content {
+        gap: 1.5rem;
+    }
+
+    .about-title {
+        font-size: 24px;
+        max-width: 100%;
+    }
+
+    .about-description {
+        font-size: 13px;
+        line-height: 1.5;
+        gap: 0.75rem;
+    }
+
+    .btn-explore-about {
+        font-size: 15px;
+        padding: 0.6rem 1.25rem;
+    }
+
+    .about-grid {
+        gap: 0.75rem;
+        max-width: 100%;
+    }
+
+    .about-grid-img {
+        width: 100%;
+        /* Let grid control width */
+        height: auto;
+        aspect-ratio: 1/1;
+        /* Maintain square aspect ratio */
+    }
+
+    /* Reorder logic for Mobile */
+    .about-content {
+        align-items: center;
+    }
+
+    .about-text-column,
+    .about-image-column {
+        display: contents;
+    }
+
+    .about-tag {
+        order: 1;
+    }
+
+    .about-title {
+        order: 2;
+    }
+
+    .about-grid {
+        order: 3;
+    }
+
+    .about-description {
+        order: 4;
+    }
+
+    .btn-explore-about {
+        order: 5;
+    }
+}

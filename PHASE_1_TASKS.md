@@ -12,6 +12,7 @@ This document contains a granular breakdown of all tasks required to complete Ph
 |:---|:---|:---|:---|:---|
 | **BE-01** | Backend | **JWT & Token Rotation** | Implement sign-up, sign-in, and refresh token rotation. Use `bcrypt` for password hashing and the new `authenticate` middleware. | 5pts |
 | **BE-02** | Backend | **Email OTP Manager** | Build a service to generate, store (Prisma), and verify 6-digit OTPs for email verification. | 3pts |
+| **BE-09** | Backend | **Google OAuth Integration** | Implement Google OIDC flow. Handle user creation or login on successful callback and return JWTs. | 5pts |
 | **FE-01** | Frontend | **Auth State Management** | Setup Redux Toolkit / RTK Query for auth state. Implement persistence for `accessToken`. | 3pts |
 | **FE-02** | Frontend | **Onboarding Flow** | Build the multi-step registration UI (Email -> OTP -> Profile Basics). Use shared Zod schemas for validation. | 5pts |
 
@@ -49,6 +50,7 @@ This document contains a granular breakdown of all tasks required to complete Ph
 |:---|:---|:---|:---|:---|
 | **INF-01** | All | **Schema Synchronization** | Ensure all contributors run `prisma generate` and `pnpm install` regularly. | 1pt |
 | **INF-02** | Backend | **API Key Management** | Build a script or internal-only endpoint to generate new `ApiKey` records for the Admin app. | 3pts |
+| **INF-03** | Both | **Sentry Error Tracking** | Initialize Sentry in both Backend (Fastify) and Frontend (Next.js) for error reporting and tracing. | 3pts |
 
 ---
 

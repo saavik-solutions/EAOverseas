@@ -1,0 +1,56 @@
+.hero-carousel {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    width: 100%;
+    will-change: transform;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 80px;
+    /* Adjust based on button placement */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 20;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.dot:hover {
+    background: rgba(45, 131, 242, 0.5);
+}
+
+.dot.active {
+    background: #2D83F2;
+    transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+    .carousel-dots {
+        bottom: 120px;
+        /* Make space for buttons on mobile */
+    }
+}

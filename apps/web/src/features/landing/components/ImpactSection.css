@@ -1,0 +1,93 @@
+.impact-section {
+    position: relative;
+    padding: 100px 40px;
+    background: linear-gradient(135deg, #f47895 0%, #cf44c3 100%);
+    overflow: visible;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    border-radius: 40px;
+    margin: 40px auto;
+    max-width: 1500px;
+    width: 95%;
+}
+
+/* Background Map Overlay */
+.impact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://www.transparenttextures.com/patterns/black-linen.png');
+    /* placeholder pattern */
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.impact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 60px;
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 992px) {
+    .impact-container {
+        flex-direction: row;
+        align-items: center;
+        padding-bottom: 0;
+        gap: 80px;
+    }
+}
+
+
+.impact-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 450px;
+}
+
+@media (min-width: 992px) {
+    .impact-stats {
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .stat-box {
+        flex: 1;
+        min-width: 300px;
+        max-width: 380px;
+    }
+}
+
+.impact-visual {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (min-width: 992px) {
+    .impact-visual {
+        max-width: 750px;
+    }
+}
+
+.impact-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 20px;
+    transform: scale(1.1);
+    transform-origin: center;
+}

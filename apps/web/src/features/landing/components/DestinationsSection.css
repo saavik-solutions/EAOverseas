@@ -1,0 +1,415 @@
+.destinations-section {
+    position: relative;
+    width: 100%;
+    padding: 1rem 0 1rem 0;
+    font-family: 'Inter', sans-serif;
+    min-height: 900px;
+    /* Ensure section has enough height for content and absolute positioned elements */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.destinations-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    /* Ensure content is above background/visuals if they overlap */
+}
+
+.destinations-heading {
+    font-weight: 700;
+    font-size: 40px;
+    text-align: center;
+    color: #000000;
+    margin: 0 0 1rem 0;
+}
+
+.destinations-subheading {
+    font-weight: 400;
+    font-size: 20px;
+    text-align: center;
+    color: #000000;
+    max-width: 800px;
+    margin-bottom: 3rem;
+    line-height: 1.5;
+}
+
+.destinations-filter-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1600px;
+    /* Matched to content width for alignment */
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    padding-left: 0;
+    /* Ensure no extra padding pushing it right */
+}
+
+.filter-options {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.filter-option {
+    font-size: 16px;
+    color: #050505;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.filter-option.active {
+    background-color: #2D83F2;
+    color: white;
+    font-weight: 500;
+}
+
+.search-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #AEAEAE;
+    border-radius: 38px;
+    color: #7D7D7D;
+    cursor: pointer;
+}
+
+.search-placeholder {
+    font-size: 16px;
+}
+
+.destinations-content {
+    display: grid;
+    /* Grid for content separation */
+    width: 100%;
+    max-width: 1600px;
+    grid-template-columns: 1fr 0.8fr;
+    /* Adjusted ratios to give cards more space but respect visual area */
+    gap: 4rem;
+    align-items: center;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    /* Occupies the first column of the parent grid */
+}
+
+.destination-card {
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    height: 100%;
+    /* Stretch to fill grid cell height */
+    min-height: 460px;
+    /* Ensure minimum size */
+    box-shadow: 0 4px 15px rgba(45, 131, 242, 0.1);
+    transition: transform 0.2s;
+    background: linear-gradient(180deg, #e3e8ef 0%, #dbeafe 45%, #2d83f2 100%);
+    animation: fadeIn 0.5s ease-out forwards;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.destination-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-bg {
+    width: 100%;
+    height: 240px;
+    /* Fixed height ensures text content starts at the same level across all cards */
+    object-fit: cover;
+    border-radius: 22px;
+    flex-shrink: 0;
+    /* Prevent image shrinking */
+}
+
+.card-overlay {
+    position: relative;
+    height: auto;
+    flex: 1;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Changed from center to allow margin-top: auto to work cleanly */
+    align-items: center;
+    padding: 1.5rem 0.5rem 1rem 0.5rem;
+    /* Adjusted padding */
+    color: white;
+    backdrop-filter: none;
+    text-align: center;
+}
+
+.uni-name {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.3;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    width: 100%;
+}
+
+.uni-stats {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    opacity: 0.95;
+    width: 100%;
+}
+
+.btn-talk {
+    background: white;
+    color: #2D83F2;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    margin-top: auto;
+    /* Pushes button to the bottom */
+}
+
+.btn-talk:hover {
+    transform: scale(1.02);
+}
+
+/* 
+   Visual Area is now independent of the centered text container.
+   It sticks to the right side of the VIEWPORT.
+*/
+.visual-area {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    /* Adjusted to make graphic fully visible as per user request */
+    transform: translateY(-50%);
+    height: 90%;
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.orbit-graphic {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+    /* Ensure it touches the edge. No margin. */
+    margin-right: -1px;
+    /* Sometimes 0 leaves a hairline gap, -1 ensures contact */
+}
+
+@keyframes orbitSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.section-footer {
+    margin-top: 3rem;
+    margin-bottom: 2.5rem;
+}
+
+.btn-explore-all {
+    background: #2D83F2;
+    color: white;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .destinations-content {
+        grid-template-columns: 1fr;
+    }
+
+    .cards-grid {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .visual-area {
+        position: relative;
+        top: auto;
+        transform: none;
+        width: 100%;
+        height: auto;
+        justify-content: center;
+        margin-top: 2rem;
+        right: auto;
+    }
+
+    .orbit-graphic {
+        width: 100%;
+        height: auto;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .destinations-section {
+        padding: 0;
+        min-height: auto;
+    }
+
+    .destinations-container {
+        padding: 0 1rem;
+    }
+
+    .destinations-heading {
+        font-size: 28px;
+        margin-bottom: 0.5rem;
+    }
+
+    .destinations-subheading {
+        font-size: 14px;
+        margin-bottom: 2rem;
+    }
+
+    .filter-options {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .filter-option {
+        font-size: 13px;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .destinations-filter-row {
+        gap: 1.5rem;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .search-pill {
+        width: 100%;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+    }
+
+    .cards-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+        padding-bottom: 1rem;
+        width: calc(100% + 2rem);
+        /* Extend to edges */
+        margin-left: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        scroll-snap-type: x mandatory;
+        /* Hide scrollbar for cleaner UI */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .cards-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .destination-card {
+        min-width: 200px;
+        width: 200px;
+        height: auto;
+        min-height: 0;
+        /* Remove fixed height constraints */
+        scroll-snap-align: center;
+        border-radius: 16px;
+        padding: 6px;
+    }
+
+    .card-bg {
+        height: 200px;
+        /* Taller image to match reference design */
+        border-radius: 12px;
+    }
+
+    .card-overlay {
+        padding: 0.5rem 0.4rem 0.6rem 0.4rem;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 0.2rem;
+    }
+
+    .uni-name {
+        font-size: 15px;
+        /* Slightly larger for better readability */
+        margin-bottom: 0.2rem;
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    .uni-stats {
+        font-size: 11px;
+        /* Readable size matching reference */
+        margin-bottom: 0.6rem;
+        line-height: 1.4;
+    }
+
+    .btn-talk {
+        font-size: 11px;
+        padding: 0.5rem 0.8rem;
+        white-space: nowrap;
+        margin-top: auto;
+        /* Auto margin pushes button to bottom for alignment */
+    }
+
+    .section-footer {
+        margin-top: 2rem;
+        margin-bottom: 0px;
+    }
+
+    .btn-explore-all {
+        font-size: 16px;
+        padding: 0.6rem 2rem;
+    }
+
+    .visual-area {
+        display: none;
+    }
+}

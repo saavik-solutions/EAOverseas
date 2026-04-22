@@ -1,0 +1,662 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- ENUMS ---
+
+enum Role {
+  student
+  vendor
+  counsellor
+  admin
+  super_admin
+}
+
+enum VerificationStatus {
+  pending
+  verified
+  rejected
+}
+
+enum FeedCategory {
+  admissions
+  scholarships
+  exams
+  news
+  visa
+  events
+}
+
+enum PostStatus {
+  draft
+  published
+  archived
+}
+
+enum InteractionType {
+  like
+  bookmark
+  view
+}
+
+enum DegreeType {
+  bachelors
+  masters
+  phd
+  diploma
+  certificate
+  associate
+}
+
+enum UniversityType {
+  public
+  private
+  autonomous
+}
+
+enum AICategory {
+  high
+  moderate
+  low
+  very_low
+}
+
+enum CollegePriority {
+  reach
+  match
+  safety
+}
+
+enum ApplicationStatus {
+  draft
+  submitted
+  pending
+  under_review
+  accepted
+  rejected
+  waitlisted
+  withdrawn
+}
+
+enum ApplicationPriority {
+  urgent
+  high
+  medium
+  low
+}
+
+enum FeeStatus {
+  unpaid
+  paid
+  waived
+}
+
+enum DocType {
+  transcript
+  sop
+  lor
+  passport
+  cv_resume
+  english_test
+  financial_proof
+  other
+}
+
+enum PlanStatus {
+  active
+  completed
+  abandoned
+}
+
+enum CurrentLevel {
+  class_10
+  class_11
+  class_12
+  ug_year_1
+  ug_year_2
+  ug_year_3
+  ug_final
+  pg
+  phd
+  working_professional
+}
+
+enum Stream {
+  science
+  commerce
+  arts
+  engineering
+  medicine
+  law
+  other
+}
+
+enum TargetDegree {
+  bachelors
+  masters
+  phd
+  mba
+  diploma
+}
+
+// --- MODELS ---
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique
+  passwordHash  String?   @map("password_hash")
+  fullName      String    @map("full_name")
+  phone         String?
+  avatarUrl     String?   @map("avatar_url")
+  role          Role      @default(student)
+  emailVerified Boolean   @default(false) @map("email_verified")
+  googleId      String?   @unique @map("google_id")
+  studentId     String?   @unique @map("student_id")
+  authProvider  String    @default("email") @map("auth_provider")
+  isActive      Boolean   @default(true) @map("is_active")
+  deletedAt     DateTime? @map("deleted_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  lastLoginAt   DateTime? @map("last_login_at")
+
+  refreshTokens     RefreshToken[]
+  emailOtps         EmailOTP[]
+  profile           UserProfile?
+  testScores        TestScore[]
+  educationHistory  EducationHistory[]
+  documents         UserDocument[]
+  feedPosts         FeedPost[]
+  feedInteractions  FeedInteraction[]
+  savedColleges     SavedCollege[]
+  aiComparisons     AIComparison[]
+  actionPlans       ActionPlan[]
+  applications      Application[]
+  apiKeys           ApiKey[]
+  communityPosts    CommunityPost[]    @relation("CommunityAuthor")
+  communityComments CommunityComment[] @relation("CommunityCommenter")
+  communityVotes    CommunityVote[]    @relation("CommunityVoter")
+
+  @@map("users")
+}
+
+model ApiKey {
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String // e.g., "Admin Dashboard Production"
+  keyHash    String    @unique @map("key_hash")
+  role       Role      @default(admin)
+  isActive   Boolean   @default(true) @map("is_active")
+  lastUsedAt DateTime? @map("last_used_at")
+  expiresAt  DateTime? @map("expires_at")
+  ownerId    String?   @map("owner_id") @db.Uuid
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  owner User? @relation(fields: [ownerId], references: [id])
+
+  @@map("api_keys")
+}
+
+model RefreshToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash")
+  familyId   String    @default(uuid()) @map("family_id") @db.Uuid
+  deviceInfo String?   @map("device_info")
+  ipAddress  String?   @map("ip_address") // Better to use String in Prisma for INET
+  expiresAt  DateTime  @map("expires_at")
+  revokedAt  DateTime? @map("revoked_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model EmailOTP {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  purpose   String
+  otpHash   String    @map("otp_hash")
+  attempts  Int       @default(0) @db.SmallInt
+  expiresAt DateTime  @default(dbgenerated("(now() + '00:15:00'::interval)")) @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_otps")
+}
+
+model PhoneOTP {
+  id        String    @id @default(uuid()) @db.Uuid
+  phone     String    @unique @map("phone")
+  purpose   String
+  otpHash   String    @map("otp_hash")
+  attempts  Int       @default(0) @db.SmallInt
+  expiresAt DateTime  @default(dbgenerated("(now() + '00:10:00'::interval)")) @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@map("phone_otps")
+}
+
+model UserProfile {
+  id                   String        @id @default(uuid()) @db.Uuid
+  userId               String        @unique @map("user_id") @db.Uuid
+  currentLevel         CurrentLevel? @map("current_level")
+  stream               Stream?
+  tenthPercentage      Decimal?      @map("tenth_percentage") @db.Decimal(5, 2)
+  twelfthPercentage    Decimal?      @map("twelfth_percentage") @db.Decimal(5, 2)
+  ugCgpa               Decimal?      @map("ug_cgpa") @db.Decimal(4, 2)
+  ugInstitution        String?       @map("ug_institution")
+  ugGraduationYear     Int?          @map("ug_graduation_year") @db.SmallInt
+  fieldOfStudy         String?       @map("field_of_study")
+  targetDegree         TargetDegree? @map("target_degree")
+  targetCountries      String[]      @default([]) @map("target_countries")
+  targetFields         String[]      @default([]) @map("target_fields")
+  budgetMinUsd         Int?          @map("budget_min_usd")
+  budgetMaxUsd         Int?          @map("budget_max_usd")
+  city                 String?
+  state                String?
+  nationality          String        @default("Indian")
+  financialAidNeeded   Boolean       @default(false) @map("financial_aid_needed")
+  workExperienceMonths Int           @default(0) @map("work_experience_months")
+  gapYearMonths        Int           @default(0) @map("gap_year_months")
+  extracurriculars     String[]      @default([])
+  customSections       Json          @default("{}") @map("custom_sections")
+  profileStrength      Int           @default(0) @map("profile_strength") @db.SmallInt
+  isPublic             Boolean       @default(false) @map("is_public")
+  publicSlug           String?       @unique @map("public_slug")
+  createdAt            DateTime      @default(now()) @map("created_at")
+  updatedAt            DateTime      @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model TestScore {
+  id          String    @id @default(uuid()) @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  examName    String    @map("exam_name") // Could use enum but SQL uses CHECK constraint
+  score       Decimal   @db.Decimal(8, 2)
+  maxScore    Decimal   @map("max_score") @db.Decimal(8, 2)
+  percentile  Decimal?  @db.Decimal(5, 2)
+  subScores   Json?     @map("sub_scores")
+  examDate    DateTime? @map("exam_date") @db.Date
+  validUntil  DateTime? @map("valid_until") @db.Date
+  isLatest    Boolean   @default(true) @map("is_latest")
+  isVerified  Boolean   @default(false) @map("is_verified")
+  documentUrl String?   @map("document_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("test_scores")
+}
+
+model EducationHistory {
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+  institutionName String    @map("institution_name")
+  degree          String?
+  field           String?
+  gpa             Decimal?  @db.Decimal(4, 2)
+  gpaScale        Decimal?  @default(10) @map("gpa_scale") @db.Decimal(4, 2)
+  percentage      Decimal?  @db.Decimal(5, 2)
+  country         String?
+  startDate       DateTime? @map("start_date") @db.Date
+  endDate         DateTime? @map("end_date") @db.Date
+  isCurrent       Boolean   @default(false) @map("is_current")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("education_history")
+}
+
+model UserDocument {
+  id                 String             @id @default(uuid()) @db.Uuid
+  userId             String             @map("user_id") @db.Uuid
+  docType            DocType            @map("doc_type")
+  fileName           String             @map("file_name")
+  fileUrl            String             @map("file_url")
+  fileSizeBytes      BigInt?            @map("file_size_bytes")
+  mimeType           String?            @map("mime_type")
+  verificationStatus VerificationStatus @default(pending) @map("verification_status")
+  verifiedById       String?            @map("verified_by_id") @db.Uuid
+  verifiedAt         DateTime?          @map("verified_at")
+  notes              String?
+  createdAt          DateTime           @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_documents")
+}
+
+model FeedPost {
+  id            String       @id @default(uuid()) @db.Uuid
+  authorId      String       @map("author_id") @db.Uuid
+  title         String
+  slug          String       @unique
+  content       String       @db.Text
+  excerpt       String?
+  coverImageUrl String?      @map("cover_image_url")
+  category      FeedCategory
+  tags          String[]     @default([])
+  status        PostStatus   @default(draft)
+  universityId  String?      @map("university_id") @db.Uuid
+  isPinned      Boolean      @default(false) @map("is_pinned")
+  viewCount     Int          @default(0) @map("view_count")
+  likeCount     Int          @default(0) @map("like_count")
+  bookmarkCount Int          @default(0) @map("bookmark_count")
+  metadata      Json?        @default("{}")
+  publishedAt   DateTime?    @map("published_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  author       User              @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  university   University?       @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  interactions FeedInteraction[]
+
+  @@map("feed_posts")
+}
+
+model FeedInteraction {
+  id        String          @id @default(uuid()) @db.Uuid
+  userId    String          @map("user_id") @db.Uuid
+  postId    String          @map("post_id") @db.Uuid
+  type      InteractionType
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId, type])
+  @@map("feed_interactions")
+}
+
+model University {
+  id              String          @id @default(uuid()) @db.Uuid
+  name            String
+  slug            String          @unique
+  country         String
+  city            String?
+  type            UniversityType?
+  qsRanking       Int?            @map("qs_ranking")
+  theRanking      Int?            @map("the_ranking")
+  websiteUrl      String?         @map("website_url")
+  logoUrl         String?         @map("logo_url")
+  bannerUrl       String?         @map("banner_url")
+  description     String?         @db.Text
+  acceptanceRate  Decimal?        @map("acceptance_rate") @db.Decimal(5, 2)
+  totalStudents   Int?            @map("total_students")
+  intlStudentsPct Decimal?        @map("intl_students_pct") @db.Decimal(5, 2)
+  establishedYear Int?            @map("established_year") @db.SmallInt
+  campusSizeAcres Int?            @map("campus_size_acres")
+  notableAlumni   String[]        @default([]) @map("notable_alumni")
+  tags            String[]        @default([])
+  isActive        Boolean         @default(true) @map("is_active")
+  dataVerifiedAt  DateTime?       @map("data_verified_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  courses   UniversityCourse[]
+  feedPosts FeedPost[]
+
+  @@map("universities")
+}
+
+model UniversityCourse {
+  id                  String     @id @default(uuid()) @db.Uuid
+  universityId        String     @map("university_id") @db.Uuid
+  name                String
+  slug                String     @unique
+  degreeType          DegreeType @map("degree_type")
+  field               String
+  subField            String?    @map("sub_field")
+  durationYears       Decimal?   @map("duration_years") @db.Decimal(3, 1)
+  language            String     @default("English")
+  intakeMonths        Int[]      @map("intake_months")
+  applicationDeadline DateTime?  @map("application_deadline") @db.Date
+  isActive            Boolean    @default(true) @map("is_active")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+
+  university   University         @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  requirements CourseRequirement?
+  fees         CourseFee?
+  savedBy      SavedCollege[]
+  comparisons  AIComparison[]
+  actionPlans  ActionPlan[]
+  applications Application[]
+
+  @@map("university_courses")
+}
+
+model CourseRequirement {
+  id                      String   @id @default(uuid()) @db.Uuid
+  courseId                String   @unique @map("course_id") @db.Uuid
+  minGpa                  Decimal? @map("min_gpa") @db.Decimal(4, 2)
+  avgGpa                  Decimal? @map("avg_gpa") @db.Decimal(4, 2)
+  minPercentage           Decimal? @map("min_percentage") @db.Decimal(5, 2)
+  avgPercentage           Decimal? @map("avg_percentage") @db.Decimal(5, 2)
+  minIelts                Decimal? @map("min_ielts") @db.Decimal(3, 1)
+  avgIelts                Decimal? @map("avg_ielts") @db.Decimal(3, 1)
+  minToefl                Int?     @map("min_toefl") @db.SmallInt
+  minPte                  Int?     @map("min_pte") @db.SmallInt
+  minDuolingo             Int?     @map("min_duolingo") @db.SmallInt
+  minSat                  Int?     @map("min_sat") @db.SmallInt
+  minGreVerbal            Int?     @map("min_gre_verbal") @db.SmallInt
+  minGreQuant             Int?     @map("min_gre_quant") @db.SmallInt
+  avgGreQuant             Int?     @map("avg_gre_quant") @db.SmallInt
+  minGmat                 Int?     @map("min_gmat") @db.SmallInt
+  avgGmat                 Int?     @map("avg_gmat") @db.SmallInt
+  workExpYears            Decimal? @map("work_exp_years") @db.Decimal(3, 1)
+  workExpRequired         Boolean  @default(false) @map("work_exp_required")
+  sopRequired             Boolean  @default(true) @map("sop_required")
+  lorCount                Int      @default(2) @map("lor_count") @db.SmallInt
+  cvRequired              Boolean  @default(true) @map("cv_required")
+  portfolioRequired       Boolean  @default(false) @map("portfolio_required")
+  specificCoursesRequired String?  @map("specific_courses_required")
+  otherNotes              String?  @map("other_notes")
+  updatedAt               DateTime @default(now()) @map("updated_at")
+
+  course UniversityCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("course_requirements")
+}
+
+model CourseFee {
+  id                   String   @id @default(uuid()) @db.Uuid
+  courseId             String   @unique @map("course_id") @db.Uuid
+  tuitionPerYearUsd    Int?     @map("tuition_per_year_usd")
+  avgLivingPerYearUsd  Int?     @map("avg_living_per_year_usd")
+  applicationFeeUsd    Int      @default(0) @map("application_fee_usd")
+  totalCostEstimateUsd Int?     @map("total_cost_estimate_usd")
+  currencyLocal        String?  @map("currency_local")
+  tuitionLocal         Int?     @map("tuition_local")
+  scholarshipAvailable Boolean  @default(false) @map("scholarship_available")
+  scholarshipAmountUsd Int?     @map("scholarship_amount_usd")
+  scholarshipDetails   String?  @map("scholarship_details")
+  feeWaiverAvailable   Boolean  @default(false) @map("fee_waiver_available")
+  feeNotes             String?  @map("fee_notes")
+  updatedAt            DateTime @default(now()) @map("updated_at")
+
+  course UniversityCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("course_fees")
+}
+
+model SavedCollege {
+  id       String           @id @default(uuid()) @db.Uuid
+  userId   String           @map("user_id") @db.Uuid
+  courseId String           @map("course_id") @db.Uuid
+  priority CollegePriority?
+  notes    String?
+  savedAt  DateTime         @default(now()) @map("saved_at")
+
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course UniversityCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("saved_colleges")
+}
+
+model AIComparison {
+  id             String     @id @default(uuid()) @db.Uuid
+  userId         String     @map("user_id") @db.Uuid
+  courseId       String     @map("course_id") @db.Uuid
+  matchScore     Decimal    @map("match_score") @db.Decimal(5, 2)
+  category       AICategory
+  scoreBreakdown Json       @default("{}") @map("score_breakdown")
+  strengths      String[]   @default([])
+  weaknesses     String[]   @default([])
+  suggestions    Json       @default("[]")
+  alternatives   String[]   @default([]) @map("alternatives") // Array of UUID strings
+  aiExplanation  String?    @map("ai_explanation") @db.Text
+  modelVersion   String     @default("v1.0") @map("model_version")
+  processingMs   Int?       @map("processing_ms")
+  cached         Boolean    @default(false)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      UniversityCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  actionPlans ActionPlan[]
+
+  @@unique([userId, courseId])
+  @@map("ai_comparisons")
+}
+
+model ActionPlan {
+  id            String     @id @default(uuid()) @db.Uuid
+  userId        String     @map("user_id") @db.Uuid
+  comparisonId  String     @map("comparison_id") @db.Uuid
+  courseId      String     @map("course_id") @db.Uuid
+  milestones    Json       @default("[]")
+  targetIntake  String?    @map("target_intake")
+  targetDate    DateTime?  @map("target_date") @db.Date
+  status        PlanStatus @default(active)
+  completionPct Int        @default(0) @map("completion_pct") @db.SmallInt
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comparison AIComparison     @relation(fields: [comparisonId], references: [id], onDelete: Cascade)
+  course     UniversityCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("action_plans")
+}
+
+model Application {
+  id                String              @id @default(uuid()) @db.Uuid
+  userId            String              @map("user_id") @db.Uuid
+  universityId      String              @map("university_id") @db.Uuid
+  courseId          String              @map("course_id") @db.Uuid
+  comparisonId      String?             @map("comparison_id") @db.Uuid
+  status            ApplicationStatus   @default(draft)
+  priority          ApplicationPriority @default(medium)
+  applicationFee    Decimal?            @map("application_fee") @db.Decimal(10, 2)
+  feeStatus         FeeStatus           @default(unpaid) @map("fee_status")
+  feePaidAt         DateTime?           @map("fee_paid_at")
+  personalStatement String?             @map("personal_statement") @db.Text
+  counsellorId      String?             @map("counsellor_id") @db.Uuid
+  internalNotes     String?             @map("internal_notes") @db.Text
+  appliedAt         DateTime?           @map("applied_at")
+  decisionAt        DateTime?           @map("decision_at")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course UniversityCourse @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("applications")
+}
+
+// --- COMMUNITY FEED ---
+
+enum CommunityCategory {
+  admissions
+  scholarships
+  visas
+  accommodation
+  career_advice
+  routine
+  general
+}
+
+enum VoteValue {
+  up
+  down
+}
+
+model CommunityPost {
+  id           String            @id @default(uuid()) @db.Uuid
+  authorId     String            @map("author_id") @db.Uuid
+  title        String
+  content      String?           @db.Text
+  imageUrl     String?           @map("image_url")
+  category     CommunityCategory @default(general)
+  tags         String[]          @default([])
+  isQuestion   Boolean           @default(false) @map("is_question")
+  isAnonymous  Boolean           @default(false) @map("is_anonymous")
+  voteScore    Int               @default(0) @map("vote_score")
+  commentCount Int               @default(0) @map("comment_count")
+  isPinned     Boolean           @default(false) @map("is_pinned")
+  isDeleted    Boolean           @default(false) @map("is_deleted")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+
+  author   User               @relation("CommunityAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  comments CommunityComment[]
+  votes    CommunityVote[]
+
+  @@map("community_posts")
+}
+
+model CommunityComment {
+  id        String   @id @default(uuid()) @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
+  authorId  String   @map("author_id") @db.Uuid
+  parentId  String?  @map("parent_id") @db.Uuid
+  text      String   @db.Text
+  isAnswer  Boolean  @default(false) @map("is_answer")
+  isBest    Boolean  @default(false) @map("is_best")
+  voteScore Int      @default(0) @map("vote_score")
+  isDeleted Boolean  @default(false) @map("is_deleted")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  post    CommunityPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author  User               @relation("CommunityCommenter", fields: [authorId], references: [id], onDelete: Cascade)
+  parent  CommunityComment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies CommunityComment[] @relation("CommentReplies")
+  votes   CommunityVote[]
+
+  @@map("community_comments")
+}
+
+model CommunityVote {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  postId    String?   @map("post_id") @db.Uuid
+  commentId String?   @map("comment_id") @db.Uuid
+  value     VoteValue
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user    User              @relation("CommunityVoter", fields: [userId], references: [id], onDelete: Cascade)
+  post    CommunityPost?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment CommunityComment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
+  @@map("community_votes")
+}

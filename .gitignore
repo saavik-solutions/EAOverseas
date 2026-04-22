@@ -28,3 +28,9 @@ Thumbs.db
 
 # Prisma
 /backend/prisma/migrations/
+
+# Logs and Temp
+tsc_errors.log
+temp_frontend/
+/brain/
+.pnpm-debug.log*

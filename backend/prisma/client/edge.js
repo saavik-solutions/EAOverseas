@@ -671,7 +671,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\saavi\\OneDrive\\Desktop\\EAOverseas Backend\\backend\\prisma\\client",
+      "value": "C:\\Users\\Katta Manish Goud\\OneDrive\\Desktop\\EA Overseas\\EA-Overseas\\EAOverseas\\backend\\prisma\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -685,7 +685,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\saavi\\OneDrive\\Desktop\\EAOverseas Backend\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Katta Manish Goud\\OneDrive\\Desktop\\EA Overseas\\EA-Overseas\\EAOverseas\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

@@ -7,6 +7,49 @@ const SuperAdminUniversityManagement = () => {
     const [selectedStatus, setSelectedStatus] = useState('All Status');
     const [currentPage, setCurrentPage] = useState(1);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [uniForm, setUniForm] = useState<{
+        name: string; website: string; overview: string;
+        type: string; estYear: string; totalStudents: string; ranking: string;
+        country: string; city: string; campusSize: string;
+        intlStudents: string; acceptanceRate: string; employability: string;
+        admissionChance: string; matchDesc: string;
+        tuition: string; living: string; misc: string;
+        logo: string; banner: string;
+        intakes: { term: string; deadline: string; start: string }[];
+    }>({
+        name: '', website: '', overview: '',
+        type: 'Public', estYear: '', totalStudents: '', ranking: '', 
+        country: '', city: '', campusSize: '',
+        intlStudents: '', acceptanceRate: '', employability: '',
+        admissionChance: '98', matchDesc: 'Match based on profile.',
+        tuition: '$30k - $45k', living: '$15,000', misc: '$2,500',
+        logo: '', banner: '',
+        intakes: []
+    });
+    const [itTerm, setItTerm] = useState('');
+    const [itDeadline, setItDeadline] = useState('');
+    const [itStart, setItStart] = useState('');
+    
+    const updateForm = (field: string, val: any) => setUniForm(prev => ({ ...prev, [field]: val }));
+
+    const addIntake = () => {
+        if (itTerm && itDeadline && itStart && uniForm.intakes.length < 4) {
+            setUniForm(prev => ({
+                ...prev,
+                intakes: [...prev.intakes, { term: itTerm, deadline: itDeadline, start: itStart }]
+            }));
+            setItTerm('');
+            setItDeadline('');
+            setItStart('');
+        }
+    };
+
+    const removeIntake = (index: number) => {
+        setUniForm(prev => ({
+            ...prev,
+            intakes: prev.intakes.filter((_, i) => i !== index)
+        }));
+    };
     const navigate = useNavigate();
     const itemsPerPage = 5;
 
@@ -161,7 +204,7 @@ const SuperAdminUniversityManagement = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center justify-end">
                                                 <button
-                                                    onClick={() => navigate(`/Superadmin/university/${uni.id}`)}
+                                                    onClick={() => navigate(`/superadmin/university/${uni.id}`)}
                                                     className="px-4 py-1.5 bg-[#2b6cee]/10 text-[#2b6cee] text-xs font-bold rounded-lg hover:bg-[#2b6cee] hover:text-white transition-all whitespace-nowrap"
                                                 >
                                                     View Profile
@@ -243,16 +286,18 @@ const SuperAdminUniversityManagement = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">University Name <span className="text-rose-500">*</span></label>
-                                            <input type="text" placeholder="Enter official institutional name" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.name} onChange={e => updateForm('name', e.target.value)} placeholder="Enter official institutional name" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
                                         </div>
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Official Website <span className="text-rose-500">*</span></label>
-                                            <input type="text" placeholder="https://university.edu" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.website} onChange={e => updateForm('website', e.target.value)} placeholder="https://university.edu" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
                                         </div>
                                     </div>
                                     <div className="flex flex-col gap-1.5 pt-2">
                                         <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Institutional Overview</label>
                                         <textarea 
+                                            value={uniForm.overview} 
+                                            onChange={e => updateForm('overview', e.target.value)}
                                             placeholder="Write a brief overview about the university..." 
                                             rows={4} 
                                             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all resize-none"
@@ -269,21 +314,42 @@ const SuperAdminUniversityManagement = () => {
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Type</label>
-                                            <input type="text" defaultValue="Public" placeholder="e.g. Public" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <select value={uniForm.type} onChange={e => updateForm('type', e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all">
+                                                <option value="Public">Public</option>
+                                                <option value="Private">Private</option>
+                                                <option value="Research">Research</option>
+                                            </select>
                                         </div>
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Est. Year</label>
-                                            <input type="text" defaultValue="1850" placeholder="YYYY" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.estYear} onChange={e => updateForm('estYear', e.target.value)} placeholder="YYYY" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
                                         </div>
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Total Students</label>
-                                            <input type="text" defaultValue="25000" placeholder="Number" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.totalStudents} onChange={e => updateForm('totalStudents', e.target.value)} placeholder="Number" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
                                         </div>
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Global Ranking</label>
-                                            <input type="text" defaultValue="#42 QS" placeholder="e.g. #42 QS" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.ranking} onChange={e => updateForm('ranking', e.target.value)} placeholder="e.g. #42 QS" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
                                         </div>
                                     </div>
+
+                                    {/* Success Metrics */}
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Int'l Students</label>
+                                            <input type="text" value={uniForm.intlStudents} onChange={e => updateForm('intlStudents', e.target.value)} placeholder="e.g. 13,000+" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Acceptance Rate</label>
+                                            <input type="text" value={uniForm.acceptanceRate} onChange={e => updateForm('acceptanceRate', e.target.value)} placeholder="e.g. 88%" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Employability</label>
+                                            <input type="text" value={uniForm.employability} onChange={e => updateForm('employability', e.target.value)} placeholder="e.g. 92%" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                    </div>
+                                    
                                 </div>
 
                                 {/* Geography & Campus */}
@@ -295,15 +361,102 @@ const SuperAdminUniversityManagement = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Country <span className="text-rose-500">*</span></label>
-                                            <input type="text" placeholder="e.g. United Kingdom" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.country} onChange={e => updateForm('country', e.target.value)} placeholder="e.g. United Kingdom" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
                                         </div>
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">City</label>
-                                            <input type="text" placeholder="e.g. London" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.city} onChange={e => updateForm('city', e.target.value)} placeholder="e.g. London" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
                                         </div>
                                         <div className="flex flex-col gap-1.5">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Campus Size</label>
-                                            <input type="text" placeholder="e.g. 500 Acres" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                            <input type="text" value={uniForm.campusSize} onChange={e => updateForm('campusSize', e.target.value)} placeholder="e.g. 500 Acres" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Financial Estimates */}
+                                <div className="space-y-4">
+                                    <h3 className="flex items-center gap-2 text-xs font-black text-[#2b6cee] uppercase tracking-wider">
+                                        <span className="material-symbols-outlined text-[18px]">payments</span>
+                                        Est. Annual Expense
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Tuition Fees (Range)</label>
+                                            <input type="text" value={uniForm.tuition} onChange={e => updateForm('tuition', e.target.value)} placeholder="e.g. $32k - $45k" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Living Expenses</label>
+                                            <input type="text" value={uniForm.living} onChange={e => updateForm('living', e.target.value)} placeholder="e.g. $15,500" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Misc & Insurance</label>
+                                            <input type="text" value={uniForm.misc} onChange={e => updateForm('misc', e.target.value)} placeholder="e.g. $2,500" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Upcoming Intakes */}
+                                <div className="space-y-6">
+                                    <h3 className="flex items-center gap-2 text-xs font-black text-[#2b6cee] uppercase tracking-wider">
+                                        <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+                                        Upcoming Institutional Intakes
+                                    </h3>
+                                    
+                                    <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-200 space-y-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                            <div className="md:col-span-3 flex flex-col gap-1.5">
+                                                <label className="text-[10px] font-black text-slate-700 uppercase">Intake Term *</label>
+                                                <input type="text" value={itTerm} onChange={e => setItTerm(e.target.value)} placeholder="e.g. Fall 2024" className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-[#2b6cee]" />
+                                            </div>
+                                            <div className="md:col-span-3 flex flex-col gap-1.5">
+                                                <label className="text-[10px] font-black text-slate-700 uppercase">Deadline *</label>
+                                                <input type="text" value={itDeadline} onChange={e => setItDeadline(e.target.value)} placeholder="e.g. Dec 15" className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-[#2b6cee]" />
+                                            </div>
+                                            <div className="md:col-span-3 flex flex-col gap-1.5">
+                                                <label className="text-[10px] font-black text-slate-700 uppercase">Classes Start *</label>
+                                                <input type="text" value={itStart} onChange={e => setItStart(e.target.value)} placeholder="e.g. Aug 20" className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold outline-none focus:border-[#2b6cee]" />
+                                            </div>
+                                            <div className="md:col-span-3">
+                                                <button 
+                                                    type="button" 
+                                                    onClick={addIntake}
+                                                    disabled={uniForm.intakes.length >= 4}
+                                                    className="w-full h-[40px] bg-[#2b6cee] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-2"
+                                                >
+                                                    <span className="material-symbols-outlined text-[18px]">add</span>
+                                                    Add Slot
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {[0, 1, 2, 3].map((slotIdx) => {
+                                                const intake = uniForm.intakes[slotIdx];
+                                                return (
+                                                    <div key={slotIdx} className={`h-20 rounded-2xl border-2 border-dashed flex items-center px-5 transition-all group ${intake ? 'bg-white border-[#2b6cee]/20 shadow-sm' : 'bg-slate-50 border-slate-200 opacity-50'}`}>
+                                                        {intake ? (
+                                                            <div className="flex-1 flex flex-col">
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-[11px] font-black text-[#2b6cee] uppercase tracking-wider">{intake.term}</span>
+                                                                    <button onClick={() => removeIntake(slotIdx)} className="size-6 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all opacity-0 group-hover:opacity-100">
+                                                                        <span className="material-symbols-outlined text-[14px]">delete</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div className="flex items-center gap-3 mt-1">
+                                                                    <span className="text-[9px] font-bold text-slate-400 uppercase">Deadline: <span className="text-rose-500">{intake.deadline}</span></span>
+                                                                    <div className="size-1 rounded-full bg-slate-200"></div>
+                                                                    <span className="text-[9px] font-bold text-slate-400 uppercase">Start: {intake.start}</span>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex-1 text-center">
+                                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Slot {slotIdx + 1}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>

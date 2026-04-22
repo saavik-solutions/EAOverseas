@@ -130,6 +130,7 @@ function App() {
                         <ScrollToTop />
                         <Routes>
                             <Route path="/landing" element={<LandingPage />} />
+                            <Route path="/test" element={<div className="p-20 text-4xl bg-red-500 text-white">TEST PAGE WORKING</div>} />
                             <Route path="/terms" element={<TermsAndConditions />} />
                             <Route path="/cookie-policy" element={<CookiePolicy />} />
                             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -252,13 +253,13 @@ function App() {
                             <Route path="/verification" element={<Verification />} />
                             <Route path="/university-verification" element={<UniversityVerification />} />
                             <Route path="/university-pending-verification" element={<UniversityPendingVerification />} />
-                             <Route path="/Superadmin" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><Superadmin /></ProtectedRoute>} />
-                             <Route path="/Superadmin/users" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUserManagement /></ProtectedRoute>} />
-                             <Route path="/Superadmin/universities" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityManagement /></ProtectedRoute>} />
-                             <Route path="/Superadmin/university/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityProfile /></ProtectedRoute>} />
-                             <Route path="/Superadmin/university-portal/posts-feed" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostFeedDashboard /></ProtectedRoute>} />
-                             <Route path="/Superadmin/university-portal/posts-feed/new" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminNewPost /></ProtectedRoute>} />
-                             <Route path="/Superadmin/university-portal/posts-feed/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostDetails /></ProtectedRoute>} />
+                             <Route path="/superadmin" element={<Superadmin />} />
+                             <Route path="/superadmin/users" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUserManagement /></ProtectedRoute>} />
+                             <Route path="/superadmin/universities" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityManagement /></ProtectedRoute>} />
+                             <Route path="/superadmin/university/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityProfile /></ProtectedRoute>} />
+                             <Route path="/superadmin/university-portal/posts-feed" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostFeedDashboard /></ProtectedRoute>} />
+                             <Route path="/superadmin/university-portal/posts-feed/new" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminNewPost /></ProtectedRoute>} />
+                             <Route path="/superadmin/university-portal/posts-feed/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostDetails /></ProtectedRoute>} />
 
                             {/* University Portal Routes */}
                             <Route path="/university-panel/:universityName" element={<UniversityDashboard />} />

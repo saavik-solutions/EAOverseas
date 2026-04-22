@@ -136,7 +136,7 @@ const SuperAdminPostFeedDashboard = () => {
                             <span className="material-symbols-outlined text-[20px]">sync</span>
                         </button>
                         <button
-                            onClick={() => navigate('/Superadmin/university-portal/posts-feed/new')}
+                            onClick={() => navigate('/superadmin/university-portal/posts-feed/new')}
                             className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-black hover:bg-black transition-all shadow-md active:scale-95"
                         >
                             <span className="material-symbols-outlined text-[18px]">add</span>
@@ -243,14 +243,14 @@ const SuperAdminPostFeedDashboard = () => {
                     filterType === 'Scholarship' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {filtered.map(post => (
-                                <ScholarshipCard key={post.id} data={post} onManage={() => navigate(`/Superadmin/university-portal/posts-feed/${post.id}`)} />
+                                <ScholarshipCard key={post.id} data={post} onManage={() => navigate(`/superadmin/university-portal/posts-feed/${post.id}`)} />
                             ))}
                             {filtered.length === 0 && <EmptyState />}
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             {filtered.map(post => (
-                                <PostCard key={post.id} post={post} onManage={() => navigate(`/Superadmin/university-portal/posts-feed/${post.id}`)} />
+                                <PostCard key={post.id} post={post} onManage={() => navigate(`/superadmin/university-portal/posts-feed/${post.id}`)} />
                             ))}
                             {filtered.length === 0 && <EmptyState />}
                         </div>
@@ -295,7 +295,7 @@ const SuperAdminPostFeedDashboard = () => {
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button onClick={() => navigate(`/Superadmin/university-portal/posts-feed/${post.id}`)} className="size-8 rounded-lg bg-blue-50 text-[#2b6cee] flex items-center justify-center hover:bg-[#2b6cee] hover:text-white transition-all">
+                                                    <button onClick={() => navigate(`/superadmin/university-portal/posts-feed/${post.id}`)} className="size-8 rounded-lg bg-blue-50 text-[#2b6cee] flex items-center justify-center hover:bg-[#2b6cee] hover:text-white transition-all">
                                                         <span className="material-symbols-outlined text-[18px]">visibility</span>
                                                     </button>
                                                     <button onClick={() => handleDelete(post.id)} className="size-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all">

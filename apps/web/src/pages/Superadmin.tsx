@@ -12,7 +12,7 @@ const Superadmin = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Total Universities */}
                     <div
-                        onClick={() => navigate('/Superadmin/universities')}
+                        onClick={() => navigate('/superadmin/universities')}
                         className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3 cursor-pointer hover:bg-slate-50 transition-colors"
                     >
                         <div className="flex justify-between items-start">

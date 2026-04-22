@@ -55,11 +55,14 @@ const SuperAdminPostDetails = () => {
                         tags: p.tags || [],
                         category: p.category || 'Article',
                         status: 'Published',
-                        grid: [
+                        grid: p.metadata?.grid || [
                             { label: 'Views', value: (p.viewCount || 0).toLocaleString() },
                             { label: 'Score', value: (p.score || 0).toString() },
                             { label: 'Comments', value: (p.commentCount || 0).toString() }
-                        ]
+                        ],
+                        benefits: p.metadata?.benefits || [],
+                        documents: p.metadata?.documents || [],
+                        downloadBtn: p.metadata?.downloadBtn || { label: '', link: '' }
                     });
                     setLoading(false);
                     return;
@@ -111,7 +114,7 @@ const SuperAdminPostDetails = () => {
             try {
                 // await feedService.delete(postId);
                 deletePost(post.id);
-                navigate('/Superadmin/university-portal/posts-feed');
+                navigate('/superadmin/university-portal/posts-feed');
             } catch (err) {
                 console.error('Delete failed', err);
             }
@@ -125,7 +128,7 @@ const SuperAdminPostDetails = () => {
                 title="Post Details"
                 breadcrumbs={[
                     { label: 'University Portal' },
-                    { label: 'Posts & Feed', link: '/Superadmin/university-portal/posts-feed' },
+                    { label: 'Posts & Feed', link: '/superadmin/university-portal/posts-feed' },
                     { label: post.title }
                 ]}
                 actions={
@@ -180,6 +183,26 @@ const SuperAdminPostDetails = () => {
                                     className="prose prose-slate max-w-none prose-lg prose-headings:font-black prose-headings:text-slate-900 prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-[#2b6cee] prose-img:rounded-3xl"
                                     dangerouslySetInnerHTML={{ __html: post.about }}
                                 />
+
+                                {/* dynamic benefits section */}
+                                {post.benefits && post.benefits.length > 0 && (
+                                    <div className="mt-12 pt-8 border-t border-slate-100">
+                                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Program Benefits & Outcomes</h4>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {post.benefits.map((benefit, i) => (
+                                                <div key={i} className="flex items-center gap-5 bg-slate-50 p-6 rounded-[32px] border border-slate-100 hover:border-[#2b6cee]/20 hover:bg-white hover:shadow-xl hover:shadow-[#2b6cee]/5 transition-all group">
+                                                    <div className="size-14 bg-white rounded-2xl flex items-center justify-center text-[#2b6cee] shadow-sm group-hover:bg-[#2b6cee] group-hover:text-white transition-all">
+                                                        <span className="material-symbols-outlined text-3xl font-light">{benefit.icon}</span>
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-black text-slate-900 text-lg leading-tight mb-1">{benefit.title}</p>
+                                                        <p className="text-sm font-bold text-slate-500 leading-relaxed">{benefit.description}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Tags */}
                                 {post.tags && post.tags.length > 0 && (
@@ -236,37 +259,67 @@ const SuperAdminPostDetails = () => {
                                     </p>
                                 </div>
                             </div>
-                            <Link to={`/Superadmin/university-portal/universities`} className="w-full py-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl transition-all flex items-center justify-center gap-2 group">
+                            <Link to={`/superadmin/universities`} className="w-full py-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl transition-all flex items-center justify-center gap-2 group">
                                 View Institution Profile
                                 <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
                             </Link>
                         </div>
 
-                        {/* Dynamic Details Slot */}
+                        {/* Dynamic Post Specifications Bar */}
                         {post.grid && post.grid.length > 0 && (
-                            <div className="bg-slate-900 rounded-[32px] p-8 text-white relative overflow-hidden shadow-xl shadow-blue-900/10">
-                                <div className="absolute top-0 right-0 size-48 bg-white/5 blur-[60px] -mr-24 -mt-24 rounded-full" />
-                                <h3 className="text-[10px] font-black text-[#2b6cee] uppercase tracking-[0.3em] mb-6 relative z-10">Quick Specifications</h3>
-                                <div className="space-y-6 relative z-10">
-                                    {post.grid.map((item, i) => (
-                                        <div key={i} className="flex items-center gap-4 group">
-                                            <div className="size-10 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-[#2b6cee]/20 transition-colors">
-                                                <span className="material-symbols-outlined text-[#2b6cee] text-xl">
-                                                    {item.label === 'Deadline' ? 'calendar_today' :
-                                                        item.label === 'Coverage' ? 'payments' :
-                                                            item.label === 'Duration' ? 'timer' :
-                                                                item.label === 'Level' ? 'stairs' :
-                                                                    item.label === 'Views' ? 'visibility' :
-                                                                        item.label === 'Score' ? 'grade' :
-                                                                            item.label === 'Comments' ? 'chat' : 'info'}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">{item.label}</p>
-                                                <p className="font-bold text-sm">{item.value}</p>
-                                            </div>
+                            <div className="bg-white rounded-[32px] border border-slate-200 overflow-hidden shadow-sm">
+                                <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-slate-100">
+                                    {post.grid.slice(0, 4).map((item, i) => (
+                                        <div key={i} className="p-6 text-center hover:bg-slate-50 transition-colors">
+                                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">{item.label}</p>
+                                            <p className={`font-bold text-sm ${
+                                                item.label.toLowerCase() === 'tuition' ? 'text-emerald-600' :
+                                                item.label.toLowerCase() === 'duration' ? 'text-blue-600' :
+                                                item.label.toLowerCase() === 'deadline' ? 'text-orange-600' :
+                                                item.label.toLowerCase() === 'type' ? 'text-purple-600' : 'text-slate-900'
+                                            }`}>
+                                                {item.value}
+                                                {item.label.toLowerCase() === 'deadline' && <span className="material-symbols-outlined text-[14px] ml-1 align-middle">schedule</span>}
+                                            </p>
                                         </div>
                                     ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Required Documents Section */}
+                        {post.documents && post.documents.length > 0 && (
+                            <div className="bg-white rounded-[32px] border border-slate-200 overflow-hidden shadow-sm">
+                                <div className="p-8 space-y-8">
+                                    <div>
+                                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Application Prerequisites</h4>
+                                        <h5 className="font-black text-slate-900 text-lg">Required Documents</h5>
+                                    </div>
+                                    
+                                    <div className="space-y-4">
+                                        {post.documents.map((doc, idx) => (
+                                            <div key={idx} className="flex items-center gap-4 group">
+                                                <div className="size-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#2b6cee]/10 group-hover:text-[#2b6cee] transition-all">
+                                                    <span className="material-symbols-outlined text-[18px]">description</span>
+                                                </div>
+                                                <p className="text-slate-600 font-bold text-sm tracking-tight">{doc}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {post.downloadBtn && post.downloadBtn.label && (
+                                        <div className="pt-8 border-t border-slate-100 flex justify-center">
+                                            <a 
+                                                href={post.downloadBtn.link || '#'} 
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-900 rounded-[24px] font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all group active:scale-95 shadow-xl shadow-slate-200"
+                                            >
+                                                <span className="material-symbols-outlined group-hover:translate-y-0.5 transition-transform">download</span>
+                                                {post.downloadBtn.label}
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -289,11 +342,11 @@ const SuperAdminPostDetails = () => {
                                 <div className="size-12 bg-[#2b6cee] rounded-2xl flex items-center justify-center text-white shrink-0">
                                     <span className="material-symbols-outlined">share</span>
                                 </div>
-                                <div>
+                                <div className="flex-1 min-w-0">
                                     <p className="text-xs font-black text-slate-900">Public URL</p>
-                                    <p className="text-[10px] text-blue-600 font-medium truncate max-w-[150px]">eaoverseas.com/feed/{post.id}</p>
+                                    <p className="text-[10px] text-blue-600 font-medium truncate">eaoverseas.com/feed/{post.id}</p>
                                 </div>
-                                <button className="ml-auto size-8 bg-white border border-blue-200 rounded-lg flex items-center justify-center text-[#2b6cee] hover:bg-blue-100 transition">
+                                <button className="size-8 bg-white border border-blue-200 rounded-lg flex items-center justify-center text-[#2b6cee] hover:bg-blue-100 transition">
                                     <span className="material-symbols-outlined text-[18px]">content_copy</span>
                                 </button>
                             </div>

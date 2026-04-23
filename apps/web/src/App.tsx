@@ -105,6 +105,10 @@ import Verification from './pages/Verification';
 import UniversityVerification from './pages/UniversityVerification';
 import UniversityPendingVerification from './pages/UniversityPendingVerification';
 import SuperAdminUserManagement from './pages/SuperAdminUserManagement';
+import SuperAdminConsultantManagement from './pages/SuperAdminConsultantManagement';
+import SuperAdminConsultantDirectory from './pages/SuperAdminConsultantDirectory';
+import SuperAdminConsultantDetails from './pages/SuperAdminConsultantDetails';
+import SuperAdminConsultantRatings from './pages/SuperAdminConsultantRatings';
 
 import { SavedItemsProvider } from './context/SavedItemsContext';
 import { UserProfileProvider } from './context/UserProfileContext';
@@ -256,6 +260,10 @@ function App() {
                              <Route path="/superadmin" element={<Superadmin />} />
                              <Route path="/superadmin/users" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUserManagement /></ProtectedRoute>} />
                              <Route path="/superadmin/universities" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityManagement /></ProtectedRoute>} />
+                             <Route path="/superadmin/consultants" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantManagement /></ProtectedRoute>} />
+                             <Route path="/superadmin/consultants/directory" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantDirectory /></ProtectedRoute>} />
+                             <Route path="/superadmin/consultant/profile/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantDetails /></ProtectedRoute>} />
+                             <Route path="/superadmin/consultant/ratings/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantRatings /></ProtectedRoute>} />
                              <Route path="/superadmin/university/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityProfile /></ProtectedRoute>} />
                              <Route path="/superadmin/university-portal/posts-feed" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostFeedDashboard /></ProtectedRoute>} />
                              <Route path="/superadmin/university-portal/posts-feed/new" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminNewPost /></ProtectedRoute>} />

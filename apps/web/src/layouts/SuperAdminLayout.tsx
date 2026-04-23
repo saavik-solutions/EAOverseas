@@ -78,8 +78,8 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
             `}>
                 <div className="p-6">
                     <div className="flex items-center gap-3">
-                        <div className="bg-[#2b6cee] size-10 rounded-lg flex items-center justify-center text-white shadow-lg shadow-[#2b6cee]/20">
-                            <span className="material-symbols-outlined">school</span>
+                        <div className="bg-white border-2 border-[#2b6cee] size-10 rounded-xl flex items-center justify-center text-[#2b6cee] shadow-lg shadow-blue-50">
+                            <span className="material-symbols-outlined font-black">school</span>
                         </div>
                         <div className="flex flex-col">
                             <h1 className="text-[#111318] text-lg font-bold leading-none">Super Admin</h1>

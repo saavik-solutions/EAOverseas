@@ -63,6 +63,11 @@ import WritingTestInstructions from './pages/WritingTestInstructions';
 import WritingTest from './pages/WritingTest';
 import ConsultantDashboard from './pages/ConsultantDashboard';
 import ConsultantLayout from './layouts/ConsultantLayout';
+import UniversityCourses from '../pages/UniversityCourses';
+import UniversityDashboard from '../pages/UniversityDashboard';
+import UniversityImpressions from '../pages/UniversityImpressions';
+import UniversityLeads from '../pages/UniversityLeads';
+import UniversityConversion from '../pages/UniversityConversion';
 
 // Profile Pages
 import ProfileLayout from './pages/profile/ProfileLayout';
@@ -178,6 +183,13 @@ function App() {
                             <Route element={<ConsultantLayout />}>
                                 <Route path="/counsellor-dashboard" element={<ConsultantDashboard />} />
                             </Route>
+
+                            {/* University Routes */}
+                            <Route path="/university-panel/:universityName" element={<UniversityDashboard />} />
+                            <Route path="/university-panel/:universityName/courses" element={<UniversityCourses />} />
+                            <Route path="/university-panel/:universityName/analytics" element={<UniversityImpressions />} />
+                            <Route path="/university-panel/:universityName/leads" element={<UniversityLeads />} />
+                            <Route path="/university-panel/:universityName/conversion" element={<UniversityConversion />} />
 
                             {/* Auth Routes */}
                             <Route path="/login" element={<Login />} />

@@ -136,6 +136,9 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
                                         (item.name === 'Overview' && location.pathname === '/superadmin') ||
                                         (item.name === 'Universities' && (
                                             location.pathname.startsWith('/superadmin/university')
+                                        )) ||
+                                        (item.name === 'Consultants' && (
+                                            location.pathname.startsWith('/superadmin/consultant')
                                         )))
                                         ? 'bg-[#2b6cee]/10 text-[#2b6cee] font-semibold'
                                         : 'text-slate-600 hover:bg-slate-50 font-medium'

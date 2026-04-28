@@ -122,6 +122,22 @@ const SuperAdminUniversityManagement = () => {
             intakes: prev.intakes.filter((_, i) => i !== index)
         }));
     };
+
+    const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
+    
+    const toggleFacility = (facility: string) => {
+        setSelectedFacilities(prev => 
+            prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility]
+        );
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'banner') => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            updateForm(field, url);
+        }
+    };
     const navigate = useNavigate();
     const itemsPerPage = 5;
 
@@ -131,22 +147,69 @@ const SuperAdminUniversityManagement = () => {
         { label: 'Suspended', value: '14', icon: 'block', color: 'bg-rose-50 text-rose-600', trend: '-2 since 2023' },
     ];
 
-    const allUniversities = [
-        // Page 1
-        { id: 1, name: 'University of Toronto', country: 'Canada', courses: 142, status: 'Active', rating: 4.8, students: 1240 },
-        { id: 2, name: 'King\'s College London', country: 'UK', courses: 86, status: 'Active', rating: 4.7, students: 840 },
-        { id: 3, name: 'University of Melbourne', country: 'Australia', courses: 215, status: 'Pending', rating: 4.9, students: 0 },
-        { id: 4, name: 'Technical University of Munich', country: 'Germany', courses: 94, status: 'Active', rating: 4.6, students: 620 },
-        { id: 5, name: 'Nanyang Technological University', country: 'Singapore', courses: 112, status: 'Suspended', rating: 4.8, students: 0 },
-        // Page 2
-        { id: 6, name: 'Harvard University', country: 'USA', courses: 310, status: 'Active', rating: 4.9, students: 2100 },
-        { id: 7, name: 'Oxford University', country: 'UK', courses: 280, status: 'Active', rating: 4.9, students: 1850 },
-        { id: 8, name: 'ETH Zurich', country: 'Switzerland', courses: 120, status: 'Active', rating: 4.7, students: 950 },
-        { id: 9, name: 'University of Tokyo', country: 'Japan', courses: 180, status: 'Pending', rating: 4.6, students: 0 },
-        { id: 10, name: 'McGill University', country: 'Canada', courses: 155, status: 'Active', rating: 4.7, students: 1100 },
-    ];
+    const [universities, setUniversities] = useState(() => {
+        const saved = localStorage.getItem('ea_universities');
+        if (saved) return JSON.parse(saved);
+        return [
+            // Page 1
+            { id: 1, name: 'University of Toronto', country: 'Canada', courses: 142, status: 'Active', rating: 4.8, students: 1240 },
+            { id: 2, name: 'King\'s College London', country: 'UK', courses: 86, status: 'Active', rating: 4.7, students: 840 },
+            { id: 3, name: 'University of Melbourne', country: 'Australia', courses: 215, status: 'Pending', rating: 4.9, students: 0 },
+            { id: 4, name: 'Technical University of Munich', country: 'Germany', courses: 94, status: 'Active', rating: 4.6, students: 620 },
+            { id: 5, name: 'Nanyang Technological University', country: 'Singapore', courses: 112, status: 'Suspended', rating: 4.8, students: 0 },
+            // Page 2
+            { id: 6, name: 'Harvard University', country: 'USA', courses: 310, status: 'Active', rating: 4.9, students: 2100 },
+            { id: 7, name: 'Oxford University', country: 'UK', courses: 280, status: 'Active', rating: 4.9, students: 1850 },
+            { id: 8, name: 'ETH Zurich', country: 'Switzerland', courses: 120, status: 'Active', rating: 4.7, students: 950 },
+            { id: 9, name: 'University of Tokyo', country: 'Japan', courses: 180, status: 'Pending', rating: 4.6, students: 0 },
+            { id: 10, name: 'McGill University', country: 'Canada', courses: 155, status: 'Active', rating: 4.7, students: 1100 },
+        ];
+    });
 
-    const filteredUniversities = allUniversities.filter((uni: { name: string; country: string; status: string }) => {
+    React.useEffect(() => {
+        localStorage.setItem('ea_universities', JSON.stringify(universities));
+    }, [universities]);
+
+    const handleOnboard = () => {
+        if (!uniForm.name || !uniForm.country) return;
+
+        const newUni = {
+            ...uniForm, // Keep full data for profile page
+            id: universities.length + 1,
+            courses: 0,
+            status: 'Active',
+            rating: 0,
+            students: 0,
+            location: `${uniForm.city || 'Campus'}, ${uniForm.country}`,
+            joined: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+            stats: { posts: '0', opportunities: '0', reach: '0', score: 'N/A' },
+            about: uniForm.overview || 'Institutional overview pending...',
+            accreditation: 'Pending Verification'
+        };
+
+        setUniversities([newUni, ...universities]);
+        setIsAddModalOpen(false);
+        // Reset form
+        setUniForm({
+            name: '', website: '', overview: '',
+            type: 'Public', estYear: '', totalStudents: '', ranking: '', 
+            country: '', city: '', campusSize: '',
+            intlStudents: '', acceptanceRate: '', employability: '',
+            admissionChance: '98', matchDesc: 'Match based on profile.',
+            tuition: '$30k - $45k', living: '$15,000', misc: '$2,500',
+            logo: '', banner: '',
+            intakes: []
+        });
+        setSelectedFacilities([]);
+    };
+
+    const deleteUniversity = (id: number) => {
+        if (window.confirm('Are you sure you want to delete this university?')) {
+            setUniversities(prev => prev.filter((u: any) => u.id !== id));
+        }
+    };
+
+    const filteredUniversities = universities.filter((uni: { name: string; country: string; status: string }) => {
         const matchesSearch = uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             uni.country.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = selectedStatus === 'All Status' || uni.status === selectedStatus;
@@ -163,27 +226,34 @@ const SuperAdminUniversityManagement = () => {
             <div className="p-8 flex flex-col gap-6">
                 {/* KPI Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {stats.map((stat: { label: string; icon: string; color: string; urgent?: boolean; value: string; trend: string }) => (
-                        <div key={stat.label} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2">
-                            <div className="flex justify-between items-start">
-                                <div className={`${stat.color} p-2 rounded-lg`}>
-                                    <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
+                    {stats.map((stat: { label: string; icon: string; color: string; urgent?: boolean; value: string; trend: string }) => {
+                        const isClickable = stat.label === 'Active Partners';
+                        return (
+                            <div 
+                                key={stat.label} 
+                                onClick={() => isClickable && navigate('/superadmin/universities/active')}
+                                className={`bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 ${isClickable ? 'cursor-pointer hover:border-blue-300 hover:shadow-md transition-all' : ''}`}
+                            >
+                                <div className="flex justify-between items-start">
+                                    <div className={`${stat.color} p-2 rounded-lg`}>
+                                        <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
+                                    </div>
+                                    {stat.urgent && (
+                                        <span className="bg-rose-100 text-rose-600 text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Urgent</span>
+                                    )}
                                 </div>
-                                {stat.urgent && (
-                                    <span className="bg-rose-100 text-rose-600 text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Urgent</span>
-                                )}
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-900">{stat.value}</h3>
+                                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">{stat.label}</p>
+                                </div>
+                                <div className="pt-2 border-t border-slate-50">
+                                    <span className={`text-[10px] font-bold ${stat.urgent ? 'text-rose-500' : 'text-slate-400'}`}>
+                                        {stat.trend}
+                                    </span>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="text-xl font-bold text-slate-900">{stat.value}</h3>
-                                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">{stat.label}</p>
-                            </div>
-                            <div className="pt-2 border-t border-slate-50">
-                                <span className={`text-[10px] font-bold ${stat.urgent ? 'text-rose-500' : 'text-slate-400'}`}>
-                                    {stat.trend}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 {/* Table Section */}
@@ -238,7 +308,6 @@ const SuperAdminUniversityManagement = () => {
                                     <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Country</th>
                                     <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Courses</th>
                                     <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Active Students</th>
-                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Rating</th>
                                     <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Assign</th>
                                     <th className="px-6 py-4 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
                                 </tr>
@@ -261,16 +330,10 @@ const SuperAdminUniversityManagement = () => {
                                             <span className="text-xs font-semibold text-slate-600">{uni.country}</span>
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            <span className="text-xs font-bold text-slate-900">{uni.courses}</span>
+                                            <span className="text-xs font-bold text-slate-900">{Array.isArray(uni.courses) ? uni.courses.length : (uni.courses || 0)}</span>
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             <span className="text-xs font-bold text-slate-900">{uni.students.toLocaleString()}</span>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <div className="flex items-center justify-center gap-1.5 font-bold text-[#2b6cee] text-xs">
-                                                <span className="material-symbols-outlined text-[14px] fill-current">star</span>
-                                                {uni.rating}
-                                            </div>
                                         </td>
                                         <td className="px-6 py-4 text-center relative">
                                             <div className="flex items-center justify-center gap-2">
@@ -322,12 +385,19 @@ const SuperAdminUniversityManagement = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="flex items-center justify-end">
+                                            <div className="flex items-center justify-end gap-2 text-right">
                                                 <button
                                                     onClick={() => navigate(`/superadmin/university/${uni.id}`)}
                                                     className="px-4 py-1.5 bg-[#2b6cee]/10 text-[#2b6cee] text-xs font-bold rounded-lg hover:bg-[#2b6cee] hover:text-white transition-all whitespace-nowrap"
                                                 >
                                                     View Profile
+                                                </button>
+                                                <button
+                                                    onClick={() => deleteUniversity(uni.id)}
+                                                    className="size-8 flex items-center justify-center bg-rose-50 text-rose-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100"
+                                                    title="Delete University"
+                                                >
+                                                    <span className="material-symbols-outlined text-[18px]">delete</span>
                                                 </button>
                                             </div>
                                         </td>
@@ -589,25 +659,35 @@ const SuperAdminUniversityManagement = () => {
                                     </h3>
                                     
                                     <div className="bg-slate-50 rounded-2xl border border-slate-200 p-6 flex flex-col md:flex-row gap-8">
-                                        {/* Logo Section */}
                                         <div className="flex items-center gap-6">
-                                            <div className="size-24 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
-                                                <span className="material-symbols-outlined text-slate-300 text-[32px]">image</span>
+                                            <div className="size-24 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+                                                {uniForm.logo ? (
+                                                    <img src={uniForm.logo} alt="Logo" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <span className="material-symbols-outlined text-slate-300 text-[32px]">image</span>
+                                                )}
                                             </div>
                                             <div className="flex flex-col gap-2 w-full min-w-[200px]">
                                                 <div className="flex flex-col gap-1">
                                                     <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Logo Image</label>
-                                                    <input type="text" placeholder="Paste logo link" className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                                    <input 
+                                                        type="text" 
+                                                        value={uniForm.logo}
+                                                        onChange={e => updateForm('logo', e.target.value)}
+                                                        placeholder="Paste logo link" 
+                                                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" 
+                                                    />
                                                 </div>
                                                 <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 uppercase">
                                                     <div className="h-px bg-slate-200 flex-1"></div>
                                                     OR UPLOAD
                                                     <div className="h-px bg-slate-200 flex-1"></div>
                                                 </div>
-                                                <button className="w-full py-2 bg-white border border-dashed border-slate-300 rounded-lg text-slate-500 font-bold text-[11px] hover:border-[#2b6cee] hover:text-[#2b6cee] hover:bg-[#2b6cee]/5 transition-all flex items-center justify-center gap-2">
+                                                <label className="w-full py-2 bg-white border border-dashed border-slate-300 rounded-lg text-slate-500 font-bold text-[11px] hover:border-[#2b6cee] hover:text-[#2b6cee] hover:bg-[#2b6cee]/5 transition-all flex items-center justify-center gap-2 cursor-pointer">
                                                     <span className="material-symbols-outlined text-[16px]">upload_file</span>
                                                     Choose File from Device
-                                                </button>
+                                                    <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'logo')} />
+                                                </label>
                                             </div>
                                         </div>
 
@@ -617,22 +697,35 @@ const SuperAdminUniversityManagement = () => {
                                         {/* Banner Section */}
                                         <div className="flex-1 flex flex-col gap-3">
                                             <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Banner Image (Hero)</label>
-                                            <div className="w-full h-24 bg-white border border-slate-200 rounded-xl flex flex-col items-center justify-center gap-1">
-                                                <span className="material-symbols-outlined text-slate-300 text-[24px]">landscape</span>
-                                                <span className="text-[10px] font-semibold text-slate-400 italic">Banner Image Preview</span>
+                                            <div className="w-full h-24 bg-white border border-slate-200 rounded-xl flex flex-col items-center justify-center gap-1 overflow-hidden">
+                                                {uniForm.banner ? (
+                                                    <img src={uniForm.banner} alt="Banner" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <>
+                                                        <span className="material-symbols-outlined text-slate-300 text-[24px]">landscape</span>
+                                                        <span className="text-[10px] font-semibold text-slate-400 italic">Banner Image Preview</span>
+                                                    </>
+                                                )}
                                             </div>
                                             <div className="flex flex-col gap-2">
-                                                <input type="text" placeholder="Paste banner image URL" className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                                <input 
+                                                    type="text" 
+                                                    value={uniForm.banner}
+                                                    onChange={e => updateForm('banner', e.target.value)}
+                                                    placeholder="Paste banner image URL" 
+                                                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" 
+                                                />
                                                 <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 uppercase">
                                                     <div className="h-px bg-slate-200 flex-1"></div>
                                                     OR UPLOAD
                                                     <div className="h-px bg-slate-200 flex-1"></div>
                                                 </div>
                                                 <div className="flex flex-col gap-1.5">
-                                                    <button className="w-full py-2 bg-white border border-dashed border-slate-300 rounded-lg text-slate-500 font-bold text-[11px] hover:border-[#2b6cee] hover:text-[#2b6cee] hover:bg-[#2b6cee]/5 transition-all flex items-center justify-center gap-2">
+                                                    <label className="w-full py-2 bg-white border border-dashed border-slate-300 rounded-lg text-slate-500 font-bold text-[11px] hover:border-[#2b6cee] hover:text-[#2b6cee] hover:bg-[#2b6cee]/5 transition-all flex items-center justify-center gap-2 cursor-pointer">
                                                         <span className="material-symbols-outlined text-[16px]">upload_file</span>
                                                         Choose Banner from Device
-                                                    </button>
+                                                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'banner')} />
+                                                    </label>
                                                     <span className="text-[9px] text-slate-400 italic">Recommended 1200x400 or higher.</span>
                                                 </div>
                                             </div>
@@ -648,7 +741,15 @@ const SuperAdminUniversityManagement = () => {
                                     </h3>
                                     <div className="flex flex-wrap gap-2">
                                         {['Library', 'Hostel', 'Sports Complex', 'Gym', 'Cafeteria', 'Wi-Fi', 'Medical Center', 'Career Counseling'].map(f => (
-                                            <button key={f} className="px-4 py-2 border border-slate-200 bg-white rounded-lg text-xs font-bold text-slate-600 hover:border-[#2b6cee] hover:text-[#2b6cee] hover:bg-[#2b6cee]/5 transition-colors">
+                                            <button 
+                                                key={f} 
+                                                onClick={() => toggleFacility(f)}
+                                                className={`px-4 py-2 border rounded-lg text-xs font-bold transition-all ${
+                                                    selectedFacilities.includes(f)
+                                                        ? 'bg-[#2b6cee] text-white border-[#2b6cee] shadow-lg shadow-blue-100'
+                                                        : 'bg-white border-slate-200 text-slate-600 hover:border-[#2b6cee] hover:text-[#2b6cee] hover:bg-[#2b6cee]/5'
+                                                }`}
+                                            >
                                                 {f}
                                             </button>
                                         ))}
@@ -663,7 +764,7 @@ const SuperAdminUniversityManagement = () => {
                             <button onClick={() => setIsAddModalOpen(false)} className="px-6 py-2.5 text-xs font-black text-slate-500 uppercase tracking-widest hover:text-slate-800 transition-colors">
                                 Cancel
                             </button>
-                            <button onClick={() => setIsAddModalOpen(false)} className="px-6 py-2.5 bg-[#111318] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-black transition-colors shadow-lg">
+                            <button onClick={handleOnboard} className="px-6 py-2.5 bg-[#111318] text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-black transition-colors shadow-lg">
                                 Confirm Onboard
                             </button>
                         </div>
@@ -689,7 +790,7 @@ const SuperAdminUniversityManagement = () => {
                             </button>
                         </div>
                         <div className="p-6 max-h-[60vh] overflow-y-auto space-y-3 bg-slate-50/10">
-                            {allUniversities.map(uni => (
+                            {universities.map(uni => (
                                 <div key={uni.id} className="p-4 rounded-xl border border-slate-100 bg-white flex flex-col gap-4 shadow-sm hover:shadow-md transition-all">
                                     <div className="flex items-center justify-between">
                                         <button 

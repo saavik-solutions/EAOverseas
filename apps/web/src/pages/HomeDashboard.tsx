@@ -5,6 +5,7 @@ import { useSavedItems } from '../context/SavedItemsContext';
 import { useAuth } from '../context/AuthContext';
 import { useUserProfile } from '../context/UserProfileContext';
 import { incrementCount, decrementCount } from '../utils/dailyCounter';
+import { getCombinedUniversities } from '../utils/universityData';
 
 const HomeDashboard = () => {
     const navigate = useNavigate();
@@ -304,28 +305,34 @@ const HomeDashboard = () => {
                                     <>
                                         {/* Dynamic Logic: Show based on preferred country or default */}
                                         {(() => {
-                                            const country = userProfile.preferences?.countries?.[0] || 'USA';
-                                            const matches = {
-                                                'USA': { name: 'Arizona State Univ.', loc: 'Tempe, USA', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBUdzt3vabnFKzx_oJmfKMYvm9OPQf8tRgWs_Dw85RU5_1SoBwHcAF4l8viDzOlp9uijwjvga0QXKCFwqRvbuJRjcNHvS7c5gVRPiVSZYDft5sEn1XWQmJKkl8649GeMqM69ZuGFUOv3tb0Yh2PBOFSDrcaTF95DgWInD5SDa7HYpjy5Nr0V2UgrCDtR8CmFi2U73PRjLtm5I81RCn5NrZhTv3QdR-atqwiDrwYD8BxuM37Uk3vLwjpAgO1NVEo2PnzPZTwXuuBFQ2Y' },
-                                                'UK': { name: 'Imperial College', loc: 'London, UK', img: 'https://logo.clearbit.com/imperial.ac.uk' },
-                                                'Canada': { name: 'Univ. of Toronto', loc: 'Toronto, Canada', img: 'https://logo.clearbit.com/utoronto.ca' },
-                                                'Australia': { name: 'Univ. of Melbourne', loc: 'Melbourne, AU', img: 'https://logo.clearbit.com/unimelb.edu.au' },
-                                                'Germany': { name: 'TU Munich', loc: 'Munich, DE', img: 'https://logo.clearbit.com/tum.de' },
-                                                'India': { name: 'IIT Bombay', loc: 'Mumbai, IN', img: 'https://logo.clearbit.com/iitb.ac.in' }
-                                            };
-                                            const match = matches[country] || matches['USA'];
+                                            const combinedUnis = getCombinedUniversities();
+                                            const preferredCountry = userProfile.preferences?.countries?.[0] || 'USA';
+                                            
+                                            // Find a match in preferred country, or fallback to first available
+                                            const match = combinedUnis.find(u => u.country.toLowerCase() === preferredCountry.toLowerCase()) || combinedUnis[0];
+
+                                            if (!match) return null;
 
                                             return (
                                                 <div onClick={() => navigate(`/college-details?name=${encodeURIComponent(match.name)}`)} className="flex gap-3 items-start cursor-pointer hover:bg-gray-50 rounded-lg p-2 -mx-2 transition-colors">
                                                     <div className="size-10 rounded border border-gray-100 bg-white p-1 flex items-center justify-center shrink-0">
-                                                        <div className="size-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url('${match.img}')` }}></div>
+                                                        {match.image ? (
+                                                            <div className="size-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url('${match.image}')` }}></div>
+                                                        ) : (
+                                                            <span className="material-symbols-outlined text-gray-300 !text-[20px]">school</span>
+                                                        )}
                                                     </div>
                                                     <div>
                                                         <h4 className="text-sm md:text-base font-bold text-gray-900">{match.name}</h4>
-                                                        <p className="text-[10px] md:text-xs text-gray-500 mb-1">{match.loc}</p>
-                                                        <span className="inline-flex items-center gap-1 text-[10px] md:text-xs font-medium text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                                                            <span className="material-symbols-outlined !text-[14px]">calendar_month</span> Fall 2024
-                                                        </span>
+                                                        <p className="text-[10px] md:text-xs text-gray-500 mb-1">{match.city}, {match.country}</p>
+                                                        <div className="flex gap-1.5 flex-wrap">
+                                                            <span className="inline-flex items-center gap-1 text-[10px] md:text-xs font-medium text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                                                                <span className="material-symbols-outlined !text-[14px]">calendar_month</span> Fall 2024
+                                                            </span>
+                                                            <span className="inline-flex items-center gap-1 text-[10px] md:text-xs font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded uppercase">
+                                                                {match.budget}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             );

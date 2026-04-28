@@ -67,20 +67,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [
                         {actions}
                     </div>
                 )}
-
-                {/* Global Sign Out Button (Except forms) */}
-                {user && !hideSignOut && (
-                    <div className="hidden lg:flex items-center">
-                        <div className="h-6 w-px bg-slate-100 mx-1"></div>
-                        <button
-                            onClick={() => logout()}
-                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-all shadow-sm"
-                        >
-                            <span className="material-symbols-outlined !text-[16px]">logout</span>
-                            Sign Out
-                        </button>
-                    </div>
-                )}
             </div>
         </header>
     );

@@ -87,10 +87,24 @@ import AssignedStudents from './pages/AssignedStudents';
 import Superadmin from './pages/Superadmin';
 import SuperAdminUniversityManagement from './pages/SuperAdminUniversityManagement';
 import SuperAdminUniversityProfile from './pages/SuperAdminUniversityProfile';
+import UniversityPostCenter from './pages/UniversityPostCenter';
+import UniversityNewPost from './pages/UniversityNewPost';
+import UniversityAdmissions from './pages/UniversityAdmissions';
+import UniversityPostDetails from './pages/UniversityPostDetails';
 import SuperAdminPostFeedDashboard from './pages/SuperAdminPostFeedDashboard';
 import SuperAdminNewPost from './pages/SuperAdminNewPost';
 import SuperAdminPostDetails from './pages/SuperAdminPostDetails';
+import SuperAdminHolidayManagement from './pages/SuperAdminHolidayManagement';
+import SuperAdminHolidayDetails from './pages/SuperAdminHolidayDetails';
+import SuperAdminActivePartners from './pages/SuperAdminActivePartners';
 import UniversityDashboard from './pages/UniversityDashboard';
+import UniversityCourses from './pages/UniversityCourses';
+import UniversityImpressions from './pages/UniversityImpressions';
+import UniversityLeads from './pages/UniversityLeads';
+import UniversityConversion from './pages/UniversityConversion';
+import UniversityScholarships from './pages/UniversityScholarships';
+import UniversityScholarshipDetail from './pages/UniversityScholarshipDetail';
+import UniversityScholarshipList from './pages/UniversityScholarshipList';
 
 // Profile Pages
 import ProfileLayout from './pages/profile/ProfileLayout';
@@ -260,6 +274,7 @@ function App() {
                              <Route path="/superadmin" element={<Superadmin />} />
                              <Route path="/superadmin/users" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUserManagement /></ProtectedRoute>} />
                              <Route path="/superadmin/universities" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityManagement /></ProtectedRoute>} />
+                             <Route path="/superadmin/universities/active" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminActivePartners /></ProtectedRoute>} />
                              <Route path="/superadmin/consultants" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantManagement /></ProtectedRoute>} />
                              <Route path="/superadmin/consultants/directory" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantDirectory /></ProtectedRoute>} />
                              <Route path="/superadmin/consultant/profile/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantDetails /></ProtectedRoute>} />
@@ -268,9 +283,22 @@ function App() {
                              <Route path="/superadmin/university-portal/posts-feed" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostFeedDashboard /></ProtectedRoute>} />
                              <Route path="/superadmin/university-portal/posts-feed/new" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminNewPost /></ProtectedRoute>} />
                              <Route path="/superadmin/university-portal/posts-feed/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostDetails /></ProtectedRoute>} />
+                             <Route path="/superadmin/consultants/holidays" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminHolidayManagement /></ProtectedRoute>} />
+                             <Route path="/superadmin/consultants/holidays/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminHolidayDetails /></ProtectedRoute>} />
 
                             {/* University Portal Routes */}
                             <Route path="/university-panel/:universityName" element={<UniversityDashboard />} />
+                            <Route path="/university-panel/:universityName/courses" element={<UniversityCourses />} />
+                            <Route path="/university-panel/:universityName/admissions" element={<UniversityAdmissions />} />
+                            <Route path="/university-panel/:universityName/analytics" element={<UniversityImpressions />} />
+                            <Route path="/university-panel/:universityName/leads" element={<UniversityLeads />} />
+                            <Route path="/university-panel/:universityName/conversion" element={<UniversityConversion />} />
+                            <Route path="/university-panel/:universityName/scholarships" element={<UniversityScholarships />} />
+                            <Route path="/university-panel/:universityName/scholarships/list" element={<UniversityScholarshipList />} />
+                            <Route path="/university-panel/:universityName/scholarships/:scholarshipId" element={<UniversityScholarshipDetail />} />
+                            <Route path="/university-panel/:universityName/post-center" element={<UniversityPostCenter />} />
+                            <Route path="/university-panel/:universityName/post-center/new" element={<UniversityNewPost />} />
+                            <Route path="/university-panel/:universityName/post-center/:postId" element={<UniversityPostDetails />} />
                         </Routes>
                     </BrowserRouter>
                     </PostsProvider>

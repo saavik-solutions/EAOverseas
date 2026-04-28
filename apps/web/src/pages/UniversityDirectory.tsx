@@ -4,7 +4,8 @@ import PageHeader from '../components/PageHeader';
 import { useAuthAction } from '../hooks/useAuthAction';
 import LoginModal from '../components/LoginModal';
 
-import { universitiesData, University } from '../data/universities';
+import { University } from '../data/universities';
+import { getCombinedUniversities } from '../utils/universityData';
 
 const UniversityDirectory = () => {
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ const UniversityDirectory = () => {
         Intake: 'All'
     });
 
+    const universitiesData = useMemo(() => getCombinedUniversities(), []);
     const countries = ['All', ...new Set(universitiesData.map((u: University) => u.country))];
     const courseTypes = ['All', ...new Set(universitiesData.map((u: University) => u.courseType))];
     const budgets = ['All', 'Budget', 'Moderate', 'Premium'];

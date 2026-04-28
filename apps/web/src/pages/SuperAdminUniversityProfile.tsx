@@ -10,72 +10,177 @@ const SuperAdminUniversityProfile = () => {
     const [showAllCourses, setShowAllCourses] = React.useState(false);
     const [isProfileEditing, setIsProfileEditing] = React.useState(false);
     
-    const [courseForm, setCourseForm] = React.useState({
-        title: '', school: '', duration: '', tuition: '', location: '',
-        matchRate: '98', matchAnalysis: '', 
-        gpaReq: 'Competitive', academicReq: 'Match', englishReq: 'Missing',
-        overview: '', outcomes: '', improvements: '',
-        intakes: [{ term: 'Sep 2024', status: 'Open', deadline: 'July 31, 2024' }]
+    // New Modal States & Logic
+    const [courseName, setCourseName] = React.useState('');
+    const [courseLevel, setCourseLevel] = React.useState('Postgraduate');
+    const [courseDuration, setCourseDuration] = React.useState('2 Years');
+    const [courseFee, setCourseFee] = React.useState('25,000');
+    const [editingId, setEditingId] = React.useState<number | null>(null);
+    const [academicReqs, setAcademicReqs] = React.useState<string[]>(['Bachelors Degree', '6.5 IELTS']);
+    const [outcomes, setOutcomes] = React.useState<string[]>([]);
+    const [tempAcademic, setTempAcademic] = React.useState('');
+    const [tempOutcome, setTempOutcome] = React.useState('');
+    const [intakePairs, setIntakePairs] = React.useState<{intake: string, deadline: string | null}[]>([]);
+    const [configuringIntakeIdx, setConfiguringIntakeIdx] = React.useState<number | null>(null);
+
+    const handleMonthClick = (month: string) => {
+        if (configuringIntakeIdx !== null) {
+            const newPairs = [...intakePairs];
+            newPairs[configuringIntakeIdx].deadline = month;
+            setIntakePairs(newPairs);
+            setConfiguringIntakeIdx(null);
+        } else {
+            const existingIdx = intakePairs.findIndex(p => p.intake === month);
+            if (existingIdx !== -1) {
+                setIntakePairs(prev => prev.filter((_, i) => i !== existingIdx));
+            } else {
+                const newIdx = intakePairs.length;
+                setIntakePairs([...intakePairs, { intake: month, deadline: null }]);
+                setConfiguringIntakeIdx(newIdx);
+            }
+        }
+    };
+
+    const addAcademicTag = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && tempAcademic.trim()) {
+            e.preventDefault();
+            if (!academicReqs.includes(tempAcademic.trim())) {
+                setAcademicReqs([...academicReqs, tempAcademic.trim()]);
+            }
+            setTempAcademic('');
+        }
+    };
+
+    const addOutcomeTag = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && tempOutcome.trim()) {
+            e.preventDefault();
+            if (!outcomes.includes(tempOutcome.trim())) {
+                setOutcomes([...outcomes, tempOutcome.trim()]);
+            }
+            setTempOutcome('');
+        }
+    };
+
+    const removeAcademicTag = (tag: string) => setAcademicReqs(academicReqs.filter(t => t !== tag));
+    const removeOutcomeTag = (tag: string) => setOutcomes(outcomes.filter(t => t !== tag));
+
+    const handleSaveCourse = () => {
+        if (!courseName.trim()) return;
+
+        const newCourse = {
+            id: editingId || Date.now(),
+            name: courseName,
+            level: courseLevel,
+            duration: courseDuration,
+            fee: courseFee,
+            intakes: intakePairs.map(p => p.intake).length > 0 ? intakePairs.map(p => p.intake) : ['TBD'],
+            deadlines: intakePairs.map(p => p.deadline || 'TBD').length > 0 ? intakePairs.map(p => p.deadline || 'TBD') : ['TBD'],
+            interest: '0',
+            status: 'Active',
+            academicRequirements: academicReqs,
+            outcomes: outcomes
+        };
+
+        let updatedCourses = [];
+        if (editingId) {
+            updatedCourses = (uni.courses || []).map((c: any) => c.id === editingId ? newCourse : c);
+        } else {
+            updatedCourses = [...(uni.courses || []), newCourse];
+        }
+
+        const updatedUni = { ...uni, courses: updatedCourses };
+        setUni(updatedUni);
+
+        // PERSIST TO LOCALSTORAGE
+        const saved = localStorage.getItem('ea_universities');
+        if (saved) {
+            const allUnis = JSON.parse(saved);
+            const newAllUnis = allUnis.map((u: any) => u.id === uni.id ? updatedUni : u);
+            localStorage.setItem('ea_universities', JSON.stringify(newAllUnis));
+        }
+
+        setIsAddCourseModalOpen(false);
+        // Reset states
+        setCourseName('');
+        setEditingId(null);
+        setAcademicReqs(['Bachelors Degree', '6.5 IELTS']);
+        setOutcomes([]);
+        setIntakePairs([]);
+        setConfiguringIntakeIdx(null);
+    };
+
+    // Dynamic data loading from localStorage to ensure newly added universities are visible
+    const [uni, setUni] = React.useState(() => {
+        const saved = localStorage.getItem('ea_universities');
+        const allUnis = saved ? JSON.parse(saved) : [];
+        
+        // Find university in saved state or fallback to hardcoded list
+        const found = allUnis.find((u: any) => u.id === Number(id));
+        if (found) return found;
+
+        // Fallback or static list for demo
+        const staticUnis = [
+            {
+                id: 1,
+                name: 'University of Toronto',
+                country: 'Canada',
+                location: 'Toronto, Canada',
+                joined: 'Oct 2021',
+                website: 'utoronto.ca',
+                status: 'Active',
+                stats: { posts: '1,284', opportunities: '156', reach: '24.5k', score: '98/100' },
+                about: 'The University of Toronto is a public research university in Toronto, Ontario, Canada, situated on the grounds that surround Queens Park. It was founded by royal charter in 1827 as Kings College, the first institution of higher learning in Upper Canada.',
+                type: 'Public Research',
+                accreditation: 'UU Accredited'
+            },
+            {
+                id: 6,
+                name: 'Harvard University',
+                country: 'USA',
+                location: 'Cambridge, USA',
+                joined: 'Jan 2020',
+                website: 'harvard.edu',
+                status: 'Active',
+                stats: { posts: '3,450', opportunities: '420', reach: '85k', score: '99/100' },
+                about: 'Harvard University is a private Ivy League research university in Cambridge, Massachusetts. Established in 1636 and named for its first benefactor, clergyman John Harvard, it is the oldest institution of higher learning in the United States.',
+                type: 'Private Ivy League',
+                accreditation: 'NECHE Accredited'
+            }
+        ];
+        
+        return staticUnis.find(u => u.id === Number(id)) || staticUnis[0];
     });
 
-    // Mock data based on the ID (matching the universities in the management page)
-    const universities = [
-        {
-            id: 1,
-            name: 'University of Toronto',
-            country: 'Canada',
-            location: 'Toronto, Canada',
-            joined: 'Oct 2021',
-            website: 'utoronto.ca',
-            status: 'Active',
-            stats: { posts: '1,284', opportunities: '156', reach: '24.5k', score: '98/100' },
-            about: 'The University of Toronto is a public research university in Toronto, Ontario, Canada, situated on the grounds that surround Queens Park. It was founded by royal charter in 1827 as Kings College, the first institution of higher learning in Upper Canada.',
-            type: 'Public Research',
-            accreditation: 'UU Accredited'
-        },
-        {
-            id: 6,
-            name: 'Harvard University',
-            country: 'USA',
-            location: 'Cambridge, USA',
-            joined: 'Jan 2020',
-            website: 'harvard.edu',
-            status: 'Active',
-            stats: { posts: '3,450', opportunities: '420', reach: '85k', score: '99/100' },
-            about: 'Harvard University is a private Ivy League research university in Cambridge, Massachusetts. Established in 1636 and named for its first benefactor, clergyman John Harvard, it is the oldest institution of higher learning in the United States.',
-            type: 'Private Ivy League',
-            accreditation: 'NECHE Accredited'
-        }
-    ];
-
-    const initialUni = universities.find(u => u.id === Number(id)) || universities[0];
-    const [uni, setUni] = React.useState(initialUni);
-
-    const updateCourseForm = (field: string, val: any) => setCourseForm(prev => ({ ...prev, [field]: val }));
     const updateUniData = (field: string, val: any) => setUni(prev => ({ ...prev, [field]: val }));
 
     const handleUploadNew = () => {
         setIsEditMode(false);
-        setCourseForm({
-            title: '', school: '', duration: '', tuition: '', location: '',
-            matchRate: '98', matchAnalysis: '', 
-            gpaReq: 'Competitive', academicReq: 'Match', englishReq: 'Missing',
-            overview: '', outcomes: '', improvements: '',
-            intakes: [{ term: 'Sep 2024', status: 'Open', deadline: 'July 31, 2024' }]
-        });
+        setEditingId(null);
+        setCourseName('');
         setIsAddCourseModalOpen(true);
     };
 
     const handleEditCourse = (course: any) => {
         setIsEditMode(true);
-        setCourseForm({
-            ...courseForm,
-            ...course,
-            overview: course.overview || 'Standard institutional course overview...',
-            outcomes: course.outcomes || 'Software Engineer, Data Scientist, Researcher',
-            improvements: course.improvements || 'Focus on relevant internships and academic projects.',
-            intakes: course.intakes || [{ term: 'Sep 2024', status: 'Open', deadline: 'July 31, 2024' }]
-        });
+        setEditingId(course.id);
+        setCourseName(course.name || course.title || '');
+        setCourseLevel(course.level || 'Postgraduate');
+        setCourseDuration(course.duration || '2 Years');
+        setCourseFee(course.fee || '25,000');
+        setAcademicReqs(Array.isArray(course.academicRequirements) ? course.academicRequirements : []);
+        setOutcomes(Array.isArray(course.outcomes) ? course.outcomes : []);
+        
+        // Reconstruct intake pairs
+        if (Array.isArray(course.intakes)) {
+            const pairs = course.intakes.map((it: string, i: number) => ({
+                intake: it,
+                deadline: Array.isArray(course.deadlines) ? course.deadlines[i] || null : null
+            }));
+            setIntakePairs(pairs);
+        } else {
+            setIntakePairs([]);
+        }
+        
         setIsAddCourseModalOpen(true);
     };
 
@@ -87,8 +192,12 @@ const SuperAdminUniversityProfile = () => {
                     <div className="p-6 border-b border-slate-50">
                         <div className="flex flex-col md:flex-row justify-between items-start gap-6">
                             <div className="flex items-start gap-5">
-                                <div className="h-20 w-20 rounded-2xl bg-[#2b6cee]/10 p-3.5 border border-[#2b6cee]/20 flex items-center justify-center text-[#2b6cee] shrink-0">
-                                    <span className="material-symbols-outlined text-3xl">{uni.name.charAt(0)}</span>
+                                <div className="h-20 w-20 rounded-2xl bg-[#2b6cee]/10 border border-[#2b6cee]/20 flex items-center justify-center text-[#2b6cee] shrink-0 overflow-hidden">
+                                    {uni.logo ? (
+                                        <img src={uni.logo} alt={uni.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span className="material-symbols-outlined text-3xl">{uni.name.charAt(0)}</span>
+                                    )}
                                 </div>
                                 <div className="flex flex-col gap-1.5 flex-1 min-w-0">
                                     <div className="flex items-center gap-3">
@@ -101,11 +210,6 @@ const SuperAdminUniversityProfile = () => {
                                         ) : (
                                             <h1 className="text-2xl font-bold text-slate-900">{uni.name}</h1>
                                         )}
-                                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${uni.status === 'Active' ? 'bg-emerald-100 text-emerald-700' :
-                                            uni.status === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'
-                                            }`}>
-                                            {uni.status}
-                                        </span>
                                     </div>
                                     <div className="flex flex-wrap gap-x-6 gap-y-2 text-slate-500 text-sm">
                                         <div className="flex items-center gap-1.5 font-medium min-w-[200px]">
@@ -197,7 +301,7 @@ const SuperAdminUniversityProfile = () => {
                             </div>
                         </div>
                         <div className="flex items-end gap-2">
-                            <span className="text-2xl font-bold">{uni.stats.posts}</span>
+                            <span className="text-2xl font-bold">{uni.stats?.posts || 0}</span>
                             <span className="text-emerald-500 text-xs font-bold flex items-center mb-1">
                                 <span className="material-symbols-outlined text-[12px]">trending_up</span> 12%
                             </span>
@@ -211,7 +315,7 @@ const SuperAdminUniversityProfile = () => {
                             </div>
                         </div>
                         <div className="flex items-end gap-2">
-                            <span className="text-2xl font-bold">{uni.stats.opportunities}</span>
+                            <span className="text-2xl font-bold">{uni.stats?.opportunities || 0}</span>
                             <span className="text-emerald-500 text-xs font-bold flex items-center mb-1">
                                 <span className="material-symbols-outlined text-[12px]">trending_up</span> 5%
                             </span>
@@ -225,7 +329,7 @@ const SuperAdminUniversityProfile = () => {
                             </div>
                         </div>
                         <div className="flex items-end gap-2">
-                            <span className="text-2xl font-bold">{uni.stats.reach}</span>
+                            <span className="text-2xl font-bold">{uni.stats?.reach || '0'}</span>
                             <span className="text-slate-400 text-xs font-bold flex items-center mb-1">
                                 Stable
                             </span>
@@ -239,7 +343,7 @@ const SuperAdminUniversityProfile = () => {
                             </div>
                         </div>
                         <div className="flex items-end gap-2">
-                            <span className="text-2xl font-bold">{uni.stats.score}</span>
+                            <span className="text-2xl font-bold">{uni.stats?.score || 'N/A'}</span>
                             <span className="text-emerald-500 text-xs font-bold flex items-center mb-1">
                                 High
                             </span>
@@ -268,42 +372,41 @@ const SuperAdminUniversityProfile = () => {
                         </div>
 
                         <div className="p-5 space-y-4 flex-1">
-                            {[
-                                { title: 'MS in Computer Science', school: 'Ira A. Fulton Schools of Engineering', duration: '2 Years', starts: 'Aug 2024', tuition: '$32k - $45k / year', match: 'HIGH MATCH' },
-                                { title: 'Master of Data Science', school: 'School of Computing and AI', duration: '1.5 Years', starts: 'Aug 2024', tuition: '$35,500', match: 'HIGH MATCH' },
-                                { title: 'MBA (Business Analytics)', school: 'W. P. Carey School of Business', duration: '2 Years', starts: 'Jan 2025', tuition: '$52,000', match: 'MED MATCH' },
-                                ...(showAllCourses ? [
-                                    { title: 'MA in International Relations', school: 'Munk School of Global Affairs', duration: '2 Years', starts: 'Sep 2024', tuition: '$38,000', match: 'MED MATCH' },
-                                    { title: 'PhD in Theoretical Physics', school: 'Department of Physics', duration: '4 Years', starts: 'Sep 2024', tuition: 'Fully Funded', match: 'HIGH MATCH' }
-                                ] : [])
-                            ].map((c, i) => (
-                                <div key={i} onClick={() => handleEditCourse(c)} className="group border border-slate-50 rounded-2xl p-4 hover:border-[#2b6cee]/30 hover:bg-slate-50/50 transition-all cursor-pointer flex items-center justify-between">
-                                    <div className="flex flex-col gap-3">
+                            {uni && Array.isArray(uni.courses) && uni.courses.length > 0 ? (
+                                (showAllCourses ? uni.courses : uni.courses.slice(0, 3)).map((course: any, idx: number) => (
+                                    <div key={course.id || idx} className="group relative flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-[#2b6cee]/30 hover:bg-blue-50/20 transition-all">
+                                        <div className="flex flex-col gap-1">
+                                            <div className="flex items-center gap-2">
+                                                <h4 className="text-sm font-bold text-slate-900">{typeof course.name === 'string' ? course.name : (typeof course.title === 'string' ? course.title : 'Untitled Course')}</h4>
+                                                <span className="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 text-[8px] font-black uppercase tracking-widest rounded-md border border-emerald-100">Active</span>
+                                            </div>
+                                            <div className="flex items-center gap-4 text-[10px] text-slate-500 font-medium">
+                                                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">school</span> {typeof course.level === 'string' ? course.level : 'Postgraduate'}</span>
+                                                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">calendar_today</span> {Array.isArray(course.intakes) ? course.intakes.join(', ') : 'Various'}</span>
+                                            </div>
+                                        </div>
                                         <div className="flex items-center gap-2">
-                                            <h4 className="font-bold text-sm text-slate-900 group-hover:text-[#2b6cee] transition-colors">{c.title}</h4>
-                                            <span className={`px-2 py-0.5 rounded-full text-[8px] font-black ${c.match.includes('HIGH') ? 'bg-emerald-100 text-emerald-600' : 'bg-orange-100 text-orange-600'}`}>{c.match}</span>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <div className="flex items-center gap-1.5 text-slate-400">
-                                                <span className="material-symbols-outlined text-[16px]">schedule</span>
-                                                <span className="text-[10px] font-bold text-slate-500">{c.duration}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-slate-400">
-                                                <span className="material-symbols-outlined text-[16px]">payments</span>
-                                                <span className="text-[10px] font-bold text-slate-500">{c.tuition}</span>
+                                            <button 
+                                                onClick={() => handleEditCourse(course)}
+                                                className="size-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-[#2b6cee] transition-all"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            <div className="size-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#2b6cee] group-hover:text-white transition-all">
+                                                <span className="material-symbols-outlined text-[18px]">chevron_right</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <button className="size-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-[#2b6cee] transition-all opacity-0 group-hover:opacity-100">
-                                            <span className="material-symbols-outlined text-[18px]">edit</span>
-                                        </button>
-                                        <div className="size-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#2b6cee] group-hover:text-white transition-all">
-                                            <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                                        </div>
+                                ))
+                            ) : (
+                                <div className="h-full flex flex-col items-center justify-center py-12 text-center">
+                                    <div className="size-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 mb-4">
+                                        <span className="material-symbols-outlined text-4xl">inventory_2</span>
                                     </div>
+                                    <h4 className="text-sm font-bold text-slate-900">No courses listed yet</h4>
+                                    <p className="text-xs text-slate-500 mt-1 max-w-[240px]">This institution has just joined. Start by uploading their course specifications.</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
                         <div className="p-4 border-t border-slate-100 bg-slate-50">
                             <button 
@@ -360,152 +463,249 @@ const SuperAdminUniversityProfile = () => {
                 </div>
             </main>
 
-            {/* Upload Course Modal */}
+            {/* Add New Course Modal */}
             {isAddCourseModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                        <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                            <div>
-                                <h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">
-                                    <span className="material-symbols-outlined text-[#2b6cee] text-3xl">{isEditMode ? 'edit_square' : 'add_circle'}</span>
-                                    {isEditMode ? 'Edit Course Specification' : 'Upload New Course Specification'}
-                                </h2>
-                                <p className="text-sm text-slate-500 italic font-medium mt-1">{isEditMode ? 'Update academic requirements and institutional metrics.' : 'Configure academic requirements and student eligibility metrics.'}</p>
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div 
+                        className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-[32px] shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-300"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Modal Header */}
+                        <div className="sticky top-0 bg-white border-b border-slate-100 px-8 py-6 flex items-center justify-between z-10">
+                            <div className="flex items-center gap-4">
+                                <div className="size-10 bg-blue-50 rounded-xl flex items-center justify-center text-[#2b6cee]">
+                                    <span className="material-symbols-outlined font-bold">add_task</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-black text-slate-900 tracking-tight">{isEditMode ? 'Edit Course' : 'Add New Course'}</h3>
+                                    <p className="text-xs text-slate-400 font-medium tracking-wide">{isEditMode ? 'Update program details' : 'Fill in details to list a new program'}</p>
+                                </div>
                             </div>
-                            <button onClick={() => setIsAddCourseModalOpen(false)} className="size-10 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-400 hover:text-rose-500 transition-all">
+                            <button 
+                                onClick={() => setIsAddCourseModalOpen(false)}
+                                className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-all"
+                            >
                                 <span className="material-symbols-outlined">close</span>
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-slate-200">
-                            <div className="space-y-10">
-                                {/* Basic Course Info */}
-                                <div className="space-y-4">
-                                    <h4 className="text-[10px] uppercase font-black tracking-[0.2em] text-[#2b6cee]">Section 01 / Basic Information</h4>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="flex flex-col gap-1.5">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">Course Title *</label>
-                                            <input type="text" value={courseForm.title} onChange={e => updateCourseForm('title', e.target.value)} placeholder="e.g. MS in Computer Science" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none focus:border-[#2b6cee] transition-all" />
-                                        </div>
-                                        <div className="flex flex-col gap-1.5">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">School / Department *</label>
-                                            <input type="text" value={courseForm.school} onChange={e => updateCourseForm('school', e.target.value)} placeholder="e.g. Ira A. Fulton Schools of Engineering" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none focus:border-[#2b6cee] transition-all" />
-                                        </div>
+                        {/* Modal Content */}
+                        <div className="p-8 space-y-8">
+                            {/* Section: Core Course Details */}
+                            <section className="space-y-6">
+                                <div className="flex items-center gap-3 text-[#2b6cee]">
+                                    <span className="material-symbols-outlined font-black">info</span>
+                                    <h4 className="font-black text-xs uppercase tracking-[0.2em]">Core Course Details</h4>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="md:col-span-2">
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Course Name</label>
+                                        <input 
+                                            className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-[#2b6cee] transition-all outline-none text-sm font-bold text-slate-900" 
+                                            placeholder="e.g. M.Sc. in Data Science & Artificial Intelligence" 
+                                            type="text" 
+                                            value={courseName}
+                                            onChange={(e) => setCourseName(e.target.value)}
+                                        />
                                     </div>
-                                    <div className="grid grid-cols-3 gap-4">
-                                        <div className="flex flex-col gap-1.5">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">Duration</label>
-                                            <input type="text" value={courseForm.duration} onChange={e => updateCourseForm('duration', e.target.value)} placeholder="e.g. 2 Years" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm" />
-                                        </div>
-                                        <div className="flex flex-col gap-1.5">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">Tuition (Intl)</label>
-                                            <input type="text" value={courseForm.tuition} onChange={e => updateCourseForm('tuition', e.target.value)} placeholder="e.g. $32,000 / year" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm" />
-                                        </div>
-                                        <div className="flex flex-col gap-1.5">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">Campus Location</label>
-                                            <input type="text" value={courseForm.location} onChange={e => updateCourseForm('location', e.target.value)} placeholder="e.g. Tempe" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm" />
-                                        </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Field of Study</label>
+                                        <select className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-[#2b6cee] transition-all outline-none text-sm font-bold text-slate-900 appearance-none">
+                                            <option>Select field...</option>
+                                            <option>Computer Science & IT</option>
+                                            <option>Business & Management</option>
+                                            <option>Engineering</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Duration</label>
+                                        <select 
+                                            value={courseDuration}
+                                            onChange={(e) => setCourseDuration(e.target.value)}
+                                            className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-[#2b6cee] transition-all outline-none text-sm font-bold text-slate-900 appearance-none"
+                                        >
+                                            <option>Select duration...</option>
+                                            <option>1 Year</option>
+                                            <option>2 Years</option>
+                                            <option>3 Years</option>
+                                            <option>4 Years</option>
+                                            <option>5 Years</option>
+                                        </select>
                                     </div>
                                 </div>
+                            </section>
 
-                                {/* AI Eligibility Analysis */}
-                                <div className="space-y-4">
-                                    <h4 className="text-[10px] uppercase font-black tracking-[0.2em] text-[#2b6cee]">Section 02 / AI Eligibility Analysis</h4>
-                                    
-                                    <div className="grid grid-cols-3 gap-4">
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">GPA Requirement Status</label>
-                                            <select value={courseForm.gpaReq} onChange={e => updateCourseForm('gpaReq', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-700">
-                                                <option value="Competitive">Competitive</option>
-                                                <option value="Match">Match</option>
-                                                <option value="Low">Low</option>
-                                            </select>
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">English Test Status</label>
-                                            <select value={courseForm.englishReq} onChange={e => updateCourseForm('englishReq', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-700">
-                                                <option value="Match">Match</option>
-                                                <option value="Missing">Missing</option>
-                                                <option value="Low">Low Score</option>
-                                            </select>
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            <label className="text-[10px] font-black text-slate-700 uppercase">Academic Background</label>
-                                            <select value={courseForm.academicReq} onChange={e => updateCourseForm('academicReq', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-700">
-                                                <option value="Match">Perfect Match</option>
-                                                <option value="Partial">Partial Match</option>
-                                                <option value="No Match">Not Recommended</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                            {/* Section: Financials & Intakes */}
+                            <section className="space-y-6">
+                                <div className="flex items-center gap-3 text-emerald-500">
+                                    <span className="material-symbols-outlined font-black">payments</span>
+                                    <h4 className="font-black text-xs uppercase tracking-[0.2em]">Financials & Intakes</h4>
                                 </div>
-
-                                {/* Outcomes & Improvements */}
-                                <div className="grid grid-cols-2 gap-8">
-                                    <div className="space-y-4">
-                                        <h4 className="text-[10px] uppercase font-black tracking-[0.2em] text-[#2b6cee]">Career Outcomes</h4>
-                                        <textarea 
-                                            value={courseForm.outcomes}
-                                            onChange={e => updateCourseForm('outcomes', e.target.value)}
-                                            placeholder="Tags (Software Engineer, AI Specialist...)" 
-                                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm min-h-[120px] outline-none"
-                                        ></textarea>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Annual Tuition Fee</label>
+                                        <div className="relative">
+                                            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 font-black">$</span>
+                                            <input 
+                                                className="w-full pl-10 pr-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-[#2b6cee] transition-all outline-none text-sm font-bold text-slate-900" 
+                                                placeholder="25,000" 
+                                                type="number" 
+                                                value={courseFee}
+                                                onChange={(e) => setCourseFee(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="space-y-4">
-                                        <h4 className="text-[10px] uppercase font-black tracking-[0.2em] text-[#2b6cee]">Chance Improvements</h4>
-                                        <textarea 
-                                            value={courseForm.improvements}
-                                            onChange={e => updateCourseForm('improvements', e.target.value)}
-                                            placeholder="Actionable steps for students..." 
-                                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm min-h-[120px] outline-none"
-                                        ></textarea>
-                                    </div>
+                                         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">
+                                             {configuringIntakeIdx !== null 
+                                                 ? `Select Deadline Month for ${intakePairs[configuringIntakeIdx].intake}...` 
+                                                 : 'Select Intake Month'}
+                                         </label>
+                                         <div className="flex flex-wrap gap-2">
+                                             {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => {
+                                                 const isIntake = intakePairs.some(p => p.intake === month);
+                                                 const isDeadline = intakePairs.some(p => p.deadline === month);
+                                                 const isCurrentConfig = configuringIntakeIdx !== null && intakePairs[configuringIntakeIdx].intake === month;
+                                                 
+                                                 return (
+                                                     <button 
+                                                         key={month} 
+                                                         onClick={() => handleMonthClick(month)}
+                                                         className={`px-3 py-1.5 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${
+                                                             isCurrentConfig
+                                                                 ? 'bg-amber-400 text-white border-amber-400 animate-pulse'
+                                                                 : isIntake
+                                                                     ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-100'
+                                                                     : isDeadline
+                                                                         ? 'bg-emerald-500 text-white border-emerald-500 shadow-lg shadow-emerald-50'
+                                                                         : 'bg-slate-50 border-slate-100 text-slate-500 hover:bg-blue-50'
+                                                         }`}
+                                                     >
+                                                         {month.substring(0, 3)}
+                                                     </button>
+                                                 );
+                                             })}
+                                         </div>
+                                         
+                                         {intakePairs.length > 0 && (
+                                             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+                                                 {intakePairs.map((pair, idx) => (
+                                                     <div key={idx} className="bg-white border border-slate-100 rounded-2xl p-3 flex flex-col gap-2 shadow-sm animate-in fade-in slide-in-from-top-2">
+                                                         <div className="flex items-center justify-between">
+                                                             <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">{pair.intake} Intake</span>
+                                                             <button onClick={() => setIntakePairs(prev => prev.filter((_, i) => i !== idx))} className="text-slate-300 hover:text-rose-500">
+                                                                 <span className="material-symbols-outlined text-[16px]">close</span>
+                                                             </button>
+                                                         </div>
+                                                         <div className="flex flex-col gap-1">
+                                                             <span className="text-[8px] font-bold text-slate-400 uppercase">Deadline:</span>
+                                                             <div className="px-3 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold text-slate-900">
+                                                                 {pair.deadline ? `${pair.deadline} (Month)` : <span className="text-amber-500 italic">Waiting selection...</span>}
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                 ))}
+                                             </div>
+                                         )}
+                                     </div>
                                 </div>
+                            </section>
 
-                                {/* Intake Timeline Management */}
+                            {/* Section: Eligibility & Requirements */}
+                            <section className="space-y-6">
+                                <div className="flex items-center gap-3 text-purple-500">
+                                    <span className="material-symbols-outlined font-black">verified</span>
+                                    <h4 className="font-black text-xs uppercase tracking-[0.2em]">Eligibility & Requirements</h4>
+                                </div>
                                 <div className="space-y-4">
-                                    <h4 className="text-[10px] uppercase font-black tracking-[0.2em] text-[#2b6cee]">Section 03 / Intake Timeline</h4>
-                                    <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 space-y-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                                            <div className="md:col-span-1">
-                                                <input type="text" placeholder="Term (e.g. Sep 2024)" className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold" />
-                                            </div>
-                                            <div className="md:col-span-1">
-                                                <select className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold">
-                                                    <option>Open - Apply Now</option>
-                                                    <option>Not Open Yet</option>
-                                                    <option>Closed</option>
-                                                </select>
-                                            </div>
-                                            <div className="md:col-span-2 flex gap-2">
-                                                <input type="text" placeholder="Deadline (e.g. July 31, 2024)" className="flex-1 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold" />
-                                                <button className="px-5 bg-slate-900 text-white rounded-xl text-xs font-bold">Add</button>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-col gap-2">
-                                            {courseForm.intakes.map((intake, idx) => (
-                                                <div key={idx} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-2xl">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="size-2 rounded-full bg-emerald-500"></div>
-                                                        <span className="text-sm font-black text-slate-900">{intake.term}</span>
-                                                        <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase">{intake.status}</span>
-                                                        <span className="text-xs text-slate-400 font-bold italic">Deadline: {intake.deadline}</span>
-                                                    </div>
-                                                    <button className="text-slate-300 hover:text-rose-500 transition-colors">
-                                                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Academic Requirements</label>
+                                        <div className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-[#2b6cee] transition-all flex flex-wrap gap-2">
+                                            {academicReqs.map(tag => (
+                                                <span key={tag} className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-600 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                                                    {tag}
+                                                    <button onClick={() => removeAcademicTag(tag)} className="hover:text-rose-500">
+                                                        <span className="material-symbols-outlined text-[14px]">close</span>
                                                     </button>
-                                                </div>
+                                                </span>
                                             ))}
+                                            <input 
+                                                value={tempAcademic}
+                                                onChange={(e) => setTempAcademic(e.target.value)}
+                                                onKeyDown={addAcademicTag}
+                                                className="bg-transparent border-none outline-none text-sm font-bold text-slate-900 flex-1 min-w-[200px]" 
+                                                placeholder={academicReqs.length === 0 ? "Type a requirement and press Enter..." : "Add another..."} 
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Min. IELTS Score</label>
+                                            <input className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-[#2b6cee] transition-all outline-none text-sm font-bold text-slate-900" placeholder="e.g. 6.5 Overall" type="text" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Min. TOEFL Score</label>
+                                            <input className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-[#2b6cee] transition-all outline-none text-sm font-bold text-slate-900" placeholder="e.g. 90 (iBT)" type="text" />
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
+
+                            {/* Section: Course Content */}
+                            <section className="space-y-6">
+                                <div className="flex items-center gap-3 text-amber-500">
+                                    <span className="material-symbols-outlined font-black">menu_book</span>
+                                    <h4 className="font-black text-xs uppercase tracking-[0.2em]">Course Content</h4>
+                                </div>
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Course Overview</label>
+                                        <textarea className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-[#2b6cee] transition-all outline-none text-sm font-medium text-slate-900 min-h-[120px]" placeholder="Provide a brief summary of the course, its unique value, and what students can expect..." />
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Learning Outcomes</label>
+                                        <div className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-[#2b6cee] transition-all flex flex-wrap gap-2">
+                                            {outcomes.map(tag => (
+                                                <span key={tag} className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                                                    {tag}
+                                                    <button onClick={() => removeOutcomeTag(tag)} className="hover:text-rose-500">
+                                                        <span className="material-symbols-outlined text-[14px]">close</span>
+                                                    </button>
+                                                </span>
+                                            ))}
+                                            <input 
+                                                value={tempOutcome}
+                                                onChange={(e) => setTempOutcome(e.target.value)}
+                                                onKeyDown={addOutcomeTag}
+                                                className="bg-transparent border-none outline-none text-sm font-bold text-slate-900 flex-1 min-w-[200px]" 
+                                                placeholder={outcomes.length === 0 ? "Type an outcome and press Enter..." : "Add another..."} 
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
 
-                        <div className="p-8 border-t border-slate-100 bg-slate-50/50 flex justify-end gap-4">
-                            <button onClick={() => setIsAddCourseModalOpen(false)} className="px-8 py-3 text-sm font-black text-slate-500 uppercase tracking-widest hover:text-slate-900 transition-colors">Cancel</button>
-                            <button onClick={() => setIsAddCourseModalOpen(false)} className="px-10 py-3 bg-[#111318] text-white rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">
-                                {isEditMode ? 'Save Changes' : 'Complete Upload'}
+                        {/* Modal Footer */}
+                        <div className="sticky bottom-0 bg-white border-t border-slate-100 px-8 py-6 flex items-center justify-end gap-3 z-10">
+                            <button 
+                                onClick={() => setIsAddCourseModalOpen(false)}
+                                className="px-6 py-3 text-xs font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={() => handleSaveCourse()}
+                                className="px-6 py-3 bg-white border border-slate-100 text-slate-900 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 shadow-sm transition-all active:scale-95"
+                            >
+                                Save as Draft
+                            </button>
+                            <button 
+                                onClick={() => handleSaveCourse()}
+                                className="bg-[#2b6cee] text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95"
+                            >
+                                {isEditMode ? 'Update Course' : 'Publish Course'}
+                                <span className="material-symbols-outlined text-[18px]">send</span>
                             </button>
                         </div>
                     </div>

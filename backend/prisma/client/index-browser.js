@@ -457,7 +457,8 @@ exports.Prisma.CommunityPostScalarFieldEnum = {
   tags: 'tags',
   isQuestion: 'isQuestion',
   isAnonymous: 'isAnonymous',
-  voteScore: 'voteScore',
+  likeCount: 'likeCount',
+  dislikeCount: 'dislikeCount',
   commentCount: 'commentCount',
   isPinned: 'isPinned',
   isDeleted: 'isDeleted',
@@ -473,7 +474,8 @@ exports.Prisma.CommunityCommentScalarFieldEnum = {
   text: 'text',
   isAnswer: 'isAnswer',
   isBest: 'isBest',
-  voteScore: 'voteScore',
+  likeCount: 'likeCount',
+  dislikeCount: 'dislikeCount',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -664,8 +666,8 @@ exports.CommunityCategory = exports.$Enums.CommunityCategory = {
 };
 
 exports.VoteValue = exports.$Enums.VoteValue = {
-  up: 'up',
-  down: 'down'
+  like: 'like',
+  dislike: 'dislike'
 };
 
 exports.Prisma.ModelName = {

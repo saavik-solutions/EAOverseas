@@ -59,8 +59,9 @@ export class CommunityService {
       isQuestion: post.isQuestion,
       isAnonymous: post.isAnonymous,
       isPinned: post.isPinned,
-      voteScore: post.voteScore,
-      commentCount: post._count.comments,
+      likeCount: post.likeCount,
+      dislikeCount: post.dislikeCount,
+      commentCount: post.commentCount,
       createdAt: post.createdAt,
       author: post.isAnonymous
         ? { fullName: 'Anonymous', avatarUrl: null, role: 'student' }
@@ -109,79 +110,97 @@ export class CommunityService {
 
   // ─── VOTES ───────────────────────────────────────────────────────────────────
 
-  async togglePostVote(userId: string, postId: string, value: 'up' | 'down') {
-    const existing = await prisma.communityVote.findUnique({
-      where: { userId_postId: { userId, postId } },
-    });
+  async togglePostVote(userId: string, postId: string, value: 'like' | 'dislike') {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await tx.communityVote.findUnique({
+        where: { userId_postId: { userId, postId } },
+      });
 
-    if (existing) {
-      if (existing.value === value) {
-        // Same vote → remove it
-        await prisma.communityVote.delete({ where: { id: existing.id } });
-        await prisma.communityPost.update({
-          where: { id: postId },
-          data: { voteScore: { increment: value === 'up' ? -1 : 1 } },
-        });
-        return { action: 'removed', value: null };
-      } else {
-        // Opposite vote → flip it (net change ±2)
-        await prisma.communityVote.update({
-          where: { id: existing.id },
-          data: { value: value as any },
-        });
-        await prisma.communityPost.update({
-          where: { id: postId },
-          data: { voteScore: { increment: value === 'up' ? 2 : -2 } },
-        });
-        return { action: 'flipped', value };
+      if (existing) {
+        if (existing.value === value) {
+          // Same vote → remove it
+          await tx.communityVote.delete({ where: { id: existing.id } });
+          await tx.communityPost.update({
+            where: { id: postId },
+            data: {
+              [value === 'like' ? 'likeCount' : 'dislikeCount']: { decrement: 1 }
+            },
+          });
+          return { action: 'removed', value: null };
+        } else {
+          // Opposite vote → flip it
+          await tx.communityVote.update({
+            where: { id: existing.id },
+            data: { value: value as any },
+          });
+          await tx.communityPost.update({
+            where: { id: postId },
+            data: {
+              [value === 'like' ? 'likeCount' : 'dislikeCount']: { increment: 1 },
+              [existing.value === 'like' ? 'likeCount' : 'dislikeCount']: { decrement: 1 }
+            },
+          });
+          return { action: 'flipped', value };
+        }
       }
-    }
 
-    // New vote
-    await prisma.communityVote.create({
-      data: { userId, postId, value: value as any },
+      // New vote
+      await tx.communityVote.create({
+        data: { userId, postId, value: value as any },
+      });
+      await tx.communityPost.update({
+        where: { id: postId },
+        data: {
+          [value === 'like' ? 'likeCount' : 'dislikeCount']: { increment: 1 }
+        },
+      });
+      return { action: 'added', value };
     });
-    await prisma.communityPost.update({
-      where: { id: postId },
-      data: { voteScore: { increment: value === 'up' ? 1 : -1 } },
-    });
-    return { action: 'added', value };
   }
 
-  async toggleCommentVote(userId: string, commentId: string, value: 'up' | 'down') {
-    const existing = await prisma.communityVote.findUnique({
-      where: { userId_commentId: { userId, commentId } },
-    });
+  async toggleCommentVote(userId: string, commentId: string, value: 'like' | 'dislike') {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await tx.communityVote.findUnique({
+        where: { userId_commentId: { userId, commentId } },
+      });
 
-    if (existing) {
-      if (existing.value === value) {
-        await prisma.communityVote.delete({ where: { id: existing.id } });
-        await prisma.communityComment.update({
-          where: { id: commentId },
-          data: { voteScore: { increment: value === 'up' ? -1 : 1 } },
-        });
-        return { action: 'removed', value: null };
-      } else {
-        await prisma.communityVote.update({
-          where: { id: existing.id },
-          data: { value: value as any },
-        });
-        await prisma.communityComment.update({
-          where: { id: commentId },
-          data: { voteScore: { increment: value === 'up' ? 2 : -2 } },
-        });
-        return { action: 'flipped', value };
+      if (existing) {
+        if (existing.value === value) {
+          await tx.communityVote.delete({ where: { id: existing.id } });
+          await tx.communityComment.update({
+            where: { id: commentId },
+            data: {
+              [value === 'like' ? 'likeCount' : 'dislikeCount']: { decrement: 1 }
+            },
+          });
+          return { action: 'removed', value: null };
+        } else {
+          await tx.communityVote.update({
+            where: { id: existing.id },
+            data: { value: value as any },
+          });
+          await tx.communityComment.update({
+            where: { id: commentId },
+            data: {
+              [value === 'like' ? 'likeCount' : 'dislikeCount']: { increment: 1 },
+              [existing.value === 'like' ? 'likeCount' : 'dislikeCount']: { decrement: 1 }
+            },
+          });
+          return { action: 'flipped', value };
+        }
       }
-    }
 
-    await prisma.communityVote.create({
-      data: { userId, commentId, value: value as any },
+      await tx.communityVote.create({
+        data: { userId, commentId, value: value as any },
+      });
+      await tx.communityComment.update({
+        where: { id: commentId },
+        data: {
+          [value === 'like' ? 'likeCount' : 'dislikeCount']: { increment: 1 }
+        },
+      });
+      return { action: 'added', value };
     });
-    await prisma.communityComment.update({
-      where: { id: commentId },
-      data: { voteScore: { increment: value === 'up' ? 1 : -1 } },
-    });
-    return { action: 'added', value };
   }
 
   // ─── COMMENTS ─────────────────────────────────────────────────────────────────
@@ -205,7 +224,7 @@ export class CommunityService {
           orderBy: { createdAt: 'asc' },
         },
       },
-      orderBy: [{ isBest: 'desc' }, { voteScore: 'desc' }, { createdAt: 'asc' }],
+      orderBy: [{ isBest: 'desc' }, { likeCount: 'desc' }, { createdAt: 'asc' }],
     });
 
     const mapComment = (c: any) => ({
@@ -213,7 +232,8 @@ export class CommunityService {
       text: c.text,
       isAnswer: c.isAnswer,
       isBest: c.isBest,
-      voteScore: c.voteScore,
+      likeCount: c.likeCount,
+      dislikeCount: c.dislikeCount,
       createdAt: c.createdAt,
       author: c.author,
       userVote: userId && c.votes?.length > 0 ? c.votes[0].value : null,
@@ -266,9 +286,19 @@ export class CommunityService {
     if (!comment) throw new Error('Comment not found');
     if (comment.authorId !== userId) throw new Error('Unauthorized');
 
-    return await prisma.communityComment.update({
-      where: { id: commentId },
-      data: { isDeleted: true },
+    return await prisma.$transaction(async (tx) => {
+      const updated = await tx.communityComment.update({
+        where: { id: commentId },
+        data: { isDeleted: true },
+      });
+
+      // Decrement comment count on the post
+      await tx.communityPost.update({
+        where: { id: comment.postId },
+        data: { commentCount: { decrement: 1 } },
+      });
+
+      return updated;
     });
   }
 }

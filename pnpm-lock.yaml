@@ -184,9 +184,6 @@ importers:
       '@fastify/static':
         specifier: ^6.12.0
         version: 6.12.0
-      '@prisma/client':
-        specifier: ^5.22.0
-        version: 5.22.0(prisma@5.22.0)
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -218,6 +215,9 @@ importers:
         specifier: ^3.22.0
         version: 3.25.76
     devDependencies:
+      '@prisma/client':
+        specifier: 5.22.0
+        version: 5.22.0(prisma@5.22.0)
       '@types/bcryptjs':
         specifier: ^2.4.6
         version: 2.4.6
@@ -234,7 +234,7 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       prisma:
-        specifier: ^5.0.0
+        specifier: 5.22.0
         version: 5.22.0
       tsx:
         specifier: ^4.0.0

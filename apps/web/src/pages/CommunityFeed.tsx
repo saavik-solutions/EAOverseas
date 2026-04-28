@@ -47,8 +47,9 @@ const CommunityFeed = () => {
                 content: p.content || '',
                 tags: p.tags,
                 category: p.category,
-                votes: p.voteScore,
-                userVote: p.userVote === 'up' ? 1 : p.userVote === 'down' ? -1 : 0,
+                likeCount: p.likeCount,
+                dislikeCount: p.dislikeCount,
+                userVote: p.userVote === 'like' ? 1 : p.userVote === 'dislike' ? -1 : 0,
                 commentsCount: p.commentCount,
                 isExpert: p.author.role === 'counsellor',
                 comments: [], // loaded on demand
@@ -89,9 +90,11 @@ const CommunityFeed = () => {
                     avatar: c.author.avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(c.author.fullName)}`,
                     text: c.text,
                     time: new Date(c.createdAt).toLocaleDateString(),
-                    upvotes: c.voteScore,
-                    userVote: c.userVote === 'up' ? 1 : c.userVote === 'down' ? -1 : 0,
+                    likeCount: c.likeCount,
+                    dislikeCount: c.dislikeCount,
+                    userVote: c.userVote === 'like' ? 1 : c.userVote === 'dislike' ? -1 : 0,
                     isBest: c.isBest,
+                    authorId: c.author.id,
                 })) }));
             } catch (err) {
                 console.error('Failed to load comments:', err);
@@ -113,14 +116,35 @@ const CommunityFeed = () => {
             const comment = postComments[commentIdx];
             if (!comment?.id) return;
 
+            const voteValue = direction === 'up' ? 'like' : 'dislike';
             try {
-                const result = await communityService.voteComment(comment.id, direction);
+                const result = await communityService.voteComment(comment.id, voteValue);
                 setComments(prev => {
                     const updated = [...(prev[postId] || [])];
-                    const currentVote = updated[commentIdx].userVote || 0;
+                    const target = updated[commentIdx];
+                    const currentVote = target.userVote || 0;
                     const newVote = result.action === 'removed' ? 0 : direction === 'up' ? 1 : -1;
-                    let voteChange = newVote - currentVote;
-                    updated[commentIdx] = { ...updated[commentIdx], upvotes: (updated[commentIdx].upvotes || 0) + voteChange, userVote: newVote };
+
+                    // Atomic logic for UI state
+                    const nextTarget = { ...target, userVote: newVote };
+                    
+                    if (result.action === 'added') {
+                        if (voteValue === 'like') nextTarget.likeCount++;
+                        else nextTarget.dislikeCount++;
+                    } else if (result.action === 'removed') {
+                        if (currentVote === 1) nextTarget.likeCount--;
+                        else if (currentVote === -1) nextTarget.dislikeCount--;
+                    } else if (result.action === 'flipped') {
+                        if (voteValue === 'like') {
+                            nextTarget.likeCount++;
+                            nextTarget.dislikeCount--;
+                        } else {
+                            nextTarget.dislikeCount++;
+                            nextTarget.likeCount--;
+                        }
+                    }
+
+                    updated[commentIdx] = nextTarget;
                     return { ...prev, [postId]: updated };
                 });
             } catch (err) {
@@ -153,7 +177,8 @@ const CommunityFeed = () => {
                     content: newPost.content || '',
                     tags: newPost.tags,
                     category: newPost.category,
-                    votes: 0,
+                    likeCount: 0,
+                    dislikeCount: 0,
                     userVote: 0,
                     commentsCount: 0,
                     isExpert: false,
@@ -181,14 +206,33 @@ const CommunityFeed = () => {
 
     const handleVote = async (postId, direction) => {
         executeAction(async () => {
+            const voteValue = direction === 'up' ? 'like' : 'dislike';
             try {
-                const result = await communityService.votePost(postId, direction);
+                const result = await communityService.votePost(postId, voteValue);
                 setPosts(prev => prev.map(p => {
                     if (p.id !== postId) return p;
                     const currentVote = p.userVote || 0;
                     const newVote = result.action === 'removed' ? 0 : direction === 'up' ? 1 : -1;
-                    const voteChange = newVote - currentVote;
-                    return { ...p, votes: p.votes + voteChange, userVote: newVote };
+                    
+                    const nextPost = { ...p, userVote: newVote };
+
+                    if (result.action === 'added') {
+                        if (voteValue === 'like') nextPost.likeCount++;
+                        else nextPost.dislikeCount++;
+                    } else if (result.action === 'removed') {
+                        if (currentVote === 1) nextPost.likeCount--;
+                        else if (currentVote === -1) nextPost.dislikeCount--;
+                    } else if (result.action === 'flipped') {
+                        if (voteValue === 'like') {
+                            nextPost.likeCount++;
+                            nextPost.dislikeCount--;
+                        } else {
+                            nextPost.dislikeCount++;
+                            nextPost.likeCount--;
+                        }
+                    }
+
+                    return nextPost;
                 }));
             } catch (err) {
                 console.error('Vote failed:', err);
@@ -213,8 +257,10 @@ const CommunityFeed = () => {
                     avatar: newComment.author.avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(newComment.author.fullName)}`,
                     text: newComment.text,
                     time: 'Just now',
-                    upvotes: 0,
+                    likeCount: 0,
+                    dislikeCount: 0,
                     userVote: 0,
+                    authorId: newComment.author.id,
                 };
                 setComments(prev => ({
                     ...prev,
@@ -227,6 +273,19 @@ const CommunityFeed = () => {
                 console.error('Comment failed:', err);
             }
         });
+    };
+
+    const handleDeleteComment = async (postId, commentId) => {
+        try {
+            await communityService.deleteComment(commentId);
+            setComments(prev => ({
+                ...prev,
+                [postId]: (prev[postId] || []).filter(c => c.id !== commentId)
+            }));
+            setPosts(prev => prev.map(p => p.id === postId ? { ...p, commentsCount: p.commentsCount - 1 } : p));
+        } catch (err) {
+            console.error('Delete comment failed:', err);
+        }
     };
 
     return (
@@ -344,23 +403,19 @@ const CommunityFeed = () => {
                                             key={post.id}
                                             className="bg-white rounded-xl border border-gray-200 shadow-sm transition-all group flex overflow-hidden w-full text-left"
                                         >
-                                            {/* Voting Column */}
-                                            <div className="w-12 bg-gray-50 flex flex-col items-center py-4 gap-1 shrink-0 border-r border-gray-100">
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleVote(post.id, 'up'); }}
-                                                    className={`hover:bg-blue-50 rounded-lg p-1.5 transition-all ${post.userVote === 1 ? 'text-blue-600' : 'text-gray-400'}`}
-                                                >
-                                                    <span className="material-symbols-outlined text-[24px]">expand_less</span>
-                                                </button>
-                                                <span className={`text-sm font-bold ${post.votes > 0 ? 'text-blue-600' : post.votes < 0 ? 'text-red-500' : 'text-gray-600'}`}>
-                                                    {post.votes}
-                                                </span>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleVote(post.id, 'down'); }}
-                                                    className={`hover:bg-red-50 rounded-lg p-1.5 transition-all ${post.userVote === -1 ? 'text-red-600' : 'text-gray-400'}`}
-                                                >
-                                                    <span className="material-symbols-outlined text-[24px]">expand_more</span>
-                                                </button>
+                                            {/* Vertical Voting Column (Like Only) */}
+                                            <div className="w-14 flex flex-col items-center py-6 shrink-0 border-r border-gray-50 bg-gray-50/30">
+                                                <div className="flex flex-col items-center">
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleVote(post.id, 'up'); }}
+                                                        className={`transition-all p-1 rounded-full ${post.userVote === 1 ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-blue-500 hover:bg-gray-100'}`}
+                                                    >
+                                                        <span className="material-symbols-outlined text-[28px]" style={{ fontVariationSettings: post.userVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
+                                                    </button>
+                                                    <span className="text-[12px] font-black text-blue-600 mt-1">
+                                                        {post.likeCount}
+                                                    </span>
+                                                </div>
                                             </div>
 
                                             <div className="flex-1 p-4 min-w-0">
@@ -400,27 +455,27 @@ const CommunityFeed = () => {
                                                     </div>
                                                 )}
 
-                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-auto gap-3">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-auto gap-3 pt-2">
                                                     <div className="flex items-center gap-2 flex-wrap">
-                                                        <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider">{post.category}</span>
+                                                        <span className="px-2 py-1 rounded bg-gray-100 text-gray-600 text-[11px] font-bold">{post.category}</span>
                                                         {post.tags.map(tag => (
-                                                            <span key={tag} className="px-2 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px] font-medium">#{tag}</span>
+                                                            <span key={tag} className="px-2 py-1 rounded bg-gray-50 text-gray-400 text-[11px] font-medium">{tag}</span>
                                                         ))}
                                                     </div>
-                                                    <div className="flex items-center gap-4 text-gray-500 text-xs font-medium">
-                                                        <button onClick={(e) => { e.stopPropagation(); toggleComments(post.id); }} className="flex items-center gap-1.5 hover:text-gray-900 transition-colors">
-                                                            <span className="material-symbols-outlined text-[18px]">mode_comment</span>
+                                                    <div className="flex items-center gap-5 text-gray-500 text-sm font-bold">
+                                                        <button onClick={(e) => { e.stopPropagation(); toggleComments(post.id); }} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                                                            <span className="material-symbols-outlined text-[20px]">mode_comment</span>
                                                             <span>{post.commentsCount}</span>
                                                         </button>
-                                                        <button onClick={(e) => { e.stopPropagation(); openShareModal(post); }} className="flex items-center gap-1.5 hover:text-gray-900 transition-colors">
-                                                            <span className="material-symbols-outlined text-[18px]">share</span>
+                                                        <button onClick={(e) => { e.stopPropagation(); openShareModal(post); }} className="flex items-center hover:text-blue-600 transition-colors">
+                                                            <span className="material-symbols-outlined text-[20px]">share</span>
                                                         </button>
                                                         {user && post.authorId === user.id && (
                                                             <button
                                                                 onClick={(e) => { e.stopPropagation(); handleDeletePost(post.id); }}
-                                                                className="flex items-center gap-1.5 hover:text-red-500 transition-colors"
+                                                                className="hover:text-red-500 transition-colors"
                                                             >
-                                                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                                                                <span className="material-symbols-outlined text-[20px]">delete</span>
                                                             </button>
                                                         )}
                                                     </div>
@@ -429,7 +484,20 @@ const CommunityFeed = () => {
                                                 {visibleComments[post.id] && (
                                                     <div className="mt-4 pt-4 border-t border-gray-100">
                                                         <div className="flex gap-3 mb-4">
-                                                            <div className="size-8 rounded-full bg-gray-100 bg-cover bg-center shrink-0" style={{ backgroundImage: `url("${user?.avatarUrl || 'https://api.dicebear.com/7.x/initials/svg?seed=Guest'}")` }}></div>
+                                                            <div 
+                                                                className="size-8 rounded-full bg-blue-50 bg-cover bg-center shrink-0 border border-blue-100 flex items-center justify-center overflow-hidden"
+                                                                style={{ 
+                                                                    backgroundImage: user?.avatarUrl ? `url("${user.avatarUrl}")` : undefined 
+                                                                }}
+                                                            >
+                                                                {!user?.avatarUrl && (
+                                                                    <img 
+                                                                        src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user?.fullName || 'Guest')}&backgroundColor=f0f7ff&textColor=2563eb`} 
+                                                                        alt="Profile" 
+                                                                        className="w-full h-full"
+                                                                    />
+                                                                )}
+                                                            </div>
                                                             <div className="flex-1 flex gap-2">
                                                                 <input
                                                                     type="text"
@@ -453,12 +521,32 @@ const CommunityFeed = () => {
                                                             {(comments[post.id] || []).slice(0, visibleCommentCounts[post.id] || 3).map((comment, idx) => (
                                                                 <div key={idx} className="flex gap-3">
                                                                     <div className="size-7 rounded-full bg-gray-100 bg-cover bg-center shrink-0" style={{ backgroundImage: `url("${comment.avatar}")` }}></div>
-                                                                    <div className="flex-1 bg-gray-50 rounded-lg p-3">
+                                                                    <div className="flex-1 bg-gray-50 rounded-lg p-3 relative group/comment">
                                                                         <div className="flex justify-between items-start mb-1">
                                                                             <p className="text-xs font-bold text-gray-900">{comment.author}</p>
-                                                                            <span className="text-[10px] text-gray-400">{comment.time}</span>
+                                                                            <div className="flex items-center gap-2">
+                                                                                <span className="text-[10px] text-gray-400">{comment.time}</span>
+                                                                                {user && comment.authorId === user.id && (
+                                                                                    <button 
+                                                                                        onClick={() => handleDeleteComment(post.id, comment.id)}
+                                                                                        className="opacity-0 group-hover/comment:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
+                                                                                    >
+                                                                                        <span className="material-symbols-outlined !text-[16px]">delete</span>
+                                                                                    </button>
+                                                                                )}
+                                                                            </div>
                                                                         </div>
-                                                                        <p className="text-xs text-gray-700 leading-relaxed">{comment.text}</p>
+                                                                        <p className="text-xs text-gray-700 leading-relaxed mb-2">{comment.text}</p>
+                                                                        
+                                                                        <div className="flex items-center gap-3">
+                                                                            <button 
+                                                                                onClick={() => handleCommentVote(post.id, idx, 'up')}
+                                                                                className={`flex items-center gap-1 text-[11px] font-bold transition-colors ${comment.userVote === 1 ? 'text-blue-600' : 'text-gray-400 hover:text-blue-500'}`}
+                                                                            >
+                                                                                <span className="material-symbols-outlined !text-[16px]" style={{ fontVariationSettings: comment.userVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
+                                                                                {comment.likeCount}
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             ))}

@@ -596,8 +596,8 @@ enum CommunityCategory {
 }
 
 enum VoteValue {
-  up
-  down
+  like
+  dislike
 }
 
 model CommunityPost {
@@ -610,7 +610,8 @@ model CommunityPost {
   tags         String[]          @default([])
   isQuestion   Boolean           @default(false) @map("is_question")
   isAnonymous  Boolean           @default(false) @map("is_anonymous")
-  voteScore    Int               @default(0) @map("vote_score")
+  likeCount    Int               @default(0) @map("like_count")
+  dislikeCount Int               @default(0) @map("dislike_count")
   commentCount Int               @default(0) @map("comment_count")
   isPinned     Boolean           @default(false) @map("is_pinned")
   isDeleted    Boolean           @default(false) @map("is_deleted")
@@ -632,7 +633,8 @@ model CommunityComment {
   text       String   @db.Text
   isAnswer   Boolean  @default(false) @map("is_answer")
   isBest     Boolean  @default(false) @map("is_best")
-  voteScore  Int      @default(0) @map("vote_score")
+  likeCount  Int      @default(0) @map("like_count")
+  dislikeCount Int    @default(0) @map("dislike_count")
   isDeleted  Boolean  @default(false) @map("is_deleted")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")

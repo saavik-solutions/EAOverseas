@@ -329,8 +329,8 @@ export type CommunityCategory = (typeof CommunityCategory)[keyof typeof Communit
 
 
 export const VoteValue: {
-  up: 'up',
-  down: 'down'
+  like: 'like',
+  dislike: 'dislike'
 };
 
 export type VoteValue = (typeof VoteValue)[keyof typeof VoteValue]
@@ -24352,12 +24352,14 @@ export namespace Prisma {
   }
 
   export type CommunityPostAvgAggregateOutputType = {
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
     commentCount: number | null
   }
 
   export type CommunityPostSumAggregateOutputType = {
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
     commentCount: number | null
   }
 
@@ -24370,7 +24372,8 @@ export namespace Prisma {
     category: $Enums.CommunityCategory | null
     isQuestion: boolean | null
     isAnonymous: boolean | null
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
     commentCount: number | null
     isPinned: boolean | null
     isDeleted: boolean | null
@@ -24387,7 +24390,8 @@ export namespace Prisma {
     category: $Enums.CommunityCategory | null
     isQuestion: boolean | null
     isAnonymous: boolean | null
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
     commentCount: number | null
     isPinned: boolean | null
     isDeleted: boolean | null
@@ -24405,7 +24409,8 @@ export namespace Prisma {
     tags: number
     isQuestion: number
     isAnonymous: number
-    voteScore: number
+    likeCount: number
+    dislikeCount: number
     commentCount: number
     isPinned: number
     isDeleted: number
@@ -24416,12 +24421,14 @@ export namespace Prisma {
 
 
   export type CommunityPostAvgAggregateInputType = {
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     commentCount?: true
   }
 
   export type CommunityPostSumAggregateInputType = {
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     commentCount?: true
   }
 
@@ -24434,7 +24441,8 @@ export namespace Prisma {
     category?: true
     isQuestion?: true
     isAnonymous?: true
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     commentCount?: true
     isPinned?: true
     isDeleted?: true
@@ -24451,7 +24459,8 @@ export namespace Prisma {
     category?: true
     isQuestion?: true
     isAnonymous?: true
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     commentCount?: true
     isPinned?: true
     isDeleted?: true
@@ -24469,7 +24478,8 @@ export namespace Prisma {
     tags?: true
     isQuestion?: true
     isAnonymous?: true
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     commentCount?: true
     isPinned?: true
     isDeleted?: true
@@ -24574,7 +24584,8 @@ export namespace Prisma {
     tags: string[]
     isQuestion: boolean
     isAnonymous: boolean
-    voteScore: number
+    likeCount: number
+    dislikeCount: number
     commentCount: number
     isPinned: boolean
     isDeleted: boolean
@@ -24611,7 +24622,8 @@ export namespace Prisma {
     tags?: boolean
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: boolean
+    likeCount?: boolean
+    dislikeCount?: boolean
     commentCount?: boolean
     isPinned?: boolean
     isDeleted?: boolean
@@ -24633,7 +24645,8 @@ export namespace Prisma {
     tags?: boolean
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: boolean
+    likeCount?: boolean
+    dislikeCount?: boolean
     commentCount?: boolean
     isPinned?: boolean
     isDeleted?: boolean
@@ -24652,7 +24665,8 @@ export namespace Prisma {
     tags?: boolean
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: boolean
+    likeCount?: boolean
+    dislikeCount?: boolean
     commentCount?: boolean
     isPinned?: boolean
     isDeleted?: boolean
@@ -24687,7 +24701,8 @@ export namespace Prisma {
       tags: string[]
       isQuestion: boolean
       isAnonymous: boolean
-      voteScore: number
+      likeCount: number
+      dislikeCount: number
       commentCount: number
       isPinned: boolean
       isDeleted: boolean
@@ -25098,7 +25113,8 @@ export namespace Prisma {
     readonly tags: FieldRef<"CommunityPost", 'String[]'>
     readonly isQuestion: FieldRef<"CommunityPost", 'Boolean'>
     readonly isAnonymous: FieldRef<"CommunityPost", 'Boolean'>
-    readonly voteScore: FieldRef<"CommunityPost", 'Int'>
+    readonly likeCount: FieldRef<"CommunityPost", 'Int'>
+    readonly dislikeCount: FieldRef<"CommunityPost", 'Int'>
     readonly commentCount: FieldRef<"CommunityPost", 'Int'>
     readonly isPinned: FieldRef<"CommunityPost", 'Boolean'>
     readonly isDeleted: FieldRef<"CommunityPost", 'Boolean'>
@@ -25489,11 +25505,13 @@ export namespace Prisma {
   }
 
   export type CommunityCommentAvgAggregateOutputType = {
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
   }
 
   export type CommunityCommentSumAggregateOutputType = {
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
   }
 
   export type CommunityCommentMinAggregateOutputType = {
@@ -25504,7 +25522,8 @@ export namespace Prisma {
     text: string | null
     isAnswer: boolean | null
     isBest: boolean | null
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
     isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -25518,7 +25537,8 @@ export namespace Prisma {
     text: string | null
     isAnswer: boolean | null
     isBest: boolean | null
-    voteScore: number | null
+    likeCount: number | null
+    dislikeCount: number | null
     isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -25532,7 +25552,8 @@ export namespace Prisma {
     text: number
     isAnswer: number
     isBest: number
-    voteScore: number
+    likeCount: number
+    dislikeCount: number
     isDeleted: number
     createdAt: number
     updatedAt: number
@@ -25541,11 +25562,13 @@ export namespace Prisma {
 
 
   export type CommunityCommentAvgAggregateInputType = {
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
   }
 
   export type CommunityCommentSumAggregateInputType = {
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
   }
 
   export type CommunityCommentMinAggregateInputType = {
@@ -25556,7 +25579,8 @@ export namespace Prisma {
     text?: true
     isAnswer?: true
     isBest?: true
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
@@ -25570,7 +25594,8 @@ export namespace Prisma {
     text?: true
     isAnswer?: true
     isBest?: true
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
@@ -25584,7 +25609,8 @@ export namespace Prisma {
     text?: true
     isAnswer?: true
     isBest?: true
-    voteScore?: true
+    likeCount?: true
+    dislikeCount?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
@@ -25685,7 +25711,8 @@ export namespace Prisma {
     text: string
     isAnswer: boolean
     isBest: boolean
-    voteScore: number
+    likeCount: number
+    dislikeCount: number
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date
@@ -25718,7 +25745,8 @@ export namespace Prisma {
     text?: boolean
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: boolean
+    likeCount?: boolean
+    dislikeCount?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -25738,7 +25766,8 @@ export namespace Prisma {
     text?: boolean
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: boolean
+    likeCount?: boolean
+    dislikeCount?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -25755,7 +25784,8 @@ export namespace Prisma {
     text?: boolean
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: boolean
+    likeCount?: boolean
+    dislikeCount?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -25792,7 +25822,8 @@ export namespace Prisma {
       text: string
       isAnswer: boolean
       isBest: boolean
-      voteScore: number
+      likeCount: number
+      dislikeCount: number
       isDeleted: boolean
       createdAt: Date
       updatedAt: Date
@@ -26201,7 +26232,8 @@ export namespace Prisma {
     readonly text: FieldRef<"CommunityComment", 'String'>
     readonly isAnswer: FieldRef<"CommunityComment", 'Boolean'>
     readonly isBest: FieldRef<"CommunityComment", 'Boolean'>
-    readonly voteScore: FieldRef<"CommunityComment", 'Int'>
+    readonly likeCount: FieldRef<"CommunityComment", 'Int'>
+    readonly dislikeCount: FieldRef<"CommunityComment", 'Int'>
     readonly isDeleted: FieldRef<"CommunityComment", 'Boolean'>
     readonly createdAt: FieldRef<"CommunityComment", 'DateTime'>
     readonly updatedAt: FieldRef<"CommunityComment", 'DateTime'>
@@ -27985,7 +28017,8 @@ export namespace Prisma {
     tags: 'tags',
     isQuestion: 'isQuestion',
     isAnonymous: 'isAnonymous',
-    voteScore: 'voteScore',
+    likeCount: 'likeCount',
+    dislikeCount: 'dislikeCount',
     commentCount: 'commentCount',
     isPinned: 'isPinned',
     isDeleted: 'isDeleted',
@@ -28004,7 +28037,8 @@ export namespace Prisma {
     text: 'text',
     isAnswer: 'isAnswer',
     isBest: 'isBest',
-    voteScore: 'voteScore',
+    likeCount: 'likeCount',
+    dislikeCount: 'dislikeCount',
     isDeleted: 'isDeleted',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -30491,7 +30525,8 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"CommunityPost">
     isQuestion?: BoolFilter<"CommunityPost"> | boolean
     isAnonymous?: BoolFilter<"CommunityPost"> | boolean
-    voteScore?: IntFilter<"CommunityPost"> | number
+    likeCount?: IntFilter<"CommunityPost"> | number
+    dislikeCount?: IntFilter<"CommunityPost"> | number
     commentCount?: IntFilter<"CommunityPost"> | number
     isPinned?: BoolFilter<"CommunityPost"> | boolean
     isDeleted?: BoolFilter<"CommunityPost"> | boolean
@@ -30512,7 +30547,8 @@ export namespace Prisma {
     tags?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
@@ -30536,7 +30572,8 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"CommunityPost">
     isQuestion?: BoolFilter<"CommunityPost"> | boolean
     isAnonymous?: BoolFilter<"CommunityPost"> | boolean
-    voteScore?: IntFilter<"CommunityPost"> | number
+    likeCount?: IntFilter<"CommunityPost"> | number
+    dislikeCount?: IntFilter<"CommunityPost"> | number
     commentCount?: IntFilter<"CommunityPost"> | number
     isPinned?: BoolFilter<"CommunityPost"> | boolean
     isDeleted?: BoolFilter<"CommunityPost"> | boolean
@@ -30557,7 +30594,8 @@ export namespace Prisma {
     tags?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
@@ -30583,7 +30621,8 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"CommunityPost">
     isQuestion?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
     isAnonymous?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
-    voteScore?: IntWithAggregatesFilter<"CommunityPost"> | number
+    likeCount?: IntWithAggregatesFilter<"CommunityPost"> | number
+    dislikeCount?: IntWithAggregatesFilter<"CommunityPost"> | number
     commentCount?: IntWithAggregatesFilter<"CommunityPost"> | number
     isPinned?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
     isDeleted?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
@@ -30602,7 +30641,8 @@ export namespace Prisma {
     text?: StringFilter<"CommunityComment"> | string
     isAnswer?: BoolFilter<"CommunityComment"> | boolean
     isBest?: BoolFilter<"CommunityComment"> | boolean
-    voteScore?: IntFilter<"CommunityComment"> | number
+    likeCount?: IntFilter<"CommunityComment"> | number
+    dislikeCount?: IntFilter<"CommunityComment"> | number
     isDeleted?: BoolFilter<"CommunityComment"> | boolean
     createdAt?: DateTimeFilter<"CommunityComment"> | Date | string
     updatedAt?: DateTimeFilter<"CommunityComment"> | Date | string
@@ -30621,7 +30661,8 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30643,7 +30684,8 @@ export namespace Prisma {
     text?: StringFilter<"CommunityComment"> | string
     isAnswer?: BoolFilter<"CommunityComment"> | boolean
     isBest?: BoolFilter<"CommunityComment"> | boolean
-    voteScore?: IntFilter<"CommunityComment"> | number
+    likeCount?: IntFilter<"CommunityComment"> | number
+    dislikeCount?: IntFilter<"CommunityComment"> | number
     isDeleted?: BoolFilter<"CommunityComment"> | boolean
     createdAt?: DateTimeFilter<"CommunityComment"> | Date | string
     updatedAt?: DateTimeFilter<"CommunityComment"> | Date | string
@@ -30662,7 +30704,8 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30684,7 +30727,8 @@ export namespace Prisma {
     text?: StringWithAggregatesFilter<"CommunityComment"> | string
     isAnswer?: BoolWithAggregatesFilter<"CommunityComment"> | boolean
     isBest?: BoolWithAggregatesFilter<"CommunityComment"> | boolean
-    voteScore?: IntWithAggregatesFilter<"CommunityComment"> | number
+    likeCount?: IntWithAggregatesFilter<"CommunityComment"> | number
+    dislikeCount?: IntWithAggregatesFilter<"CommunityComment"> | number
     isDeleted?: BoolWithAggregatesFilter<"CommunityComment"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"CommunityComment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CommunityComment"> | Date | string
@@ -33123,7 +33167,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -33144,7 +33189,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -33163,7 +33209,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -33184,7 +33231,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -33204,7 +33252,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -33221,7 +33270,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -33239,7 +33289,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -33252,7 +33303,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33271,7 +33323,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33284,7 +33337,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33303,7 +33357,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33319,7 +33374,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33330,7 +33386,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33344,7 +33401,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35528,7 +35586,8 @@ export namespace Prisma {
     tags?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
@@ -35537,7 +35596,8 @@ export namespace Prisma {
   }
 
   export type CommunityPostAvgOrderByAggregateInput = {
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     commentCount?: SortOrder
   }
 
@@ -35550,7 +35610,8 @@ export namespace Prisma {
     category?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
@@ -35567,7 +35628,8 @@ export namespace Prisma {
     category?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
@@ -35576,7 +35638,8 @@ export namespace Prisma {
   }
 
   export type CommunityPostSumOrderByAggregateInput = {
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     commentCount?: SortOrder
   }
 
@@ -35608,14 +35671,16 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type CommunityCommentAvgOrderByAggregateInput = {
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
   }
 
   export type CommunityCommentMaxOrderByAggregateInput = {
@@ -35626,7 +35691,8 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -35640,14 +35706,16 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type CommunityCommentSumOrderByAggregateInput = {
-    voteScore?: SortOrder
+    likeCount?: SortOrder
+    dislikeCount?: SortOrder
   }
 
   export type EnumVoteValueFilter<$PrismaModel = never> = {
@@ -38827,7 +38895,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -38846,7 +38915,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -38871,7 +38941,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -38888,7 +38959,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39435,7 +39507,8 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"CommunityPost">
     isQuestion?: BoolFilter<"CommunityPost"> | boolean
     isAnonymous?: BoolFilter<"CommunityPost"> | boolean
-    voteScore?: IntFilter<"CommunityPost"> | number
+    likeCount?: IntFilter<"CommunityPost"> | number
+    dislikeCount?: IntFilter<"CommunityPost"> | number
     commentCount?: IntFilter<"CommunityPost"> | number
     isPinned?: BoolFilter<"CommunityPost"> | boolean
     isDeleted?: BoolFilter<"CommunityPost"> | boolean
@@ -39470,7 +39543,8 @@ export namespace Prisma {
     text?: StringFilter<"CommunityComment"> | string
     isAnswer?: BoolFilter<"CommunityComment"> | boolean
     isBest?: BoolFilter<"CommunityComment"> | boolean
-    voteScore?: IntFilter<"CommunityComment"> | number
+    likeCount?: IntFilter<"CommunityComment"> | number
+    dislikeCount?: IntFilter<"CommunityComment"> | number
     isDeleted?: BoolFilter<"CommunityComment"> | boolean
     createdAt?: DateTimeFilter<"CommunityComment"> | Date | string
     updatedAt?: DateTimeFilter<"CommunityComment"> | Date | string
@@ -43314,7 +43388,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43331,7 +43406,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43495,7 +43571,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -43515,7 +43592,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -43607,7 +43685,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43625,7 +43704,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43642,7 +43722,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43659,7 +43740,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43723,7 +43805,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -43743,7 +43826,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -43847,7 +43931,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43865,7 +43950,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43986,7 +44072,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -44006,7 +44093,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -44025,7 +44113,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44043,7 +44132,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44154,7 +44244,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -44174,7 +44265,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -44199,7 +44291,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44217,7 +44310,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44396,7 +44490,8 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
@@ -44411,7 +44506,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -44927,7 +45023,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -44946,7 +45043,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -44965,7 +45063,8 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
@@ -44978,7 +45077,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44995,7 +45095,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45010,7 +45111,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45527,7 +45629,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45546,7 +45649,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45563,7 +45667,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45578,7 +45683,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45615,7 +45721,8 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
+    likeCount?: number
+    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -45634,7 +45741,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45651,7 +45759,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -45666,7 +45775,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

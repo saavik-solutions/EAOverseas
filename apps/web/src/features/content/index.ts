@@ -1,0 +1,10 @@
+export { default as AboutUs } from './pages/AboutUs';
+export { default as Team } from './pages/Team';
+export { default as ExpertProfile } from './pages/ExpertProfile';
+export { default as Blogs } from './pages/Blogs';
+export { default as BlogDetails } from './pages/BlogDetails';
+export { default as Testimonials } from './pages/Testimonials';
+export { default as StudentStory } from './pages/StudentStory';
+export { default as TermsAndConditions } from './pages/TermsAndConditions';
+export { default as PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+export { default as CookiePolicyPage } from './pages/CookiePolicyPage';

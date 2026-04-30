@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Hero.css';
-import chatIcon from '../assets/icon_chat.png';
-import whatsappIcon from '../assets/icon_whatsapp.png';
+import chatIcon from '@/assets/icon_chat.png';
+import whatsappIcon from '@/assets/icon_whatsapp.png';
 
 const Hero = () => {
     const navigate = useNavigate();

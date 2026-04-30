@@ -1,6 +1,6 @@
 import React from 'react';
 import './ImpactSection.css';
-import loanHero from '../../../assets/loan_hero.png';
+import loanHero from '@/assets/loan_hero.png';
 
 const ImpactSection = () => {
     return (

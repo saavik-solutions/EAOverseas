@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useNotification } from '../../context/NotificationContext';
-import { useAuth } from '../../context/AuthContext';
-// import NotificationDropdown from '../features/notifications/NotificationDropdown';
+import { useNotification } from '@/features/notifications/context/NotificationContext';
+import { useAuth } from '@/features/auth/context/AuthContext';
+import NotificationDropdown from '@/components/feedback/NotificationDropdown';
 
 interface Breadcrumb {
     label: string;
@@ -10,13 +10,12 @@ interface Breadcrumb {
 }
 
 interface PageHeaderProps {
-    title?: React.ReactNode;
+    title?: string;
     actions?: React.ReactNode;
     breadcrumbs?: Breadcrumb[];
-    hideSignOut?: boolean;
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [], hideSignOut = false }) => {
+const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [] }) => {
     const navigate = useNavigate();
     const { unreadCount } = useNotification();
     const { logout, user } = useAuth();
@@ -63,24 +62,53 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [
             <div className="flex items-center gap-4">
                 {/* Custom Actions */}
                 {actions && (
-                    <div className="flex items-center gap-3">
+                    <>
                         {actions}
+                        {user && <div className="h-8 w-px bg-gray-200 mx-1"></div>}
+                    </>
+                )}
+
+                {/* Notification Bell */}
+                {user && (
+                    <div className="relative hidden lg:block" ref={notificationRef}>
+                        <button
+                            onClick={toggleNotifications}
+                            className={`relative p-2 transition-colors rounded-full hover:bg-gray-100 ${showNotifications ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
+                        >
+                            <span className={`material-symbols-outlined !text-[24px] ${showNotifications ? 'filled' : ''}`}>notifications</span>
+                            {unreadCount > 0 && (
+                                <span className="absolute top-2 right-2 size-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                            )}
+                        </button>
+
+                        {/* Dropdown */}
+                        {showNotifications && (
+                            <NotificationDropdown onClose={() => setShowNotifications(false)} />
+                        )}
                     </div>
                 )}
 
-                {/* Global Sign Out Button (Except forms) */}
-                {user && !hideSignOut && (
-                    <div className="hidden lg:flex items-center">
-                        <div className="h-6 w-px bg-slate-100 mx-1"></div>
+                {user && (
+                    <>
+                        <div className="h-8 w-px bg-gray-200 mx-1"></div>
+
+                        {/* Sign Out Button - Restored (Authenticated Only) */}
                         <button
-                            onClick={() => logout()}
-                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition-all shadow-sm"
+                            onClick={() => {
+                                navigate('/login');
+                                setTimeout(() => {
+                                    logout();
+                                }, 100);
+                            }}
+                            className="hidden lg:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
                         >
-                            <span className="material-symbols-outlined !text-[16px]">logout</span>
+                            <span className="material-symbols-outlined !text-[20px]">logout</span>
                             Sign Out
                         </button>
-                    </div>
+                    </>
                 )}
+
+
             </div>
         </header>
     );

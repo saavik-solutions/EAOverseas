@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import logo from '../assets/logo.jpg';
-import { useAuth } from '../context/AuthContext';
-import { useNotification } from '../context/NotificationContext';
-import NotificationDropdown from '../components/NotificationDropdown';
-import LoginModal from '../components/LoginModal';
+import Sidebar from '@/components/layout/Sidebar';
+import logo from '@/assets/logo.jpg';
+import { useAuth } from '@/features/auth/context/AuthContext';
+import { useNotification } from '@/features/notifications/context/NotificationContext';
+import NotificationDropdown from '@/components/feedback/NotificationDropdown';
+import LoginModal from '@/features/auth/components/LoginModal';
 import { useRef, useEffect } from 'react';
 
 const MainLayout = () => {

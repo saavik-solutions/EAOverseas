@@ -1,0 +1,10 @@
+export { default as ApplicationDashboard } from './pages/ApplicationDashboard';
+export { default as ApplicationLayout } from './wizard/ApplicationLayout';
+export { default as ApplicationStart } from './wizard/ApplicationStart';
+export { default as InitiateApplication } from './wizard/InitiateApplication';
+export { default as PersonalDetails } from './wizard/PersonalDetails';
+export { default as AcademicDetails } from './wizard/AcademicDetails';
+export { default as Documents } from './wizard/Documents';
+export { default as Payment } from './wizard/Payment';
+export { default as Review } from './wizard/Review';
+export { default as ApplicationSubmitted } from './wizard/ApplicationSubmitted';

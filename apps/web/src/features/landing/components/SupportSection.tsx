@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import './SupportSection.css';
-import leavesImage from '../assets/support_palm_leaves.png';
-import fabricImage from '../assets/support_fabric_texture.png';
+import leavesImage from '@/assets/support_palm_leaves.png';
+import fabricImage from '@/assets/support_fabric_texture.png';
 
 const steps = [
     {

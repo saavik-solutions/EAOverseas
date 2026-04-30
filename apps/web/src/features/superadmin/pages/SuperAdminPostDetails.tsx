@@ -109,8 +109,9 @@ const SuperAdminPostDetails = () => {
     const handleDelete = async () => {
         if (window.confirm('This action cannot be undone. Are you sure you want to delete this post from the cloud?')) {
             try {
-                // await feedService.delete(postId);
-                deletePost(post.id);
+                if (post.id) {
+                    await feedService.delete(post.id);
+                }
                 navigate('/Superadmin/university-portal/posts-feed');
             } catch (err) {
                 console.error('Delete failed', err);

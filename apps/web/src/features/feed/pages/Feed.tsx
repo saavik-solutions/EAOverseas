@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '@/components/layout/Sidebar';
 import PageHeader from '@/components/layout/PageHeader';
 import { feedService, PostResponse } from '@/features/feed/services/feedService';
-import { useAuthAction } from '@/hooks/useAuthAction';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 import LoginModal from '@/features/auth/components/LoginModal';
@@ -14,6 +13,15 @@ const Feed = () => {
     const [posts, setPosts] = useState<PostResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
     // State for Filter Bar
     const [activeCountry, setActiveCountry] = useState('All Countries');
@@ -32,7 +40,7 @@ const Feed = () => {
     const fetchPosts = useCallback(async () => {
         try {
             setLoading(true);
-            const data = await feedService.getAll();
+            const data = await feedService.getAll({ search: debouncedSearch });
             setPosts(data);
             setError(null);
         } catch (err: any) {
@@ -41,7 +49,7 @@ const Feed = () => {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [debouncedSearch]);
 
     useEffect(() => {
         fetchPosts();
@@ -369,6 +377,8 @@ const Feed = () => {
                             <input
                                 type="text"
                                 placeholder="Search updates..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
                             />
                         </div>
@@ -381,7 +391,11 @@ const Feed = () => {
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {['#Fall2026', '#NoIELTS', '#GermanyScholarships', '#FullyFunded', '#MBA', '#STEM'].map(tag => (
-                                    <button key={tag} className="px-3 py-1.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-600 text-gray-600 text-xs font-medium rounded-lg border border-gray-100 transition-colors">
+                                    <button 
+                                        key={tag} 
+                                        onClick={() => setSearchQuery(tag)}
+                                        className="px-3 py-1.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-600 text-gray-600 text-xs font-medium rounded-lg border border-gray-100 transition-colors"
+                                    >
                                         {tag}
                                     </button>
                                 ))}
@@ -398,27 +412,18 @@ const Feed = () => {
                                 <button className="text-xs font-medium text-blue-600 hover:underline">View All</button>
                             </div>
                             <div className="flex flex-col gap-4">
-                                <div className="pb-3 border-b border-gray-50 last:border-0 last:pb-0">
-                                    <h4 className="text-sm font-semibold text-gray-800">Chevening Scholarship UK</h4>
-                                    <p className="text-xs text-orange-600 mt-1 flex items-center gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                                        Closes in 2 days
-                                    </p>
-                                </div>
-                                <div className="pb-3 border-b border-gray-50 last:border-0 last:pb-0">
-                                    <h4 className="text-sm font-semibold text-gray-800">Fulbright Program USA</h4>
-                                    <p className="text-xs text-orange-600 mt-1 flex items-center gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                                        Closes in 5 days
-                                    </p>
-                                </div>
-                                <div className="pb-3 border-b border-gray-50 last:border-0 last:pb-0">
-                                    <h4 className="text-sm font-semibold text-gray-800">University of Melbourne - Round 1</h4>
-                                    <p className="text-xs text-orange-600 mt-1 flex items-center gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-                                        Closes next week
-                                    </p>
-                                </div>
+                                {posts.filter(p => ['scholarships', 'admissions', 'exams'].includes(p.category.toLowerCase())).slice(0, 3).map(post => (
+                                    <div key={post.id} className="pb-3 border-b border-gray-50 last:border-0 last:pb-0 cursor-pointer" onClick={() => navigate(`/feed-details/${post.slug}`)}>
+                                        <h4 className="text-sm font-semibold text-gray-800 hover:text-blue-600 transition-colors line-clamp-2">{post.title}</h4>
+                                        <p className="text-xs text-orange-600 mt-1 flex items-center gap-1">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
+                                            {post.metadata?.deadline ? `Closes ${post.metadata.deadline}` : 'Action Required Soon'}
+                                        </p>
+                                    </div>
+                                ))}
+                                {posts.filter(p => ['scholarships', 'admissions', 'exams'].includes(p.category.toLowerCase())).length === 0 && (
+                                    <p className="text-xs text-gray-500">No immediate deadlines.</p>
+                                )}
                             </div>
                         </div>
 

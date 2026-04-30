@@ -1,3 +1,8 @@
+/**
+ * @deprecated This context is a legacy layer for mock data and fallback state.
+ * It is being phased out in favor of direct feedService API calls.
+ * Do not use for new features.
+ */
 import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import { feedService } from '@/features/feed/services/feedService';
 

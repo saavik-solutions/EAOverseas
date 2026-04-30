@@ -2,13 +2,20 @@ import { prisma } from '../../lib/prisma';
 import { Prisma } from '@prisma/client';
 
 export class FeedService {
-  async getAll(query: { category?: any; universityId?: string; limit?: number; userId?: string }) {
+  async getAll(query: { category?: any; universityId?: string; limit?: number; userId?: string; search?: string }) {
     const where: any = {
       status: 'published',
     };
 
     if (query.category) {
       where.category = query.category;
+    }
+
+    if (query.search) {
+      where.OR = [
+        { title: { contains: query.search, mode: 'insensitive' } },
+        { content: { contains: query.search, mode: 'insensitive' } },
+      ];
     }
 
     if (query.universityId && query.universityId !== 'all') {
@@ -140,7 +147,7 @@ export class FeedService {
   }
 
   async create(data: any) {
-    const { title, content, category, tags, authorId, universityId, ...rest } = data;
+    const { title, content, category, tags, authorId, universityId, coverImageUrl, excerpt, ...rest } = data;
     
     // Validate universityId (UUID expectation)
     const validUniId = (universityId && universityId !== 'all') ? universityId : null;
@@ -153,11 +160,37 @@ export class FeedService {
         tags: tags || [],
         authorId,
         universityId: validUniId,
+        coverImageUrl,
+        excerpt,
         slug: this.generateSlug(title),
         status: (data.status?.toLowerCase() as any) || 'published',
         publishedAt: data.status?.toLowerCase() === 'published' ? new Date() : null,
         metadata: rest || {},
       }
     });
+  }
+
+  async update(id: string, data: any) {
+    const { title, content, category, tags, universityId, coverImageUrl, excerpt, status, authorId, ...rest } = data;
+    const updateData: any = {};
+    if (title) { updateData.title = title; updateData.slug = this.generateSlug(title); }
+    if (content) updateData.content = content;
+    if (category) updateData.category = category as any;
+    if (tags) updateData.tags = tags;
+    if (universityId !== undefined) updateData.universityId = universityId === 'all' ? null : universityId;
+    if (coverImageUrl !== undefined) updateData.coverImageUrl = coverImageUrl;
+    if (excerpt !== undefined) updateData.excerpt = excerpt;
+    if (status) updateData.status = status.toLowerCase() as any;
+    
+    // Store remaining attributes in metadata
+    if (Object.keys(rest).length > 0) {
+      updateData.metadata = rest;
+    }
+
+    return await prisma.feedPost.update({ where: { id }, data: updateData });
+  }
+
+  async delete(id: string) {
+    return await prisma.feedPost.delete({ where: { id } });
   }
 }

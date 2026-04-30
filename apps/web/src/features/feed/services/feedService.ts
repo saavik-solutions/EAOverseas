@@ -69,6 +69,38 @@ export const feedService = {
         return res.json();
     },
 
+    update: async (id: string, data: any) => {
+        const token = localStorage.getItem('eaoverseas_token');
+        const res = await fetch(`${API_BASE}/api/feed/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.error || 'Failed to update post');
+        }
+        return res.json();
+    },
+
+    delete: async (id: string) => {
+        const token = localStorage.getItem('eaoverseas_token');
+        const res = await fetch(`${API_BASE}/api/feed/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.error || 'Failed to delete post');
+        }
+        return res.json();
+    },
+
     toggleLike: async (id: string) => {
         const token = localStorage.getItem('eaoverseas_token');
         const res = await fetch(`${API_BASE}/api/feed/${id}/like`, {

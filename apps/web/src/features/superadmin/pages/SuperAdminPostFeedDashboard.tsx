@@ -107,8 +107,7 @@ const SuperAdminPostFeedDashboard = () => {
     const handleDelete = async (id: string) => {
         if (window.confirm('Are you sure you want to permanently remove this post from the cloud?')) {
             try {
-                // In a real app we'd call feedService.delete(id)
-                deletePost(id); // Using context for now to simulate if no backend delete yet
+                await feedService.delete(id);
                 setApiPosts(prev => prev.filter(p => p.id !== id));
             } catch (err) {
                 console.error('Delete failed', err);

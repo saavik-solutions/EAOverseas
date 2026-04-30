@@ -449,7 +449,7 @@ Good luck!
                     isOpen={isShareModalOpen}
                     onClose={() => setIsShareModalOpen(false)}
                     title="Share Scholarship"
-                    shareUrl={`https://eaoverseas.com/feed-details/${data.slug}`}
+                    shareUrl={`${window.location.origin}/feed-details/${data.slug}`}
                     preview={{
                         title: data.title,
                         subtitle: displayData?.institution || 'EAOverseas',

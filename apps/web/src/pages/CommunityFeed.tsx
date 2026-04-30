@@ -1,11 +1,19 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useAuthAction } from '../hooks/useAuthAction';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
 import ShareModal from '../components/ShareModal';
 import { communityService, type CommunityPost as ApiPost } from '../services/communityService';
+
+const formatCommunityDate = (date: Date) => {
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return `${day} ${month} ${year}   •   ${time}`;
+};
 
 const CommunityFeed = () => {
     // State for interactive elements
@@ -24,10 +32,16 @@ const CommunityFeed = () => {
     const [comments, setComments] = useState<Record<string, any[]>>({}); // postId -> comments[]
     const [isLoading, setIsLoading] = useState(true);
     const [isPosting, setIsPosting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [composerCategory, setComposerCategory] = useState('General');
+    const [composerTags, setComposerTags] = useState<string[]>([]);
+    const [tagInput, setTagInput] = useState('');
+    const [isMoreTopicsOpen, setIsMoreTopicsOpen] = useState(false);
 
     const { executeAction, isLoginModalOpen, closeLoginModal } = useAuthAction();
     const { user } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     // ─── Fetch feed from API ─────────────────────────────────────────────────────
     const fetchFeed = useCallback(async () => {
@@ -42,7 +56,7 @@ const CommunityFeed = () => {
                 id: p.id,
                 author: p.author.fullName,
                 avatar: p.author.avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(p.author.fullName)}`,
-                time: new Date(p.createdAt).toLocaleDateString(),
+                time: formatCommunityDate(new Date(p.createdAt)),
                 title: p.title,
                 content: p.content || '',
                 tags: p.tags,
@@ -66,6 +80,20 @@ const CommunityFeed = () => {
     useEffect(() => {
         fetchFeed();
     }, [fetchFeed]);
+
+    // Handle deep linking for shared posts
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const postId = queryParams.get('postId');
+        if (postId && posts.length > 0) {
+            const targetPost = posts.find(p => p.id === postId || p._apiId === postId);
+            if (targetPost) {
+                setSelectedPostForModal(targetPost);
+                // Optional: clear the query param after opening
+                // navigate(location.pathname, { replace: true });
+            }
+        }
+    }, [location.search, posts]);
 
     // ─── Handlers ──────────────────────────────────────────────────────────────
 
@@ -110,48 +138,6 @@ const CommunityFeed = () => {
         }));
     };
 
-    const handleCommentVote = async (postId, commentIdx, direction) => {
-        executeAction(async () => {
-            const postComments = comments[postId] || [];
-            const comment = postComments[commentIdx];
-            if (!comment?.id) return;
-
-            const voteValue = direction === 'up' ? 'like' : 'dislike';
-            try {
-                const result = await communityService.voteComment(comment.id, voteValue);
-                setComments(prev => {
-                    const updated = [...(prev[postId] || [])];
-                    const target = updated[commentIdx];
-                    const currentVote = target.userVote || 0;
-                    const newVote = result.action === 'removed' ? 0 : direction === 'up' ? 1 : -1;
-
-                    // Atomic logic for UI state
-                    const nextTarget = { ...target, userVote: newVote };
-                    
-                    if (result.action === 'added') {
-                        if (voteValue === 'like') nextTarget.likeCount++;
-                        else nextTarget.dislikeCount++;
-                    } else if (result.action === 'removed') {
-                        if (currentVote === 1) nextTarget.likeCount--;
-                        else if (currentVote === -1) nextTarget.dislikeCount--;
-                    } else if (result.action === 'flipped') {
-                        if (voteValue === 'like') {
-                            nextTarget.likeCount++;
-                            nextTarget.dislikeCount--;
-                        } else {
-                            nextTarget.dislikeCount++;
-                            nextTarget.likeCount--;
-                        }
-                    }
-
-                    updated[commentIdx] = nextTarget;
-                    return { ...prev, [postId]: updated };
-                });
-            } catch (err) {
-                console.error('Vote failed:', err);
-            }
-        });
-    };
 
     const handlePostSubmit = async () => {
         executeAction(async () => {
@@ -161,10 +147,8 @@ const CommunityFeed = () => {
                 const newPost = await communityService.createPost({
                     title: newPostTitle,
                     content: newPostDescription,
-                    category: selectedFilter !== 'All Topics'
-                        ? selectedFilter.toLowerCase().replace(/ /g, '_')
-                        : 'general',
-                    tags: [],
+                    category: composerCategory === 'General' ? 'general' : composerCategory.toLowerCase().replace(/ /g, '_'),
+                    tags: composerTags,
                     isQuestion: newPostTitle.endsWith('?'),
                 });
                 setPosts(prev => [{
@@ -172,7 +156,7 @@ const CommunityFeed = () => {
                     _apiId: newPost.id,
                     author: newPost.author.fullName,
                     avatar: newPost.author.avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(newPost.author.fullName)}`,
-                    time: 'Just now',
+                    time: `Just now (${formatCommunityDate(new Date())})`,
                     title: newPost.title,
                     content: newPost.content || '',
                     tags: newPost.tags,
@@ -187,8 +171,12 @@ const CommunityFeed = () => {
                 }, ...prev]);
                 setNewPostTitle('');
                 setNewPostDescription('');
-            } catch (err) {
+                setComposerCategory('General');
+                setComposerTags([]);
+                setError(null);
+            } catch (err: any) {
                 console.error('Post failed:', err);
+                setError(err.message || 'Failed to create post. Please try again.');
             } finally {
                 setIsPosting(false);
             }
@@ -256,7 +244,7 @@ const CommunityFeed = () => {
                     author: newComment.author.fullName,
                     avatar: newComment.author.avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(newComment.author.fullName)}`,
                     text: newComment.text,
-                    time: 'Just now',
+                    time: `Just now (${formatCommunityDate(new Date())})`,
                     likeCount: 0,
                     dislikeCount: 0,
                     userVote: 0,
@@ -269,8 +257,50 @@ const CommunityFeed = () => {
                 setPosts(prev => prev.map(p => p.id === postId ? { ...p, commentsCount: p.commentsCount + 1 } : p));
                 setCommentInputs(prev => ({ ...prev, [postId]: '' }));
                 setVisibleCommentCounts(prev => ({ ...prev, [postId]: (prev[postId] || 3) + 1 }));
-            } catch (err) {
+                setError(null);
+            } catch (err: any) {
                 console.error('Comment failed:', err);
+                setError(err.message || 'Failed to add comment. Please try again.');
+            }
+        });
+    };
+
+    const handleCommentVote = async (postId, commentId, direction) => {
+        executeAction(async () => {
+            const voteValue = direction === 'up' ? 'like' : 'dislike';
+            try {
+                const result = await communityService.voteComment(commentId, voteValue);
+                setComments(prev => {
+                    const postComments = [...(prev[postId] || [])];
+                    const commentIndex = postComments.findIndex(c => c.id === commentId);
+                    if (commentIndex === -1) return prev;
+
+                    const comment = { ...postComments[commentIndex] };
+                    const currentVote = comment.userVote || 0;
+                    const newVote = result.action === 'removed' ? 0 : direction === 'up' ? 1 : -1;
+
+                    comment.userVote = newVote;
+                    if (result.action === 'added') {
+                        if (voteValue === 'like') comment.likeCount++;
+                        else comment.dislikeCount++;
+                    } else if (result.action === 'removed') {
+                        if (currentVote === 1) comment.likeCount--;
+                        else if (currentVote === -1) comment.dislikeCount--;
+                    } else if (result.action === 'flipped') {
+                        if (voteValue === 'like') {
+                            comment.likeCount++;
+                            comment.dislikeCount--;
+                        } else {
+                            comment.dislikeCount++;
+                            comment.likeCount--;
+                        }
+                    }
+
+                    postComments[commentIndex] = comment;
+                    return { ...prev, [postId]: postComments };
+                });
+            } catch (err) {
+                console.error('Comment vote failed:', err);
             }
         });
     };
@@ -327,8 +357,8 @@ const CommunityFeed = () => {
                             {/* Dual-Field Composer */}
                             <div className="bg-white rounded-xl border border-blue-100 p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all">
                                 <div className="flex gap-4">
-                                    <div className="size-12 rounded-full bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
-                                        <span className="material-symbols-outlined text-blue-600">rate_review</span>
+                                    <div className="size-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
+                                        <span className="material-symbols-outlined text-blue-600 !text-[20px]">rate_review</span>
                                     </div>
                                     <div className="flex-1 flex flex-col gap-3">
                                         <input
@@ -338,12 +368,73 @@ const CommunityFeed = () => {
                                             value={newPostTitle}
                                             onChange={(e) => setNewPostTitle(e.target.value)}
                                         />
+                                        <div className="h-[1px] w-full bg-gray-200 my-1"></div>
                                         <textarea
-                                            className="w-full text-sm text-gray-600 placeholder:text-gray-400 bg-transparent border-none outline-none resize-none min-h-[80px]"
+                                            className="w-full text-sm text-gray-600 placeholder:text-gray-400 bg-transparent border-none outline-none resize-none min-h-[60px]"
                                             placeholder="Describe your question or share some details..."
                                             value={newPostDescription}
                                             onChange={(e) => setNewPostDescription(e.target.value)}
                                         />
+
+                                        {/* New Compact Category & Tags Selection */}
+                                        <div className="flex flex-col gap-4 mt-2 pt-4 border-t border-gray-100">
+                                            {/* Topics Row */}
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-[13px] font-bold text-gray-700 whitespace-nowrap">Choose Topic:</span>
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    {[
+                                                        { name: 'General', icon: 'chat_bubble' },
+                                                        { name: 'Admissions', icon: 'account_balance' },
+                                                        { name: 'Scholarships', icon: 'school' },
+                                                        { name: 'Visas', icon: 'description' }
+                                                    ].map(cat => (
+                                                        <button
+                                                            key={cat.name}
+                                                            onClick={() => {
+                                                                setComposerCategory(cat.name);
+                                                                setIsMoreTopicsOpen(false);
+                                                            }}
+                                                            className={`flex items-center gap-1.5 h-[30px] px-3 rounded-lg text-[12px] font-bold transition-all border ${composerCategory === cat.name ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}
+                                                        >
+                                                            <span className="material-symbols-outlined !text-[16px]">{cat.icon}</span>
+                                                            {cat.name}
+                                                        </button>
+                                                    ))}
+
+                                                    <div className="relative">
+                                                        <button
+                                                            onClick={() => setIsMoreTopicsOpen(!isMoreTopicsOpen)}
+                                                            className={`flex items-center gap-1.5 h-[30px] px-3 rounded-lg text-[12px] font-bold transition-all border ${['Accommodation', 'Career Advice', 'Routine'].includes(composerCategory) ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}
+                                                        >
+                                                            {['Accommodation', 'Career Advice', 'Routine'].includes(composerCategory) ? composerCategory : 'More'}
+                                                            <span className="material-symbols-outlined !text-[16px]">expand_more</span>
+                                                        </button>
+
+                                                        {isMoreTopicsOpen && (
+                                                            <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                                                                {[
+                                                                    { name: 'Accommodation', icon: 'home' },
+                                                                    { name: 'Career Advice', icon: 'work' },
+                                                                    { name: 'Routine', icon: 'calendar_today' }
+                                                                ].map(cat => (
+                                                                    <button
+                                                                        key={cat.name}
+                                                                        onClick={() => {
+                                                                            setComposerCategory(cat.name);
+                                                                            setIsMoreTopicsOpen(false);
+                                                                        }}
+                                                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] font-bold text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                                                                    >
+                                                                        <span className="material-symbols-outlined !text-[18px]">{cat.icon}</span>
+                                                                        {cat.name}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -354,17 +445,31 @@ const CommunityFeed = () => {
                                     </div>
                                     <button
                                         onClick={handlePostSubmit}
-                                        className={`px-6 py-2 rounded-full transition-all flex items-center justify-center text-sm font-bold ${newPostTitle.trim() ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700 active:scale-95' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
-                                        disabled={!newPostTitle.trim()}
+                                        className={`px-6 py-2 rounded-full transition-all flex items-center justify-center text-sm font-bold ${newPostTitle.trim() && !isPosting ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700 active:scale-95' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}
+                                        disabled={!newPostTitle.trim() || isPosting}
                                     >
-                                        Post Discussion
+                                        {isPosting ? (
+                                            <span className="flex items-center gap-2">
+                                                <svg className="animate-spin h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Posting...
+                                            </span>
+                                        ) : 'Post Discussion'}
                                     </button>
                                 </div>
+                                {error && (
+                                    <div className="mt-3 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-xs font-medium flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+                                        <span className="material-symbols-outlined !text-base">error</span>
+                                        {error}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex items-center gap-3 overflow-x-auto pb-2 -mx-6 px-6 scrollbar-hide">
                                 <button
-                                    onClick={() => executeAction(() => setSelectedFilter('All Topics'))}
+                                    onClick={() => setSelectedFilter('All Topics')}
                                     className={`shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold border transition-all ${selectedFilter === 'All Topics' ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-blue-600 border-blue-200 hover:bg-blue-50'}`}
                                 >
                                     All Topics
@@ -372,7 +477,7 @@ const CommunityFeed = () => {
                                 {['Admissions', 'Scholarships', 'Visas', 'Accommodation', 'Career Advice', 'Routine'].map(filter => (
                                     <button
                                         key={filter}
-                                        onClick={() => executeAction(() => setSelectedFilter(filter))}
+                                        onClick={() => setSelectedFilter(filter)}
                                         className={`shrink-0 px-4 py-1.5 rounded-full text-xs font-medium border transition-all ${selectedFilter === filter ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-blue-600 border-blue-200 hover:bg-blue-50'}`}
                                     >
                                         {filter}
@@ -540,11 +645,18 @@ const CommunityFeed = () => {
                                                                         
                                                                         <div className="flex items-center gap-3">
                                                                             <button 
-                                                                                onClick={() => handleCommentVote(post.id, idx, 'up')}
+                                                                                onClick={() => handleCommentVote(post.id, comment.id, 'up')}
                                                                                 className={`flex items-center gap-1 text-[11px] font-bold transition-colors ${comment.userVote === 1 ? 'text-blue-600' : 'text-gray-400 hover:text-blue-500'}`}
                                                                             >
                                                                                 <span className="material-symbols-outlined !text-[16px]" style={{ fontVariationSettings: comment.userVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
                                                                                 {comment.likeCount}
+                                                                            </button>
+                                                                            <button 
+                                                                                onClick={() => handleCommentVote(post.id, comment.id, 'down')}
+                                                                                className={`flex items-center gap-1 text-[11px] font-bold transition-colors ${comment.userVote === -1 ? 'text-red-600' : 'text-gray-400 hover:text-red-500'}`}
+                                                                            >
+                                                                                <span className="material-symbols-outlined !text-[16px]" style={{ fontVariationSettings: comment.userVote === -1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
+                                                                                {comment.dislikeCount}
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -606,7 +718,8 @@ const CommunityFeed = () => {
                     isOpen={isShareModalOpen}
                     onClose={() => setIsShareModalOpen(false)}
                     title="Share Discussion"
-                    shareUrl={`https://eaoverseas.com/community/discussion-${shareData.id}`}
+                    shareUrl={`${window.location.origin}/community-feed?postId=${shareData.id}`}
+                    postData={shareData}
                     preview={{
                         title: shareData.title,
                         subtitle: "EAOverseas Community",
@@ -655,17 +768,8 @@ const CommunityFeed = () => {
                         </div>
                         <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 sticky bottom-0">
                             <button 
-                                onClick={() => {
-                                    navigator.clipboard.writeText(selectedPostForModal.content);
-                                    // Could add a toast here
-                                }}
-                                className="px-4 py-2 text-gray-600 rounded-lg text-sm font-bold hover:bg-gray-200 transition-all flex items-center gap-2"
-                            >
-                                <span className="material-symbols-outlined !text-[18px]">content_copy</span> Copy Text
-                            </button>
-                            <button 
                                 onClick={() => setSelectedPostForModal(null)}
-                                className="px-8 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95"
+                                className="px-8 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95"
                             >
                                 Done
                             </button>

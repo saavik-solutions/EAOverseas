@@ -280,12 +280,12 @@ exports.Prisma.FeedPostScalarFieldEnum = {
   isPinned: 'isPinned',
   viewCount: 'viewCount',
   likeCount: 'likeCount',
-  dislikeCount: 'dislikeCount',
   bookmarkCount: 'bookmarkCount',
   metadata: 'metadata',
   publishedAt: 'publishedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  dislikeCount: 'dislikeCount'
 };
 
 exports.Prisma.FeedInteractionScalarFieldEnum = {
@@ -457,13 +457,13 @@ exports.Prisma.CommunityPostScalarFieldEnum = {
   tags: 'tags',
   isQuestion: 'isQuestion',
   isAnonymous: 'isAnonymous',
-  likeCount: 'likeCount',
-  dislikeCount: 'dislikeCount',
   commentCount: 'commentCount',
   isPinned: 'isPinned',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  dislikeCount: 'dislikeCount',
+  likeCount: 'likeCount'
 };
 
 exports.Prisma.CommunityCommentScalarFieldEnum = {
@@ -474,11 +474,11 @@ exports.Prisma.CommunityCommentScalarFieldEnum = {
   text: 'text',
   isAnswer: 'isAnswer',
   isBest: 'isBest',
-  likeCount: 'likeCount',
-  dislikeCount: 'dislikeCount',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  dislikeCount: 'dislikeCount',
+  likeCount: 'likeCount'
 };
 
 exports.Prisma.CommunityVoteScalarFieldEnum = {
@@ -486,8 +486,8 @@ exports.Prisma.CommunityVoteScalarFieldEnum = {
   userId: 'userId',
   postId: 'postId',
   commentId: 'commentId',
-  value: 'value',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  value: 'value'
 };
 
 exports.Prisma.SortOrder = {
@@ -592,9 +592,9 @@ exports.PostStatus = exports.$Enums.PostStatus = {
 
 exports.InteractionType = exports.$Enums.InteractionType = {
   like: 'like',
-  dislike: 'dislike',
   bookmark: 'bookmark',
-  view: 'view'
+  view: 'view',
+  dislike: 'dislike'
 };
 
 exports.UniversityType = exports.$Enums.UniversityType = {

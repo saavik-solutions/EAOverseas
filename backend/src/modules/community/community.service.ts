@@ -94,6 +94,15 @@ export class CommunityService {
         author: { select: { id: true, fullName: true, avatarUrl: true, role: true } },
       },
     });
+    
+    // Mask author info if the post was made anonymously
+    if (post.isAnonymous) {
+      return {
+        ...post,
+        author: { id: authorId, fullName: 'Anonymous', avatarUrl: null, role: 'student' }
+      };
+    }
+    
     return post;
   }
 

@@ -1,4 +1,6 @@
-const API_BASE = 'http://localhost:4000/api/community';
+const API_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+  ? 'http://localhost:4000/api/community'
+  : 'https://eaoverseas-v1.onrender.com/api/community';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('eaoverseas_token');
@@ -130,7 +132,14 @@ export const communityService = {
       } as Record<string, string>,
       body: JSON.stringify(data),
     });
-    if (!res.ok) throw new Error('Failed to add comment');
+    if (!res.ok) {
+      let errMsg = 'Failed to add comment';
+      try {
+        const errBody = await res.json();
+        errMsg = errBody.message || errBody.error || errMsg;
+      } catch {}
+      throw new Error(`${errMsg} (status ${res.status})`);
+    }
     return res.json();
   },
 

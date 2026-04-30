@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams, useOutletContext } from 'react-router-dom
 const Payment = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const { uniName } = useOutletContext();
+    const { uniName } = useOutletContext<{ uniName: string }>();
     const [selectedMethod, setSelectedMethod] = useState('card');
 
     const handleBack = () => {

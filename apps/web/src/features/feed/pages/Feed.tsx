@@ -25,7 +25,7 @@ const Feed = () => {
 
     // State for Filter Bar
     const [activeCountry, setActiveCountry] = useState('All Countries');
-    const { user, requireAuth } = useAuth();
+    const { user, requireAuth, isLoginModalOpen, setLoginModalOpen } = useAuth();
     const { togglePost, isPostSaved } = useSavedItems();
     const [activeTopic, setActiveTopic] = useState('All Topics');
     const [sortBy, setSortBy] = useState('Newest');
@@ -102,8 +102,15 @@ const Feed = () => {
 
         return matchesCountry && matchesTopic;
     }).sort((a, b) => {
-        if (sortBy === 'Most Saved') return (b.likeCount || 0) - (a.likeCount || 0);
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        if (sortBy === 'Most Saved') {
+            const savedA = a.bookmarkCount ?? a.likeCount ?? 0;
+            const savedB = b.bookmarkCount ?? b.likeCount ?? 0;
+            return savedB - savedA;
+        }
+        
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return timeB - timeA;
     });
 
     const openShareModal = (post: PostResponse) => {
@@ -171,8 +178,8 @@ const Feed = () => {
                                             onChange={handleSortChange}
                                             className="appearance-none pl-3 pr-8 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-100 cursor-pointer"
                                         >
-                                            <option>Newest</option>
-                                            <option>Most Saved</option>
+                                            <option value="Newest">Newest</option>
+                                            <option value="Most Saved">Most Saved</option>
                                         </select>
                                         <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 !text-[18px] text-gray-500 pointer-events-none">sort</span>
                                     </div>
@@ -455,6 +462,12 @@ const Feed = () => {
                     }}
                 />
             )}
+
+            {/* Login Modal */}
+            <LoginModal 
+                isOpen={isLoginModalOpen} 
+                onClose={() => setLoginModalOpen(false)} 
+            />
         </div>
     );
 };

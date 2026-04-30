@@ -251,7 +251,7 @@ const UniversityPendingVerification = () => {
                                         </div>
                                         <div className="space-y-2">
                                             <label className="block text-sm font-semibold text-[#111318] dark:text-gray-200">Message</label>
-                                            <textarea className="w-full bg-[#f6f6f8] dark:bg-[#2d323c] border-0 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#2b6cee] placeholder:text-[#616f89]/60 resize-none" placeholder="Describe your query in detail..." rows="5" required></textarea>
+                                            <textarea className="w-full bg-[#f6f6f8] dark:bg-[#2d323c] border-0 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#2b6cee] placeholder:text-[#616f89]/60 resize-none" placeholder="Describe your query in detail..." rows={5} required></textarea>
                                         </div>
                                         <div>
                                             <button className="flex items-center gap-2 text-[#2b6cee] font-bold text-sm hover:text-blue-700 transition-colors" type="button">

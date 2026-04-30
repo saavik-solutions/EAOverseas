@@ -19,7 +19,7 @@ const ConsultantSchedule = () => {
     const [weekDates, setWeekDates] = useState([]);
 
     // Schedule Data State (Mock Database)
-    const [scheduleItems, setScheduleItems] = useState([
+    const [scheduleItems, setScheduleItems] = useState<any[]>([
         // Automatic lunch slots for Mon-Sat (13:00-14:00) - Sunday excluded
         // { id: 101, dayIndex: 0 ... } REMOVED
         { id: 102, dayIndex: 1, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
@@ -674,7 +674,7 @@ const ConsultantSchedule = () => {
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(stat.available / 8) * 100}%` }}></div>
+                                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(parseFloat(stat.available as unknown as string) / 8) * 100}%` }}></div>
                                                         </div>
                                                         <span className="w-8 text-right font-medium">{stat.available}h</span>
                                                     </div>

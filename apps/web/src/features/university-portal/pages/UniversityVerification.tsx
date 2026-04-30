@@ -21,7 +21,7 @@ const UniversityVerification = () => {
         accurate: false
     });
 
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Refs for hidden file inputs
@@ -65,7 +65,7 @@ const UniversityVerification = () => {
     };
 
     const validateForm = () => {
-        const newErrors = {};
+        const newErrors: Record<string, string> = {};
 
         if (!files.proofOfRecognition) newErrors.proofOfRecognition = "Proof of Recognition is required";
         if (!files.authorizationLetter) newErrors.authorizationLetter = "Authorization Letter is required";

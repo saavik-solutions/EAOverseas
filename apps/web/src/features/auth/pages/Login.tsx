@@ -299,7 +299,7 @@ const Login = () => {
                         <div className="grid grid-cols-2 gap-2">
                             <button 
                                 type="button" 
-                                onClick={handleGoogleLogin}
+                                onClick={() => handleGoogleLogin()}
                                 className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700"
                             >
                                 <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />

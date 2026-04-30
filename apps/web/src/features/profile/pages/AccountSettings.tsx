@@ -42,7 +42,7 @@ const AccountSettings = () => {
             // 1. Remove user from "Database" if it's a real user
             if (user && user.email !== 'alex.j@example.com') {
                 const registeredUsers = JSON.parse(localStorage.getItem('eaoverseas_registered_users') || '[]');
-                const updatedUsers = registeredUsers.filter(u => u.email !== user.email);
+                const updatedUsers = registeredUsers.filter((u: any) => u.email !== user.email);
                 localStorage.setItem('eaoverseas_registered_users', JSON.stringify(updatedUsers));
             }
 
@@ -59,6 +59,49 @@ const AccountSettings = () => {
         } else {
             setDeleteError("Incorrect password");
         }
+    };
+
+    const handleEmailToggle = () => {
+        if (isEditingEmail) {
+            // Save email
+            updateIdentity({ email });
+        }
+        setIsEditingEmail(!isEditingEmail);
+        if (!isEditingEmail) {
+            setTimeout(() => emailInputRef.current?.focus(), 0);
+        }
+    };
+
+    const handleUpdatePassword = () => {
+        if (newPassword !== confirmPassword) {
+            setShowErrorToast(true);
+            setTimeout(() => setShowErrorToast(false), 3000);
+            return;
+        }
+        setShowPasswordSuccess(true);
+        setTimeout(() => setShowPasswordSuccess(false), 3000);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+    };
+
+    const handleLogoutAll = () => {
+        setActiveSessions(prev => prev.filter(s => s.current));
+        setShowLogoutToast(true);
+        setTimeout(() => setShowLogoutToast(false), 3000);
+    };
+
+    const handleRemoveDevice = (id: number) => {
+        setActiveSessions(prev => prev.filter(s => s.id !== id));
+    };
+
+    const handleDeleteInitialClick = () => {
+        setShowDeleteConfirm(true);
+    };
+
+    const handleDeleteConfirmYes = () => {
+        setShowDeleteConfirm(false);
+        setShowDeletePassword(true);
     };
 
     return (

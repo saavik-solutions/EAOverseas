@@ -53,7 +53,7 @@ const ConsultationWaitingRoom = () => {
                 }
             }
 
-            let difference = targetTime - now;
+            let difference = targetTime.getTime() - now.getTime();
 
             // Debug support: if difference is negative but date was "Today" and time is earlier, maybe it was meant for tomorrow? 
             // (Only if booking logic isn't robust, but let's stick to strict interpretation first)

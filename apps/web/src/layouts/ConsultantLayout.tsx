@@ -22,7 +22,7 @@ const ConsultantLayout = () => {
                 </button>
             </div>
 
-            <ConsultantSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} user={user} />
+            <ConsultantSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             {/* Main Content Area */}
             <Outlet />

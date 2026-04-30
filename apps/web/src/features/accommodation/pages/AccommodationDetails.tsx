@@ -186,7 +186,7 @@ const AccommodationDetails = () => {
                                         <div key={catIdx}>
                                             <h4 className="text-[#111418] text-lg font-bold mb-4">{category}</h4>
                                             <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-4">
-                                                {items.map((item, idx) => (
+                                                {(items as any[]).map((item, idx) => (
                                                     <div key={idx} className="flex items-center gap-3 text-[#60728a]">
                                                         <span className="material-symbols-outlined text-[22px] shrink-0">{item.icon}</span>
                                                         <span className="text-sm font-medium">{item.label}</span>

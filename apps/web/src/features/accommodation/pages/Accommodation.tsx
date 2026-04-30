@@ -764,11 +764,11 @@ const Accommodation = () => {
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        executeAction(() => toggleAccommodation(acc));
+                                                        executeAction(() => toggleAccommodation(acc as any));
                                                     }}
-                                                    className={`absolute top-3 right-3 p-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all ${isAccommodationSaved(acc) ? 'text-[#0d6cf2]' : 'text-gray-400 hover:text-[#0d6cf2]'}`}
+                                                    className={`absolute top-3 right-3 p-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all ${isAccommodationSaved(acc as any) ? 'text-[#0d6cf2]' : 'text-gray-400 hover:text-[#0d6cf2]'}`}
                                                 >
-                                                    <span className={`material-symbols-outlined !text-[22px] ${isAccommodationSaved(acc) ? 'filled' : ''}`}>bookmark</span>
+                                                    <span className={`material-symbols-outlined !text-[22px] ${isAccommodationSaved(acc as any) ? 'filled' : ''}`}>bookmark</span>
                                                 </button>
                                             </div>
 
@@ -801,7 +801,7 @@ const Accommodation = () => {
                                                     {acc.amenities && acc.amenities.map((icon, idx) => (
                                                         <span key={idx} className="material-symbols-outlined text-gray-400 !text-[16px] lg:!text-[20px]" title={icon.replace('_', ' ')}>{icon}</span>
                                                     ))}
-                                                    <span onClick={() => setShowAmenitiesModal(acc)} className="text-xs text-[#0d6cf2] font-medium cursor-pointer hover:underline">+ More</span>
+                                                    <span onClick={() => setShowAmenitiesModal(acc as any)} className="text-xs text-[#0d6cf2] font-medium cursor-pointer hover:underline">+ More</span>
                                                 </div>
 
                                                 {/* Footer */}

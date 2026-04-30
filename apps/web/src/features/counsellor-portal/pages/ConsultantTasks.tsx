@@ -324,7 +324,7 @@ const ConsultantTasks = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="5" className="py-10 text-center text-gray-500">
+                                                <td colSpan={5} className="py-10 text-center text-gray-500">
                                                     No tasks found matching your filters.
                                                 </td>
                                             </tr>

@@ -5,7 +5,7 @@ import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext'
 const Review = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const { uniName, courseName } = useOutletContext();
+    const { uniName, courseName } = useOutletContext<{ uniName: string; courseName: string }>();
     const { submitApplication } = useSavedItems();
     const isCourseApplication = !!searchParams.get('title');
     const [agreed, setAgreed] = useState(false);

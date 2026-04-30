@@ -16,7 +16,7 @@ const PersonalDetails = () => {
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                         <span className="bg-blue-50 text-blue-600 p-2 rounded-lg">
-                            <span className="material-symbols-outlined">person</span>
+                                <span className="material-symbols-outlined !text-[18px]">verified_user</span>
                         </span>
                         <h1 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">Let's get to know you</h1>
                     </div>
@@ -91,7 +91,7 @@ const PersonalDetails = () => {
                         </div>
                     </label>
                     <label className="flex flex-col gap-2">
-                        <span className="text-sm font-semibold text-slate-700">Nationality <span class="text-red-500">*</span></span>
+                        <span className="text-sm font-semibold text-slate-700">Nationality <span className="text-red-500">*</span></span>
                         <div className="relative">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]">public</span>
                             <select className="w-full pl-12 pr-10 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none appearance-none cursor-pointer">

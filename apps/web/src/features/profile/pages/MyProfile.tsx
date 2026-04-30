@@ -24,7 +24,7 @@ const MyProfile = () => {
 
     // Context
     const { userProfile, updatePreferences, updateIdentity, getConnectionDetails } = useUserProfile();
-    const { preferences, identity = {}, academics = {}, readiness = {} } = userProfile;
+    const { preferences, identity, academics, readiness } = userProfile;
 
     // State
     const [isEditingPreferences, setIsEditingPreferences] = useState(false);

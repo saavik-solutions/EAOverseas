@@ -6,7 +6,7 @@ import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 const EditProfile = () => {
     const navigate = useNavigate();
     const { userProfile, updateIdentity, updateGuardian } = useUserProfile();
-    const { identity, guardian = {} } = userProfile;
+    const { identity, guardian } = userProfile;
 
     const [isEmailEditable, setIsEmailEditable] = useState(false);
     const emailInputRef = useRef(null);

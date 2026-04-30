@@ -84,7 +84,12 @@ const ConsultationBookingModal = ({ isOpen, onClose, onConfirm }) => {
                 <div
                     key={day}
                     role="button"
-                    onClick={() => !isPast && (setSelectedDate(date) || setSelectedTime(null))}
+                    onClick={() => {
+                        if (!isPast) {
+                            setSelectedDate(date as any);
+                            setSelectedTime(null);
+                        }
+                    }}
                     style={{
                         transform: 'none',
                         rotate: '0deg',

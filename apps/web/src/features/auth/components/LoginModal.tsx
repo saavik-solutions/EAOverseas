@@ -1,13 +1,33 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
+import { useGoogleLogin } from '@react-oauth/google';
 
 const LoginModal = ({ isOpen, onClose }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useAuth();
+    const { login, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
+
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try {
+                const user = await loginWithGoogle(tokenResponse.access_token);
+                if (user.isNewUser) {
+                    onClose();
+                    navigate('/signup', { state: { googleData: user } });
+                } else {
+                    onClose();
+                }
+            } catch (err) {
+                setError('Google login failed. Please try again.');
+            }
+        },
+        onError: () => {
+            setError('Google login was cancelled or failed.');
+        }
+    });
 
     if (!isOpen) return null;
 
@@ -87,7 +107,7 @@ const LoginModal = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
-                        <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all font-bold text-slate-700 text-xs lg:text-sm">
+                        <button type="button" onClick={() => handleGoogleLogin()} className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all font-bold text-slate-700 text-xs lg:text-sm">
                             <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
                             <span className="hidden lg:inline">Google</span>
                         </button>

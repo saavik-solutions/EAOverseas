@@ -150,7 +150,7 @@ const EnquireModal = ({ isOpen, onClose, accommodation }) => {
 
                                 <div className="space-y-1.5 text-left">
                                     <label className="text-xs font-bold text-[#60728a] uppercase tracking-wider ml-1">Message</label>
-                                    <textarea rows="3" placeholder="Any specific questions regarding this property?" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#0d6cf2] focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium resize-none hover:bg-white focus:bg-white"></textarea>
+                                    <textarea rows={3} placeholder="Any specific questions regarding this property?" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#0d6cf2] focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium resize-none hover:bg-white focus:bg-white"></textarea>
                                 </div>
 
                                 <button

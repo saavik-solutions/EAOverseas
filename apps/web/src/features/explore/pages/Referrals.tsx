@@ -159,7 +159,7 @@ const Referrals = () => {
                                     <tbody className="divide-y divide-gray-100">
                                         {/* No referrals yet for new user */}
                                         <tr className="hover:bg-gray-50/50 transition-colors">
-                                            <td colSpan="4" className="px-6 py-8 text-center text-slate-500 italic">
+                                            <td colSpan={4} className="px-6 py-8 text-center text-slate-500 italic">
                                                 No referrals yet. Invite your friends to start earning!
                                             </td>
                                         </tr>

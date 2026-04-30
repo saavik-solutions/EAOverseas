@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/components/layout/PageHeader';
 import { feedService, PostResponse } from '@/features/feed/services/feedService';
 import { usePosts, Post } from '@/features/feed/services/PostsContext';
+import { universityService, UniversityData } from '@/features/colleges/services/universityService';
 import SuperAdminLayout from '@/layouts/SuperAdminLayout';
 
 const TYPE_COLORS: Record<string, string> = {

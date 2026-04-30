@@ -309,7 +309,7 @@ const CountryDetails = () => {
     const getCountryData = () => {
         if (countryData[countryCode]) {
             // Add flag if missing in main data but present in lookup
-            const data = { ...countryData[countryCode] };
+            const data = { ...countryData[countryCode] } as any;
             if (!data.flag && countryFlags[countryCode]) {
                 data.flag = countryFlags[countryCode];
             }
@@ -317,7 +317,7 @@ const CountryDetails = () => {
         }
 
         // Use fallback but override name if known
-        const fallback = { ...countryData['default'] };
+        const fallback = { ...countryData['default'] } as any;
         if (countryNames[countryCode]) {
             fallback.name = countryNames[countryCode];
         }
@@ -572,7 +572,7 @@ const CountryDetails = () => {
                                             src={uni.image || universityImg}
                                             alt={uni.name}
                                             className="w-full h-full object-cover"
-                                            onError={(e) => { e.target.src = universityImg; }}
+                                            onError={(e) => { (e.target as HTMLImageElement).src = universityImg; }}
                                         />
                                     </div>
                                     <span className="font-bold text-sm md:text-xl text-[#111218] whitespace-nowrap">{uni.name}</span>

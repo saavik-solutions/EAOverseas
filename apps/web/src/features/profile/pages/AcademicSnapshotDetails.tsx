@@ -6,10 +6,10 @@ import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 
 const AcademicSnapshotDetails = () => {
     const { userProfile } = useUserProfile();
-    const { academics = {} } = userProfile;
+    const { academics } = userProfile;
 
     // State to track uploaded files
-    const [uploadedFiles, setUploadedFiles] = useState({});
+    const [uploadedFiles, setUploadedFiles] = useState<Record<number, { name: string; size: string; type: string }>>({});
 
     // ... (rest of uploadedFiles handlers) ...
     const handleFileChange = (event, index) => {
@@ -34,7 +34,7 @@ const AcademicSnapshotDetails = () => {
             return newState;
         });
         // Reset the input value so the same file can be selected again if needed
-        const input = document.getElementById(`file-upload-${index}`);
+        const input = document.getElementById(`file-upload-${index}`) as HTMLInputElement;
         if (input) input.value = '';
     };
 

@@ -15,7 +15,7 @@ const UserProfile = () => {
     const isOwnProfile = !username || (user && user.name === username);
 
     // Use auth user data if available and matching, otherwise fallback or empty
-    const displayUser = isOwnProfile ? user : { name: username, isDemo: true }; // Fallback for public viewing
+    const displayUser: any = isOwnProfile ? user : { name: username, email: '', isDemo: true }; // Fallback for public viewing
 
     // Mock Data for Demo/Admin User
     const demoData = {

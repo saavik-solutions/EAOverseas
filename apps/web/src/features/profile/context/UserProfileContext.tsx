@@ -10,9 +10,11 @@ interface UserIdentity {
     nationality: string;
     address: string;
     currentCountry: string;
+    country?: string;
     image: string | null;
     banner: string | null;
     profileStrength: number;
+    studentId?: string;
 }
 
 interface GuardianInfo {
@@ -43,6 +45,10 @@ interface AcademicInfo {
 interface UserPreferences {
     countries: string[];
     intakes: string[];
+    programType?: string;
+    budget?: string;
+    timeline?: string;
+    factors?: string[];
 }
 
 interface UserReadiness {

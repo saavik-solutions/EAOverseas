@@ -454,8 +454,8 @@ const Courses = () => {
                                             key={idx}
                                             course={course}
                                             navigate={navigate}
-                                            isSaved={isCourseSaved(course)}
-                                            onToggle={() => executeAction(() => toggleCourse(course))}
+                                            isSaved={isCourseSaved(course as any)}
+                                            onToggle={() => executeAction(() => toggleCourse(course as any))}
                                             onClick={() => executeAction(() => navigate(`/course-details?title=${encodeURIComponent(course.title)}&university=${encodeURIComponent(course.university)}`))}
                                         />
                                     ))}
@@ -472,8 +472,8 @@ const Courses = () => {
                                                 key={idx + ITEMS_PER_PAGE}
                                                 course={course}
                                                 navigate={navigate}
-                                                isSaved={isCourseSaved(course)}
-                                                onToggle={() => executeAction(() => toggleCourse(course))}
+                                                isSaved={isCourseSaved(course as any)}
+                                                onToggle={() => executeAction(() => toggleCourse(course as any))}
                                                 onClick={() => executeAction(() => navigate(`/course-details?title=${encodeURIComponent(course.title)}&university=${encodeURIComponent(course.university)}`))}
                                             />
                                         ))}

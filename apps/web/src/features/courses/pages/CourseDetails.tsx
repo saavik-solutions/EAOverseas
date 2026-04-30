@@ -173,7 +173,7 @@ const CourseDetails = () => {
     const isSaved = useMemo(() => {
         if (!course) return false;
         return savedCourses.some(c =>
-            (c.id && c.id === course.id) ||
+            (c.id && c.id === (course as any).id) ||
             (c.title === course.title && c.university === course.university)
         );
     }, [savedCourses, course]);
@@ -204,7 +204,7 @@ const CourseDetails = () => {
                     </div>
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => executeAction(() => toggleCourse(course))}
+                            onClick={() => executeAction(() => toggleCourse(course as any))}
                             className={`flex items-center justify-center gap-2 h-9 md:h-10 px-4 md:px-5 rounded-lg border text-sm font-bold shadow-sm transition-all ${isSaved
                                 ? 'bg-blue-50 border-blue-200 text-blue-700'
                                 : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'

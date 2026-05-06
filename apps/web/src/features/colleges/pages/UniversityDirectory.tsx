@@ -4,7 +4,12 @@ import PageHeader from '@/components/layout/PageHeader';
 import { useAuthAction } from '@/hooks/useAuthAction';
 import LoginModal from '@/features/auth/components/LoginModal';
 
+<<<<<<< HEAD:apps/web/src/features/colleges/pages/UniversityDirectory.tsx
 import { universitiesData, University } from '@/features/content/data/universities';
+=======
+import { University } from '../data/universities';
+import { getCombinedUniversities } from '../utils/universityData';
+>>>>>>> origin/manikanth:apps/web/src/pages/UniversityDirectory.tsx
 
 const UniversityDirectory = () => {
     const navigate = useNavigate();
@@ -18,6 +23,7 @@ const UniversityDirectory = () => {
         Intake: 'All'
     });
 
+    const universitiesData = useMemo(() => getCombinedUniversities(), []);
     const countries = ['All', ...new Set(universitiesData.map((u: University) => u.country))];
     const courseTypes = ['All', ...new Set(universitiesData.map((u: University) => u.courseType))];
     const budgets = ['All', 'Budget', 'Moderate', 'Premium'];

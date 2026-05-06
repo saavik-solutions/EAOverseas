@@ -39,20 +39,34 @@ const Login = () => {
         }
     });
 
-    const handleLogin = async (e) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+
+        // Institutional Fast-Login Logic for University Admins
+        if (selectedRole === 'University' && email.endsWith('@eaoverseas.com')) {
+            const institutionalId = email.split('@')[0]; // e.g., 'toronto'
+            // Construct the path dynamically based on the email prefix
+            const universitySlug = institutionalId === 'toronto' 
+                ? 'university-of-toronto' 
+                : institutionalId === 'melbourne'
+                    ? 'university-of-melbourne'
+                    : institutionalId.includes('-') ? institutionalId : `university-of-${institutionalId}`;
+            
+            navigate(`/university-panel/${universitySlug}/courses`);
+            return;
+        }
 
         try {
             const user = await login(email, password);
             
             // Redirect based strictly on the DB role assigned to the user
             if (user.role === 'super_admin' || user.role === 'admin') {
-                navigate('/Superadmin');
+                navigate('/superadmin');
             } else if (user.role === 'counsellor') {
                 navigate('/counsellor-dashboard');
             } else if (user.role === 'vendor') {
-                navigate(`/university-panel/${user.id}`); // Or any specific property mapped
+                navigate(`/university-panel/${user.id}`); 
             } else {
                 const from = location.state?.from || '/feed';
                 navigate(from, { replace: true });

@@ -87,6 +87,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [
                         )}
                     </div>
                 )}
+<<<<<<< HEAD
 
                 {user && (
                     <>
@@ -109,6 +110,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [
                 )}
 
 
+=======
+>>>>>>> origin/manikanth
             </div>
         </header>
     );

@@ -42,6 +42,16 @@ export interface University {
     visaType: string;
     processingTime: string;
     loanInterestRate: string;
+    image?: string;
+    acceptanceRate?: string;
+    rankingQS?: string;
+    tags?: {
+        icon: string;
+        text: string;
+        color: string;
+        bg?: string;
+        border?: string;
+    }[];
 }
 
 export const universitiesData: University[] = [

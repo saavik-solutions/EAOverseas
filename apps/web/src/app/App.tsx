@@ -16,8 +16,51 @@ import ProtectedRoute from '../components/guards/ProtectedRoute';
 import MainLayout from '@/layouts/MainLayout';
 import ConsultantLayout from '@/layouts/ConsultantLayout';
 
+<<<<<<< HEAD
 // ── Feature: Auth ──
 import { Login, Signup, ForgotPassword, Verification } from '../features/auth';
+=======
+import MyProfile from './pages/MyProfile';
+import UserProfile from './pages/UserProfile';
+import UniversityProfile from './pages/UniversityProfile';
+import EditProfile from './pages/EditProfile';
+import Consultant from './pages/Consultant';
+import ConsultationWaitingRoom from './pages/ConsultationWaitingRoom';
+import AccountSettings from './pages/AccountSettings';
+import NotificationPreferences from './pages/NotificationPreferences';
+import PrivacySecurity from './pages/PrivacySecurity';
+import AcademicSnapshotDetails from './pages/AcademicSnapshotDetails';
+import Referrals from './pages/Referrals';
+import SavedColleges from './pages/SavedColleges';
+import SavedCourses from './pages/SavedCourses';
+import SavedAccommodations from './pages/SavedAccommodations';
+import VisaPrep from './pages/VisaPrep';
+import LoanRequirements from './pages/LoanRequirements';
+import LoanEligibility from './pages/LoanEligibility';
+import LoanDocuments from './pages/LoanDocuments';
+import LenderSelection from './pages/LenderSelection';
+import LoanApplicationTimeline from './pages/LoanApplicationTimeline';
+import ConfirmAdmission from './pages/ConfirmAdmission';
+import VisaDocumentUpload from './pages/VisaDocumentUpload';
+import AskAI from './pages/AskAI';
+import TestPrep from './pages/TestPrep';
+import TestOverview from './pages/TestOverview';
+import ListeningTest from './pages/ListeningTest';
+import SpeakingTest from './pages/SpeakingTest';
+import ReadingTestInstructions from './pages/ReadingTestInstructions';
+import ReadingTest from './pages/ReadingTest';
+import ReadingTestResult from './pages/ReadingTestResult';
+import ReadingTestSubmitted from './pages/ReadingTestSubmitted';
+import WritingTestInstructions from './pages/WritingTestInstructions';
+import WritingTest from './pages/WritingTest';
+import ConsultantDashboard from './pages/ConsultantDashboard';
+import ConsultantLayout from './layouts/ConsultantLayout';
+import UniversityCourses from '../pages/UniversityCourses';
+import UniversityDashboard from '../pages/UniversityDashboard';
+import UniversityImpressions from '../pages/UniversityImpressions';
+import UniversityLeads from '../pages/UniversityLeads';
+import UniversityConversion from '../pages/UniversityConversion';
+>>>>>>> origin/manikanth
 
 // ── Feature: Explore (Public pages) ──
 import { LandingPage, Countries, CountryDetails, AllDestinations, Referrals } from '../features/explore';
@@ -239,6 +282,7 @@ function App() {
           <Route path="/application/initiate" element={<InitiateApplication />} />
           <Route path="/application/submitted" element={<ApplicationSubmitted />} />
 
+<<<<<<< HEAD
           {/* ═══════════════════════════════════════════════════════════════
               COUNSELLOR PORTAL — Role-restricted
           ═══════════════════════════════════════════════════════════════ */}
@@ -275,6 +319,28 @@ function App() {
       </BrowserRouter>
     </AppProviders>
   );
+=======
+                            {/* University Routes */}
+                            <Route path="/university-panel/:universityName" element={<UniversityDashboard />} />
+                            <Route path="/university-panel/:universityName/courses" element={<UniversityCourses />} />
+                            <Route path="/university-panel/:universityName/analytics" element={<UniversityImpressions />} />
+                            <Route path="/university-panel/:universityName/leads" element={<UniversityLeads />} />
+                            <Route path="/university-panel/:universityName/conversion" element={<UniversityConversion />} />
+
+                            {/* Auth Routes */}
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/signup" element={<Signup />} />
+                            <Route path="/forgot-password" element={<ForgotPassword />} />
+                            <Route path="/verification" element={<Verification />} />
+                            <Route path="/university-verification" element={<UniversityVerification />} />
+                            <Route path="/university-pending-verification" element={<UniversityPendingVerification />} />
+                        </Routes>
+                    </BrowserRouter>
+                </UserProfileProvider>
+            </SavedItemsProvider>
+        </NotificationProvider>
+    );
+>>>>>>> origin/manikanth
 }
 
 export default App;

@@ -454,7 +454,7 @@ const Feed = () => {
                     isOpen={isShareModalOpen}
                     onClose={() => setIsShareModalOpen(false)}
                     title="Share Opportunity"
-                    shareUrl={`https://eaoverseas.com/feed-details/${shareData.slug}`}
+                    shareUrl={`${window.location.origin}/feed-details/${shareData.slug}`}
                     preview={{
                         title: shareData.title,
                         subtitle: shareData.university?.name || shareData.metadata?.universityName || 'EAOverseas',

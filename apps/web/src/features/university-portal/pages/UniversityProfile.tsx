@@ -298,7 +298,7 @@ const UniversityProfile = () => {
                     isOpen={isShareModalOpen}
                     onClose={() => setIsShareModalOpen(false)}
                     title="Share Opportunity"
-                    shareUrl={`https://eaoverseas.com/feed-details/${shareData.slug}`}
+                    shareUrl={`${window.location.origin}/feed-details/${shareData.slug}`}
                     preview={{
                         title: shareData.title,
                         subtitle: data.name,

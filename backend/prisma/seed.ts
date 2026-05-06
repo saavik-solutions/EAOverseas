@@ -22,6 +22,24 @@ async function main() {
   });
   console.log('Admin user created:', admin.email);
 
+  // 1.1 Create Student User
+  const studentPassword = await bcrypt.hash('Student@123', 12);
+  const student = await prisma.user.upsert({
+    where: { email: 'prasenjeetspy@gmail.com' },
+    update: {
+      passwordHash: studentPassword
+    },
+    create: {
+      email: 'prasenjeetspy@gmail.com',
+      passwordHash: studentPassword,
+      fullName: 'Prasenjeet',
+      role: Role.student,
+      emailVerified: true,
+      authProvider: 'email',
+    },
+  });
+  console.log('Student user created:', student.email);
+
   // 2. Create Universities
   const tum = await prisma.university.upsert({
     where: { slug: 'tum-munich' },

@@ -1,168 +1,45 @@
 
-const universitiesData = [
-    {
-        id: 'arizona-state-university',
-        name: "Arizona State University",
-        location: "Tempe, Arizona, USA",
-        country: "USA",
-        match: 98,
-        ranking: 56,
-        tuitionVal: 38000,
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBUdzt3vabnFKzx_oJmfKMYvm9OPQf8tRgWs_Dw85RU5_1SoBwHcAF4l8viDzOlp9uijwjvga0QXKCFwqRvbuJRjcNHvS7c5gVRPiVSZYDft5sEn1XWQmJKkl8649GeMqM69ZuGFUOv3tb0Yh2PBOFSDrcaTF95DgWInD5SDa7HYpjy5Nr0V2UgrCDtR8CmFi2U73PRjLtm5I81RCn5NrZhTv3QdR-atqwiDrwYD8BxuM37Uk3vLwjpAgO1NVEo2PnzPZTwXuuBFQ2Y",
-        tags: [
-            { icon: "trophy", text: "#56 Global Ranking", color: "text-blue-600" },
-            { icon: "payments", text: "$32k - $45k / year", color: "text-gray-400" },
-            { icon: "check_circle", text: "IELTS Waived", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "88%", salary: "$75k" },
-        budgetCategory: "medium"
-    },
-    {
-        id: 'university-of-manchester',
-        name: "University of Manchester",
-        location: "Manchester, United Kingdom",
-        country: "United Kingdom",
-        match: 92,
-        ranking: 38,
-        tuitionVal: 40000,
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBrz5opf6XSLf_jFqn-0A2HESJWZ5xcncY2JViYooxB062bvoQEfvOq77f5B3SJbDE-rW0JjKacZk6lJMAxGL65Uf0ud8ukzl4pYUxz2hMoIbP44PBG8DDRNqwhlt-XYShvpMQv9x4DOsendHngzBNlmGFdkmTD6Zb2kGPmDSM307Zz8L71EaQ3CCHMNBzehwXDJVoghPMc5TeGKBq_ENBpI94N02uMd1olu4t4wsOF3L-26cEpm8IgIPMJ-AxvJS9vjo8dQx8OkP00",
-        tags: [
-            { icon: "school", text: "#38 Global Ranking", color: "text-blue-600" },
-            { icon: "payments", text: "£28k - £35k / year", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "56%", salary: "£45k" },
-        budgetCategory: "medium"
-    },
-    {
-        id: 'university-of-waterloo',
-        name: "University of Waterloo",
-        location: "Waterloo, Ontario, Canada",
-        country: "Canada",
-        match: 85,
-        ranking: 112,
-        tuitionVal: 35000,
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuALLciL-jFVPbmbjb2E4QB4dhDnpL74OVLJsFj1YZzWnBl73kctmVbI_5v46D51g30mzquMR0xjaW9A0kO1MGsxLOe4A9ML16jRbNP4V9FqnhTZsp6gl9HZhm8URHeWPAEMgkXg0smBG-flgVU9xUjPB2gmkB4zgFlmYJgEMwX2fa_AFJIlzwLg22aI62Bj0Skk37nGzcd12_LIe9i3CNLS1jiu8czaT47OBrlgQ7Kooru4TX6x4__txvynLxVEQQK0WYUoIOeIgN33",
-        tags: [
-            { icon: "lightbulb", text: "Innovation Hub", color: "text-blue-600" },
-            { icon: "payments", text: "CAD 40k - 55k / year", color: "text-gray-400" },
-            { icon: "work", text: "Co-op Available", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-100" }
-        ],
-        stats: { acceptance: "53%", salary: "CAD 80k" },
-        budgetCategory: "medium"
-    },
-    {
-        id: 'university-of-bristol',
-        name: "University of Bristol",
-        location: "Bristol, UK",
-        country: "United Kingdom",
-        match: 80,
-        ranking: 61,
-        tuitionVal: 38000,
-        image: null,
-        tags: [
-            { icon: "trophy", text: "#61 Global Ranking", color: "text-blue-600" },
-            { icon: "payments", text: "£26k - £32k / year", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "67%", salary: "£42k" },
-        budgetCategory: "medium"
-    },
-    {
-        id: 'university-of-melbourne',
-        name: "University of Melbourne",
-        location: "Melbourne, Australia",
-        country: "Australia",
-        match: 78,
-        ranking: 14,
-        tuitionVal: 45000,
-        image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=300&auto=format&fit=crop",
-        tags: [
-            { icon: "sunny", text: "#14 Global Ranking", color: "text-orange-500" },
-            { icon: "payments", text: "AUD 45k - 60k / year", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "70%", salary: "AUD 85k" },
-        budgetCategory: "high"
-    },
-    {
-        id: 'technical-university-of-munich',
-        name: "Technical University of Munich",
-        location: "Munich, Germany",
-        country: "Germany",
-        match: 95,
-        ranking: 30,
-        tuitionVal: 0,
-        image: "https://images.unsplash.com/photo-1590240984813-98246df16298?q=80&w=300&auto=format&fit=crop",
-        tags: [
-            { icon: "school", text: "Tuition Free", color: "text-green-600", bg: "bg-green-50" },
-            { icon: "language", text: "German/English", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "8%", salary: "€65k" },
-        budgetCategory: "low"
-    },
-    {
-        id: 'university-of-toronto',
-        name: "University of Toronto",
-        location: "Toronto, Canada",
-        country: "Canada",
-        match: 88,
-        ranking: 21,
-        tuitionVal: 50000,
-        image: "https://images.unsplash.com/photo-1623631484736-2182068aa828?q=80&w=300&auto=format&fit=crop",
-        tags: [
-            { icon: "leaderboard", text: "#21 Global Ranking", color: "text-blue-600" },
-            { icon: "payments", text: "CAD 50k - 70k / year", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "43%", salary: "CAD 85k" },
-        budgetCategory: "high"
-    },
-    {
-        id: 'stanford-university',
-        name: "Stanford University",
-        location: "Stanford, California, USA",
-        country: "USA",
-        match: 75,
-        ranking: 3,
-        tuitionVal: 65000,
-        image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=300&auto=format&fit=crop",
-        tags: [
-            { icon: "rocket_launch", text: "#3 Global Ranking", color: "text-red-500" },
-            { icon: "payments", text: "$60k+ / year", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "4%", salary: "$120k+" },
-        budgetCategory: "premium"
-    },
-    {
-        id: 'university-of-sydney',
-        name: "University of Sydney",
-        location: "Sydney, Australia",
-        country: "Australia",
-        match: 82,
-        ranking: 41,
-        tuitionVal: 48000,
-        image: "https://images.unsplash.com/photo-1533038590840-1cde6e668a91?q=80&w=300&auto=format&fit=crop",
-        tags: [
-            { icon: "water_drop", text: "Harbour City", color: "text-blue-400" },
-            { icon: "payments", text: "AUD 40k - 55k / year", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "65%", salary: "AUD 80k" },
-        budgetCategory: "high"
-    },
-    {
-        id: 'imperial-college-london',
-        name: "Imperial College London",
-        location: "London, UK",
-        country: "United Kingdom",
-        match: 89,
-        ranking: 6,
-        tuitionVal: 42000,
-        image: "https://images.unsplash.com/photo-1546953304-42f025cb1f1e?q=80&w=300&auto=format&fit=crop",
-        tags: [
-            { icon: "science", text: "STEM Focused", color: "text-indigo-500" },
-            { icon: "payments", text: "£35k - £45k / year", color: "text-gray-400" }
-        ],
-        stats: { acceptance: "15%", salary: "£55k" },
-        budgetCategory: "high"
-    }
-];
+const staticUniversities = [];
+
+const getUniversitiesData = () => {
+    const saved = localStorage.getItem('ea_universities');
+    if (!saved) return staticUniversities;
+
+    const adminUnis = JSON.parse(saved);
+    const mappedAdminUnis = adminUnis.map((uni: any) => {
+        // Only map if it's not already in static (by name)
+        if (staticUniversities.find(s => s.name.toLowerCase() === uni.name.toLowerCase())) return null;
+
+        const tuitionStr = uni.tuition || "$30k - $45k";
+        const tuitionVal = parseInt(tuitionStr.replace(/[^0-9]/g, '')) * 1000 || 35000;
+        
+        return {
+            id: `admin-${uni.id}`,
+            name: uni.name,
+            location: uni.location || `${uni.city || 'Campus'}, ${uni.country}`,
+            country: uni.country,
+            match: parseInt(uni.admissionChance) || 90,
+            ranking: parseInt(uni.ranking?.replace(/[^0-9]/g, '')) || 100,
+            tuitionVal: tuitionVal,
+            image: uni.logo || null,
+            tags: [
+                { icon: "trophy", text: `${uni.ranking || 'Global Rank #100'}`, color: "text-blue-600" },
+                { icon: "payments", text: `${tuitionStr} / year`, color: "text-gray-400" },
+                { icon: "calendar_today", text: "Multiple Intakes", color: "text-gray-400" }
+            ],
+            stats: { 
+                acceptance: uni.acceptanceRate || "85%", 
+                salary: "N/A" 
+            },
+            budgetCategory: tuitionVal > 50000 ? "premium" : tuitionVal > 40000 ? "high" : tuitionVal > 20000 ? "medium" : "low"
+        };
+    }).filter(Boolean);
+
+    return [...mappedAdminUnis, ...staticUniversities];
+};
+
+const universitiesData = getUniversitiesData();
+
 
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -205,8 +82,12 @@ const CollegeFinder = () => {
         });
     };
 
+    const universitiesDataDynamic = useMemo(() => {
+        return getUniversitiesData();
+    }, []);
+
     const filteredUniversities = useMemo(() => {
-        let result = universitiesData.filter(uni => {
+        let result = universitiesDataDynamic.filter(uni => {
             const matchesCountry = filters.countries.length === 0 || filters.countries.includes(uni.country);
             const matchesBudget = filters.budgets.length === 0 || filters.budgets.includes(uni.budgetCategory);
             const matchesSearch = uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -289,7 +170,7 @@ const CollegeFinder = () => {
                 <div className="space-y-4 border-b border-gray-100 pb-6 mb-6">
                     <h4 className="font-bold text-gray-900 text-base lg:text-lg">Country</h4>
                     <div className="space-y-3">
-                        {['USA', 'United Kingdom', 'Canada', 'Australia', 'Germany'].map(country => (
+                        {[...new Set(universitiesDataDynamic.map(u => u.country))].sort().map(country => (
                             <label key={country} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors">
                                 <div className={`size-5 lg:size-6 rounded border flex items-center justify-center transition-colors ${filters.countries.includes(country) ? 'bg-blue-600 border-blue-600' : 'border-gray-300 bg-white'}`}>
                                     {filters.countries.includes(country) && <span className="material-symbols-outlined text-white text-[16px] lg:text-[18px]">check</span>}

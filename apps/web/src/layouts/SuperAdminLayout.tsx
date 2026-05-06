@@ -16,7 +16,7 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const [isUniPortalOpen, setIsUniPortalOpen] = useState(
-        location.pathname.startsWith('/Superadmin/universit') || location.pathname.startsWith('/Superadmin/university-portal')
+        location.pathname.startsWith('/superadmin/universit') || location.pathname.startsWith('/superadmin/university-portal')
     );
 
     const handleDropdownClick = (itemName: string) => {
@@ -29,20 +29,20 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
     };
 
     const menuItems = [
-        { name: 'Overview', icon: 'dashboard', path: '/Superadmin' },
+        { name: 'Overview', icon: 'dashboard', path: '/superadmin' },
         { 
             name: 'University Portal', 
             icon: 'account_balance', 
             isDropdown: true,
             children: [
-                { name: 'Universities', icon: 'account_balance', path: '/Superadmin/universities' },
-                { name: 'Posts & Feed', icon: 'feed', path: '/Superadmin/university-portal/posts-feed' }
+                { name: 'Universities', icon: 'account_balance', path: '/superadmin/universities' },
+                { name: 'Posts & Feed', icon: 'feed', path: '/superadmin/university-portal/posts-feed' }
             ]
         },
-        { name: 'Consultants', icon: 'support_agent', path: '/Superadmin/consultants' },
-        { name: 'Students', icon: 'group', path: '/Superadmin/students' },
-        { name: 'User Management', icon: 'manage_accounts', path: '/Superadmin/users' },
-        { name: 'Revenue', icon: 'payments', path: '/Superadmin/revenue' },
+        { name: 'Consultants', icon: 'support_agent', path: '/superadmin/consultants' },
+        { name: 'Students', icon: 'group', path: '/superadmin/students' },
+        { name: 'User Management', icon: 'manage_accounts', path: '/superadmin/users' },
+        { name: 'Revenue', icon: 'payments', path: '/superadmin/revenue' },
     ];
 
     return (
@@ -78,8 +78,8 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
             `}>
                 <div className="p-6">
                     <div className="flex items-center gap-3">
-                        <div className="bg-[#2b6cee] size-10 rounded-lg flex items-center justify-center text-white shadow-lg shadow-[#2b6cee]/20">
-                            <span className="material-symbols-outlined">school</span>
+                        <div className="bg-white border-2 border-[#2b6cee] size-10 rounded-xl flex items-center justify-center text-[#2b6cee] shadow-lg shadow-blue-50">
+                            <span className="material-symbols-outlined font-black">school</span>
                         </div>
                         <div className="flex flex-col">
                             <h1 className="text-[#111318] text-lg font-bold leading-none">Super Admin</h1>
@@ -133,9 +133,12 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
                                     to={item.path!}
                                     onClick={() => setIsSidebarOpen(false)}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${(location.pathname === item.path ||
-                                        (item.name === 'Overview' && location.pathname === '/Superadmin') ||
+                                        (item.name === 'Overview' && location.pathname === '/superadmin') ||
                                         (item.name === 'Universities' && (
-                                            location.pathname.startsWith('/Superadmin/university')
+                                            location.pathname.startsWith('/superadmin/university')
+                                        )) ||
+                                        (item.name === 'Consultants' && (
+                                            location.pathname.startsWith('/superadmin/consultant')
                                         )))
                                         ? 'bg-[#2b6cee]/10 text-[#2b6cee] font-semibold'
                                         : 'text-slate-600 hover:bg-slate-50 font-medium'

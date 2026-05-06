@@ -11,7 +11,7 @@ const getUniversitiesData = () => {
         if (staticUniversities.find(s => s.name.toLowerCase() === uni.name.toLowerCase())) return null;
 
         const tuitionStr = uni.tuition || "$30k - $45k";
-        const tuitionVal = parseInt(tuitionStr.replace(/[^0-9]/g, '')) * 1000 || 35000;
+        const tuitionVal = parseInt(tuitionStr.split('-')[0].replace(/[^0-9]/g, '')) * 1000 || 35000;
         
         return {
             id: `admin-${uni.id}`,
@@ -41,13 +41,14 @@ const getUniversitiesData = () => {
 const universitiesData = getUniversitiesData();
 
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useSavedItems } from '../context/SavedItemsContext';
 import { useAuthAction } from '../hooks/useAuthAction';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
+import { universityService } from '../services/universityService';
 
 const CollegeFinder = () => {
     // State
@@ -82,8 +83,54 @@ const CollegeFinder = () => {
         });
     };
 
-    const universitiesDataDynamic = useMemo(() => {
-        return getUniversitiesData();
+    const [universitiesDataDynamic, setUniversitiesDataDynamic] = useState<any[]>(getUniversitiesData());
+
+    useEffect(() => {
+        universityService.getAll().then(res => {
+            const backendUnis = Array.isArray(res) ? res : (res as any).data || [];
+            const mappedBackendUnis = backendUnis.map((uni: any) => {
+                let tuitionVal = 35000;
+                let tuitionStr = "$35k / year";
+                if (uni.courses && uni.courses.length > 0 && uni.courses[0].fees?.tuitionPerYearUsd) {
+                    tuitionVal = uni.courses[0].fees.tuitionPerYearUsd;
+                    tuitionStr = `$${Math.round(tuitionVal / 1000)}k / year`;
+                } else {
+                    tuitionVal = 20000 + (uni.qsRanking || 50) * 200;
+                    tuitionStr = `$${Math.round(tuitionVal / 1000)}k / year`;
+                }
+
+                return {
+                    id: `backend-${uni.id}`,
+                    name: uni.name,
+                    location: `${uni.city || 'Campus'}, ${uni.country}`,
+                    country: uni.country,
+                    match: uni.qsRanking ? Math.max(99 - Math.floor(uni.qsRanking / 10), 75) : 90,
+                    ranking: uni.qsRanking || 100,
+                    tuitionVal: tuitionVal,
+                    image: uni.logoUrl || null,
+                    tags: [
+                        { icon: "trophy", text: `${uni.qsRanking || 100} Global Rank`, color: "text-blue-600" },
+                        { icon: "payments", text: tuitionStr, color: "text-gray-400" },
+                        { icon: "calendar_today", text: "Multiple Intakes", color: "text-gray-400" }
+                    ],
+                    stats: { 
+                        acceptance: uni.acceptanceRate ? `${uni.acceptanceRate}%` : "85%", 
+                        salary: "N/A" 
+                    },
+                    budgetCategory: tuitionVal > 50000 ? "premium" : tuitionVal > 40000 ? "high" : tuitionVal > 20000 ? "medium" : "low"
+                };
+            });
+            
+            setUniversitiesDataDynamic(prev => {
+                const merged = [...prev];
+                mappedBackendUnis.forEach((b: any) => {
+                    if (!merged.find(m => m.name.toLowerCase() === b.name.toLowerCase())) {
+                        merged.push(b);
+                    }
+                });
+                return merged;
+            });
+        }).catch(e => console.error("Failed to fetch backend universities", e));
     }, []);
 
     const filteredUniversities = useMemo(() => {

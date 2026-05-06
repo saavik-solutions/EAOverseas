@@ -2,6 +2,129 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import UniversityLayout from '../layouts/UniversityLayout';
 
+const DEFAULT_SCHOLARSHIPS = [
+    {
+        id: 1,
+        title: 'Global Excellence STEM Award',
+        amount: '$45,000/Yr',
+        level: 'UG',
+        type: 'International',
+        applied: 45,
+        total: 100,
+        deadline: 'Oct 15',
+        status: 'Active',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=GE'
+    },
+    {
+        id: 2,
+        title: 'Future Leaders Fellowship',
+        amount: '$12,000/Sem',
+        level: 'PG',
+        type: 'Domestic',
+        applied: 82,
+        total: 150,
+        deadline: 'Nov 30',
+        status: 'Active',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=FL'
+    },
+    {
+        id: 3,
+        title: 'Sustainability Impact Grant',
+        amount: 'Full Tuition',
+        level: 'Research',
+        type: 'Any',
+        applied: 12,
+        total: 20,
+        deadline: 'Oct 08',
+        status: 'Active',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=SI'
+    },
+    {
+        id: 4,
+        title: 'Women in Tech Bursary',
+        amount: '$5,000 Flat',
+        level: 'UG',
+        type: 'Diversity',
+        applied: 156,
+        total: 200,
+        deadline: 'Sep 30',
+        status: 'Expired',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=WT'
+    },
+    {
+        id: 5,
+        title: 'Chancellor\'s Merit Scholarship',
+        amount: '$25,000/Yr',
+        level: 'UG',
+        type: 'Domestic',
+        applied: 30,
+        total: 50,
+        deadline: 'Dec 01',
+        status: 'Active',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=CM'
+    },
+    {
+        id: 6,
+        title: 'Post-Graduate Research Grant',
+        amount: '$40,000/Yr',
+        level: 'PG',
+        type: 'Research',
+        applied: 15,
+        total: 15,
+        deadline: 'Jan 15',
+        status: 'Expired',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=PG'
+    },
+    {
+        id: 7,
+        title: 'Global Citizen Leadership Fund',
+        amount: '$10,000',
+        level: 'UG',
+        type: 'Any',
+        applied: 200,
+        total: 200,
+        deadline: 'Aug 20',
+        status: 'Expired',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=GC'
+    },
+    {
+        id: 8,
+        title: 'Innovators for Tomorrow Bursary',
+        amount: '75% Tuition',
+        level: 'PG',
+        type: 'Diversity',
+        applied: 10,
+        total: 50,
+        deadline: 'Mar 15',
+        status: 'Active',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=IT'
+    },
+    {
+        id: 9,
+        title: 'Arts & Humanities Grant',
+        amount: '$3,000 Flat',
+        level: 'UG',
+        type: 'Domestic',
+        applied: 45,
+        total: 45,
+        deadline: 'Jul 10',
+        status: 'Expired',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=AH'
+    },
+    {
+        id: 10,
+        title: 'Early Career Scientists Award',
+        amount: '$15,000/Yr',
+        level: 'Research',
+        type: 'International',
+        applied: 5,
+        total: 30,
+        deadline: 'Jan 30',
+        status: 'Active',
+        logo: 'https://api.dicebear.com/7.x/initials/svg?seed=EC'
+    }
+];
+
 const UniversityScholarshipList = () => {
     const { universityName } = useParams<{ universityName: string }>();
     const [searchQuery, setSearchQuery] = useState('');
@@ -11,129 +134,11 @@ const UniversityScholarshipList = () => {
         .split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
     const uniSlug = (universityName || 'university').toLowerCase();
-
-    const scholarships = [
-        {
-            id: 1,
-            title: 'Global Excellence STEM Award',
-            amount: '$45,000/Yr',
-            level: 'UG',
-            type: 'International',
-            applied: 45,
-            total: 100,
-            deadline: 'Oct 15',
-            status: 'Active',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=GE'
-        },
-        {
-            id: 2,
-            title: 'Future Leaders Fellowship',
-            amount: '$12,000/Sem',
-            level: 'PG',
-            type: 'Domestic',
-            applied: 82,
-            total: 150,
-            deadline: 'Nov 30',
-            status: 'Active',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=FL'
-        },
-        {
-            id: 3,
-            title: 'Sustainability Impact Grant',
-            amount: 'Full Tuition',
-            level: 'Research',
-            type: 'Any',
-            applied: 12,
-            total: 20,
-            deadline: 'Oct 08',
-            status: 'Active',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=SI'
-        },
-        {
-            id: 4,
-            title: 'Women in Tech Bursary',
-            amount: '$5,000 Flat',
-            level: 'UG',
-            type: 'Diversity',
-            applied: 156,
-            total: 200,
-            deadline: 'Sep 30',
-            status: 'Expired',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=WT'
-        },
-        {
-            id: 5,
-            title: 'Chancellor\'s Merit Scholarship',
-            amount: '$25,000/Yr',
-            level: 'UG',
-            type: 'Domestic',
-            applied: 30,
-            total: 50,
-            deadline: 'Dec 01',
-            status: 'Active',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=CM'
-        },
-        {
-            id: 6,
-            title: 'Post-Graduate Research Grant',
-            amount: '$40,000/Yr',
-            level: 'PG',
-            type: 'Research',
-            applied: 15,
-            total: 15,
-            deadline: 'Jan 15',
-            status: 'Expired',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=PG'
-        },
-        {
-            id: 7,
-            title: 'Global Citizen Leadership Fund',
-            amount: '$10,000',
-            level: 'UG',
-            type: 'Any',
-            applied: 200,
-            total: 200,
-            deadline: 'Aug 20',
-            status: 'Expired',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=GC'
-        },
-        {
-            id: 8,
-            title: 'Innovators for Tomorrow Bursary',
-            amount: '75% Tuition',
-            level: 'PG',
-            type: 'Diversity',
-            applied: 10,
-            total: 50,
-            deadline: 'Mar 15',
-            status: 'Active',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=IT'
-        },
-        {
-            id: 9,
-            title: 'Arts & Humanities Grant',
-            amount: '$3,000 Flat',
-            level: 'UG',
-            type: 'Domestic',
-            applied: 45,
-            total: 45,
-            deadline: 'Jul 10',
-            status: 'Expired',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=AH'
-        },
-        {
-            id: 10,
-            title: 'Early Career Scientists Award',
-            amount: '$15,000/Yr',
-            level: 'Research',
-            type: 'International',
-            applied: 5,
-            total: 30,
-            deadline: 'Jan 30',
-            status: 'Active',
-            logo: 'https://api.dicebear.com/7.x/initials/svg?seed=EC'
-        }
-    ];
+    
+    const [scholarships] = useState(() => {
+        const saved = localStorage.getItem('university_scholarships');
+        return saved ? JSON.parse(saved) : DEFAULT_SCHOLARSHIPS;
+    });
 
     const counts = {
         Active: scholarships.filter(s => s.status === 'Active').length,

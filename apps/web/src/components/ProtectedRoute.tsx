@@ -24,9 +24,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role || 'student')) {
-    // User is logged in but doesn't have the required role
-    return <Navigate to="/" replace />;
+  if (allowedRoles && user) {
+    const userRole = (user.role || 'student').toLowerCase();
+    const normalizedRoles = allowedRoles.map(r => r.toLowerCase());
+    
+    if (!normalizedRoles.includes(userRole)) {
+      console.warn(`User role ${userRole} not authorized for this route. Allowed: ${normalizedRoles.join(', ')}`);
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <>{children}</>;

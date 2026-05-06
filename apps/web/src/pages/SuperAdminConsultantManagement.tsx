@@ -6,24 +6,27 @@ const DEFAULT_CONSULTANTS = [
     {
         name: 'Liam Smith',
         email: 'liam.s@eaoverseas.com',
+        password: 'Liam' + Math.floor(1000 + Math.random() * 9000),
         avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrDaQadzcKETSmU43z89uAcQYHFHVNAcfznBm8hyGXDlXssaUO2y39YbS2KPSRGe-44yPdhq1UzRe9eCwRUAzKE_A7jnNS3Q00UfGk1ThrIT7WgcbWrQTdfkV4RxrS5I5IB-7bsJf3ujZWlPQZJ3_DQq7KT-Eihb95-GYvbbetwiWxgz9AApeUS9ASBEoUNgx4vmcIxwmwGsGFkfWKbgZ7grr-OfuU3cd79WHckxjEl0biL-VeJy0qur8kbyTN61ogFNHoQsnxgb4',
         specialty: 'Visa Guidance',
-        assignedStudents: 24,
+        assignedStudents: 0,
         rating: 4.8,
         status: 'Active'
     },
     {
         name: 'Sarah Jenkins',
         email: 'sarah.j@eaoverseas.com',
+        password: 'Sarah' + Math.floor(1000 + Math.random() * 9000),
         avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAItVYiS_ClPdBiemoyRXKwIOxxOTMd0McFmnbEHBcES0G0s-h63p--QHioW1lR6R8vqSrsEBSlTrp8S7ByDUAqHd31Cbr2V5JCEyv_lR8tIIrIg7XFkqSImcNG1RzwO0FXY2SxW-5ljc96clWW-eeBpdWBEO-F3nGYoixLfP6qhy4PvZQEmUT6kQPVmfwPuC-3mnsTycuNfEiezW7_kGioBvG6dizAsFfWB940rlcYGTddwJhR-Ml6yqyF9dm5PN2INoOsIlk4Mi4',
         specialty: 'Admissions',
-        assignedStudents: 31,
+        assignedStudents: 0,
         rating: 4.9,
         status: 'Active'
     },
     {
         name: 'Robert Chen',
         email: 'robert.c@eaoverseas.com',
+        password: 'Robert' + Math.floor(1000 + Math.random() * 9000),
         avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDZZjDbwo-gqrgF8KQs6b9SABxmFBB1tXrO6rC3W_uj26P9T1TC7Xv9ZU6x1VHPwpsPnkiMgZASLXH6YwI_dlxFK96AoCCmGdZx4CtHGNvZ54lifmofEjeC5HRqo4G7OINjPoyfqP9KhAejfxjXJehdk3lYdFFj23parXY5VumySwxC7Tnb4-E1zfZrJvH8VN8lZvUXHx8lCspOl2Z8ptQZZbTecbk5iKVCwxmBKUwtH0Blsb7KwMWhxUIkL6QAfsAFCOplJljbY9Y',
         specialty: 'Documentation',
         assignedStudents: 0,
@@ -33,9 +36,10 @@ const DEFAULT_CONSULTANTS = [
     {
         name: 'Emily Davis',
         email: 'emily.d@eaoverseas.com',
+        password: 'Emily' + Math.floor(1000 + Math.random() * 9000),
         avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQTJNrm76AQqXjRMpzoWm6BfFrV7MCg9HwDs0c5bwSIOjJ_XrjUsdXT-bSPyXh5V6h7762Z3HrglFPIc1LsXG8STrOu0N3tTtfHhsVlXIxu0rkTDgpgIMrdYGtf3ldJMk3ZphjApAhsZpGBmQC06Ai9R-iQdhmZwMDZpBSaa56dqwa4cDguG4n63pYX8Iq-y_CDSfxhmm1girIaRhPhJqrc8VRACPY2jfBrLB7O3V4iKKCEGRju4qy80jmng5k_lA9b9pQRuInWbA',
         specialty: 'Visa Guidance',
-        assignedStudents: 18,
+        assignedStudents: 0,
         rating: 4.7,
         status: 'Active'
     }
@@ -58,6 +62,10 @@ const SuperAdminConsultantManagement: React.FC = () => {
     // Initial Defaults Helpers
     const getTodayDate = () => new Date().toISOString().split('T')[0];
     const generateEmpId = () => `EAO-${Math.floor(1000 + Math.random() * 9000)}`;
+    const generatePassword = (name: string) => {
+        const cleanName = name.replace(/\s+/g, '').substring(0, 5);
+        return `${cleanName}@${Math.floor(100 + Math.random() * 899)}`;
+    };
     
     // Load data from LocalStorage
     useEffect(() => {
@@ -65,10 +73,15 @@ const SuperAdminConsultantManagement: React.FC = () => {
         if (saved) {
             const parsed = JSON.parse(saved);
             const migrated = parsed.map((c: any) => {
+                // Ensure every consultant has a password for the new column
+                if (!c.password) {
+                    c.password = generatePassword(c.name);
+                }
                 if (c.assignedStudents === 0 && (c.rating === 5 || c.rating === '5')) return { ...c, rating: 0 };
                 return c;
             });
             setConsultants(migrated);
+            localStorage.setItem('eao_consultants', JSON.stringify(migrated));
         } else {
             setConsultants(DEFAULT_CONSULTANTS);
             localStorage.setItem('eao_consultants', JSON.stringify(DEFAULT_CONSULTANTS));
@@ -97,9 +110,10 @@ const SuperAdminConsultantManagement: React.FC = () => {
     };
 
     const handleComplete = () => {
+        const password = generatePassword(formData.name);
         const newConsultant = {
             id: formData.name.replace(/\s+/g, '-').toLowerCase(),
-            name: formData.name, email: formData.email, phone: formData.phone,
+            name: formData.name, email: formData.email, password: password, phone: formData.phone,
             avatar: formData.profileImage || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=256&h=256',
             specialty: formData.selectedCountries[0] + ' Specialist', role: 'Consultant', assignedStudents: 0, rating: 0, reviews: 0, status: 'Active',
             personalInfo: { fullName: formData.name, email: formData.email, phone: formData.phone, office: formData.office, employeeId: formData.empId, joiningDate: formData.joinDate },
@@ -174,6 +188,7 @@ const SuperAdminConsultantManagement: React.FC = () => {
                             <thead>
                                 <tr className="bg-slate-50">
                                     <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Name</th>
+                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Auth</th>
                                     <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Specialty</th>
                                     <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Assigned</th>
                                     <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Rating</th>
@@ -190,8 +205,34 @@ const SuperAdminConsultantManagement: React.FC = () => {
                                                 <div className="flex flex-col"><span className="text-sm font-bold text-slate-900">{consultant.name}</span><span className="text-[11px] text-slate-500">{consultant.email}</span></div>
                                             </div>
                                         </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex flex-col gap-1 bg-slate-100/50 p-2 rounded-lg border border-slate-100 group-hover:bg-white transition-all">
+                                                <div className="flex items-center justify-between gap-4">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[9px] font-black text-slate-400 uppercase leading-none">Login Credentials</span>
+                                                        <span className="text-[10px] font-bold text-blue-600 mt-1">{consultant.email}</span>
+                                                        <span className="text-[10px] font-bold text-slate-900">Pass: {consultant.password}</span>
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => {
+                                                            navigator.clipboard.writeText(`Email: ${consultant.email}\nPassword: ${consultant.password}`);
+                                                            alert('Credentials copied to clipboard!');
+                                                        }}
+                                                        className="size-7 bg-white text-slate-400 hover:text-blue-600 rounded-md border border-slate-200 flex items-center justify-center transition-all shadow-sm active:scale-90"
+                                                        title="Copy Credentials"
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm">content_copy</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td className="px-6 py-4"><span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-500">{consultant.specialty}</span></td>
-                                        <td className="px-6 py-4 text-center font-bold text-slate-700 text-sm">{consultant.assignedStudents}</td>
+                                        <td className="px-6 py-4 text-center font-bold text-slate-700 text-sm">
+                                            {(() => {
+                                                const sessions = JSON.parse(localStorage.getItem('scheduled_sessions') || '[]');
+                                                return sessions.filter((s: any) => s.counsellorEmail === consultant.email).length;
+                                            })()}
+                                        </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-1">
                                                 <span className={`material-symbols-outlined text-[18px] ${consultant.rating > 0 ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`}>star</span>

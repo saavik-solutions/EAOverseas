@@ -47,6 +47,22 @@ const AccommodationApplicationForm = ({ onClose, accommodation }) => {
     };
 
     const handleSubmit = () => {
+        const applicationData = {
+            id: `acc_${Date.now()}`,
+            studentName: `${formData.firstName} ${formData.lastName}`,
+            studentEmail: formData.email,
+            accommodationName: accommodation?.title || 'Unknown Property',
+            universityName: formData.universityName,
+            courseName: formData.courseName,
+            levelOfStudy: formData.levelOfStudy,
+            visaStatus: formData.visaStatus,
+            submissionDate: new Date().toLocaleDateString(),
+            status: 'Pending'
+        };
+
+        const existingApps = JSON.parse(localStorage.getItem('accommodation_applications') || '[]');
+        localStorage.setItem('accommodation_applications', JSON.stringify([...existingApps, applicationData]));
+
         setIsSubmitted(true);
     };
 

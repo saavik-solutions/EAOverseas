@@ -1,24 +1,63 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useOutletContext, Link } from 'react-router-dom';
 import { useSavedItems } from '../../context/SavedItemsContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Review = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { uniName, courseName } = useOutletContext();
-    const { submitApplication } = useSavedItems();
+    const { submitApplication, userProfile, profileDocuments } = useSavedItems();
+    const displayDocs = profileDocuments || [];
     const isCourseApplication = !!searchParams.get('title');
     const [agreed, setAgreed] = useState(false);
+
+    const { user } = useAuth();
 
     const handleSubmit = () => {
         if (!agreed) {
             alert("Please agree to the Terms & Conditions and Privacy Policy to submit your application.");
             return;
         }
+
+        const applicationData = {
+            id: `app_${Date.now()}`,
+            studentName: userProfile?.fullName || user?.fullName || user?.name || 'Not provided',
+            studentEmail: userProfile?.email || user?.email || 'Not provided',
+            universityName: uniName,
+            courseName: courseName || 'General Admission',
+            status: 'Pending',
+            submissionDate: new Date().toLocaleDateString(),
+            type: courseName ? 'Course' : 'University',
+            details: {
+                phone: userProfile?.phone || "Not provided",
+                nationality: userProfile?.nationality || "Not provided",
+                passportNumber: userProfile?.passportNumber || "Not provided"
+            },
+            academic: {
+                highestQualification: userProfile?.education?.level || "Not provided",
+                institutionName: userProfile?.education?.institution || "Not provided",
+                cgpa: userProfile?.education?.gpa ? `${userProfile.education.gpa} / 4.0` : "Not provided",
+                englishTest: userProfile?.englishTest?.type || "Not provided",
+                testScore: userProfile?.englishTest?.score || "Not provided"
+            },
+            documents: displayDocs.length > 0 
+                ? displayDocs.map((doc: any) => ({
+                    name: doc.name,
+                    size: doc.size,
+                    type: doc.type,
+                    base64: doc.base64 || null
+                }))
+                : []
+        };
+
+        // Save to student_applications list for counsellor
+        const existingApps = JSON.parse(localStorage.getItem('student_applications') || '[]');
+        localStorage.setItem('student_applications', JSON.stringify([...existingApps, applicationData]));
+
         submitApplication({
             universityName: uniName,
             courseName: courseName,
-            // You might want to pass more details here if available from context or params
         });
         navigate(`/application/submitted?${searchParams.toString()}`);
     };
@@ -28,10 +67,7 @@ const Review = () => {
         navigate(-1);
     };
 
-    const { userProfile, profileDocuments } = useSavedItems();
 
-    // Merge context docs with any local docs functionality if needed, for now just use context
-    const displayDocs = profileDocuments || [];
 
     const ReviewSection = ({ title, icon, onEdit, children, autofilled }) => (
         <div className="border border-slate-200 rounded-xl overflow-hidden mb-6 relative group">
@@ -114,12 +150,12 @@ const Review = () => {
                     onEdit={() => navigate(`/application/details?${searchParams.toString()}`)}
                 >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                        <DetailItem label="Full Name" value={userProfile?.fullName || "Alex Morgan"} />
-                        <DetailItem label="Date of Birth" value={userProfile?.dob || "1999-08-12"} />
-                        <DetailItem label="Email Address" value={userProfile?.email || "alex.morgan@example.com"} />
-                        <DetailItem label="Mobile Number" value={userProfile?.phone || "+1 (555) 123-4567"} />
-                        <DetailItem label="Nationality" value={userProfile?.nationality || "American"} />
-                        <DetailItem label="Country of Residence" value={userProfile?.residence || "United States"} />
+                        <DetailItem label="Full Name" value={userProfile?.fullName || user?.fullName || user?.name || "Not provided"} />
+                        <DetailItem label="Date of Birth" value={userProfile?.dob || "Not provided"} />
+                        <DetailItem label="Email Address" value={userProfile?.email || user?.email || "Not provided"} />
+                        <DetailItem label="Mobile Number" value={userProfile?.phone || "Not provided"} />
+                        <DetailItem label="Nationality" value={userProfile?.nationality || "Not provided"} />
+                        <DetailItem label="Country of Residence" value={userProfile?.residence || "Not provided"} />
                     </div>
                 </ReviewSection>
 
@@ -131,11 +167,11 @@ const Review = () => {
                     onEdit={() => navigate(`/application/academic?${searchParams.toString()}`)}
                 >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
-                        <DetailItem label="Highest Qualification" value={userProfile?.education?.level || "Bachelor's Degree"} />
-                        <DetailItem label="Institution" value={userProfile?.education?.institution || "University of California, Berkeley"} />
-                        <DetailItem label="Major" value={userProfile?.education?.major || "Computer Science"} />
-                        <DetailItem label="Graduation Date" value={userProfile?.education?.gradDate || "2021-05-30"} />
-                        <DetailItem label="GPA" value={userProfile?.education?.gpa ? `${userProfile.education.gpa} / 4.0` : "3.8 / 4.0"} />
+                        <DetailItem label="Highest Qualification" value={userProfile?.education?.level || "Not provided"} />
+                        <DetailItem label="Institution" value={userProfile?.education?.institution || "Not provided"} />
+                        <DetailItem label="Major" value={userProfile?.education?.major || "Not provided"} />
+                        <DetailItem label="Graduation Date" value={userProfile?.education?.gradDate || "Not provided"} />
+                        <DetailItem label="GPA" value={userProfile?.education?.gpa ? `${userProfile.education.gpa} / 4.0` : "Not provided"} />
                     </div>
                 </ReviewSection>
 
@@ -147,18 +183,24 @@ const Review = () => {
                     onEdit={() => navigate(`/application/documents?${searchParams.toString()}`)}
                 >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {displayDocs.map((doc, idx) => (
-                            <div key={idx} className="flex items-center p-3 border border-slate-200 rounded-lg bg-slate-50">
-                                <div className="size-10 rounded bg-white border border-slate-200 flex items-center justify-center shrink-0 text-red-500">
-                                    <span className="material-symbols-outlined">picture_as_pdf</span>
+                        {displayDocs.length > 0 ? (
+                            displayDocs.map((doc, idx) => (
+                                <div key={idx} className="flex items-center p-3 border border-slate-200 rounded-lg bg-slate-50">
+                                    <div className="size-10 rounded bg-white border border-slate-200 flex items-center justify-center shrink-0 text-red-500">
+                                        <span className="material-symbols-outlined">picture_as_pdf</span>
+                                    </div>
+                                    <div className="ml-3 flex-1 overflow-hidden">
+                                        <div className="text-sm font-medium text-slate-900 truncate">{doc.name}</div>
+                                        <div className="text-xs text-slate-500">{doc.size} • Ready to submit</div>
+                                    </div>
+                                    <span className="material-symbols-outlined text-green-600 text-[20px] ml-2">check_circle</span>
                                 </div>
-                                <div className="ml-3 flex-1 overflow-hidden">
-                                    <div className="text-sm font-medium text-slate-900 truncate">{doc.name}</div>
-                                    <div className="text-xs text-slate-500">{doc.size} • Ready to submit</div>
-                                </div>
-                                <span className="material-symbols-outlined text-green-600 text-[20px] ml-2">check_circle</span>
+                            ))
+                        ) : (
+                            <div className="col-span-full text-center py-6">
+                                <span className="text-sm text-slate-500 italic">No documents attached.</span>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </ReviewSection>
 

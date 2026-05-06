@@ -45,8 +45,16 @@ const Login = () => {
 
         // Institutional Fast-Login Logic for University Admins
         if (selectedRole === 'University' && email.endsWith('@eaoverseas.com')) {
-            const institutionalId = email.split('@')[0]; // e.g., 'toronto'
-            // Construct the path dynamically based on the email prefix
+            // Check if these specific credentials are blocked (Mock access check)
+            const blockedCredsJSON = localStorage.getItem('ea_blocked_credentials');
+            const blockedCreds: any[] = blockedCredsJSON ? JSON.parse(blockedCredsJSON) : [];
+            
+            if (blockedCreds.some(c => c.email.toLowerCase() === email.toLowerCase() && c.password === password)) {
+                setError("You're not eligible to login. Your account has been suspended by the administrator.");
+                return;
+            }
+
+            const institutionalId = email.split('@')[0];
             const universitySlug = institutionalId === 'toronto' 
                 ? 'university-of-toronto' 
                 : institutionalId === 'melbourne'
@@ -60,6 +68,15 @@ const Login = () => {
         try {
             const user = await login(email, password);
             
+            // Check if user is in the blocked creators list (Client-side secondary check)
+            const blockedJSON = localStorage.getItem('ea_blocked_creators');
+            const blockedCreators: string[] = blockedJSON ? JSON.parse(blockedJSON) : [];
+            
+            if (blockedCreators.includes(user.fullName)) {
+                // If they are on the blocked list, we treat it as an eligibility error
+                throw new Error('you_are_not_eligible_to_login');
+            }
+
             // Redirect based strictly on the DB role assigned to the user
             if (user.role === 'super_admin' || user.role === 'admin') {
                 navigate('/superadmin');
@@ -72,7 +89,11 @@ const Login = () => {
                 navigate(from, { replace: true });
             }
         } catch (err: any) {
-            setError(err.message);
+            if (err.message === 'you_are_not_eligible_to_login') {
+                setError("You're not eligible to login. Your account has been suspended by the administrator.");
+            } else {
+                setError(err.message || 'Login failed');
+            }
         }
     };
 
@@ -313,7 +334,7 @@ const Login = () => {
                         <div className="grid grid-cols-2 gap-2">
                             <button 
                                 type="button" 
-                                onClick={handleGoogleLogin}
+                                onClick={() => handleGoogleLogin()}
                                 className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700"
                             >
                                 <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />

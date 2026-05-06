@@ -9,7 +9,7 @@ const Superadmin = () => {
         <SuperAdminLayout title="Dashboard Overview">
             <div className="p-8 flex flex-col gap-6">
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {/* Total Universities */}
                     <div
                         onClick={() => navigate('/superadmin/universities')}
@@ -30,7 +30,10 @@ const Superadmin = () => {
                     </div>
 
                     {/* Pending Verifications */}
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
+                    <div 
+                        onClick={() => navigate('/superadmin/verifications')}
+                        className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3 cursor-pointer hover:bg-slate-50 transition-colors"
+                    >
                         <div className="flex justify-between items-start">
                             <div className="bg-amber-100 text-amber-600 p-2 rounded-lg">
                                 <span className="material-symbols-outlined">verified_user</span>
@@ -46,7 +49,10 @@ const Superadmin = () => {
                     </div>
 
                     {/* Active Consultants */}
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
+                    <div 
+                        onClick={() => navigate('/superadmin/consultants/directory')}
+                        className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3 cursor-pointer hover:bg-slate-50 transition-colors"
+                    >
                         <div className="flex justify-between items-start">
                             <div className="bg-slate-100 text-slate-600 p-2 rounded-lg">
                                 <span className="material-symbols-outlined">badge</span>
@@ -55,19 +61,6 @@ const Superadmin = () => {
                         <div>
                             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Active Consultants</p>
                             <h3 className="text-xl font-bold text-slate-900">48</h3>
-                        </div>
-                    </div>
-
-                    {/* Total Revenue */}
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
-                        <div className="flex justify-between items-start">
-                            <div className="bg-emerald-100 text-emerald-600 p-2 rounded-lg">
-                                <span className="material-symbols-outlined">payments</span>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">Total Revenue</p>
-                            <h3 className="text-xl font-bold text-slate-900">$124,000</h3>
                         </div>
                     </div>
                 </div>
@@ -144,74 +137,46 @@ const Superadmin = () => {
                     {/* Right Column - Charts & Analytics */}
                     <div className="lg:col-span-8 flex flex-col gap-6">
                         {/* Top Row - Distribution & Revenue */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 gap-6">
                             {/* Global Distribution */}
                             <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col p-5">
                                 <h3 className="font-bold text-sm text-slate-900 mb-6">Global Distribution</h3>
-                                <div className="flex items-center gap-6">
-                                    <div className="size-32 rounded-full relative flex-shrink-0" style={{
+                                <div className="flex items-center gap-12">
+                                    <div className="size-40 rounded-full relative flex-shrink-0" style={{
                                         background: 'conic-gradient(#2b6cee 0% 35%, #60a5fa 35% 60%, #93c5fd 60% 80%, #bfdbfe 80% 92%, #dbeafe 92% 100%)'
                                     }}>
-                                        <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center">
-                                            <span className="text-[10px] font-bold text-slate-400">ENROLLS</span>
+                                        <div className="absolute inset-6 bg-white rounded-full flex items-center justify-center">
+                                            <span className="text-xs font-bold text-slate-400">ENROLLS</span>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col gap-2 w-full">
+                                    <div className="flex flex-col gap-3 w-full max-w-xs">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <div className="size-2 rounded-full bg-[#2b6cee]"></div>
-                                                <span className="text-xs text-slate-600">India</span>
+                                                <div className="size-3 rounded-full bg-[#2b6cee]"></div>
+                                                <span className="text-sm text-slate-600">India</span>
                                             </div>
-                                            <span className="text-xs font-bold text-slate-900">35%</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <div className="size-2 rounded-full bg-blue-400"></div>
-                                                <span className="text-xs text-slate-600">Nigeria</span>
-                                            </div>
-                                            <span className="text-xs font-bold text-slate-900">25%</span>
+                                            <span className="text-sm font-bold text-slate-900">35%</span>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <div className="size-2 rounded-full bg-blue-300"></div>
-                                                <span className="text-xs text-slate-600">Vietnam</span>
+                                                <div className="size-3 rounded-full bg-blue-400"></div>
+                                                <span className="text-sm text-slate-600">Nigeria</span>
                                             </div>
-                                            <span className="text-xs font-bold text-slate-900">20%</span>
+                                            <span className="text-sm font-bold text-slate-900">25%</span>
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <div className="size-2 rounded-full bg-blue-200"></div>
-                                                <span className="text-xs text-slate-600">Brazil</span>
+                                                <div className="size-3 rounded-full bg-blue-300"></div>
+                                                <span className="text-sm text-slate-600">Vietnam</span>
                                             </div>
-                                            <span className="text-xs font-bold text-slate-900">12%</span>
+                                            <span className="text-sm font-bold text-slate-900">20%</span>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Revenue Contribution */}
-                            <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col p-5">
-                                <h3 className="font-bold text-sm text-slate-900 mb-4">Revenue Contribution</h3>
-                                <div className="grid grid-cols-2 gap-2 mt-2">
-                                    <div className="bg-[#2b6cee]/5 p-3 rounded-lg border border-[#2b6cee]/10">
-                                        <p className="text-[10px] font-bold text-slate-500 uppercase">Admissions</p>
-                                        <p className="text-base font-bold text-[#2b6cee]">$72.5k</p>
-                                        <div className="w-full bg-slate-200 h-1 mt-2 rounded-full overflow-hidden">
-                                            <div className="bg-[#2b6cee] h-full w-[58%]"></div>
-                                        </div>
-                                    </div>
-                                    <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
-                                        <p className="text-[10px] font-bold text-slate-500 uppercase">Loans</p>
-                                        <p className="text-base font-bold text-emerald-600">$41.2k</p>
-                                        <div className="w-full bg-slate-200 h-1 mt-2 rounded-full overflow-hidden">
-                                            <div className="bg-emerald-500 h-full w-[33%]"></div>
-                                        </div>
-                                    </div>
-                                    <div className="bg-amber-50 p-3 rounded-lg border border-amber-100 col-span-2">
-                                        <p className="text-[10px] font-bold text-slate-500 uppercase">Visa Services</p>
-                                        <div className="flex items-baseline gap-3">
-                                            <p className="text-base font-bold text-amber-600">$10.3k</p>
-                                            <span className="text-[10px] text-amber-600 font-bold">+8% vs MoM</span>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <div className="size-3 rounded-full bg-blue-200"></div>
+                                                <span className="text-sm text-slate-600">Brazil</span>
+                                            </div>
+                                            <span className="text-sm font-bold text-slate-900">12%</span>
                                         </div>
                                     </div>
                                 </div>
@@ -271,21 +236,6 @@ const Superadmin = () => {
                     </div>
                 </div>
 
-                {/* Alert Banner */}
-                <div className="bg-white p-5 mx-8 mb-8 rounded-xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                        <div className="bg-[#d97706]/10 text-[#d97706] size-10 rounded-full flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[20px]">warning</span>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-sm text-slate-900">Verification Queue Alert</h4>
-                            <p className="text-xs text-slate-500">3 pending university applications haven't been reviewed for over 48 hours.</p>
-                        </div>
-                    </div>
-                    <button className="w-full md:w-auto px-5 py-2 bg-[#2b6cee]/10 text-[#2b6cee] text-xs font-bold rounded-lg hover:bg-[#2b6cee]/20 transition-all">
-                        Review Queue
-                    </button>
-                </div>
             </div>
         </SuperAdminLayout>
     );

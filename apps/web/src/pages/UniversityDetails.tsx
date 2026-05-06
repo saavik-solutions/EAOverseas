@@ -1,14 +1,15 @@
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { jsPDF } from 'jspdf';
-import { universitiesData } from '../data/universities';
+import { getCombinedUniversities } from '../utils/universityData';
 import { useAuthAction } from '../hooks/useAuthAction';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
 
 const UniversityDetails = () => {
     const { id } = useParams();
-    const university = universitiesData.find(u => u.id === Number(id));
+    const universities = getCombinedUniversities();
+    const university = universities.find(u => u.id === Number(id));
     const { executeAction, isLoginModalOpen, closeLoginModal } = useAuthAction();
     const { user } = useAuth();
 
@@ -27,80 +28,122 @@ const UniversityDetails = () => {
     const handleDownload = () => {
         executeAction(() => {
             const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
 
-            // Title
-            doc.setFontSize(22);
-            doc.setTextColor(43, 108, 238); // #2b6cee
-            doc.text(university.name, 20, 20);
+            // Helper for centered text
+            const centerText = (text: string, y: number, size = 12) => {
+                doc.setFontSize(size);
+                const textWidth = doc.getTextWidth(text);
+                doc.text(text, (pageWidth - textWidth) / 2, y);
+            };
 
-            doc.setFontSize(14);
-            doc.setTextColor(100);
-            doc.text("University Brochure", 20, 30);
-            doc.line(20, 35, 190, 35);
+            // Header Section
+            doc.setFillColor(43, 108, 238); // Blue
+            doc.rect(0, 0, pageWidth, 40, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            centerText(university.name, 20, 24);
+            centerText(`Global Ranking: #${university.globalRanking} | ${university.city}, ${university.country}`, 30, 12);
 
-            // General Info
-            doc.setFontSize(12);
-            doc.setTextColor(0);
-            doc.text(`Location: ${university.city}, ${university.country}`, 20, 45);
-            doc.text(`Ranking: #${university.globalRanking} Global Ranking`, 20, 52);
-            doc.text(`Type: ${university.type}`, 20, 59);
-
-            // Overview
-            doc.setFontSize(14);
-            doc.text("University Overview", 20, 75);
+            // Overview Section
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(16);
+            doc.text("University Overview", 20, 55);
+            doc.line(20, 58, 70, 58);
+            
             doc.setFontSize(10);
             const splitOverview = doc.splitTextToSize(university.overview, 170);
-            doc.text(splitOverview, 20, 82);
+            doc.text(splitOverview, 20, 65);
 
-            // Stats
+            // Quick Stats Table
             doc.setFontSize(14);
-            doc.text("Quick Snapshot", 20, 105);
-            doc.setFontSize(10);
-            doc.text([
-                `- ${university.coursesCount} Courses`,
-                `- ${university.avgTuition} Avg Tuition per Year`,
-                `- ${university.livingExpense} Living Expense per Month`,
-                `- ${university.intakes}`,
-                `- ${university.partTimeRights} Part-time Work Rights`
-            ], 20, 112);
+            doc.text("Quick Snapshot", 20, 95);
+            doc.line(20, 98, 60, 98);
 
-            // Admission
+            const stats = [
+                ["Category", "Details"],
+                ["Available Courses", university.coursesCount],
+                ["Avg. Tuition Fees", university.avgTuition],
+                ["Living Expenses", university.livingExpense],
+                ["Work Rights", university.partTimeRights],
+                ["Intakes", university.intakes]
+            ];
+
+            let startY = 105;
+            stats.forEach((row, i) => {
+                doc.setFont(undefined, i === 0 ? 'bold' : 'normal');
+                doc.text(row[0], 25, startY);
+                doc.text(row[1], 100, startY);
+                doc.line(20, startY + 2, 190, startY + 2);
+                startY += 10;
+            });
+
+            // Eligibility & Requirements
             doc.setFontSize(14);
-            doc.text("Admission Process", 20, 145);
-            doc.setFontSize(10);
-            doc.text(university.admissionSteps.map(s => `${s.step}. ${s.title}`), 20, 152);
+            doc.text("Eligibility & Entrance Requirements", 20, 180);
+            doc.line(20, 183, 100, 183);
+            
+            let reqY = 190;
+            university.testRequirements.forEach(req => {
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'bold');
+                doc.text(`${req.label}:`, 25, reqY);
+                doc.setFont(undefined, 'normal');
+                doc.text(req.value, 80, reqY);
+                reqY += 8;
+            });
 
-            // Requirements
-            doc.setFontSize(14);
-            doc.text("Entrance Requirements", 20, 185);
-            doc.setFontSize(10);
-            doc.text(university.testRequirements.map(r => `- ${r.label}: ${r.value}`), 20, 192);
+            // Application Journey (New Page)
+            doc.addPage();
+            doc.setFontSize(18);
+            doc.setTextColor(43, 108, 238);
+            doc.text("Your Application Journey", 20, 25);
+            doc.line(20, 28, 190, 28);
 
-            // Disclaimer
+            let journeyY = 40;
+            university.admissionSteps.forEach(step => {
+                doc.setFillColor(240, 247, 255);
+                doc.rect(20, journeyY, 170, 20, 'F');
+                doc.setFontSize(11);
+                doc.setTextColor(43, 108, 238);
+                doc.setFont(undefined, 'bold');
+                doc.text(`Step ${step.step}: ${step.title}`, 25, journeyY + 8);
+                doc.setFontSize(9);
+                doc.setTextColor(100);
+                doc.setFont(undefined, 'normal');
+                doc.text(step.description, 25, journeyY + 14);
+                journeyY += 25;
+            });
+
+            // Popular Courses
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text("Popular Programs", 20, journeyY + 10);
+            doc.line(20, journeyY + 13, 70, journeyY + 13);
+
+            const sampleCourses = [
+                `• Bachelor of ${university.course} (${university.courseType})`,
+                `• Master of ${university.course} (Postgraduate)`,
+                `• Research Doctorate (PhD) in ${university.course}`,
+                `• Diploma & Vocational Programs`
+            ];
+            doc.setFontSize(10);
+            doc.text(sampleCourses, 25, journeyY + 23);
+
+            // Footer
             doc.setFontSize(8);
             doc.setTextColor(150);
-            doc.text("Disclaimer: This brochure is generated for informational purposes by EAOverseas.", 20, 280);
+            const footerText = "Generated by EAOverseas Education Portal | © 2026 EAOverseas Global";
+            doc.text(footerText, (pageWidth - doc.getTextWidth(footerText)) / 2, 285);
 
-            doc.save(`${university.name.replace(/\s+/g, '_')}_Brochure.pdf`);
+            doc.save(`${university.name.replace(/\s+/g, '_')}_Portfolio.pdf`);
         });
     };
 
     return (
         <div className="flex flex-col flex-1 h-full overflow-hidden bg-[#F8FAFC]">
             <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
-            {/* Headers are usually handled by the layout, but the template has a specific one. 
-                Since this is inside ConsultantLayout, we might have double headers.
-                The user asked for this specific page design.
-                I will include the header from the template for now, but if it conflicts, I might need to remove it later.
-                However, existing layouts likely have a sidebar/header.
-                Let's keep it as a standalone page content or try to integrate.
-                The user said "don't navigate it into students /user login ( make it in the counsellor login)".
-                ConsultantLayout likely has a sidebar.
-                The provided HTML has a full header. 
-                I will render the MainHeader as part of the component for now.
-            */}
-
-            {/* Breadcrumb Header */}
+            
             <PageHeader
                 breadcrumbs={[
                     { label: 'University Directory', link: '/consultant/university-directory' },
@@ -108,240 +151,315 @@ const UniversityDetails = () => {
                 ]}
             />
 
-            <main className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
-                <div className="max-w-[95%] lg:max-w-[1400px] mx-auto pb-6 md:pb-10">
-                    {/* BEGIN: HeroSection */}
-                    <section className="mb-6 md:mb-12" data-purpose="university-identity">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
-                            <div>
-                                <div className="flex items-center gap-2 mb-3 md:mb-4">
-                                    <span className="bg-blue-50 text-[#2b6cee] text-[10px] md:text-xs font-bold px-2 py-0.5 md:px-3 md:py-1 rounded-full uppercase tracking-wider">#{university.globalRanking} GLOBAL RANKING</span>
-                                    <span className="bg-gray-100 text-gray-600 text-[10px] md:text-xs font-bold px-2 py-0.5 md:px-3 md:py-1 rounded-full uppercase tracking-wider">{university.type}</span>
+            <main className="flex-1 overflow-y-auto p-4 lg:p-6 scroll-smooth text-sm">
+                <div className="max-w-[95%] lg:max-w-5xl mx-auto pb-6 md:pb-8">
+                    {/* Hero Section */}
+                    <section className="mb-6 md:mb-8">
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="bg-blue-50 text-blue-600 text-[10px] md:text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest border border-blue-100">#{university.globalRanking} GLOBAL RANKING</span>
+                                    <span className="bg-emerald-50 text-emerald-600 text-[10px] md:text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest border border-emerald-100">{university.type}</span>
                                 </div>
-                                <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-1.5 md:mb-2">{university.name}</h1>
-                                <p className="text-sm md:text-lg text-gray-500 flex items-center gap-1.5 mb-3 md:mb-4">
-                                    <svg className="h-4 w-4 md:h-5 md:w-5 text-gray-400 shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path clipRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" fillRule="evenodd"></path>
-                                    </svg>
+                                <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-3 tracking-tight">{university.name}</h1>
+                                <p className="text-sm md:text-lg text-gray-500 flex items-center gap-2 mb-4 font-medium">
+                                    <span className="material-symbols-outlined text-blue-500 text-[20px]">location_on</span>
                                     {university.city}, {university.country}
                                 </p>
-                                <p className="text-xs md:text-base text-gray-600 max-w-2xl leading-relaxed">
-                                    {university.overview}
-                                </p>
+                                <div className="mb-6">
+                                    <button 
+                                        onClick={handleDownload}
+                                        className="flex w-max items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-700 transition-all shadow-md shadow-blue-600/20 active:scale-95"
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                                        Export PDF Brochure
+                                    </button>
+                                </div>
+                                <div className="p-4 md:p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                                    <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                        <span className="w-1.5 h-4 bg-blue-600 rounded-full"></span>
+                                        University Overview
+                                    </h3>
+                                    <p className="text-xs md:text-base text-gray-600 leading-relaxed font-medium">
+                                        {university.overview}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="hidden lg:block w-72 shrink-0">
+                                <div className="bg-white rounded-3xl p-6 text-gray-900 border border-blue-100 shadow-sm relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                                    <h3 className="text-lg font-black mb-6 relative z-10 flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-blue-600">bar_chart</span>
+                                        Quick Stats
+                                    </h3>
+                                    <div className="space-y-4 relative z-10">
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                            <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Acceptance Rate</span>
+                                            <span className="font-black text-emerald-600">{university.acceptanceRate || '18%'}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                            <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Satisfaction</span>
+                                            <span className="font-black text-blue-600">4.8/5.0</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                            <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Employment</span>
+                                            <span className="font-black text-purple-600">92%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2">
+                                            <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">QS Ranking</span>
+                                            <span className="font-black text-orange-500">#{university.rankingQS || university.globalRanking}</span>
+                                        </div>
+                                    </div>
+                                    <button onClick={handleDownload} className="w-full mt-6 bg-blue-600 text-white py-2.5 rounded-xl font-black text-xs hover:bg-blue-700 transition-colors uppercase tracking-widest shadow-md shadow-blue-600/20 active:scale-95">
+                                        Get Prospectus
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </section>
-                    {/* END: HeroSection */}
 
-                    {/* BEGIN: QuickSnapshot */}
-                    <section className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-10 md:mb-16" data-purpose="university-stats">
-                        {/* Item 1 */}
-                        <div className="bg-white p-3.5 md:p-5 rounded-xl shadow-sm border border-gray-50 flex flex-col items-center text-center">
-                            <span className="text-xl md:text-2xl mb-1.5 md:mb-2">🎓</span>
-                            <span className="text-[11px] md:text-sm font-bold text-gray-900 leading-tight">{university.coursesCount} Courses</span>
-                            <span className="text-[9px] md:text-xs text-gray-400 mt-0.5">Popular Programs</span>
+                    {/* Stats Grid */}
+                    <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-8 md:mb-12">
+                        <div className="bg-white p-3 md:p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:border-blue-200 transition-all">
+                            <div className="size-8 md:size-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 mb-2 group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-[20px] md:text-[24px]">school</span>
+                            </div>
+                            <span className="text-[11px] md:text-sm font-black text-gray-900 leading-tight">{university.coursesCount} Courses</span>
+                            <span className="text-[9px] text-gray-400 mt-1 font-bold uppercase tracking-widest">Available Programs</span>
                         </div>
-                        {/* Item 2 */}
-                        <div className="bg-white p-3.5 md:p-5 rounded-xl shadow-sm border border-gray-50 flex flex-col items-center text-center">
-                            <span className="text-xl md:text-2xl mb-1.5 md:mb-2">💰</span>
-                            <span className="text-[11px] md:text-sm font-bold text-gray-900 leading-tight">{university.avgTuition} Avg Tuition</span>
-                            <span className="text-[9px] md:text-xs text-gray-400 mt-0.5 whitespace-nowrap">Per Academic Year</span>
+                        <div className="bg-white p-3 md:p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:border-emerald-200 transition-all">
+                            <div className="size-8 md:size-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-2 group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-[20px] md:text-[24px]">payments</span>
+                            </div>
+                            <span className="text-[11px] md:text-sm font-black text-gray-900 leading-tight">{university.avgTuition} Avg</span>
+                            <span className="text-[9px] text-gray-400 mt-1 font-bold uppercase tracking-widest">Tuition Per Year</span>
                         </div>
-                        {/* Item 3 */}
-                        <div className="bg-white p-3.5 md:p-5 rounded-xl shadow-sm border border-gray-50 flex flex-col items-center text-center">
-                            <span className="text-xl md:text-2xl mb-1.5 md:mb-2">🏠</span>
-                            <span className="text-[11px] md:text-sm font-bold text-gray-900 leading-tight">{university.livingExpense} Living</span>
-                            <span className="text-[9px] md:text-xs text-gray-400 mt-0.5">Average per month</span>
+                        <div className="bg-white p-3 md:p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:border-orange-200 transition-all">
+                            <div className="size-8 md:size-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 mb-2 group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-[20px] md:text-[24px]">home_work</span>
+                            </div>
+                            <span className="text-[11px] md:text-sm font-black text-gray-900 leading-tight">{university.livingExpense}</span>
+                            <span className="text-[9px] text-gray-400 mt-1 font-bold uppercase tracking-widest">Living Cost/mo</span>
                         </div>
-                        {/* Item 4 */}
-                        <div className="bg-white p-3.5 md:p-5 rounded-xl shadow-sm border border-gray-50 flex flex-col items-center text-center">
-                            <span className="text-xl md:text-2xl mb-1.5 md:mb-2">📅</span>
-                            <span className="text-[11px] md:text-sm font-bold text-gray-900 leading-tight">Available Intakes</span>
-                            <span className="text-[9px] md:text-xs text-gray-400 mt-0.5 truncate w-full">{university.intakes}</span>
+                        <div className="bg-white p-3 md:p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:border-purple-200 transition-all">
+                            <div className="size-8 md:size-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 mb-2 group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-[20px] md:text-[24px]">calendar_today</span>
+                            </div>
+                            <span className="text-[11px] md:text-sm font-black text-gray-900 leading-tight">{university.intakes.split(' ')[0]} / {university.intakes.split(' ')[2] || 'Annual'}</span>
+                            <span className="text-[9px] text-gray-400 mt-1 font-bold uppercase tracking-widest">Major Intakes</span>
                         </div>
-                        {/* Item 5 */}
-                        <div className="bg-white p-3.5 md:p-5 rounded-xl shadow-sm border border-gray-50 flex flex-col items-center text-center col-span-2 md:col-span-1">
-                            <span className="text-xl md:text-2xl mb-1.5 md:mb-2">🕒</span>
-                            <span className="text-[11px] md:text-sm font-bold text-gray-900 leading-tight">{university.partTimeRights}</span>
-                            <span className="text-[9px] md:text-xs text-gray-400 mt-0.5">Part-time Work Rights</span>
+                        <div className="bg-white p-3 md:p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center group hover:border-indigo-200 transition-all col-span-2 md:col-span-1">
+                            <div className="size-8 md:size-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-2 group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-[20px] md:text-[24px]">work_history</span>
+                            </div>
+                            <span className="text-[11px] md:text-sm font-black text-gray-900 leading-tight">{university.partTimeRights}</span>
+                            <span className="text-[9px] text-gray-400 mt-1 font-bold uppercase tracking-widest">Post-study Work</span>
                         </div>
                     </section>
-                    {/* END: QuickSnapshot */}
 
                     <div className="grid lg:grid-cols-3 gap-8 md:gap-12">
-                        {/* BEGIN: LeftColumn */}
-                        <div className="lg:col-span-2 space-y-10 md:space-y-16">
-                            {/* BEGIN: AdmissionProcess */}
-                            <section data-purpose="admission-steps">
-                                <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 flex items-center gap-2 md:gap-3">
-                                    <span className="w-1 h-6 md:h-8 bg-[#2b6cee] rounded-full"></span>
-                                    Admission Process
+                        {/* Main Content Area */}
+                        <div className="lg:col-span-2 space-y-12">
+                            {/* Courses Section (New) */}
+                            <section id="courses">
+                                <h2 className="text-xl md:text-2xl font-black mb-8 flex items-center gap-3 text-gray-900">
+                                    <span className="w-1.5 h-8 bg-blue-600 rounded-full"></span>
+                                    Popular Available Courses
                                 </h2>
-                                <div className="space-y-3 md:space-y-4">
-                                    {university.admissionSteps.map((step) => (
-                                        <div key={step.step} className="flex items-center gap-3 md:gap-5 p-3.5 md:p-5 bg-white border border-gray-100 rounded-xl transition-all hover:border-[#2b6cee]/20 shadow-sm">
-                                            <span className="bg-[#2b6cee15] text-[#2b6cee] w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-bold rounded-lg flex-shrink-0 text-base md:text-lg">{step.step}</span>
-                                            <div className="min-w-0">
-                                                <h4 className="font-bold text-gray-900 text-sm md:text-base">{step.title}</h4>
-                                                <p className="text-[11px] md:text-sm text-gray-500 leading-tight">{step.description}</p>
+                                <div className="grid sm:grid-cols-2 gap-4">
+                                    {[
+                                        { name: `Bachelor of ${university.course}`, type: university.courseType, duration: '3-4 Years', fee: university.avgTuition },
+                                        { name: `Master of ${university.course}`, type: 'Postgraduate', duration: '1-2 Years', fee: `£${parseInt(university.avgTuition.replace(/[^0-9]/g, '')) + 5000}` },
+                                        { name: `PhD in ${university.course}`, type: 'Research', duration: '3-5 Years', fee: 'Full Funding Available' },
+                                        { name: `Diploma in ${university.course}`, type: 'Vocational', duration: '1 Year', fee: '£15,000' }
+                                    ].map((course, i) => (
+                                        <div key={i} className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all group">
+                                            <div className="flex justify-between items-start mb-3">
+                                                <h4 className="font-black text-gray-900 text-sm md:text-base group-hover:text-blue-600 transition-colors">{course.name}</h4>
+                                                <span className="bg-blue-50 text-blue-600 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">{course.type}</span>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                                    <span className="material-symbols-outlined text-[14px]">timer</span>
+                                                    <span>Duration: {course.duration}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                                    <span className="material-symbols-outlined text-[14px]">payments</span>
+                                                    <span>Est. Fee: {course.fee}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             </section>
-                            {/* END: AdmissionProcess */}
 
-                            {/* BEGIN: FeesStructure */}
-                            <section data-purpose="fees-breakdown">
-                                <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                                    <span className="w-1 h-8 bg-[#2b6cee] rounded-full"></span>
-                                    Tuition & Cost Breakdown
+                            {/* Application Journey Section */}
+                            <section id="journey">
+                                <h2 className="text-xl md:text-2xl font-black mb-8 flex items-center gap-3 text-gray-900">
+                                    <span className="w-1.5 h-8 bg-emerald-600 rounded-full"></span>
+                                    Application Journey
                                 </h2>
-                                <div className="overflow-hidden border border-gray-100 rounded-[12px] bg-white">
-                                    <table className="w-full text-left border-collapse">
-                                        <thead>
-                                            <tr className="bg-gray-50">
-                                                <th className="p-4 font-semibold text-sm text-gray-600 border-b">Expense Type</th>
-                                                <th className="p-4 font-semibold text-sm text-gray-600 border-b">Estimated Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-50">
-                                            <tr>
-                                                <td className="p-4 text-sm font-medium">Tuition Fees</td>
-                                                <td className="p-4 text-sm">{university.avgTuition} / year</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="p-4 text-sm font-medium">Living Expenses</td>
-                                                <td className="p-4 text-sm">{university.livingExpense} / month</td>
-                                            </tr>
-                                            <tr>
-                                                <td className="p-4 text-sm font-medium text-[#2b6cee]">Other Expenses</td>
-                                                <td className="p-4 text-sm">Varies by program</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div className="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
+                                    {university.admissionSteps.map((step) => (
+                                        <div key={step.step} className="relative group">
+                                            <div className="absolute -left-[31px] top-0 size-6 rounded-full bg-white border-4 border-gray-100 group-hover:border-emerald-500 transition-colors z-10"></div>
+                                            <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm group-hover:border-emerald-100 transition-all">
+                                                <h4 className="font-black text-gray-900 text-sm md:text-base mb-1">Step {step.step}: {step.title}</h4>
+                                                <p className="text-xs md:text-sm text-gray-500 leading-relaxed font-medium">{step.description}</p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </section>
-                            {/* END: FeesStructure */}
 
-                            {/* BEGIN: Scholarships */}
-                            <section data-purpose="scholarship-info">
-                                <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                                    <span className="w-1 h-8 bg-[#2b6cee] rounded-full"></span>
-                                    Scholarships & Financial Aid
+                            {/* Eligibility Section */}
+                            <section id="eligibility">
+                                <h2 className="text-xl md:text-2xl font-black mb-8 flex items-center gap-3 text-gray-900">
+                                    <span className="w-1.5 h-8 bg-orange-600 rounded-full"></span>
+                                    Eligibility & Requirements
                                 </h2>
                                 <div className="grid md:grid-cols-2 gap-6">
-                                    {university.scholarships.map((sch, index) => (
-                                        <div key={index} className="p-6 bg-white border border-gray-100 rounded-[12px] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] group hover:border-[#2b6cee]/30 transition-all">
-                                            <div className="mb-4">
-                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${sch.type === 'Fully Funded' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                                                    }`}>{sch.type}</span>
-                                            </div>
-                                            <h4 className="font-bold text-gray-900 mb-2 group-hover:text-[#2b6cee] transition-colors">{sch.title}</h4>
-                                            <p className="text-xs text-gray-400 mb-4 font-semibold">Deadline: {sch.deadline}</p>
-                                            <p className="text-sm text-gray-500 leading-relaxed">{sch.description}</p>
+                                    <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                                        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-orange-500">verified</span>
+                                            Entrance Exams
+                                        </h3>
+                                        <ul className="space-y-4">
+                                            {university.testRequirements.map((req, index) => (
+                                                <li key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                                                    <span className="text-xs font-bold text-gray-600">{req.label}</span>
+                                                    <span className="text-xs font-black text-gray-900">{req.value}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                                        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-orange-500">description</span>
+                                            Required Documents
+                                        </h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {['Academic Transcripts', 'Passport Copy', 'CV / Resume', 'Personal Statement', '2 Recommendation Letters', 'Financial Proof'].map((doc, i) => (
+                                                <span key={i} className="px-3 py-1.5 bg-gray-50 text-gray-600 text-[10px] font-bold rounded-lg border border-gray-100 uppercase tracking-wider">{doc}</span>
+                                            ))}
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
                             </section>
-                            {/* END: Scholarships */}
-                        </div>
-                        {/* END: LeftColumn */}
 
-                        {/* BEGIN: RightSidebar */}
-                        <div className="space-y-8 md:space-y-12">
-                            {/* BEGIN: TestRequirements */}
-                            <aside className="bg-white p-8 rounded-[12px] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] border border-gray-50" data-purpose="requirements-sidebar">
-                                <h3 className="text-lg font-bold mb-6">Entrance Requirements</h3>
-                                <ul className="space-y-6">
-                                    {university.testRequirements.map((req, index) => (
-                                        <li key={index} className="flex items-start gap-3">
-                                            <svg className="h-5 w-5 text-[#2b6cee] mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"></path>
-                                            </svg>
-                                            <div>
-                                                <p className="text-sm font-bold text-gray-900">{req.label}</p>
-                                                <p className="text-sm text-gray-500">{req.value}</p>
+                            {/* Fees & Funding Section */}
+                            <section id="fees">
+                                <h2 className="text-xl md:text-2xl font-black mb-8 flex items-center gap-3 text-gray-900">
+                                    <span className="w-1.5 h-8 bg-purple-600 rounded-full"></span>
+                                    Fees & Funding
+                                </h2>
+                                <div className="space-y-6">
+                                    <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm">
+                                        <table className="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr className="bg-gray-50">
+                                                    <th className="p-5 font-black text-[10px] uppercase tracking-widest text-gray-500">Expense Category</th>
+                                                    <th className="p-5 font-black text-[10px] uppercase tracking-widest text-gray-500 text-right">Estimated Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-50">
+                                                <tr>
+                                                    <td className="p-5 text-sm font-bold text-gray-900 flex items-center gap-2">
+                                                        <span className="material-symbols-outlined text-blue-500 text-[18px]">payments</span>
+                                                        Tuition Fees
+                                                    </td>
+                                                    <td className="p-5 text-sm font-black text-gray-900 text-right">{university.avgTuition} <span className="text-[10px] text-gray-400 font-bold">/ YEAR</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="p-5 text-sm font-bold text-gray-900 flex items-center gap-2">
+                                                        <span className="material-symbols-outlined text-emerald-500 text-[18px]">home</span>
+                                                        Living Expenses
+                                                    </td>
+                                                    <td className="p-5 text-sm font-black text-gray-900 text-right">{university.livingExpense} <span className="text-[10px] text-gray-400 font-bold">/ MONTH</span></td>
+                                                </tr>
+                                                <tr className="bg-blue-50/30">
+                                                    <td className="p-5 text-sm font-black text-blue-600">Total Estimated (1st Year)</td>
+                                                    <td className="p-5 text-sm font-black text-blue-600 text-right">
+                                                        {`£${(parseInt(university.avgTuition.replace(/[^0-9]/g, '')) + (parseInt(university.livingExpense.replace(/[^0-9]/g, '')) * 12)).toLocaleString()}`}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        {university.scholarships.map((sch, index) => (
+                                            <div key={index} className="p-5 bg-gradient-to-br from-white to-blue-50/30 border border-blue-100 rounded-3xl shadow-sm hover:shadow-md transition-all group">
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <span className={`text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest border ${
+                                                        sch.type === 'Fully Funded' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-blue-50 text-blue-600 border-blue-100'
+                                                    }`}>{sch.type}</span>
+                                                    <span className="text-[10px] font-black text-gray-400">{sch.deadline}</span>
+                                                </div>
+                                                <h4 className="font-black text-gray-900 mb-2 group-hover:text-blue-600 transition-colors text-sm">{sch.title}</h4>
+                                                <p className="text-xs text-gray-500 leading-relaxed font-medium">{sch.description}</p>
                                             </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </aside>
-                            {/* END: TestRequirements */}
+                                        ))}
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
 
-                            {/* BEGIN: IntakeTimeline */}
-                            <aside className="bg-gray-900 text-white p-8 rounded-[12px] shadow-xl" data-purpose="intake-timeline">
-                                <h3 className="text-lg font-bold mb-6">Available Intakes</h3>
-                                <div className="space-y-8 relative">
-                                    <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-700"></div>
-                                    <div className="relative pl-10">
-                                        <div className="absolute left-[9px] top-1.5 w-1.5 h-1.5 rounded-full bg-green-500 ring-4 ring-green-500/20"></div>
-                                        <p className="text-xs font-bold text-green-400 uppercase tracking-widest mb-1">Fall Intake</p>
-                                        <h4 className="font-bold">{university.deadlineFall === 'No Winter Intake' ? 'Annual Intake' : 'Main Intake'}</h4>
-                                        <p className="text-sm text-gray-400">Deadline: {university.deadlineFall}</p>
+                        {/* Sidebar */}
+                        <div className="space-y-6">
+                            <aside className="bg-white text-gray-900 border border-blue-100 p-6 md:p-8 rounded-3xl shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full blur-2xl"></div>
+                                <h3 className="text-base font-black mb-6 relative z-10 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-blue-600 text-[20px]">event_available</span>
+                                    Intake Deadlines
+                                </h3>
+                                <div className="space-y-6 relative z-10">
+                                    <div className="relative pl-6 border-l-2 border-gray-100 pb-1">
+                                        <div className="absolute -left-[9px] top-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-50"></div>
+                                        <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-1">Fall Intake</p>
+                                        <h4 className="font-black text-xs mb-0.5">{university.deadlineFall === 'No Winter Intake' ? 'Annual Intake' : 'Main Intake'}</h4>
+                                        <p className="text-[11px] text-gray-500 font-bold">Apply by: {university.deadlineFall}</p>
                                     </div>
                                     {university.deadlineWinter !== 'No Winter Intake' && (
-                                        <div className="relative pl-10">
-                                            <div className="absolute left-[9px] top-1.5 w-1.5 h-1.5 rounded-full bg-orange-500 ring-4 ring-orange-500/20"></div>
-                                            <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-1">Winter Intake</p>
-                                            <h4 className="font-bold">Secondary Intake</h4>
-                                            <p className="text-sm text-gray-400">Deadline: {university.deadlineWinter}</p>
+                                        <div className="relative pl-6 border-l-2 border-gray-100">
+                                            <div className="absolute -left-[9px] top-1 w-3.5 h-3.5 rounded-full bg-orange-500 ring-4 ring-orange-50"></div>
+                                            <p className="text-[9px] font-black text-orange-600 uppercase tracking-widest mb-1">Winter Intake</p>
+                                            <h4 className="font-black text-xs mb-0.5">Secondary Intake</h4>
+                                            <p className="text-[11px] text-gray-500 font-bold">Apply by: {university.deadlineWinter}</p>
                                         </div>
                                     )}
                                 </div>
                             </aside>
-                            {/* END: IntakeTimeline */}
 
-                            {/* BEGIN: VisaSummary */}
-                            <aside className="bg-blue-50 p-8 rounded-[12px] border border-blue-100" data-purpose="visa-loan-info">
-                                <h3 className="text-lg font-bold text-gray-900 mb-4">Visa & Loan Summary</h3>
-                                <div className="space-y-4">
-                                    <div>
-                                        <p className="text-xs font-bold text-[#2b6cee] uppercase mb-1">Visa Type</p>
-                                        <p className="text-sm text-gray-700">{university.visaType}</p>
+                            <aside className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+                                <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-blue-600">article</span>
+                                    Visa & Loans
+                                </h3>
+                                <div className="space-y-6">
+                                    <div className="p-4 bg-gray-50 rounded-2xl">
+                                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-2">Visa Processing</p>
+                                        <p className="text-xs font-black text-gray-900 mb-1">{university.visaType}</p>
+                                        <p className="text-[11px] font-medium text-gray-500">{university.processingTime} Est. time</p>
                                     </div>
-                                    <div>
-                                        <p className="text-xs font-bold text-[#2b6cee] uppercase mb-1">Processing Time</p>
-                                        <p className="text-sm text-gray-700">{university.processingTime}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold text-[#2b6cee] uppercase mb-1">Education Loans</p>
-                                        <p className="text-sm text-gray-700 leading-relaxed">Interest rates between <span className="font-bold">{university.loanInterestRate}</span>.</p>
+                                    <div className="p-4 bg-gray-50 rounded-2xl">
+                                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">Financing Options</p>
+                                        <p className="text-xs font-black text-gray-900 mb-1">Education Loans Available</p>
+                                        <p className="text-[11px] font-medium text-gray-500">Interest: {university.loanInterestRate}</p>
                                     </div>
                                 </div>
                             </aside>
-                            {/* END: VisaSummary */}
                         </div>
-                        {/* END: RightSidebar */}
                     </div>
 
-                    {/* BEGIN: BottomAction */}
-                    <div className="mt-12 md:mt-24 text-center pb-12 md:pb-20">
-                        <div className="inline-block p-6 md:p-12 bg-white rounded-2xl border border-gray-100 shadow-sm max-w-2xl mx-auto">
-                            <h2 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 px-2">Ready to start your application?</h2>
-                            <p className="text-[11px] md:text-base text-gray-500 mb-6 md:mb-8 leading-relaxed px-4">Get the complete university brochure including detailed course modules and alumni insights.</p>
-                            <button
-                                onClick={handleDownload}
-                                className="w-full sm:w-auto bg-[#2b6cee] text-white px-6 py-3 md:px-10 md:py-4 rounded-xl font-bold text-sm md:text-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2 md:gap-3 shadow-lg shadow-blue-600/20 mx-auto active:scale-95"
-                            >
-                                <svg className="h-4 w-4 md:h-6 md:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"></path>
-                                </svg>
-                                Download {university.name.length > 20 ? 'Info' : university.name} (PDF)
-                            </button>
-                        </div>
-                    </div>
-                    {/* END: BottomAction */}
                 </div>
             </main>
 
-            {/* BEGIN: FooterSimple */}
-            <footer className="bg-white border-t border-gray-100 py-4 md:py-8 shrink-0">
+            <footer className="bg-white border-t border-gray-100 py-6 md:py-10 shrink-0">
                 <div className="max-w-7xl mx-auto px-4 text-center">
-                    <p className="text-[10px] md:text-sm text-gray-400">© 2023 EAOverseas Education Platform. All rights reserved.</p>
+                    <p className="text-[11px] md:text-sm text-gray-400 font-bold uppercase tracking-widest">© 2026 EAOverseas Education Global. Premium University Directory.</p>
                 </div>
             </footer>
-            {/* END: FooterSimple */}
         </div>
     );
 };

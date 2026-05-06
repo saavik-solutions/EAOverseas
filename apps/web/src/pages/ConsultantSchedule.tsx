@@ -664,7 +664,7 @@ const ConsultantSchedule = () => {
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(stat.available / 8) * 100}%` }}></div>
+                                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(parseFloat(stat.available as unknown as string) / 8) * 100}%` }}></div>
                                                         </div>
                                                         <span className="w-8 text-right font-medium">{stat.available}h</span>
                                                     </div>

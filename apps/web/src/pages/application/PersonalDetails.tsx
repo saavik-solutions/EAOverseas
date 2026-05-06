@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSavedItems } from '../../context/SavedItemsContext';
 
 const PersonalDetails = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { userProfile, updateUserProfile } = useSavedItems();
+
+    const [fullName, setFullName] = useState(userProfile?.fullName || '');
+    const [email, setEmail] = useState(userProfile?.email || '');
+    const [phone, setPhone] = useState(userProfile?.phone || '');
+    const [dob, setDob] = useState(userProfile?.dob || '');
+    const [nationality, setNationality] = useState(userProfile?.nationality || '');
+    const [residence, setResidence] = useState(userProfile?.residence || '');
 
     const handleNext = () => {
+        updateUserProfile({
+            fullName,
+            email,
+            phone,
+            dob,
+            nationality,
+            residence
+        });
         navigate(`/application/academic?${searchParams.toString()}`);
     };
 
@@ -41,6 +58,8 @@ const PersonalDetails = () => {
                                 className="w-full pl-12 pr-4 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all"
                                 placeholder="Enter your full name as per passport"
                                 type="text"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
                             />
                         </div>
                         <span className="text-xs text-slate-500">Must match your passport exactly to avoid visa issues later.</span>
@@ -57,6 +76,8 @@ const PersonalDetails = () => {
                                 className="w-full pl-12 pr-4 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all"
                                 placeholder="student@example.com"
                                 type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                     </label>
@@ -73,6 +94,8 @@ const PersonalDetails = () => {
                                 className="flex-1 px-4 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all"
                                 placeholder="98765 43210"
                                 type="tel"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
                             />
                         </div>
                     </label>
@@ -87,6 +110,8 @@ const PersonalDetails = () => {
                             <input
                                 className="w-full pl-12 pr-4 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all appearance-none"
                                 type="date"
+                                value={dob}
+                                onChange={(e) => setDob(e.target.value)}
                             />
                         </div>
                     </label>
@@ -94,12 +119,16 @@ const PersonalDetails = () => {
                         <span className="text-sm font-semibold text-slate-700">Nationality <span class="text-red-500">*</span></span>
                         <div className="relative">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]">public</span>
-                            <select className="w-full pl-12 pr-10 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none appearance-none cursor-pointer">
-                                <option disabled selected value="">Select your nationality</option>
-                                <option value="in">Indian</option>
-                                <option value="us">American</option>
-                                <option value="uk">British</option>
-                                <option value="ca">Canadian</option>
+                            <select 
+                                className="w-full pl-12 pr-10 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none appearance-none cursor-pointer"
+                                value={nationality}
+                                onChange={(e) => setNationality(e.target.value)}
+                            >
+                                <option disabled value="">Select your nationality</option>
+                                <option value="Indian">Indian</option>
+                                <option value="American">American</option>
+                                <option value="British">British</option>
+                                <option value="Canadian">Canadian</option>
                             </select>
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined pointer-events-none">expand_more</span>
                         </div>
@@ -111,13 +140,17 @@ const PersonalDetails = () => {
                         <span className="text-sm font-semibold text-slate-700">Current Country of Residence <span className="text-red-500">*</span></span>
                         <div className="relative">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]">home_pin</span>
-                            <select className="w-full pl-12 pr-10 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none appearance-none cursor-pointer">
-                                <option disabled selected value="">Select country of residence</option>
-                                <option value="in">India</option>
-                                <option value="us">United States</option>
-                                <option value="uk">United Kingdom</option>
-                                <option value="ca">Canada</option>
-                                <option value="ae">UAE</option>
+                            <select 
+                                className="w-full pl-12 pr-10 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none appearance-none cursor-pointer"
+                                value={residence}
+                                onChange={(e) => setResidence(e.target.value)}
+                            >
+                                <option disabled value="">Select country of residence</option>
+                                <option value="India">India</option>
+                                <option value="United States">United States</option>
+                                <option value="United Kingdom">United Kingdom</option>
+                                <option value="Canada">Canada</option>
+                                <option value="UAE">UAE</option>
                             </select>
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined pointer-events-none">expand_more</span>
                         </div>

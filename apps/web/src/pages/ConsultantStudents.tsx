@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import { useAuth } from '../context/AuthContext';
 
 interface Student {
     name: string;
@@ -15,6 +16,7 @@ interface Student {
 }
 
 const ConsultantStudents = () => {
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = React.useState('');
     // Load completed students from localStorage on mount
@@ -50,6 +52,13 @@ const ConsultantStudents = () => {
                     const studentId = session.studentId;
                     if (!studentId || seenIds.has(studentId)) return;
 
+                    // ONLY SHOW STUDENTS ASSIGNED TO THIS COUNSELLOR
+                    if (session.counsellorEmail !== user?.email) return;
+
+                    // Filter out bad data like dashboard does
+                    const name = session?.studentName || session?.name || '';
+                    if (/student\s*user|guest\s*user/i.test(name)) return;
+
                     // Create a student object from session data
                     const initials = session.studentName
                         ? session.studentName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
@@ -61,13 +70,20 @@ const ConsultantStudents = () => {
                     if (session.topic?.toLowerCase().includes('visa')) stage = 'Visa Processing';
                     else if (session.topic?.toLowerCase().includes('ielts') || session.topic?.toLowerCase().includes('test')) stage = 'Test Prep';
 
+                    // Check if consultation is done
+                    const savedCompleted = localStorage.getItem('completedStudents');
+                    const completedArray = savedCompleted ? JSON.parse(savedCompleted) : [];
+                    if (completedArray.includes(studentId)) {
+                        stage = 'Consulted';
+                    }
+
                     dynamicStudents.push({
                         name: session.studentName,
                         id: studentId,
                         country: session.country || 'Unassigned',
                         stage: stage,
                         priority: session.priority || 'Medium',
-                        lastInteraction: session.dateLabel || 'Just now',
+                        lastInteraction: `${session.dateLabel || session.date || 'Today'} ${session.time || ''}`,
                         detail: session.topic || 'Consultation',
                         initials: initials,
                         color: ['blue', 'orange', 'purple', 'teal'][Math.floor(Math.random() * 4)]

@@ -40,12 +40,15 @@ export class AuthService {
     const user = await prisma.user.findFirst({
       where: { 
         email,
-        isActive: true
       },
     });
 
     if (!user || !user.passwordHash) {
       throw new Error('Invalid credentials');
+    }
+
+    if (!user.isActive) {
+      throw new Error('you_are_not_eligible_to_login');
     }
 
     const isValid = await bcrypt.compare(passwordHash, user.passwordHash);

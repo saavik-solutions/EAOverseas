@@ -56,7 +56,25 @@ const Consultant = () => {
         });
     };
 
+    const [assignedExpert, setAssignedExpert] = useState<any>(null);
+
     const triggerSuccessModal = () => {
+        // 0. Randomly assign an expert from the SuperAdmin list
+        let expert = null;
+        const savedConsultants = localStorage.getItem('eao_consultants');
+        if (savedConsultants) {
+            try {
+                const consultants = JSON.parse(savedConsultants);
+                const activeOnes = consultants.filter((c: any) => c.status === 'Active');
+                if (activeOnes.length > 0) {
+                    expert = activeOnes[Math.floor(Math.random() * activeOnes.length)];
+                    setAssignedExpert(expert);
+                }
+            } catch (e) {
+                console.error("Error assigning expert", e);
+            }
+        }
+
         setIsModalOpen(true);
 
         // Create immediate booking details so the "Start Chat" button appears
@@ -80,14 +98,15 @@ const Consultant = () => {
         };
 
         // GENERATE DYNAMIC STUDENT ID IF NOT EXISTS
-        // For guests/demo, generate a random ID. For logged in, use their stable mapping if possible.
         const studentId = user?.id || `#EAS-${Math.floor(1000 + Math.random() * 9000)}`;
 
         const newSession = {
             id: `session_${Date.now()}`,
-            studentName: user?.name || 'Alex', // Fallback to 'Alex' for demo clarity
+            studentName: user?.fullName || user?.name || 'Alex',
             studentId: studentId,
             studentEmail: user?.email || 'alex@example.com',
+            counsellorEmail: expert?.email, // IMPORTANT: Assign to this specific counsellor
+            counsellorName: expert?.name,
             date: sessionDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             dateLabel: 'Today',
             time: currentTimeStr,
@@ -109,7 +128,6 @@ const Consultant = () => {
         // Simulate redirect after showing modal for a bit
         setTimeout(() => {
             setIsModalOpen(false);
-            // No navigation, stay on page
         }, 5000);
     };
 
@@ -265,7 +283,7 @@ const Consultant = () => {
             <ConsultationSuccessModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                data={{ consultationType, mode }}
+                data={{ consultationType, mode, assignedExpert }}
             />
 
             <BookingModal

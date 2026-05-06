@@ -17,6 +17,9 @@ import Testimonials from './pages/Testimonials';
 import StudentStory from './pages/StudentStory';
 import HomeDashboard from './pages/HomeDashboard';
 import Courses from './pages/Courses';
+import Scholarships from './pages/Scholarships';
+import ScholarshipDetails from './pages/ScholarshipDetails';
+import SavedScholarships from './pages/SavedScholarships';
 import Feed from './pages/Feed';
 import CommunityFeed from './pages/CommunityFeed';
 import ApplicationDashboard from './pages/ApplicationDashboard';
@@ -28,7 +31,6 @@ import ApplicationLayout from './pages/application/ApplicationLayout';
 import PersonalDetails from './pages/application/PersonalDetails';
 import AcademicDetails from './pages/application/AcademicDetails';
 import Documents from './pages/application/Documents';
-import Payment from './pages/application/Payment';
 import Review from './pages/application/Review';
 
 import ApplicationSubmitted from './pages/application/ApplicationSubmitted';
@@ -78,6 +80,8 @@ import ConsultantStudents from './pages/ConsultantStudents';
 import ConsultantSchedule from './pages/ConsultantSchedule';
 import ConsultantTasks from './pages/ConsultantTasks';
 import ConsultantLayout from './layouts/ConsultantLayout';
+import CounsellorApplications from './pages/CounsellorApplications';
+import CounsellorApplicationDetails from './pages/CounsellorApplicationDetails';
 import UniversityDirectory from './pages/UniversityDirectory';
 import UniversityDetails from './pages/UniversityDetails';
 import CounsellorProfile from './pages/CounsellorProfile';
@@ -97,11 +101,18 @@ import SuperAdminPostDetails from './pages/SuperAdminPostDetails';
 import SuperAdminHolidayManagement from './pages/SuperAdminHolidayManagement';
 import SuperAdminHolidayDetails from './pages/SuperAdminHolidayDetails';
 import SuperAdminActivePartners from './pages/SuperAdminActivePartners';
+import SuperAdminStudentUniversities from './pages/SuperAdminStudentUniversities';
+import SuperAdminStudentCourses from './pages/SuperAdminStudentCourses';
+import SuperAdminStudentAccommodation from './pages/SuperAdminStudentAccommodation';
+import SuperAdminApplicationDetails from './pages/SuperAdminApplicationDetails';
+import SuperAdminSuspendedUniversities from './pages/SuperAdminSuspendedUniversities';
 import UniversityDashboard from './pages/UniversityDashboard';
 import UniversityCourses from './pages/UniversityCourses';
 import UniversityImpressions from './pages/UniversityImpressions';
 import UniversityLeads from './pages/UniversityLeads';
 import UniversityConversion from './pages/UniversityConversion';
+import UniversityTotalCourses from './pages/UniversityTotalCourses';
+import UniversityPanelProfile from './pages/UniversityPanelProfile';
 import UniversityScholarships from './pages/UniversityScholarships';
 import UniversityScholarshipDetail from './pages/UniversityScholarshipDetail';
 import UniversityScholarshipList from './pages/UniversityScholarshipList';
@@ -119,6 +130,7 @@ import Verification from './pages/Verification';
 import UniversityVerification from './pages/UniversityVerification';
 import UniversityPendingVerification from './pages/UniversityPendingVerification';
 import SuperAdminUserManagement from './pages/SuperAdminUserManagement';
+import SuperAdminVerifications from './pages/SuperAdminVerifications';
 import SuperAdminConsultantManagement from './pages/SuperAdminConsultantManagement';
 import SuperAdminConsultantDirectory from './pages/SuperAdminConsultantDirectory';
 import SuperAdminConsultantDetails from './pages/SuperAdminConsultantDetails';
@@ -166,6 +178,9 @@ function App() {
                             <Route path="/" element={<MainLayout />}>
                                 <Route index element={<HomeRoute />} />
                                 <Route path="dashboard" element={<ProtectedRoute><HomeDashboard /></ProtectedRoute>} />
+                                <Route path="scholarships" element={<Scholarships />} />
+                                <Route path="scholarship-details/:id" element={<ScholarshipDetails />} />
+                                <Route path="saved-scholarships" element={<SavedScholarships />} />
                                 <Route path="courses" element={<Courses />} />
                                 <Route path="feed" element={<Feed />} />
                                 <Route path="community-feed" element={<CommunityFeed />} />
@@ -240,8 +255,8 @@ function App() {
                                  <Route path="details" element={<PersonalDetails />} />
                                  <Route path="academic" element={<AcademicDetails />} />
                                  <Route path="documents" element={<Documents />} />
-                                 <Route path="payment" element={<Payment />} />
                                  <Route path="review" element={<Review />} />
+                                 <Route path="payment" element={<Navigate to="../review" replace />} />
                              </Route>
 
                             <Route path="/application/start" element={<ApplicationStart />} />
@@ -250,6 +265,8 @@ function App() {
 
                              <Route element={<ProtectedRoute allowedRoles={['counsellor', 'admin', 'super_admin']}><ConsultantLayout /></ProtectedRoute>}>
                                  <Route path="/counsellor-dashboard" element={<ConsultantDashboard />} />
+                                 <Route path="/counsellor/applications" element={<CounsellorApplications />} />
+                                 <Route path="/counsellor/applications/:id" element={<CounsellorApplicationDetails />} />
                                  <Route path="/counsellor-students" element={<ConsultantStudents />} />
                                  <Route path="/counsellor-schedule" element={<ConsultantSchedule />} />
                                  <Route path="/counsellor-tasks" element={<ConsultantTasks />} />
@@ -271,10 +288,17 @@ function App() {
                             <Route path="/verification" element={<Verification />} />
                             <Route path="/university-verification" element={<UniversityVerification />} />
                             <Route path="/university-pending-verification" element={<UniversityPendingVerification />} />
+
                              <Route path="/superadmin" element={<Superadmin />} />
+                             <Route path="/superadmin/student-activity/universities" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminStudentUniversities /></ProtectedRoute>} />
+                             <Route path="/superadmin/student-activity/courses" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminStudentCourses /></ProtectedRoute>} />
+                             <Route path="/superadmin/student-activity/accommodation" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminStudentAccommodation /></ProtectedRoute>} />
+                             <Route path="/superadmin/application/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminApplicationDetails /></ProtectedRoute>} />
+                             <Route path="/superadmin/verifications" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminVerifications /></ProtectedRoute>} />
                              <Route path="/superadmin/users" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUserManagement /></ProtectedRoute>} />
                              <Route path="/superadmin/universities" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityManagement /></ProtectedRoute>} />
                              <Route path="/superadmin/universities/active" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminActivePartners /></ProtectedRoute>} />
+                             <Route path="/superadmin/universities/suspended" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminSuspendedUniversities /></ProtectedRoute>} />
                              <Route path="/superadmin/consultants" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantManagement /></ProtectedRoute>} />
                              <Route path="/superadmin/consultants/directory" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantDirectory /></ProtectedRoute>} />
                              <Route path="/superadmin/consultant/profile/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantDetails /></ProtectedRoute>} />
@@ -292,13 +316,16 @@ function App() {
                             <Route path="/university-panel/:universityName/admissions" element={<UniversityAdmissions />} />
                             <Route path="/university-panel/:universityName/analytics" element={<UniversityImpressions />} />
                             <Route path="/university-panel/:universityName/leads" element={<UniversityLeads />} />
+                            <Route path="/university-panel/:universityName/total-courses" element={<UniversityTotalCourses />} />
                             <Route path="/university-panel/:universityName/conversion" element={<UniversityConversion />} />
-                            <Route path="/university-panel/:universityName/scholarships" element={<UniversityScholarships />} />
+                             <Route path="/university-panel/:universityName/university-profile" element={<UniversityPanelProfile />} />
+                             <Route path="/university-panel/:universityName/scholarships" element={<UniversityScholarships />} />
                             <Route path="/university-panel/:universityName/scholarships/list" element={<UniversityScholarshipList />} />
                             <Route path="/university-panel/:universityName/scholarships/:scholarshipId" element={<UniversityScholarshipDetail />} />
                             <Route path="/university-panel/:universityName/post-center" element={<UniversityPostCenter />} />
                             <Route path="/university-panel/:universityName/post-center/new" element={<UniversityNewPost />} />
                             <Route path="/university-panel/:universityName/post-center/:postId" element={<UniversityPostDetails />} />
+                            <Route path="/university-panel/:universityName/post-center/edit/:postId" element={<UniversityNewPost />} />
                         </Routes>
                     </BrowserRouter>
                     </PostsProvider>

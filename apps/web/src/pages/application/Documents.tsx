@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSavedItems } from '../../context/SavedItemsContext';
 
 const Documents = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { updateProfileDocuments } = useSavedItems();
 
     // Simulating file states (null = no file, object = file uploaded)
     const [files, setFiles] = useState({
@@ -15,25 +17,47 @@ const Documents = () => {
         visa: null
     });
 
+    // Store file metadata + base64 content for later retrieval
+    const [fileData, setFileData] = useState<Record<string, any>>({});
+
     const handleFileChange = (type, e) => {
         const file = e.target.files[0];
         if (file) {
             setFiles(prev => ({ ...prev, [type]: file }));
+            // Convert to base64 so it can be stored in localStorage
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                setFileData(prev => ({
+                    ...prev,
+                    [type]: {
+                        name: file.name,
+                        size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`,
+                        mimeType: file.type,
+                        base64: ev.target?.result as string
+                    }
+                }));
+            };
+            reader.readAsDataURL(file);
         }
     };
 
     const removeFile = (type) => {
         setFiles(prev => ({ ...prev, [type]: null }));
+        setFileData(prev => { const n = {...prev}; delete n[type]; return n; });
     };
 
     const isCourseApplication = !!searchParams.get('title');
 
     const handleNext = () => {
-        if (isCourseApplication) {
-            navigate(`/application/review?${searchParams.toString()}`);
-        } else {
-            navigate(`/application/payment?${searchParams.toString()}`);
-        }
+        // Save uploaded docs with base64 content to context for Review + Counsellor view
+        const uploadedDocs = Object.values(fileData).map((d: any) => ({
+            name: d.name,
+            size: d.size,
+            type: d.mimeType,
+            base64: d.base64
+        }));
+        updateProfileDocuments(uploadedDocs);
+        navigate(`/application/review?${searchParams.toString()}`);
     };
 
     const handleBack = () => {
@@ -134,7 +158,7 @@ const Documents = () => {
                         onClick={handleNext}
                         className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-lg shadow-lg shadow-blue-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 group"
                     >
-                        {isCourseApplication ? 'Continue to Review' : 'Continue to Payment'}
+                        Continue to Review
                         <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-[20px]">arrow_forward</span>
                     </button>
                 </div>

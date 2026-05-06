@@ -288,6 +288,15 @@ exports.Prisma.FeedPostScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FeedCommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  authorId: 'authorId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.FeedInteractionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -458,6 +467,8 @@ exports.Prisma.CommunityPostScalarFieldEnum = {
   isQuestion: 'isQuestion',
   isAnonymous: 'isAnonymous',
   voteScore: 'voteScore',
+  likeCount: 'likeCount',
+  dislikeCount: 'dislikeCount',
   commentCount: 'commentCount',
   isPinned: 'isPinned',
   isDeleted: 'isDeleted',
@@ -474,6 +485,8 @@ exports.Prisma.CommunityCommentScalarFieldEnum = {
   isAnswer: 'isAnswer',
   isBest: 'isBest',
   voteScore: 'voteScore',
+  likeCount: 'likeCount',
+  dislikeCount: 'dislikeCount',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -579,13 +592,20 @@ exports.FeedCategory = exports.$Enums.FeedCategory = {
   exams: 'exams',
   news: 'news',
   visa: 'visa',
-  events: 'events'
+  events: 'events',
+  guides: 'guides',
+  webinars: 'webinars',
+  announcements: 'announcements',
+  programs: 'programs',
+  articles: 'articles'
 };
 
 exports.PostStatus = exports.$Enums.PostStatus = {
   draft: 'draft',
+  pending: 'pending',
   published: 'published',
-  archived: 'archived'
+  archived: 'archived',
+  rejected: 'rejected'
 };
 
 exports.InteractionType = exports.$Enums.InteractionType = {
@@ -665,7 +685,9 @@ exports.CommunityCategory = exports.$Enums.CommunityCategory = {
 
 exports.VoteValue = exports.$Enums.VoteValue = {
   up: 'up',
-  down: 'down'
+  down: 'down',
+  like: 'like',
+  dislike: 'dislike'
 };
 
 exports.Prisma.ModelName = {
@@ -679,6 +701,7 @@ exports.Prisma.ModelName = {
   EducationHistory: 'EducationHistory',
   UserDocument: 'UserDocument',
   FeedPost: 'FeedPost',
+  FeedComment: 'FeedComment',
   FeedInteraction: 'FeedInteraction',
   University: 'University',
   UniversityCourse: 'UniversityCourse',

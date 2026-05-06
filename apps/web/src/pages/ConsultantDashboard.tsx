@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import NotificationBanner from '../components/NotificationBanner';
+import { useAuth } from '../context/AuthContext';
 import { getDailyCount } from '../utils/dailyCounter';
 
 const ConsultantDashboard = () => {
@@ -12,64 +13,68 @@ const ConsultantDashboard = () => {
 
     // Load sessions and assigned count
     const loadData = () => {
-        // Load sessions
-        const savedSessions = localStorage.getItem('scheduled_sessions');
-        if (savedSessions) {
-            const parsedSessions = JSON.parse(savedSessions);
-            const scheduledSessions = parsedSessions.filter(s => {
-                const name = s.studentName || s.name || '';
-                const isBadData = /student\s*user|guest\s*user/i.test(name);
-                return s.status === 'scheduled' && !isBadData;
-            });
-            if (scheduledSessions.length < parsedSessions.length) {
-                localStorage.setItem('scheduled_sessions', JSON.stringify(scheduledSessions));
-            }
-            setSessions(scheduledSessions);
-        } else {
-            // Auto-generate two demo sessions if none exist
-            const demoSessions = [
-                {
-                    id: 'demo-1',
-                    studentName: 'Priya Sharma',
-                    studentId: '#EAS-2045',
-                    date: 'Today',
-                    dateLabel: 'Today',
-                    topic: 'University Selection & Application Strategy',
-                    mode: 'video',
-                    university: 'University of Toronto',
-                    status: 'scheduled'
-                },
-                {
-                    id: 'demo-2',
-                    studentName: 'Rahul Patel',
-                    studentId: '#EAS-2046',
-                    date: 'Tomorrow',
-                    dateLabel: 'Tomorrow',
-                    topic: 'Visa Interview Preparation',
-                    mode: 'voice',
-                    university: 'Imperial College London',
-                    status: 'scheduled'
+        try {
+            // Load sessions
+            const savedSessions = localStorage.getItem('scheduled_sessions');
+            if (savedSessions) {
+                const parsedSessions = JSON.parse(savedSessions);
+                if (Array.isArray(parsedSessions)) {
+                    const scheduledSessions = parsedSessions.filter(s => {
+                        const name = s?.studentName || s?.name || '';
+                        const isBadData = /student\s*user|guest\s*user/i.test(name);
+                        
+                        // ONLY SHOW SESSIONS ASSIGNED TO THIS COUNSELLOR
+                        const isForMe = s?.counsellorEmail === user?.email;
+                        
+                        return s?.status === 'scheduled' && !isBadData && isForMe;
+                    });
+                    setSessions(scheduledSessions);
+                    
+                    // Set active count to number of scheduled sessions
+                    setDailyActiveCount(scheduledSessions.length);
                 }
-            ];
-            localStorage.setItem('scheduled_sessions', JSON.stringify(demoSessions));
-            setSessions(demoSessions);
-        }
+            } else {
+                // Auto-generate demo sessions if none exist
+                const demoSessions = [
+                    {
+                        id: 'demo-1',
+                        studentName: 'Priya Sharma',
+                        studentId: '#EAS-2045',
+                        date: 'Today',
+                        dateLabel: 'Today',
+                        topic: 'University Selection & Application Strategy',
+                        mode: 'video',
+                        university: 'University of Toronto',
+                        status: 'scheduled'
+                    },
+                    {
+                        id: 'demo-2',
+                        studentName: 'Rahul Patel',
+                        studentId: '#EAS-2046',
+                        date: 'Tomorrow',
+                        dateLabel: 'Tomorrow',
+                        topic: 'Visa Interview Preparation',
+                        mode: 'voice',
+                        university: 'Imperial College London',
+                        status: 'scheduled'
+                    }
+                ];
+                localStorage.setItem('scheduled_sessions', JSON.stringify(demoSessions));
+                setSessions(demoSessions);
+                setDailyActiveCount(2);
+            }
 
-        // Load dynamic assigned students count
-        const savedAssigned = localStorage.getItem('assigned_students_list');
-        if (savedAssigned) {
-            const dynamicList = JSON.parse(savedAssigned);
-            // Count unique ones that aren't in the base 24 (matching the logic in AssignedStudents.tsx)
-            // For simplicity, we just add the dynamic list length if we assume they are unique
-            setAssignedStudentsCount(24 + dynamicList.length);
+            // Load dynamic assigned students count
+            if (savedSessions) {
+                const parsedSessions = JSON.parse(savedSessions);
+                if (Array.isArray(parsedSessions)) {
+                    const totalAssigned = parsedSessions.filter(s => s.counsellorEmail === user?.email).length;
+                    setAssignedStudentsCount(totalAssigned);
+                }
+            }
+        } catch (e) {
+            console.error("Failed to load dashboard data", e);
         }
-
-        // Set active count to number of scheduled sessions
-        setDailyActiveCount(savedSessions ? JSON.parse(savedSessions).filter(s => {
-            const name = s.studentName || s.name || '';
-            const isBadData = /student\s*user|guest\s*user/i.test(name);
-            return s.status === 'scheduled' && !isBadData;
-        }).length : 2); // Default to 2 for demo sessions
     };
 
     // Load on mount and refresh
@@ -101,6 +106,20 @@ const ConsultantDashboard = () => {
         // Check if student already exists in assigned list
         const exists = assignedStudents.some(s => s.id === studentId || s.name === studentName);
 
+        // 3. Update the session status in the main scheduled_sessions list
+        const savedSessions = localStorage.getItem('scheduled_sessions');
+        if (savedSessions) {
+            try {
+                const sessions = JSON.parse(savedSessions);
+                const updatedSessions = sessions.map((s: any) => 
+                    s.id === session.id ? { ...s, status: 'completed' } : s
+                );
+                localStorage.setItem('scheduled_sessions', JSON.stringify(updatedSessions));
+            } catch (e) {
+                console.error("Error updating session status", e);
+            }
+        }
+
         if (!exists) {
             const newStudent = {
                 id: studentId,
@@ -111,9 +130,11 @@ const ConsultantDashboard = () => {
             };
             const updatedList = [...assignedStudents, newStudent];
             localStorage.setItem('assigned_students_list', JSON.stringify(updatedList));
-            setAssignedStudentsCount(24 + updatedList.length);
         }
+        loadData();
     };
+    const { user } = useAuth();
+
     return (
         <div className="flex flex-col flex-1 h-full overflow-hidden bg-gray-50/50">
             {/* Notification Banner */}
@@ -123,7 +144,13 @@ const ConsultantDashboard = () => {
             <PageHeader title="Counsellor Dashboard" />
 
             <main className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
-                <div className="max-w-[1200px] mx-auto flex flex-col gap-8 pb-10">
+                <div className="max-w-[1200px] mx-auto flex flex-col gap-6 md:gap-8 pb-10">
+                    
+                    {/* Welcome Section */}
+                    <div className="flex flex-col gap-1">
+                        <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Welcome back, {user?.fullName || user?.name || 'Counsellor'}!</h2>
+                        <p className="text-slate-500 text-sm md:text-base font-medium">Here's what's happening with your students today.</p>
+                    </div>
 
                     {/* Stats Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">

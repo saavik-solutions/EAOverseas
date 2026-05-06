@@ -18,10 +18,11 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<string, string> = {
-    Published: 'bg-emerald-100 text-emerald-700',
+    Approved: 'bg-emerald-100 text-emerald-700',
     Draft: 'bg-slate-100 text-slate-600',
     Archived: 'bg-rose-100 text-rose-700',
-    'Under Review': 'bg-yellow-100 text-yellow-700',
+    Pending: 'bg-yellow-100 text-yellow-700',
+    Denied: 'bg-rose-100 text-rose-700',
 };
 
 type ViewMode = 'grid' | 'table';
@@ -48,33 +49,39 @@ const UniversityPostCenter = () => {
             );
             setCurrentUni(uniData || null);
 
-            const feedRes = await feedService.getAll();
+            const uniId = uniData?.id || uniData?._id;
+            const feedRes = await feedService.getAll({ 
+                universityId: uniId,
+                status: 'all' 
+            });
             
             // Map and filter posts for this specific university
             const mapped: Post[] = feedRes
-                .filter((p: any) => {
-                    const uniSlug = universityName?.toLowerCase();
-                    const postUniName = p.universityName?.toLowerCase().replace(/\s+/g, '-');
-                    const authorName = p.authorId?.name?.toLowerCase().replace(/\s+/g, '-');
-                    return postUniName === uniSlug || authorName === uniSlug;
-                })
-                .map((p: any) => ({
-                    id: p._id,
-                    title: p.title,
-                    about: p.content,
-                    institution: p.universityName || p.authorId?.name || 'Partner',
-                    logo: p.universityLogo || p.authorId?.avatarUrl || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
-                    banner: p.mediaUrls?.[0] || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800&h=400&fit=crop',
-                    location: p.location || 'Global',
-                    tags: p.tags || [],
-                    category: p.category || 'Article',
-                    status: (p.status?.charAt(0).toUpperCase() + p.status?.slice(1)) || 'Published',
-                    grid: [
-                        { label: 'Views', value: (p.viewCount || 0).toString() },
-                        { label: 'Upvotes', value: (p.score || 0).toString() },
-                        { label: 'Comments', value: (p.commentCount || 0).toString() }
-                    ]
-                }));
+                .map((p: any) => {
+                    let displayStatus = 'Draft';
+                    if (p.status === 'published') displayStatus = 'Approved';
+                    else if (p.status === 'pending') displayStatus = 'Pending';
+                    else if (p.status === 'rejected') displayStatus = 'Denied';
+                    else if (p.status === 'archived') displayStatus = 'Archived';
+
+                    return {
+                        id: p.id || p._id,
+                        title: p.title,
+                        about: p.content,
+                        institution: p.university?.name || p.author?.fullName || 'Partner',
+                        logo: p.university?.logoUrl || p.author?.avatarUrl || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
+                        banner: p.coverImageUrl || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800&h=400&fit=crop',
+                        location: p.university?.country || 'Global',
+                        tags: p.tags || [],
+                        category: p.category || 'Article',
+                        status: displayStatus,
+                        grid: [
+                            { label: 'Views', value: (p.viewCount || 0).toString() },
+                            { label: 'Upvotes', value: (p.score || p.likeCount || 0).toString() },
+                            { label: 'Comments', value: (p.commentCount || 0).toString() }
+                        ]
+                    };
+                });
             setApiPosts(mapped);
         } catch (err) {
             console.error('Data sync failed', err);
@@ -107,7 +114,7 @@ const UniversityPostCenter = () => {
 
     const stats = [
         { label: 'Uni Posts', value: apiPosts.length, icon: 'article', color: 'text-blue-600 bg-blue-50' },
-        { label: 'Published', value: apiPosts.filter(p => p.status === 'Published').length, icon: 'check_circle', color: 'text-emerald-600 bg-emerald-50' },
+        { label: 'Approved', value: apiPosts.filter(p => p.status === 'Approved').length, icon: 'check_circle', color: 'text-emerald-600 bg-emerald-50' },
         { label: 'Total Reach', value: formatValue(totalReach), icon: 'visibility', color: 'text-orange-600 bg-orange-50' },
         { label: 'Engagement', value: apiPosts.reduce((acc, p) => acc + (parseInt(p.grid[1].value) || 0), 0), icon: 'favorite', color: 'text-rose-600 bg-rose-50' },
     ];
@@ -181,9 +188,10 @@ const UniversityPostCenter = () => {
                             <div className="relative min-w-[140px]">
                                 <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 appearance-none pr-10">
                                     <option value="All">All Statuses</option>
-                                    <option value="Published">Published</option>
+                                    <option value="Approved">Approved</option>
                                     <option value="Draft">Draft</option>
-                                    <option value="Under Review">Under Review</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Denied">Denied</option>
                                 </select>
                                 <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">filter_list</span>
                             </div>

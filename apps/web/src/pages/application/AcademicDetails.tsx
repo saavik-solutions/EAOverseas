@@ -1,13 +1,30 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSavedItems } from '../../context/SavedItemsContext';
 
 const AcademicDetails = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { userProfile, updateUserProfile } = useSavedItems();
+    
+    const [level, setLevel] = useState(userProfile?.education?.level || '');
+    const [institution, setInstitution] = useState(userProfile?.education?.institution || '');
+    const [major, setMajor] = useState(userProfile?.education?.major || '');
+    const [gradDate, setGradDate] = useState(userProfile?.education?.gradDate || '');
+    const [gpa, setGpa] = useState(userProfile?.education?.gpa || '');
     const [fileName, setFileName] = useState('');
     const fileInputRef = useRef(null);
 
     const handleNext = () => {
+        updateUserProfile({
+            education: {
+                level,
+                institution,
+                major,
+                gradDate,
+                gpa
+            }
+        });
         navigate(`/application/documents?${searchParams.toString()}`);
     };
 
@@ -52,13 +69,17 @@ const AcademicDetails = () => {
                         <span className="text-sm font-semibold text-slate-700">Highest Education Level <span className="text-red-500">*</span></span>
                         <div className="relative">
                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]">school</span>
-                            <select className="w-full pl-12 pr-10 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none appearance-none cursor-pointer">
-                                <option disabled selected value="">Select your qualification</option>
-                                <option>Bachelor's Degree</option>
-                                <option>Master's Degree</option>
-                                <option>High School Diploma</option>
-                                <option>PhD / Doctorate</option>
-                                <option>Associate Degree</option>
+                            <select 
+                                className="w-full pl-12 pr-10 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none appearance-none cursor-pointer"
+                                value={level}
+                                onChange={(e) => setLevel(e.target.value)}
+                            >
+                                <option disabled value="">Select your qualification</option>
+                                <option value="Bachelor's Degree">Bachelor's Degree</option>
+                                <option value="Master's Degree">Master's Degree</option>
+                                <option value="High School Diploma">High School Diploma</option>
+                                <option value="PhD / Doctorate">PhD / Doctorate</option>
+                                <option value="Associate Degree">Associate Degree</option>
                             </select>
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined pointer-events-none">expand_more</span>
                         </div>
@@ -75,6 +96,8 @@ const AcademicDetails = () => {
                                 className="w-full pl-12 pr-4 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all"
                                 placeholder="e.g. University of Mumbai"
                                 type="text"
+                                value={institution}
+                                onChange={(e) => setInstitution(e.target.value)}
                             />
                         </div>
                     </label>
@@ -86,6 +109,8 @@ const AcademicDetails = () => {
                                 className="w-full pl-12 pr-4 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all"
                                 placeholder="e.g. Computer Science"
                                 type="text"
+                                value={major}
+                                onChange={(e) => setMajor(e.target.value)}
                             />
                         </div>
                     </label>
@@ -100,6 +125,8 @@ const AcademicDetails = () => {
                             <input
                                 className="w-full pl-12 pr-4 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all appearance-none"
                                 type="date"
+                                value={gradDate}
+                                onChange={(e) => setGradDate(e.target.value)}
                             />
                         </div>
                     </label>
@@ -111,6 +138,8 @@ const AcademicDetails = () => {
                                 className="w-full pl-12 pr-20 py-3.5 rounded-lg border border-slate-200 bg-white text-slate-900 focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 placeholder:text-slate-400 outline-none transition-all"
                                 placeholder="3.8"
                                 type="text"
+                                value={gpa}
+                                onChange={(e) => setGpa(e.target.value)}
                             />
                             <div className="absolute right-2 top-1/2 -translate-y-1/2">
                                 <select className="h-9 rounded-md border-none bg-slate-50 text-slate-600 text-sm focus:ring-0 cursor-pointer outline-none">

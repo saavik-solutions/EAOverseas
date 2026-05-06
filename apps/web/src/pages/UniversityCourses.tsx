@@ -241,13 +241,13 @@ const UniversityCourses = () => {
 
                 {/* Summary Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Link to={`/university-panel/${universityName}/analytics`} className="bg-white p-4 rounded-[20px] border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-all group">
-                        <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                            <span className="material-symbols-outlined text-[24px]">trending_up</span>
+                    <Link to={`/university-panel/${universityName}/total-courses`} className="bg-white p-4 rounded-[20px] border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-all group">
+                        <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-all">
+                            <span className="material-symbols-outlined text-[24px]">list_alt</span>
                         </div>
                         <div>
-                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.1em] mb-0.5">Impressions</p>
-                            <h4 className="text-xl font-black text-slate-900 tabular-nums">{currentUnivData.impressions}</h4>
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.1em] mb-0.5">Total Courses</p>
+                            <h4 className="text-xl font-black text-slate-900 tabular-nums">{courses.length}</h4>
                         </div>
                     </Link>
 
@@ -261,13 +261,13 @@ const UniversityCourses = () => {
                         </div>
                     </Link>
 
-                    <Link to={`/university-panel/${universityName}/conversion`} className="bg-white p-4 rounded-[20px] border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-all group">
-                        <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-all">
-                            <span className="material-symbols-outlined text-[24px]">auto_awesome</span>
+                    <Link to={`/university-panel/${universityName}/analytics`} className="bg-white p-4 rounded-[20px] border border-slate-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-all group">
+                        <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                            <span className="material-symbols-outlined text-[24px]">trending_up</span>
                         </div>
                         <div>
-                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.1em] mb-0.5">Conversion</p>
-                            <h4 className="text-xl font-black text-slate-900 tabular-nums">{currentUnivData.conversion}</h4>
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.1em] mb-0.5">Impressions</p>
+                            <h4 className="text-xl font-black text-slate-900 tabular-nums">{currentUnivData.impressions}</h4>
                         </div>
                     </Link>
                 </div>

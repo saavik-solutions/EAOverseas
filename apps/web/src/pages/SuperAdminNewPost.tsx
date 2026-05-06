@@ -456,9 +456,6 @@ const SuperAdminNewPost = () => {
                         <button onClick={() => handleSubmit('Draft')} className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-100 transition">
                             Save Draft
                         </button>
-                        <button onClick={() => handleSubmit('Under Review')} className="px-4 py-2 text-sm font-bold text-orange-600 border border-orange-200 bg-orange-50 rounded-lg hover:bg-orange-100 transition">
-                            Submit for Review
-                        </button>
                         <button onClick={() => handleSubmit('Published')} className="px-4 py-2 text-sm font-bold text-white bg-[#2b6cee] rounded-lg hover:bg-blue-700 transition">
                             Publish Now
                         </button>

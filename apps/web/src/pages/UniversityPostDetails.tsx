@@ -5,6 +5,7 @@ import { feedService, PostResponse } from '../services/feedService';
 import { universityService, UniversityData } from '../services/universityService';
 import { usePosts, Post } from '../shared/contexts/PostsContext';
 import UniversityLayout from '../layouts/UniversityLayout';
+import EditPostModal from '../components/university/EditPostModal';
 
 const TYPE_COLORS: Record<string, string> = {
     Article: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -21,9 +22,10 @@ const UniversityPostDetails = () => {
     const { universityName, postId } = useParams<{ universityName: string; postId: string }>();
     const navigate = useNavigate();
     const { posts: allPosts, deletePost } = usePosts();
-    const [post, setPost] = useState<Post | null>(null);
+    const [post, setPost] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentUni, setCurrentUni] = useState<UniversityData | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,41 +39,38 @@ const UniversityPostDetails = () => {
                 );
                 setCurrentUni(uniData || null);
 
-                // Try fetching from Live API first
-                try {
-                    const p: PostResponse = await feedService.getById(postId);
-                    setPost({
-                        id: p._id,
-                        label: p.category || 'Article',
-                        labelColor: TYPE_COLORS[p.category || 'Article'],
-                        title: p.title,
-                        about: p.content,
-                        institution: p.universityName || p.authorId?.fullName || 'Partner',
-                        logo: p.universityLogo || p.authorId?.profilePicture || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
-                        banner: p.mediaUrls?.[0] || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800&h=400&fit=crop',
-                        location: p.location || 'Global',
-                        tags: p.tags || [],
-                        category: p.category || 'Article',
-                        status: 'Published',
-                        grid: p.metadata?.grid || [
-                            { label: 'Views', value: (p.viewCount || 0).toLocaleString() },
-                            { label: 'Score', value: (p.score || 0).toString() },
-                            { label: 'Comments', value: (p.commentCount || 0).toString() }
-                        ],
-                        benefits: p.metadata?.benefits || [],
-                        documents: p.metadata?.documents || [],
-                        downloadBtn: p.metadata?.downloadBtn || { label: '', link: '' }
-                    });
-                    setLoading(false);
-                    return;
-                } catch (e) {
-                    console.warn('API fetch failed, falling back to local state', e);
-                }
-
-                const localPost = allPosts.find(p => p.id === postId);
-                if (localPost) setPost(localPost);
+                // Try fetching from Live API
+                const p: PostResponse = await feedService.getById(postId);
+                const mappedPost = {
+                    id: p.id,
+                    title: p.title,
+                    content: p.content,
+                    category: p.category || 'Article',
+                    categoryColor: TYPE_COLORS[p.category || 'Article'],
+                    institution: p.university?.name || p.author?.fullName || 'Partner',
+                    location: p.metadata?.location || p.metadata?.country || 'Global',
+                    logo: p.university?.logoUrl || p.author?.avatarUrl || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
+                    banner: p.coverImageUrl || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=1200&h=400&fit=crop',
+                    isVerified: true,
+                    // Stats Grid - Always ensure 4 items exist
+                    grid: [
+                        { label: 'TUITION', value: p.metadata?.tuitionFee || 'N/A', color: 'text-emerald-600' },
+                        { label: 'DURATION', value: p.metadata?.programDuration || 'N/A', color: 'text-blue-600' },
+                        { label: 'DEADLINE', value: p.metadata?.scholarshipDeadline || 'N/A', color: 'text-orange-600', icon: 'schedule' },
+                        { label: 'TYPE', value: p.category || 'Article', color: 'text-purple-600' }
+                    ],
+                    // Detailed Content
+                    summary: p.metadata?.summary || '',
+                    eligibility: p.metadata?.scholarshipEligibility ? [p.metadata.scholarshipEligibility] : (p.metadata?.documents || []),
+                    benefits: p.metadata?.benefits || [],
+                    requiredDocuments: p.metadata?.documents || ['Completed application form', 'CV / Resume', 'Academic Transcripts'],
+                    applyLink: p.metadata?.eventRegistrationLink || p.metadata?.webinarLink || '#'
+                };
+                setPost(mappedPost);
             } catch (err) {
                 console.error('Failed to resolve post data', err);
+                const localPost = allPosts.find(p => p.id === postId);
+                if (localPost) setPost(localPost);
             } finally {
                 setLoading(false);
             }
@@ -117,104 +116,183 @@ const UniversityPostDetails = () => {
 
     return (
         <UniversityLayout universityName={currentUni?.name || 'University'} pageTitle={post.title}>
-            <div className="flex-1 bg-[#f8fafc] min-h-screen pb-20">
-                <PageHeader
-                    title="Post Details"
-                    breadcrumbs={[
-                        { label: 'Post Center', link: `/university-panel/${universityName}/post-center` },
-                        { label: post.title }
-                    ]}
-                    actions={
-                        <div className="flex items-center gap-2">
-                            <button className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 transition flex items-center gap-2">
-                                <span className="material-symbols-outlined text-[18px]">edit</span> Edit
+            <div className="flex-1 bg-white min-h-screen pb-16">
+                {/* 1. Slimmer Banner */}
+                <div className="relative w-full h-[320px] overflow-hidden">
+                    <img src={post.banner} alt="" className="w-full h-full object-cover" />
+                    <div className="absolute top-4 right-8">
+                        <span className="px-3 py-1 bg-[#e8fbf3] text-[#10b981] rounded-full text-[10px] font-bold border border-[#d1fae5]">
+                            {post.category.endsWith('s') ? post.category : `${post.category}s`}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="max-w-6xl mx-auto px-6 lg:px-8 -mt-12 relative z-10">
+                    <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+                        {/* 2. Header Info (Smaller) */}
+                        <div className="flex items-start gap-5 mb-6">
+                            <div className="size-16 rounded-xl border border-slate-100 p-2 bg-white flex items-center justify-center shadow-sm">
+                                <img src={post.logo} alt="" className="size-full object-contain" />
+                            </div>
+                            <div className="flex-1 pt-1">
+                                <h1 className="text-2xl font-black text-slate-900 mb-2">{post.title}</h1>
+                                <div className="flex items-center gap-4 text-xs font-bold text-slate-500">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="material-symbols-outlined text-[16px]">account_balance</span>
+                                        {post.institution}
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="material-symbols-outlined text-[16px]">location_on</span>
+                                        {post.location}
+                                    </div>
+                                    <div className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100">
+                                        <span className="material-symbols-outlined text-[14px] font-bold">verified</span>
+                                        <span className="text-[9px] uppercase tracking-wider">Verified</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="h-px bg-slate-50 w-full mb-6"></div>
+
+                        {/* 3. Administrative Actions */}
+                        <div className="flex items-center gap-3 mb-8">
+                            <button onClick={() => setIsEditModalOpen(true)} className="px-5 py-2.5 bg-[#2b6cee] text-white rounded-xl text-xs font-bold hover:bg-blue-600 transition flex items-center gap-2 shadow-lg shadow-blue-500/10">
+                                <span className="material-symbols-outlined text-[18px]">edit</span> Edit Details
                             </button>
-                            <button onClick={handleDelete} className="px-4 py-2 text-sm font-bold text-rose-600 border border-rose-200 bg-rose-50 rounded-lg hover:bg-rose-100 transition flex items-center gap-2">
+                            <button onClick={handleDelete} className="px-5 py-2.5 border border-rose-200 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold hover:bg-rose-100 transition flex items-center gap-2">
                                 <span className="material-symbols-outlined text-[18px]">delete</span> Delete
                             </button>
                         </div>
-                    }
-                />
 
-                <div className="max-w-[1400px] mx-auto p-6 lg:p-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        {/* Main Content */}
-                        <div className="lg:col-span-8 space-y-8">
-                            <div className="bg-white rounded-[40px] border border-slate-200 shadow-sm overflow-hidden">
-                                <div className="relative aspect-[21/9] overflow-hidden">
-                                    <img src={post.banner} alt="" className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                                    <div className="absolute bottom-8 left-10">
-                                        <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border backdrop-blur-md shadow-lg mb-4 inline-block ${TYPE_COLORS[post.category || 'Article']}`}>{post.category}</span>
-                                        <h1 className="text-3xl lg:text-4xl font-black text-white leading-tight mt-2">{post.title}</h1>
+                        {/* 4. Stats Grid (More compact) */}
+                        <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-50 border-y border-slate-50 mb-8 py-2">
+                            {post.grid.map((stat: any, i: number) => (
+                                <div key={i} className="py-3 md:py-1 text-center">
+                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{stat.label}</p>
+                                    <div className={`flex items-center justify-center gap-1 font-bold text-xs ${stat.color || 'text-slate-900'}`}>
+                                        {stat.value}
+                                        {stat.icon && <span className="material-symbols-outlined text-[16px]">{stat.icon}</span>}
                                     </div>
                                 </div>
-                                <div className="p-10">
-                                    <div className="prose prose-slate max-w-none prose-headings:font-black prose-p:text-slate-600 prose-p:leading-relaxed" dangerouslySetInnerHTML={{ __html: post.about }} />
-                                    
-                                    {post.benefits && post.benefits.length > 0 && (
-                                        <div className="mt-12 pt-8 border-t border-slate-100">
-                                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Special Benefits</h4>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                {post.benefits.map((b, i) => (
-                                                    <div key={i} className="flex items-center gap-4 bg-slate-50 p-6 rounded-[32px] border border-slate-100">
-                                                        <div className="size-12 bg-white rounded-2xl flex items-center justify-center text-[#2b6cee]"><span className="material-symbols-outlined">{b.icon}</span></div>
-                                                        <div><p className="font-black text-slate-900 text-base leading-tight">{b.title}</p><p className="text-xs font-bold text-slate-500">{b.description}</p></div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+                            ))}
                         </div>
 
-                        {/* Sidebar */}
-                        <div className="lg:col-span-4 space-y-6">
-                            <div className="bg-white rounded-[32px] p-8 border border-slate-200 shadow-sm">
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className="size-14 rounded-2xl bg-slate-50 border border-slate-100 p-2 flex items-center justify-center overflow-hidden"><img src={post.logo} className="size-full object-contain" alt="" /></div>
-                                    <div>
-                                        <h3 className="font-black text-slate-900 border-b-2 border-orange-400 leading-none">{post.institution}</h3>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1.5 flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">location_on</span>{post.location}</p>
-                                    </div>
+                        {/* 5. Main Content */}
+                        <div className="space-y-10">
+                            <div className="prose prose-slate max-w-none prose-p:text-sm prose-p:leading-relaxed">
+                                <p className="text-base text-slate-600 font-medium">{post.summary}</p>
+                                <div className="mt-6 pt-6 border-t border-slate-50" dangerouslySetInnerHTML={{ __html: post.content }} />
+                            </div>
+
+                            {/* 6. Eligibility Criteria */}
+                            <div className="bg-[#f8faff] rounded-2xl p-6 border border-blue-50">
+                                <div className="flex items-center gap-2.5 mb-5">
+                                    <span className="material-symbols-outlined text-[#2b6cee] text-[20px]">fact_check</span>
+                                    <h3 className="text-base font-black text-slate-900">Eligibility Criteria</h3>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-10">
+                                    {post.eligibility.map((item: string, i: number) => (
+                                        <div key={i} className="flex items-start gap-2.5">
+                                            <span className="material-symbols-outlined text-slate-400 text-[18px]">check_circle</span>
+                                            <p className="text-xs font-bold text-slate-600">{item}</p>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
-                            {post.grid && post.grid.length > 0 && (
-                                <div className="bg-white rounded-[32px] border border-slate-200 overflow-hidden shadow-sm">
-                                    <div className="grid grid-cols-2 divide-x divide-y divide-slate-100">
-                                        {post.grid.map((item, i) => (
-                                            <div key={i} className="p-6 text-center hover:bg-slate-50 transition-colors">
-                                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{item.label}</p>
-                                                <p className="font-black text-sm text-slate-900">{item.value}</p>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* 7. Scholarship Benefits */}
+                                <div>
+                                    <h3 className="text-base font-black text-slate-900 mb-5">Scholarship Benefits</h3>
+                                    <div className="space-y-3">
+                                        {(post.benefits.length > 0 ? post.benefits : [
+                                            { title: 'Living Allowance', desc: '$37,000 per year', icon: 'savings' },
+                                            { title: 'Relocation Grant', desc: '$3,000 for overseas students', icon: 'local_shipping' }
+                                        ]).map((benefit: any, i: number) => (
+                                            <div key={i} className="flex items-center gap-4 p-4 rounded-xl border border-slate-100 bg-white hover:border-[#2b6cee]/20 transition-all group">
+                                                <div className="size-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-[#2b6cee]/5 group-hover:text-[#2b6cee] transition-colors">
+                                                    <span className="material-symbols-outlined text-[20px]">{benefit.icon || 'star'}</span>
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-black text-slate-900 leading-tight">{benefit.title}</p>
+                                                    <p className="text-[10px] font-bold text-slate-400 mt-0.5">{benefit.desc || benefit.description}</p>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
-                            )}
 
-                            <div className="bg-[#111318] rounded-[32px] p-8 text-white relative overflow-hidden">
-                                <div className="absolute top-0 right-0 size-32 bg-[#2b6cee]/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
-                                <h3 className="text-[10px] font-black text-[#2b6cee] uppercase tracking-[0.2em] mb-4">Post Insights</h3>
-                                <div className="grid grid-cols-2 gap-4 mb-6">
-                                    <div className="bg-white/5 p-4 rounded-3xl border border-white/10">
-                                        <div className="text-xl font-black">{post.grid[0].value}</div>
-                                        <div className="text-[8px] font-black text-slate-500 uppercase">Impact Score</div>
-                                    </div>
-                                    <div className="bg-white/5 p-4 rounded-3xl border border-white/10">
-                                        <div className="text-xl font-black">Active</div>
-                                        <div className="text-[8px] font-black text-slate-500 uppercase">Status</div>
+                                {/* 8. Required Documents */}
+                                <div>
+                                    <h3 className="text-base font-black text-slate-900 mb-5">Required Documents</h3>
+                                    <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                                        <div className="space-y-4 mb-8">
+                                            {post.requiredDocuments.map((doc: string, i: number) => (
+                                                <div key={i} className="flex items-center gap-3">
+                                                    <span className="material-symbols-outlined text-slate-400 text-[18px]">description</span>
+                                                    <p className="text-xs font-bold text-slate-600">{doc}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="space-y-2">
+                                            <button 
+                                                onClick={() => window.open(post.applyLink)}
+                                                className="w-full py-3 bg-white border border-slate-200 rounded-xl font-black text-[10px] uppercase tracking-widest text-slate-700 hover:bg-slate-100 transition flex items-center justify-center gap-2"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">download</span>
+                                                Download Application Guide
+                                            </button>
+                                            <label className="w-full py-3 bg-slate-100 border border-dashed border-slate-300 rounded-xl font-black text-[10px] uppercase tracking-widest text-slate-500 hover:bg-slate-200 transition flex items-center justify-center gap-2 cursor-pointer">
+                                                <span className="material-symbols-outlined text-[18px]">upload_file</span>
+                                                Update Guide (PDF)
+                                                <input 
+                                                    type="file" 
+                                                    accept=".pdf" 
+                                                    className="hidden" 
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (!file) return;
+                                                        const formData = new FormData();
+                                                        formData.append('file', file);
+                                                        try {
+                                                            const token = localStorage.getItem('eaoverseas_token');
+                                                            const res = await fetch('http://localhost:4000/api/upload/image', {
+                                                                method: 'POST',
+                                                                headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+                                                                body: formData
+                                                            });
+                                                            if (res.ok) {
+                                                                const data = await res.json();
+                                                                if (data.url) {
+                                                                    await feedService.update(post.id, { metadata: { ...post.metadata, eventRegistrationLink: data.url } });
+                                                                    alert('Application guide updated!');
+                                                                    window.location.reload();
+                                                                }
+                                                            }
+                                                        } catch (err) {
+                                                            console.error('Upload failed', err);
+                                                        }
+                                                    }} 
+                                                />
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <button className="w-full py-4 bg-[#2b6cee] hover:bg-blue-600 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 shadow-xl shadow-blue-900/20">
-                                    <span className="material-symbols-outlined text-base">share</span> Share Link
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            {post && (
+                <EditPostModal 
+                    postId={post.id} 
+                    isOpen={isEditModalOpen} 
+                    onClose={() => setIsEditModalOpen(false)} 
+                    onSuccess={() => window.location.reload()} 
+                />
+            )}
         </UniversityLayout>
     );
 };

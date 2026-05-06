@@ -382,7 +382,7 @@ export const PostsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }, []);
 
     const addPost = async (postData: any) => {
-        await feedService.create(postData);
+        // The API call is now handled by the pages before calling addPost
         await refreshPosts();
     };
 
@@ -393,8 +393,7 @@ export const PostsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     };
 
     const deletePost = async (id: string) => {
-        // Implementation for delete would go here if service supported it
-        // For now we just refresh to show the source of truth
+        await feedService.delete(id);
         await refreshPosts();
     };
 

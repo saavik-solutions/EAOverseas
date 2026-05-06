@@ -68,6 +68,9 @@ import UniversityDashboard from '../pages/UniversityDashboard';
 import UniversityImpressions from '../pages/UniversityImpressions';
 import UniversityLeads from '../pages/UniversityLeads';
 import UniversityConversion from '../pages/UniversityConversion';
+import UniversityScholarships from '../pages/UniversityScholarships';
+import UniversityScholarshipDetail from '../pages/UniversityScholarshipDetail';
+import UniversityScholarshipList from '../pages/UniversityScholarshipList';
 
 // Profile Pages
 import ProfileLayout from './pages/profile/ProfileLayout';
@@ -190,6 +193,9 @@ function App() {
                             <Route path="/university-panel/:universityName/analytics" element={<UniversityImpressions />} />
                             <Route path="/university-panel/:universityName/leads" element={<UniversityLeads />} />
                             <Route path="/university-panel/:universityName/conversion" element={<UniversityConversion />} />
+                            <Route path="/university-panel/:universityName/scholarships" element={<UniversityScholarships />} />
+                            <Route path="/university-panel/:universityName/scholarships/list" element={<UniversityScholarshipList />} />
+                            <Route path="/university-panel/:universityName/scholarships/:id" element={<UniversityScholarshipDetail />} />
 
                             {/* Auth Routes */}
                             <Route path="/login" element={<Login />} />

@@ -4,11 +4,34 @@ import { createPortal } from 'react-dom';
 const ConsultationSuccessModal = ({ isOpen, onClose, data }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [countdown, setCountdown] = useState(5);
+    const [assignedExpert, setAssignedExpert] = useState<any>(null);
 
     useEffect(() => {
         if (isOpen) {
             setIsVisible(true);
             setCountdown(5); // Reset countdown
+
+            // 1. If expert was already assigned by parent (Consultant.tsx), use it
+            if (data?.assignedExpert) {
+                setAssignedExpert(data.assignedExpert);
+            } 
+            // 2. Otherwise, fall back to random assignment for independent usage
+            else {
+                const saved = localStorage.getItem('eao_consultants');
+                if (saved) {
+                    try {
+                        const consultants = JSON.parse(saved);
+                        const activeConsultants = consultants.filter((c: any) => c.status === 'Active');
+                        if (activeConsultants.length > 0) {
+                            const randomExpert = activeConsultants[Math.floor(Math.random() * activeConsultants.length)];
+                            setAssignedExpert(randomExpert);
+                        }
+                    } catch (e) {
+                        console.error("Error selecting expert", e);
+                    }
+                }
+            }
+
             const timer = setInterval(() => {
                 setCountdown((prev) => {
                     if (prev <= 1) {
@@ -26,6 +49,13 @@ const ConsultationSuccessModal = ({ isOpen, onClose, data }) => {
     }, [isOpen]);
 
     if (!isVisible) return null;
+
+    // Fallback if no expert assigned
+    const expert = assignedExpert || {
+        name: 'Sarah Jenkins',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+        rating: 4.8
+    };
 
     // Mapping IDs to readable text
     const getConsultationTitle = (id) => {
@@ -106,16 +136,16 @@ const ConsultationSuccessModal = ({ isOpen, onClose, data }) => {
                     {/* Expert Assigned */}
                     <div className="bg-gray-50 border border-gray-100 rounded-2xl p-3 shrink-0 flex md:flex-col items-center justify-start md:justify-center gap-3 md:gap-0 w-full md:w-28 text-left md:text-center shadow-inner">
                         <img
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            src={expert.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'}
                             alt="Expert"
                             className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm md:mb-2"
                         />
                         <div>
                             <span className="text-[10px] font-bold text-gray-900 leading-tight block">Expert Assigned</span>
-                            <span className="text-[9px] text-gray-500 block">Sarah Jen</span>
+                            <span className="text-[9px] text-gray-500 block truncate w-full max-w-[80px]">{expert.name}</span>
                             <div className="flex items-center justify-center md:justify-center gap-1 mt-1">
                                 <span className="material-symbols-outlined text-yellow-500 text-[12px] icon-filled">star</span>
-                                <span className="text-[10px] font-bold text-gray-900">4.8</span>
+                                <span className="text-[10px] font-bold text-gray-900">{expert.rating}</span>
                             </div>
                         </div>
                     </div>

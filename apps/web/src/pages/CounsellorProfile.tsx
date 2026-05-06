@@ -1,8 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import { useAuth } from '../context/AuthContext';
 
 const CounsellorProfile = () => {
+    const { user } = useAuth();
+    const [consultantData, setConsultantData] = useState<any>(null);
+
+    useEffect(() => {
+        if (user) {
+            // Try to find extended details from the SuperAdmin management list
+            const savedConsultants = localStorage.getItem('eao_consultants');
+            if (savedConsultants) {
+                try {
+                    const consultants = JSON.parse(savedConsultants);
+                    const match = consultants.find((c: any) => 
+                        c.email.toLowerCase() === user.email.toLowerCase()
+                    );
+                    if (match) {
+                        setConsultantData(match);
+                    }
+                } catch (e) {
+                    console.error("Error parsing consultants for profile", e);
+                }
+            }
+        }
+    }, [user]);
+
+    // Fallback display values
+    const displayName = user?.fullName || user?.name || 'Counsellor';
+    const displayEmail = user?.email || 'email@example.com';
+    const displayRole = consultantData?.specialty || (user?.role === 'counsellor' ? 'Senior Consultant' : 'Staff Member');
+    const avatar = user?.avatar || consultantData?.avatar;
+    const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
     return (
         <div className="flex flex-col flex-1 h-full overflow-hidden bg-[#f5f7f8]">
             <PageHeader title="Counsellor Profile" />
@@ -14,23 +45,18 @@ const CounsellorProfile = () => {
                     <div className="flex w-full flex-col gap-6 lg:flex-row lg:justify-between lg:items-center bg-white p-8 rounded-xl border border-[#dbdfe6] shadow-sm">
                         <div className="flex gap-6 items-center flex-wrap md:flex-nowrap">
                             <div className="relative">
-                                {(() => {
-                                    const imageURL = "https://lh3.googleusercontent.com/aida-public/AB6AXuCe1eoVP2XU8R1oNFxPvHYd_r6uGxRWWb8wLeisttZzZJQUofnP-7PuPGu63Zci7XdsdrEUpn6llWt98jk1XN0ZB15dR2sZAgiGY53IYn6iJ4tgOYcGjcOENPWLfvSmXtrL6fLkeUKoPIBwZ6726N3cgsvyYi0o5AQpTKTn6mFzD0qhQ-IX0USYvTpcodXtbP7QkSIj4qz73A0krQ1EpSvxSiykWnHvXDJn2oQ8WuR1SxYaYTyyFJt4CQZAAJosEienTdYRG-uovgI";
-                                    return (
-                                        <div
-                                            className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-24 border-4 border-white shadow-md flex items-center justify-center bg-blue-100 text-blue-600 font-bold text-3xl"
-                                            style={{ backgroundImage: `url("${imageURL}")` }}
-                                        >
-                                            {!imageURL && "ER"}
-                                        </div>
-                                    );
-                                })()}
+                                <div
+                                    className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-24 border-4 border-white shadow-md flex items-center justify-center bg-blue-100 text-blue-600 font-bold text-3xl overflow-hidden"
+                                    style={avatar ? { backgroundImage: `url("${avatar}")` } : {}}
+                                >
+                                    {!avatar && initials}
+                                </div>
                                 <div className="absolute bottom-1 right-1 size-5 bg-green-500 border-2 border-white rounded-full" title="Active"></div>
                             </div>
                             <div className="flex flex-col">
-                                <h1 className="text-[#111418] text-3xl font-bold leading-tight tracking-[-0.015em]">Elena Rodriguez</h1>
+                                <h1 className="text-[#111418] text-3xl font-bold leading-tight tracking-[-0.015em]">{displayName}</h1>
                                 <p className="text-[#60728a] text-base font-medium leading-normal flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-sm">badge</span> Senior Consultant - STEM Specialist
+                                    <span className="material-symbols-outlined text-sm">badge</span> {displayRole}
                                 </p>
 
                                 {/* 5-Star Rating UI */}
@@ -42,12 +68,12 @@ const CounsellorProfile = () => {
                                         <span className="material-symbols-outlined icon-filled !text-[18px]">star</span>
                                         <span className="material-symbols-outlined icon-filled !text-[18px]">star_half</span>
                                     </div>
-                                    <span className="text-sm font-bold text-gray-900">4.8</span>
-                                    <span className="text-xs text-gray-500 font-medium">(250+ reviews)</span>
+                                    <span className="text-sm font-bold text-gray-900">{consultantData?.rating || '4.8'}</span>
+                                    <span className="text-xs text-gray-500 font-medium">({consultantData?.reviews || '250'}+ reviews)</span>
                                 </Link>
 
                                 <div className="flex gap-4 mt-1">
-                                    <p className="text-[#60728a] text-sm font-normal leading-normal">Experience: 10+ Years</p>
+                                    <p className="text-[#60728a] text-sm font-normal leading-normal">Experience: {consultantData?.professionalDetails?.experience || '10+ Years'}</p>
                                     <span className="text-gray-300">|</span>
                                     <p className="text-green-600 text-sm font-bold leading-normal flex items-center gap-1">
                                         Active Status
@@ -77,27 +103,27 @@ const CounsellorProfile = () => {
                             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider">Full Name</p>
-                                    <p className="text-[#111418] text-base font-semibold mt-1">Elena Rodriguez</p>
+                                    <p className="text-[#111418] text-base font-semibold mt-1">{displayName}</p>
                                 </div>
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider">Email Address</p>
-                                    <p className="text-[#111418] text-base font-semibold mt-1">elena.rodriguez@eaoverseas.com</p>
+                                    <p className="text-[#111418] text-base font-semibold mt-1">{displayEmail}</p>
                                 </div>
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider">Phone</p>
-                                    <p className="text-[#111418] text-base font-semibold mt-1">+1 (555) 123-4567</p>
+                                    <p className="text-[#111418] text-base font-semibold mt-1">{consultantData?.personalInfo?.phone || consultantData?.phone || '+1 (555) 123-4567'}</p>
                                 </div>
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider">Office</p>
-                                    <p className="text-[#111418] text-base font-semibold mt-1">London Hub</p>
+                                    <p className="text-[#111418] text-base font-semibold mt-1">{consultantData?.personalInfo?.office || 'Global Hub'}</p>
                                 </div>
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider">Employee ID</p>
-                                    <p className="text-[#111418] text-base font-semibold mt-1">EAO-8829</p>
+                                    <p className="text-[#111418] text-base font-semibold mt-1">{consultantData?.personalInfo?.employeeId || 'EAO-' + Math.floor(1000 + Math.random() * 9000)}</p>
                                 </div>
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider">Joining Date</p>
-                                    <p className="text-[#111418] text-base font-semibold mt-1">Jan 12, 2020</p>
+                                    <p className="text-[#111418] text-base font-semibold mt-1">{consultantData?.personalInfo?.joiningDate || 'Jan 12, 2024'}</p>
                                 </div>
                             </div>
                         </div>
@@ -113,33 +139,29 @@ const CounsellorProfile = () => {
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider mb-2">Specialization</p>
                                     <div className="flex flex-wrap gap-2">
-                                        <span className="inline-flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg text-sm font-semibold border border-gray-100">
-                                            🇨🇦 Canada
-                                        </span>
-                                        <span className="inline-flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg text-sm font-semibold border border-gray-100">
-                                            🇺🇸 USA
-                                        </span>
-                                        <span className="inline-flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg text-sm font-semibold border border-gray-100">
-                                            🇬🇧 UK
-                                        </span>
+                                        {(consultantData?.professionalDetails?.specialization || ['Canada', 'USA', 'UK']).map((spec: string) => (
+                                            <span key={spec} className="inline-flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg text-sm font-semibold border border-gray-100">
+                                                {spec}
+                                            </span>
+                                        ))}
                                     </div>
                                 </div>
                                 <div>
                                     <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider mb-2">Exams Expertise</p>
                                     <div className="flex flex-wrap gap-2">
-                                        <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black border border-blue-100 uppercase">IELTS</span>
-                                        <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black border border-blue-100 uppercase">GRE</span>
-                                        <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black border border-blue-100 uppercase">GMAT</span>
+                                        {(consultantData?.professionalDetails?.examsExpertise || ['IELTS', 'GRE', 'GMAT']).map((exam: string) => (
+                                            <span key={exam} className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black border border-blue-100 uppercase">{exam}</span>
+                                        ))}
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider mb-1">Languages</p>
-                                        <p className="text-[#111418] text-sm font-semibold">English, German, French</p>
+                                        <p className="text-[#111418] text-sm font-semibold">{consultantData?.professionalDetails?.languages || 'English, Hindi, Telugu'}</p>
                                     </div>
                                     <div>
                                         <p className="text-[#60728a] text-[10px] font-bold uppercase tracking-wider mb-1">Education</p>
-                                        <p className="text-[#111418] text-sm font-semibold">Ph.D. Educational Leadership</p>
+                                        <p className="text-[#111418] text-sm font-semibold">{consultantData?.professionalDetails?.education || 'Bachelor\'s Degree'}</p>
                                     </div>
                                 </div>
                             </div>
@@ -214,7 +236,7 @@ const CounsellorProfile = () => {
                                     <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
                                         <p className="text-[10px] text-[#60728a] font-bold uppercase mb-1">Active Cases</p>
                                         <div className="flex items-end gap-2">
-                                            <span className="text-2xl font-bold text-[#111418]">45</span>
+                                            <span className="text-2xl font-bold text-[#111418]">{consultantData?.assignedStudents || '24'}</span>
                                             <span className="text-xs text-green-600 font-bold pb-1 flex items-center">
                                                 <span className="material-symbols-outlined text-xs">arrow_upward</span> 12%
                                             </span>

@@ -31,12 +31,19 @@ enum FeedCategory {
   news
   visa
   events
+  guides
+  webinars
+  announcements
+  programs
+  articles
 }
 
 enum PostStatus {
   draft
+  pending
   published
   archived
+  rejected
 }
 
 enum InteractionType {
@@ -174,6 +181,7 @@ model User {
   documents       UserDocument[]
   feedPosts       FeedPost[]
   feedInteractions FeedInteraction[]
+  feedComments     FeedComment[]
   savedColleges   SavedCollege[]
   aiComparisons   AIComparison[]
   actionPlans     ActionPlan[]
@@ -365,8 +373,23 @@ model FeedPost {
   author       User              @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   university   University?       @relation(fields: [universityId], references: [id], onDelete: Cascade)
   interactions FeedInteraction[]
+  comments     FeedComment[]
 
   @@map("feed_posts")
+}
+
+model FeedComment {
+  id        String   @id @default(uuid()) @db.Uuid
+  postId    String   @db.Uuid @map("post_id")
+  authorId  String   @db.Uuid @map("author_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  post   FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("feed_comments")
 }
 
 model FeedInteraction {
@@ -598,6 +621,8 @@ enum CommunityCategory {
 enum VoteValue {
   up
   down
+  like
+  dislike
 }
 
 model CommunityPost {
@@ -611,6 +636,8 @@ model CommunityPost {
   isQuestion   Boolean           @default(false) @map("is_question")
   isAnonymous  Boolean           @default(false) @map("is_anonymous")
   voteScore    Int               @default(0) @map("vote_score")
+  likeCount    Int               @default(0) @map("like_count")
+  dislikeCount Int               @default(0) @map("dislike_count")
   commentCount Int               @default(0) @map("comment_count")
   isPinned     Boolean           @default(false) @map("is_pinned")
   isDeleted    Boolean           @default(false) @map("is_deleted")
@@ -633,6 +660,8 @@ model CommunityComment {
   isAnswer   Boolean  @default(false) @map("is_answer")
   isBest     Boolean  @default(false) @map("is_best")
   voteScore  Int      @default(0) @map("vote_score")
+  likeCount    Int      @default(0) @map("like_count")
+  dislikeCount Int      @default(0) @map("dislike_count")
   isDeleted  Boolean  @default(false) @map("is_deleted")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")

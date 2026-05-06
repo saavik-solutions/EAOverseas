@@ -14,8 +14,7 @@ const ApplicationLayout = () => {
         if (path.includes('details')) return 1;
         if (path.includes('academic')) return 2;
         if (path.includes('documents')) return 3;
-        if (path.includes('payment')) return 4;
-        if (path.includes('review')) return courseName ? 4 : 5;
+        if (path.includes('review')) return 4;
         return 1;
     };
 
@@ -114,8 +113,7 @@ const ApplicationLayout = () => {
                                 {renderStepperItem(1, 'Details')}
                                 {renderStepperItem(2, 'Academic')}
                                 {renderStepperItem(3, 'Documents')}
-                                {!courseName && renderStepperItem(4, 'Payment')}
-                                {renderStepperItem(courseName ? 4 : 5, 'Review')}
+                                {renderStepperItem(4, 'Review')}
                             </div>
                         </div>
 

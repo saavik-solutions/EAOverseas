@@ -25,6 +25,10 @@ const Feed = () => {
     // Share Modal State
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [shareData, setShareData] = useState<PostResponse | null>(null);
+    const [expandedComments, setExpandedComments] = useState<string | null>(null);
+    const [comments, setComments] = useState<any[]>([]);
+    const [commentInput, setCommentInput] = useState('');
+    const [isCommenting, setIsCommenting] = useState(false);
 
     const countries = ['All Countries', 'USA', 'UK', 'Canada', 'Germany', 'Australia', 'Europe', 'Global'];
     const topics = ['All Topics', 'Admissions', 'Scholarships', 'Visas', 'Accomodation', 'Career Advice', 'Routine'];
@@ -106,6 +110,39 @@ const Feed = () => {
     const handleSave = (post: any) => {
         requireAuth(() => {
             togglePost(post);
+        });
+    };
+
+    const toggleComments = async (postId: string) => {
+        if (expandedComments === postId) {
+            setExpandedComments(null);
+            setComments([]);
+            return;
+        }
+
+        setExpandedComments(postId);
+        try {
+            const data = await feedService.getComments(postId);
+            setComments(data);
+        } catch (err) {
+            console.error('Failed to fetch comments:', err);
+        }
+    };
+
+    const handleAddComment = async (postId: string) => {
+        if (!commentInput.trim() || isCommenting) return;
+
+        requireAuth(async () => {
+            setIsCommenting(true);
+            try {
+                const newComment = await feedService.addComment(postId, commentInput.trim());
+                setComments(prev => [newComment, ...prev]);
+                setCommentInput('');
+            } catch (err) {
+                console.error('Failed to add comment:', err);
+            } finally {
+                setIsCommenting(false);
+            }
         });
     };
 
@@ -332,6 +369,13 @@ const Feed = () => {
                                                         </button>
                                                     </div>
                                                     <div className="flex items-center gap-1">
+                                                        <button 
+                                                            onClick={(e) => { e.stopPropagation(); toggleComments(post.id); }}
+                                                            className={`p-1.5 md:p-2 rounded-lg transition-colors ${expandedComments === post.id ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}
+                                                            title="Comments"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[18px] md:text-[22px]">chat_bubble_outline</span>
+                                                        </button>
                                                         <button
                                                             onClick={(e) => { e.stopPropagation(); handleSave(post); }}
                                                             className={`p-1.5 md:p-2 rounded-lg transition-colors ${isPostSaved(post) ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}
@@ -353,6 +397,62 @@ const Feed = () => {
                                                     View Details
                                                 </button>
                                             </div>
+
+                                            {/* Comment Section */}
+                                            {expandedComments === post.id && (
+                                                <div className="mt-4 pt-4 border-t border-gray-50 animate-in fade-in slide-in-from-top-2 duration-200" onClick={(e) => e.stopPropagation()}>
+                                                    <div className="flex items-start gap-3 mb-4">
+                                                        <div className="size-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
+                                                            <span className="material-symbols-outlined text-[18px]">account_circle</span>
+                                                        </div>
+                                                        <div className="flex-1 flex flex-col gap-2">
+                                                            <textarea 
+                                                                value={commentInput}
+                                                                onChange={(e) => setCommentInput(e.target.value)}
+                                                                placeholder="Write a comment..."
+                                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all resize-none"
+                                                                rows={2}
+                                                            />
+                                                            <div className="flex justify-end">
+                                                                <button 
+                                                                    onClick={() => handleAddComment(post.id)}
+                                                                    disabled={!commentInput.trim() || isCommenting}
+                                                                    className="px-4 py-1.5 bg-blue-600 text-white text-[11px] font-bold rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
+                                                                >
+                                                                    {isCommenting ? 'Posting...' : 'Post Comment'}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin">
+                                                        {comments.length === 0 ? (
+                                                            <p className="text-center py-6 text-gray-400 text-xs font-medium">No comments yet. Be the first to start the conversation!</p>
+                                                        ) : (
+                                                            comments.map((comment, i) => (
+                                                                <div key={i} className="flex gap-3 group/comment">
+                                                                    <div className="size-7 rounded-full bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+                                                                        {comment.author?.avatarUrl ? (
+                                                                            <img src={comment.author.avatarUrl} alt="" className="size-full object-cover" />
+                                                                        ) : (
+                                                                            <div className="size-full flex items-center justify-center text-slate-400">
+                                                                                <span className="material-symbols-outlined text-[16px]">person</span>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="flex-1 bg-gray-50 rounded-2xl px-3 py-2 border border-gray-100">
+                                                                        <div className="flex items-center justify-between mb-1">
+                                                                            <span className="text-[11px] font-black text-gray-900">{comment.author?.fullName}</span>
+                                                                            <span className="text-[9px] text-gray-400 font-bold">{new Date(comment.createdAt).toLocaleDateString()}</span>
+                                                                        </div>
+                                                                        <p className="text-[11px] text-gray-600 leading-normal">{comment.content}</p>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </article>
                                     );
                                 })

@@ -30,25 +30,62 @@ const AuthContext = createContext<AuthContextType | null>(null);
 const API_BASE_URL = 'http://localhost:4000/api';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = localStorage.getItem('eaoverseas_user');
+        if (storedUser) {
+            try {
+                return JSON.parse(storedUser);
+            } catch (e) {
+                console.error("Failed to parse stored user", e);
+                return null;
+            }
+        }
+        return null;
+    });
+    const [loading, setLoading] = useState(false);
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
 
     useEffect(() => {
+        // Double check token validity if needed, but for now we trust localStorage
         const storedToken = localStorage.getItem('eaoverseas_token');
-        const storedUser = localStorage.getItem('eaoverseas_user');
-        
-        if (storedToken && storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch (e) {
-                console.error("Failed to parse stored user", e);
-            }
+        if (!storedToken) {
+            setUser(null);
         }
-        setLoading(false);
     }, []);
 
     const login = async (email: string, password: string): Promise<User> => {
+        // 1. Check for Virtual Consultants in LocalStorage (added via SuperAdmin)
+        const savedConsultants = localStorage.getItem('eao_consultants');
+        if (savedConsultants) {
+            try {
+                const consultants = JSON.parse(savedConsultants);
+                const match = consultants.find((c: any) => 
+                    c.email.toLowerCase() === email.toLowerCase() && 
+                    c.password === password
+                );
+
+                if (match) {
+                    console.log("[Auth] Virtual Consultant login detected:", match.name);
+                    const virtualUser: User = {
+                        id: match.id || match.name.replace(/\s+/g, '-').toLowerCase(),
+                        fullName: match.name,
+                        name: match.name,
+                        email: match.email,
+                        role: 'counsellor', // Force counsellor role for dashboard access
+                        avatar: match.avatar,
+                        isVirtual: true
+                    };
+                    setUser(virtualUser);
+                    localStorage.setItem('eaoverseas_token', 'virtual-token-' + Date.now());
+                    localStorage.setItem('eaoverseas_user', JSON.stringify(virtualUser));
+                    return virtualUser;
+                }
+            } catch (e) {
+                console.error("Error checking virtual consultants", e);
+            }
+        }
+
+        // 2. Fallback to API login for real users
         const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

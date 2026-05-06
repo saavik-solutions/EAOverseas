@@ -4,16 +4,16 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 
 const DEFAULT_CONSULTANTS = [
     {
-        name: 'Liam Smith', email: 'liam.s@eaoverseas.com', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrDaQadzcKETSmU43z89uAcQYHFHVNAcfznBm8hyGXDlXssaUO2y39YbS2KPSRGe-44yPdhq1UzRe9eCwRUAzKE_A7jnNS3Q00UfGk1ThrIT7WgcbWrQTdfkV4RxrS5I5IB-7bsJf3ujZWlPQZJ3_DQq7KT-Eihb95-GYvbbetwiWxgz9AApeUS9ASBEoUNgx4vmcIxwmwGsGFkfWKbgZ7grr-OfuU3cd79WHckxjEl0biL-VeJy0qur8kbyTN61ogFNHoQsnxgb4', specialty: 'Visa Guidance', assignedStudents: 24, rating: 4.8, status: 'Active'
+        name: 'Liam Smith', email: 'liam.s@eaoverseas.com', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrDaQadzcKETSmU43z89uAcQYHFHVNAcfznBm8hyGXDlXssaUO2y39YbS2KPSRGe-44yPdhq1UzRe9eCwRUAzKE_A7jnNS3Q00UfGk1ThrIT7WgcbWrQTdfkV4RxrS5I5IB-7bsJf3ujZWlPQZJ3_DQq7KT-Eihb95-GYvbbetwiWxgz9AApeUS9ASBEoUNgx4vmcIxwmwGsGFkfWKbgZ7grr-OfuU3cd79WHckxjEl0biL-VeJy0qur8kbyTN61ogFNHoQsnxgb4', specialty: 'Visa Guidance', assignedStudents: 0, rating: 4.8, status: 'Active'
     },
     {
-        name: 'Sarah Jenkins', email: 'sarah.j@eaoverseas.com', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAItVYiS_ClPdBiemoyRXKwIOxxOTMd0McFmnbEHBcES0G0s-h63p--QHioW1lR6R8vqSrsEBSlTrp8S7ByDUAqHd31Cbr2V5JCEyv_lR8tIIrIg7XFkqSImcNG1RzwO0FXY2SxW-5ljc96clWW-eeBpdWBEO-F3nGYoixLfP6qhy4PvZQEmUT6kQPVmfwPuC-3mnsTycuNfEiezW7_kGioBvG6dizAsFfWB940rlcYGTddwJhR-Ml6yqyF9dm5PN2INoOsIlk4Mi4', specialty: 'Admissions', assignedStudents: 31, rating: 4.9, status: 'Active'
+        name: 'Sarah Jenkins', email: 'sarah.j@eaoverseas.com', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAItVYiS_ClPdBiemoyRXKwIOxxOTMd0McFmnbEHBcES0G0s-h63p--QHioW1lR6R8vqSrsEBSlTrp8S7ByDUAqHd31Cbr2V5JCEyv_lR8tIIrIg7XFkqSImcNG1RzwO0FXY2SxW-5ljc96clWW-eeBpdWBEO-F3nGYoixLfP6qhy4PvZQEmUT6kQPVmfwPuC-3mnsTycuNfEiezW7_kGioBvG6dizAsFfWB940rlcYGTddwJhR-Ml6yqyF9dm5PN2INoOsIlk4Mi4', specialty: 'Admissions', assignedStudents: 0, rating: 4.9, status: 'Active'
     },
     {
         name: 'Robert Chen', email: 'robert.c@eaoverseas.com', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDZZjDbwo-gqrgF8KQs6b9SABxmFBB1tXrO6rC3W_uj26P9T1TC7Xv9ZU6x1VHPwpsPnkiMgZASLXH6YwI_dlxFK96AoCCmGdZx4CtHGNvZ54lifmofEjeC5HRqo4G7OINjPoyfqP9KhAejfxjXJehdk3lYdFFj23parXY5VumySwxC7Tnb4-E1zfZrJvH8VN8lZvUXHx8lCspOl2Z8ptQZZbTecbk5iKVCwxmBKUwtH0Blsb7KwMWhxUIkL6QAfsAFCOplJljbY9Y', specialty: 'Documentation', assignedStudents: 0, rating: 4.2, status: 'Inactive'
     },
     {
-        name: 'Emily Davis', email: 'emily.d@eaoverseas.com', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQTJNrm76AQqXjRMpzoWm6BfFrV7MCg9HwDs0c5bwSIOjJ_XrjUsdXT-bSPyXh5V6h7762Z3HrglFPIc1LsXG8STrOu0N3tTtfHhsVlXIxu0rkTDgpgIMrdYGtf3ldJMk3ZphjApAhsZpGBmQC06Ai9R-iQdhmZwMDZpBSaa56dqwa4cDguG4n63pYX8Iq-y_CDSfxhmm1girIaRhPhJqrc8VRACPY2jfBrLB7O3V4iKKCEGRju4qy80jmng5k_lA9b9pQRuInWbA', specialty: 'Visa Guidance', assignedStudents: 18, rating: 4.7, status: 'Active'
+        name: 'Emily Davis', email: 'emily.d@eaoverseas.com', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQTJNrm76AQqXjRMpzoWm6BfFrV7MCg9HwDs0c5bwSIOjJ_XrjUsdXT-bSPyXh5V6h7762Z3HrglFPIc1LsXG8STrOu0N3tTtfHhsVlXIxu0rkTDgpgIMrdYGtf3ldJMk3ZphjApAhsZpGBmQC06Ai9R-iQdhmZwMDZpBSaa56dqwa4cDguG4n63pYX8Iq-y_CDSfxhmm1girIaRhPhJqrc8VRACPY2jfBrLB7O3V4iKKCEGRju4qy80jmng5k_lA9b9pQRuInWbA', specialty: 'Visa Guidance', assignedStudents: 0, rating: 4.7, status: 'Active'
     }
 ];
 
@@ -99,6 +99,7 @@ const SuperAdminConsultantDirectory: React.FC = () => {
                             <thead>
                                 <tr className="border-b border-slate-50">
                                     <th className="px-10 py-6 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest">Consultant</th>
+                                    <th className="px-10 py-6 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest">Auth</th>
                                     <th className="px-10 py-6 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest">Status</th>
                                     <th className="px-10 py-6 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest">Specialization</th>
                                     <th className="px-10 py-6 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest">Students</th>
@@ -119,6 +120,24 @@ const SuperAdminConsultantDirectory: React.FC = () => {
                                             </div>
                                         </td>
                                         <td className="px-10 py-6">
+                                            <div className="flex items-center gap-4 bg-slate-50 px-3 py-2 rounded-2xl border border-slate-100 group-hover:bg-white transition-all">
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-black text-[#2b6cee]">{consultant.email}</span>
+                                                    <span className="text-[10px] font-black text-slate-900">Pass: {consultant.password || 'EAO@123'}</span>
+                                                </div>
+                                                <button 
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(`Email: ${consultant.email}\nPassword: ${consultant.password || 'EAO@123'}`);
+                                                        alert('Credentials copied!');
+                                                    }}
+                                                    className="size-8 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 hover:text-[#2b6cee] hover:border-[#2b6cee] transition-all shadow-sm active:scale-90"
+                                                    title="Copy Credentials"
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">content_copy</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td className="px-10 py-6">
                                             <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${consultant.status === 'Active' ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : consultant.status === 'Blocked' ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
                                                 {consultant.status}
                                             </span>
@@ -131,7 +150,12 @@ const SuperAdminConsultantDirectory: React.FC = () => {
                                         <td className="px-10 py-6">
                                             <div className="flex items-center gap-2">
                                                 <span className="material-symbols-outlined text-[18px] text-slate-400">group</span>
-                                                <span className="text-sm font-black text-slate-900">{consultant.assignedStudents || 0}</span>
+                                                <span className="text-sm font-black text-slate-900">
+                                                    {(() => {
+                                                        const sessions = JSON.parse(localStorage.getItem('scheduled_sessions') || '[]');
+                                                        return sessions.filter((s: any) => s.counsellorEmail === consultant.email).length;
+                                                    })()}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-10 py-6">

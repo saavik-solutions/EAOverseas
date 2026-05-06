@@ -8,7 +8,7 @@ import UniversityLayout from '../layouts/UniversityLayout';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type PostType = 'Article' | 'Scholarship' | 'Announcement' | 'Event' | 'Guide' | 'News' | 'Webinar' | 'Program';
-type PostStatus = 'Draft' | 'Published' | 'Scheduled' | 'Under Review';
+type PostStatus = 'Draft' | 'Published' | 'Scheduled' | 'Pending';
 type Visibility = 'Public' | 'Members Only' | 'University Partners' | 'Internal';
 
 interface PostForm {
@@ -64,7 +64,7 @@ interface PostForm {
 }
 
 const POST_TYPES: PostType[] = ['Article', 'Scholarship', 'Program', 'Announcement', 'Event', 'Guide', 'News', 'Webinar'];
-const STATUSES: PostStatus[] = ['Draft', 'Under Review', 'Scheduled', 'Published'];
+const STATUSES: PostStatus[] = ['Draft', 'Pending', 'Scheduled', 'Published'];
 const VISIBILITIES: Visibility[] = ['Public', 'Members Only', 'University Partners', 'Internal'];
 const CATEGORIES = ['Admissions', 'Scholarships', 'Visa', 'Career', 'Study Abroad', 'Test Prep', 'Housing', 'Finance', 'Research', 'Events'];
 const COUNTRIES = ['United States', 'United Kingdom', 'Canada', 'Australia', 'Germany', 'France', 'Netherlands', 'New Zealand', 'Singapore', 'Ireland'];
@@ -127,7 +127,7 @@ const selectCls = `${inputCls} appearance-none`;
 
 const editorStyle = `
     .editor-placeholder:empty:before {
-        content: attr(placeholder);
+        content: attr(data-placeholder);
         color: #94a3b8;
         cursor: text;
     }
@@ -147,7 +147,8 @@ const editorStyle = `
 `;
 
 const UniversityNewPost = () => {
-    const { universityName: urlUniName } = useParams<{ universityName: string }>();
+    const { universityName: urlUniName, postId } = useParams<{ universityName: string; postId?: string }>();
+    const isEditing = !!postId;
     const navigate = useNavigate();
     const location = useLocation();
     const [form, setForm] = useState<PostForm>(DEFAULT_FORM);
@@ -161,6 +162,7 @@ const UniversityNewPost = () => {
     const [benefitIcon, setBenefitIcon] = useState('work');
     const [docInput, setDocInput] = useState('');
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const bodyEditableRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -181,7 +183,7 @@ const UniversityNewPost = () => {
                 if (matchedUni) {
                     setForm(prev => ({ 
                         ...prev, 
-                        universityId: matchedUni._id, 
+                        universityId: matchedUni.id || matchedUni._id, 
                         universityName: matchedUni.name,
                         country: matchedUni.country || ''
                     }));
@@ -190,8 +192,76 @@ const UniversityNewPost = () => {
                 console.error('Failed to resolve university', err);
             }
         };
+        
+        const fetchPost = async () => {
+            if (!postId) return;
+            try {
+                const p = await feedService.getById(postId);
+                const categoryMapRev: Record<string, PostType> = {
+                    'articles': 'Article',
+                    'scholarships': 'Scholarship',
+                    'programs': 'Program',
+                    'announcements': 'Announcement',
+                    'events': 'Event',
+                    'guides': 'Guide',
+                    'news': 'News',
+                    'webinars': 'Webinar'
+                };
+
+                setForm({
+                    title: p.title || '',
+                    postType: categoryMapRev[p.category] || (p.category.charAt(0).toUpperCase() + p.category.slice(1) as PostType) || 'Article',
+                    status: (p.status.charAt(0).toUpperCase() + p.status.slice(1)) as PostStatus,
+                    visibility: p.metadata?.visibility || 'Public',
+                    summary: p.metadata?.summary || '',
+                    body: p.content || '',
+                    coverImageUrl: p.coverImageUrl || '',
+                    universityId: p.universityId || '',
+                    universityName: p.university?.name || '',
+                    country: p.metadata?.country || '',
+                    tags: p.tags || [],
+                    categories: p.metadata?.categories || [],
+                    language: p.metadata?.language || 'English',
+                    scholarshipAmount: p.metadata?.scholarshipAmount || '',
+                    scholarshipDeadline: p.metadata?.scholarshipDeadline || '',
+                    scholarshipEligibility: p.metadata?.scholarshipEligibility || '',
+                    eventDate: p.metadata?.eventDate || '',
+                    eventTime: p.metadata?.eventTime || '',
+                    eventVenue: p.metadata?.eventVenue || '',
+                    eventRegistrationLink: p.metadata?.eventRegistrationLink || '',
+                    webinarLink: p.metadata?.webinarLink || '',
+                    webinarHost: p.metadata?.webinarHost || '',
+                    programName: p.metadata?.programName || '',
+                    programDuration: p.metadata?.programDuration || '',
+                    tuitionFee: p.metadata?.tuitionFee || '',
+                    academicLevel: p.metadata?.academicLevel || 'Undergraduate',
+                    intakes: p.metadata?.intakes || '',
+                    seoTitle: p.metadata?.seoTitle || '',
+                    seoDescription: p.metadata?.seoDescription || '',
+                    seoKeywords: p.metadata?.seoKeywords || '',
+                    scheduledDate: p.metadata?.scheduledDate || '',
+                    scheduledTime: p.metadata?.scheduledTime || '',
+                    featuredPost: p.metadata?.featuredPost || false,
+                    allowComments: p.metadata?.allowComments !== false,
+                    pinToTop: p.metadata?.pinToTop || false,
+                    sendNotification: false,
+                    grid: p.metadata?.grid || [],
+                    benefits: p.metadata?.benefits || [],
+                    documents: p.metadata?.documents || [],
+                    downloadBtn: p.metadata?.downloadBtn || { label: '', link: '' },
+                });
+                
+                if (bodyEditableRef.current) {
+                    bodyEditableRef.current.innerHTML = p.content || '';
+                }
+            } catch (err) {
+                console.error('Failed to fetch post for editing', err);
+            }
+        };
+
         fetchUni();
-    }, [urlUniName]);
+        if (postId) fetchPost();
+    }, [urlUniName, postId]);
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -335,6 +405,8 @@ const UniversityNewPost = () => {
     const { addPost } = usePosts();
 
     const handleSubmit = async (submitStatus: PostStatus) => {
+        if (isSubmitting) return;
+        
         const postData = {
             ...form,
             status: submitStatus.toLowerCase(),
@@ -343,17 +415,24 @@ const UniversityNewPost = () => {
             universityId: form.universityId === 'all' ? null : form.universityId
         };
         try {
-            const savedPost = await feedService.create(postData);
-            addPost({
-                ...postData,
-                id: savedPost.post?._id || `post-${Date.now()}`,
-                label: form.postType,
-                institution: form.universityName,
-                grid: [{ label: 'Views', value: '0' }, { label: 'Category', value: form.postType }]
-            });
+            setIsSubmitting(true);
+            if (isEditing && postId) {
+                await feedService.update(postId, postData);
+            } else {
+                const savedPost = await feedService.create(postData);
+                addPost({
+                    ...postData,
+                    id: savedPost.post?.id || savedPost.post?._id || `post-${Date.now()}`,
+                    label: form.postType,
+                    institution: form.universityName,
+                    grid: [{ label: 'Views', value: '0' }, { label: 'Category', value: form.postType }]
+                });
+            }
             navigate(`/university-panel/${urlUniName}/post-center`);
         } catch (err: any) {
             alert(`Failed: ${err.message}`);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -367,18 +446,26 @@ const UniversityNewPost = () => {
             <style>{editorStyle}</style>
             <div className="flex-1 bg-slate-50 min-h-screen">
                 <PageHeader
-                    title="Create New Post"
+                    title={isEditing ? 'Edit Post' : 'Create New Post'}
                     breadcrumbs={[
                         { label: 'Post Center', link: `/university-panel/${urlUniName}/post-center` },
-                        { label: 'New Post' }
+                        { label: isEditing ? 'Edit Post' : 'New Post' }
                     ]}
                     actions={
                         <div className="flex items-center gap-2">
-                            <button onClick={() => handleSubmit('Draft')} className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-100 transition">
-                                Save Draft
+                            <button 
+                                onClick={() => handleSubmit('Draft')} 
+                                disabled={isSubmitting}
+                                className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-100 transition disabled:opacity-50"
+                            >
+                                {isSubmitting ? 'Saving...' : 'Save Draft'}
                             </button>
-                            <button onClick={() => handleSubmit('Published')} className="px-4 py-2 text-sm font-bold text-white bg-[#2b6cee] rounded-lg hover:bg-blue-700 transition shadow-lg">
-                                Publish Now
+                            <button 
+                                onClick={() => handleSubmit('Pending')} 
+                                disabled={isSubmitting}
+                                className="px-4 py-2 text-sm font-bold text-orange-600 border border-orange-200 bg-orange-50 rounded-lg hover:bg-orange-100 transition disabled:opacity-50"
+                            >
+                                {isSubmitting ? 'Submitting...' : 'Submit for Review'}
                             </button>
                         </div>
                     }
@@ -449,7 +536,7 @@ const UniversityNewPost = () => {
                                                     contentEditable={true}
                                                     onInput={handleBodyChange}
                                                     className="min-h-[300px] p-6 focus:outline-none prose prose-sm max-w-none editor-placeholder editor-content" 
-                                                    placeholder="Write your content here..."
+                                                    data-placeholder="Write your content here..."
                                                 />
                                             </div>
                                         </Field>
@@ -582,15 +669,7 @@ const UniversityNewPost = () => {
 
                         {/* ── Right Column ── */}
                         <div className="space-y-5">
-                            {/* Publish Status */}
-                            <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm">
-                                <h3 className="font-bold text-sm flex items-center gap-2"><span className="material-symbols-outlined text-[#2b6cee] text-[18px]">send</span> Publish Controls</h3>
-                                <Field label="Current Status">
-                                    <select value={form.status} onChange={set('status')} className={selectCls}>
-                                        {STATUSES.map(s => <option key={s}>{s}</option>)}
-                                    </select>
-                                </Field>
-                            </div>
+
 
                             {/* Institutional Context (Locked) */}
                             <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm">

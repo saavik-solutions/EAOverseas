@@ -11,7 +11,7 @@ const HomeDashboard = () => {
     const navigate = useNavigate();
     const { user, requireAuth } = useAuth();
     const { userProfile, updatePreferences } = useUserProfile();
-    const { savedColleges, savedCourses, savedAccommodations, savedPosts } = useSavedItems();
+    const { savedColleges, savedCourses, savedAccommodations, savedPosts, savedScholarships } = useSavedItems();
 
     // Track visitor - increment on mount, decrement on unmount
     React.useEffect(() => {
@@ -398,7 +398,10 @@ const HomeDashboard = () => {
                         </div>
 
                         {/* Scholarships */}
-                        <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm flex flex-col h-full relative overflow-hidden">
+                        <div 
+                            onClick={() => navigate('/scholarships')}
+                            className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm flex flex-col h-full relative overflow-hidden cursor-pointer hover:shadow-md transition-shadow group"
+                        >
                             <div className="flex items-center gap-2 mb-4 relative z-10">
                                 <span className="material-symbols-outlined text-blue-600 !text-[20px] md:!text-[24px]">savings</span>
                                 <h3 className="font-bold text-sm md:text-base text-gray-900">Scholarships</h3>
@@ -551,95 +554,105 @@ const HomeDashboard = () => {
                         </div>
 
                         {/* Saved Items Component Box */}
-                        <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm h-full flex flex-col gap-4 md:gap-6">
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 flex-1">
-                                {/* Row 1: Saved Accommodation (Full Width) */}
+                        <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-5 shadow-sm h-full flex flex-col gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 flex-1">
+                                {/* Saved Accommodation */}
                                 <div
                                     onClick={() => requireAuth(() => navigate('/saved-accommodations'))}
-                                    className="bg-gray-50 rounded-xl p-3 md:p-5 hover:bg-gray-100 transition-colors cursor-pointer group flex items-center justify-between relative overflow-hidden gap-4"
+                                    className="bg-gray-50 rounded-xl p-3 md:p-4 hover:bg-gray-100 transition-colors cursor-pointer group relative overflow-hidden flex flex-col gap-3 min-h-[100px]"
                                 >
-                                    <div className="flex items-center gap-4 relative z-10">
-                                        <div className="size-10 md:size-16 rounded-xl bg-white text-orange-600 flex items-center justify-center shadow-sm shrink-0">
-                                            <span className="material-symbols-outlined !text-[24px] md:!text-[40px]">home</span>
+                                    <div className="flex items-start justify-between relative z-10">
+                                        <div className="size-10 md:size-12 rounded-xl bg-white text-orange-600 flex items-center justify-center shadow-sm">
+                                            <span className="material-symbols-outlined !text-[24px] md:!text-[28px]">home</span>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-sm md:text-lg leading-tight">Saved Accommodation</h4>
-                                            <p className="text-xs text-gray-400 sm:hidden mt-0.5">View properties</p>
-                                            <p className="text-xs text-gray-400 hidden sm:block mt-0.5">View saved properties</p>
-                                        </div>
+                                        <span className="font-bold text-gray-900 text-lg md:text-xl">{savedAccommodations ? savedAccommodations.length : 0}</span>
                                     </div>
-                                    <div className="relative z-10 self-end sm:self-auto">
-                                        <span className="font-bold text-gray-900 text-lg md:text-2xl">{savedAccommodations ? savedAccommodations.length : 0}</span>
+                                    <div className="relative z-10">
+                                        <h4 className="font-bold text-gray-900 text-[10px] sm:text-[11px] md:text-xs lg:text-sm leading-tight">Saved Accommodation</h4>
+                                        <p className="text-[9px] md:text-[10px] text-gray-400 mt-0.5">View properties</p>
                                     </div>
-                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-20px] opacity-5 group-hover:opacity-10 transition-opacity">
-                                        <span className="material-symbols-outlined !text-[100px] md:!text-[140px] text-orange-600">home</span>
+                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-10px] opacity-[0.03] group-hover:opacity-5 transition-opacity">
+                                        <span className="material-symbols-outlined !text-[60px] md:!text-[80px] text-orange-600">home</span>
                                     </div>
                                 </div>
 
                                 {/* Saved Courses */}
                                 <div
                                     onClick={() => requireAuth(() => navigate('/saved-courses'))}
-                                    className="bg-gray-50 rounded-xl p-3 md:p-5 hover:bg-gray-100 transition-colors cursor-pointer group flex items-center justify-between relative overflow-hidden gap-4"
+                                    className="bg-gray-50 rounded-xl p-3 md:p-4 hover:bg-gray-100 transition-colors cursor-pointer group relative overflow-hidden flex flex-col gap-3 min-h-[100px]"
                                 >
-                                    <div className="flex items-center gap-4 relative z-10">
-                                        <div className="size-10 md:size-16 rounded-xl bg-white text-purple-600 flex items-center justify-center shadow-sm shrink-0">
-                                            <span className="material-symbols-outlined !text-[24px] md:!text-[40px]">book</span>
+                                    <div className="flex items-start justify-between relative z-10">
+                                        <div className="size-10 md:size-12 rounded-xl bg-white text-purple-600 flex items-center justify-center shadow-sm">
+                                            <span className="material-symbols-outlined !text-[24px] md:!text-[28px]">book</span>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-sm md:text-lg leading-tight">Saved Courses</h4>
-                                            <p className="text-xs text-gray-400 mt-0.5">View courses</p>
-                                        </div>
+                                        <span className="font-bold text-gray-900 text-lg md:text-xl">{savedCourses.length}</span>
                                     </div>
-                                    <div className="relative z-10 self-end sm:self-auto">
-                                        <span className="font-bold text-gray-900 text-lg md:text-2xl">{savedCourses.length}</span>
+                                    <div className="relative z-10">
+                                        <h4 className="font-bold text-gray-900 text-[10px] sm:text-[11px] md:text-xs lg:text-sm leading-tight">Saved Courses</h4>
+                                        <p className="text-[9px] md:text-[10px] text-gray-400 mt-0.5">View courses</p>
                                     </div>
-                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-20px] opacity-5 group-hover:opacity-10 transition-opacity">
-                                        <span className="material-symbols-outlined !text-[100px] md:!text-[140px] text-purple-600">book</span>
+                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-10px] opacity-[0.03] group-hover:opacity-5 transition-opacity">
+                                        <span className="material-symbols-outlined !text-[60px] md:!text-[80px] text-purple-600">book</span>
                                     </div>
                                 </div>
 
                                 {/* Saved Colleges */}
                                 <div
                                     onClick={() => requireAuth(() => navigate('/saved-colleges'))}
-                                    className="bg-gray-50 rounded-xl p-3 md:p-5 hover:bg-gray-100 transition-colors cursor-pointer group flex items-center justify-between relative overflow-hidden gap-4"
+                                    className="bg-gray-50 rounded-xl p-3 md:p-4 hover:bg-gray-100 transition-colors cursor-pointer group relative overflow-hidden flex flex-col gap-3 min-h-[100px]"
                                 >
-                                    <div className="flex items-center gap-4 relative z-10">
-                                        <div className="size-10 md:size-16 rounded-xl bg-white text-blue-600 flex items-center justify-center shadow-sm shrink-0">
-                                            <span className="material-symbols-outlined !text-[24px] md:!text-[40px]">school</span>
+                                    <div className="flex items-start justify-between relative z-10">
+                                        <div className="size-10 md:size-12 rounded-xl bg-white text-blue-600 flex items-center justify-center shadow-sm">
+                                            <span className="material-symbols-outlined !text-[24px] md:!text-[28px]">school</span>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-sm md:text-lg leading-tight">Saved Colleges</h4>
-                                            <p className="text-xs text-gray-400 mt-0.5">View universities</p>
+                                        <span className="font-bold text-gray-900 text-lg md:text-xl">{savedColleges.length}</span>
+                                    </div>
+                                    <div className="relative z-10">
+                                        <h4 className="font-bold text-gray-900 text-[10px] sm:text-[11px] md:text-xs lg:text-sm leading-tight">Saved Colleges</h4>
+                                        <p className="text-[9px] md:text-[10px] text-gray-400 mt-0.5">View universities</p>
+                                    </div>
+                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-10px] opacity-[0.03] group-hover:opacity-5 transition-opacity">
+                                        <span className="material-symbols-outlined !text-[60px] md:!text-[80px] text-blue-600">school</span>
+                                    </div>
+                                </div>
+
+                                {/* Saved Scholarships */}
+                                <div
+                                    onClick={() => requireAuth(() => navigate('/saved-scholarships'))}
+                                    className="bg-gray-50 rounded-xl p-3 md:p-4 hover:bg-gray-100 transition-colors cursor-pointer group relative overflow-hidden flex flex-col gap-3 min-h-[100px]"
+                                >
+                                    <div className="flex items-start justify-between relative z-10">
+                                        <div className="size-10 md:size-12 rounded-xl bg-white text-pink-600 flex items-center justify-center shadow-sm">
+                                            <span className="material-symbols-outlined !text-[24px] md:!text-[28px]">savings</span>
                                         </div>
+                                        <span className="font-bold text-gray-900 text-lg md:text-xl">{savedScholarships ? savedScholarships.length : 0}</span>
                                     </div>
-                                    <div className="relative z-10 self-end sm:self-auto">
-                                        <span className="font-bold text-gray-900 text-lg md:text-2xl">{savedColleges.length}</span>
+                                    <div className="relative z-10">
+                                        <h4 className="font-bold text-gray-900 text-[10px] sm:text-[11px] md:text-xs lg:text-sm leading-tight">Saved Scholarships</h4>
+                                        <p className="text-[9px] md:text-[10px] text-gray-400 mt-0.5">View grants</p>
                                     </div>
-                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-20px] opacity-5 group-hover:opacity-10 transition-opacity">
-                                        <span className="material-symbols-outlined !text-[100px] md:!text-[140px] text-blue-600">school</span>
+                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-10px] opacity-[0.03] group-hover:opacity-5 transition-opacity">
+                                        <span className="material-symbols-outlined !text-[60px] md:!text-[80px] text-pink-600">savings</span>
                                     </div>
                                 </div>
 
                                 {/* Saved Posts */}
                                 <div
                                     onClick={() => requireAuth(() => navigate('/saved-posts'))}
-                                    className="bg-gray-50 rounded-xl p-3 md:p-5 hover:bg-gray-100 transition-colors cursor-pointer group flex items-center justify-between relative overflow-hidden gap-4"
+                                    className="bg-gray-50 rounded-xl p-3 md:p-4 hover:bg-gray-100 transition-colors cursor-pointer group relative overflow-hidden flex flex-col gap-3 min-h-[100px]"
                                 >
-                                    <div className="flex items-center gap-4 relative z-10">
-                                        <div className="size-10 md:size-16 rounded-xl bg-white text-emerald-600 flex items-center justify-center shadow-sm shrink-0">
-                                            <span className="material-symbols-outlined !text-[24px] md:!text-[40px]">dynamic_feed</span>
+                                    <div className="flex items-start justify-between relative z-10">
+                                        <div className="size-10 md:size-12 rounded-xl bg-white text-emerald-600 flex items-center justify-center shadow-sm">
+                                            <span className="material-symbols-outlined !text-[24px] md:!text-[28px]">dynamic_feed</span>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900 text-sm md:text-lg leading-tight">Saved Posts</h4>
-                                            <p className="text-xs text-gray-400 mt-0.5">View saved articles</p>
-                                        </div>
+                                        <span className="font-bold text-gray-900 text-lg md:text-xl">{savedPosts ? savedPosts.length : 0}</span>
                                     </div>
-                                    <div className="relative z-10 self-end sm:self-auto">
-                                        <span className="font-bold text-gray-900 text-lg md:text-2xl">{savedPosts ? savedPosts.length : 0}</span>
+                                    <div className="relative z-10">
+                                        <h4 className="font-bold text-gray-900 text-[10px] sm:text-[11px] md:text-xs lg:text-sm leading-tight">Saved Posts</h4>
+                                        <p className="text-[9px] md:text-[10px] text-gray-400 mt-0.5">View saved articles</p>
                                     </div>
-                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-20px] opacity-5 group-hover:opacity-10 transition-opacity">
-                                        <span className="material-symbols-outlined !text-[100px] md:!text-[140px] text-emerald-600">dynamic_feed</span>
+                                    <div className="absolute top-1/2 -translate-y-1/2 right-[-10px] opacity-[0.03] group-hover:opacity-5 transition-opacity">
+                                        <span className="material-symbols-outlined !text-[60px] md:!text-[80px] text-emerald-600">dynamic_feed</span>
                                     </div>
                                 </div>
                             </div>

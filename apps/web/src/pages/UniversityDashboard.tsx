@@ -1,37 +1,117 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import UniversityLayout from '../layouts/UniversityLayout';
 
 const UniversityDashboard = () => {
     const { universityName } = useParams<{ universityName: string }>();
-    
-    // Format the name back from slug if needed, but for display we can just capitalize words
+    const [stats, setStats] = useState<any[]>([]);
+    const [deadlines, setDeadlines] = useState<any[]>([]);
+    const [interestsByCategory, setInterestsByCategory] = useState<any[]>([]);
+
+    const universityRegistry: Record<string, any> = {
+        'university-of-toronto': {
+            impressions: '48,291',
+            leads: '3,102',
+            conversion: '6.4%',
+             courses: [
+                { id: 1, name: 'MSc Artificial Intelligence & Data Science', level: 'Postgraduate', intakes: ['Sept 2024'], deadlines: ['Oct 15'], interest: '1,248', status: 'Active', category: 'COMPUTER SCIENCE' },
+                { id: 2, name: 'BEng Mechanical Engineering', level: 'Undergraduate', intakes: ['Sept 2024'], deadlines: ['Aug 01'], interest: '856', status: 'Active', category: 'ENGINEERING' },
+                { id: 3, name: 'BA International Relations', level: 'Undergraduate', intakes: ['Jan 2024'], deadlines: ['Dec 10'], interest: '231', status: 'Closed', category: 'ARTS & DESIGN' }
+            ],
+            scholarships: 8
+        },
+        'kings-college-london': {
+            impressions: '35,102',
+            leads: '1,421',
+            conversion: '5.8%',
+            courses: [
+                { id: 1, name: 'Global Health MSc', level: 'Postgraduate', intakes: ['Sept 2024'], deadlines: ['Jun 30'], interest: '942', status: 'Active', category: 'MEDICINE & LIFE SCIENCES' },
+                { id: 2, name: 'Law LLB', level: 'Undergraduate', intakes: ['Sept 2024'], deadlines: ['Jun 15'], interest: '2,104', status: 'Active', category: 'LAW' },
+                { id: 3, name: 'Business Management BSc', level: 'Undergraduate', intakes: ['Jan 2025'], deadlines: ['Nov 30'], interest: '1,562', status: 'Active', category: 'BUSINESS & MBA' }
+            ],
+            scholarships: 5
+        },
+        'university-of-melbourne': {
+            impressions: '22,481',
+            leads: '642',
+            conversion: '3.9%',
+            courses: [
+                { id: 1, name: 'Master of Data Science', level: 'Postgraduate', intakes: ['July 2024'], deadlines: ['May 15'], interest: '512', status: 'Active', category: 'COMPUTER SCIENCE' },
+                { id: 2, name: 'Bachelor of Commerce', level: 'Undergraduate', intakes: ['Feb 2024'], deadlines: ['Jan 31'], interest: '842', status: 'Active', category: 'BUSINESS & MBA' }
+            ],
+            scholarships: 3
+        }
+    };
+
+    useEffect(() => {
+        const saved = localStorage.getItem('ea_universities');
+        const allUnis = saved ? JSON.parse(saved) : [];
+        const found = allUnis.find((u: any) => 
+            u.id === Number(universityName) || 
+            u.name.toLowerCase().replace(/\s+/g, '-') === universityName
+        );
+
+        let activeCourses = [];
+        let scholarshipsCount = 0;
+
+        if (found) {
+            activeCourses = found.courses || [];
+            scholarshipsCount = Array.isArray(found.scholarships) ? found.scholarships.length : (found.scholarships || 0);
+        } else {
+            const registryData = universityRegistry[universityName || ''] || { courses: [], impressions: '0', scholarships: 0 };
+            activeCourses = registryData.courses;
+            scholarshipsCount = registryData.scholarships;
+        }
+
+        // Compute Stats
+        const totalInterest = activeCourses.reduce((acc: number, c: any) => acc + parseInt(String(c.interest || '0').replace(/,/g, '')), 0);
+        const admissionCount = activeCourses.filter((c: any) => c.status === 'Active').reduce((acc: number, c: any) => acc + (c.intakes?.length || 0), 0);
+
+        setStats([
+            { label: 'Total active courses', value: activeCourses.length.toString(), icon: 'library_books', trend: '+5% this month', trendType: 'up', link: `/university-panel/${universityName}/total-courses` },
+            { label: 'Active admissions', value: admissionCount.toString(), icon: 'history_edu', trend: '+2% this month', trendType: 'up', link: `/university-panel/${universityName}/admissions` },
+            { label: 'Scholarships published', value: scholarshipsCount.toString(), icon: 'award_star', trend: 'No change', trendType: 'neutral', link: `/university-panel/${universityName}/scholarships` },
+            { label: 'Total student interest', value: totalInterest.toLocaleString(), icon: 'person_search', trend: '+12% this month', trendType: 'up' },
+        ]);
+
+        // Compute Categories
+        const cats: Record<string, number> = {};
+        activeCourses.forEach((c: any) => {
+            const cat = (c.category || 'GENERAL').toUpperCase();
+            cats[cat] = (cats[cat] || 0) + parseInt(String(c.interest || '0').replace(/,/g, ''));
+        });
+        
+        const sortedCats = Object.entries(cats)
+            .map(([label, count]) => ({ 
+                label, 
+                count: count.toLocaleString(), 
+                percentage: Math.min(100, Math.round((count / (totalInterest || 1)) * 100)) 
+            }))
+            .sort((a, b) => parseInt(b.count.replace(/,/g, '')) - parseInt(a.count.replace(/,/g, '')))
+            .slice(0, 5);
+        
+        setInterestsByCategory(sortedCats);
+
+        // Compute Deadlines
+        const dls = activeCourses
+            .filter((c: any) => c.status === 'Active' && c.deadlines?.length > 0)
+            .map((c: any) => ({
+                month: String(c.deadlines[0]).split(' ')[0],
+                day: String(c.deadlines[0]).split(' ')[1] || '01',
+                title: c.name,
+                detail: c.level,
+                status: 'Active',
+                statusColor: 'bg-emerald-50 text-emerald-700'
+            }))
+            .slice(0, 3);
+        
+        setDeadlines(dls);
+
+    }, [universityName]);
+
     const displayName = universityName 
         ? universityName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
         : "University of Global Excellence";
-
-    const demoUniversities = ['university-of-toronto', 'kings-college-london', 'university-of-melbourne'];
-    const isDemo = demoUniversities.includes(universityName || '');
-
-    const stats = [
-        { label: 'Total active courses', value: isDemo ? '124' : '0', icon: 'library_books', trend: isDemo ? '+5% this month' : 'No data', trendType: isDemo ? 'up' : 'neutral' },
-        { label: 'Active admissions', value: isDemo ? '12' : '0', icon: 'history_edu', trend: isDemo ? '+2% this month' : 'No data', trendType: isDemo ? 'up' : 'neutral' },
-        { label: 'Scholarships published', value: isDemo ? '8' : '0', icon: 'award_star', trend: 'No change', trendType: 'neutral' },
-        { label: 'Total student interest', value: isDemo ? '1,240' : '0', icon: 'person_search', trend: isDemo ? '+12% this month' : 'No data', trendType: isDemo ? 'up' : 'neutral' },
-    ];
-
-    const studentInterest = isDemo ? [
-        { name: 'Sarah Jenkins', interest: 'MSc Computer Science', time: '12 mins ago', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBbqN6J7D76Vj15ZyP1A_wEgf2B7o0yUxc1b1ohoeqWzwYxn-YHn2AyT9TgKGwKLAzuhpO_GQHZSvGbBzt6IPRK5zIeNBvhZOquVvBo68Ob9Ix9uzb-ZOoCsqA5qbxhh0HEMjyM3kxgM6N32u3qZmnuQpDiuKtPdIoEC23HGZCHztH_Bj0A_V1tHzSknHqBowgUiiMabctAEAAuSEQmxcNC9f6I8rPeZe27bbl-oRIj2IvBLImw2CFHEHciqpHP4PMZKA7BpkmFEBU' },
-        { name: 'Arjun Mehta', interest: 'MBA Global Finance', time: '45 mins ago', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxTMqpXkbbskYOQ-NyifQOMYdXT-hbTd60Fc_AigSDsDZd7VVbXv2A7s2pur1WqaaEf-oZcJ4cQMaOf8XbowQXS9UbkeZnfMUeS6IFiJIceJ0e1_UlkT_rlTdP4CSRe2jDj1TOlesfK5hfl2Bzs7cyXricTvvZF9SLcxm7ARTZglAvBBhatIewm-GxQ-E_LARiYOigbSk516EOa33EKSnXNmscdzjkoVLw-RGZ2lHAMa07qrazzp044RIIMxQXTUhW3gn4LXsbTnQ' },
-        { name: 'Elena Rodriguez', interest: 'BA Graphic Design', time: '2 hours ago', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBImfIZNIXADvqJcy9nN-v4zSeV5NCyHD19P02RYxN9H9A-M_lrS2d_hzXJE3oKebchLYxkAuj20VN7Of-AFa8gAp6T63l-JHZbcLLwvfqbIFFVBpIwirRPxhFDY7V-0EfVTjSmDmffQSUr2m8son2vsqwL8tGtpEi8hgh1g3BAqc71G8TYh5O5Xq-fTDzWIosjYD_EwAeU7nQmQh2elh_BFsPeYk9Ka5fodTFVBS0mOYi38sbar56Q3DCqClkQ-22vkDCqHDRBIfk' },
-        { name: 'David Chen', interest: 'PhD Bio-Engineering', time: '3 hours ago', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC0VQIZAcqRc7nsiVrB_w6-GqMYAEVwFbUqA295IEuiJIA1RZFkMV8x_D47qhjbrWBAJDAjaKAnspc6AmTgL8ukeNgQY3jPDilpeH0Mt2GgPgAa2vl4w_ErRKgUeXPiPUwVj-dx5LAh28C9MI7KuYlEceN7mA-UJhllximtvnxMAI1EzEg6-oNWQnTxtW3WyuYIV7bi9xLREzGgim18GZHB1Wi4EfXaHoKHs6ox9l4jkGcRnn-WxeANpdtTr6GLEMJydD9c50Md9cU' },
-    ] : [];
-
-    const deadlines = isDemo ? [
-        { month: 'Oct', day: '15', title: 'Fall 2024 Early Bird', detail: 'Undergraduate Programs', status: 'Closing Soon', statusColor: 'bg-red-100 text-red-700' },
-        { month: 'Nov', day: '02', title: 'Postgraduate Research Grant', detail: 'All PhD Candidates', status: '18 Days Left', statusColor: 'bg-gray-100 text-gray-600' },
-        { month: 'Dec', day: '10', title: 'Spring Intake Final Call', detail: 'Business & Management Faculty', status: 'Active', statusColor: 'bg-gray-100 text-gray-600' },
-    ] : [];
 
     return (
         <UniversityLayout universityName={displayName}>
@@ -47,7 +127,11 @@ const UniversityDashboard = () => {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {stats.slice(0, 3).map((stat) => (
-                        <div key={stat.label} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm transition-all hover:shadow-md flex flex-col justify-between">
+                        <Link 
+                            key={stat.label} 
+                            to={stat.link || '#'} 
+                            className={`bg-white p-4 rounded-xl border border-slate-100 shadow-sm transition-all flex flex-col justify-between ${stat.link ? 'hover:shadow-md hover:border-blue-100 cursor-pointer' : ''}`}
+                        >
                             <div className="flex justify-between items-start">
                                 <p className="text-slate-400 text-[9px] font-bold uppercase tracking-widest">{stat.label}</p>
                                 <span className="material-symbols-outlined text-[#2b6cee] bg-[#2b6cee]/5 p-1.5 rounded-lg text-[18px]">{stat.icon}</span>
@@ -59,7 +143,7 @@ const UniversityDashboard = () => {
                                     <span>{stat.trend}</span>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
 
@@ -71,13 +155,7 @@ const UniversityDashboard = () => {
                             <h3 className="text-sm font-black text-slate-900">Interest by Course Category</h3>
                         </div>
                         <div className="p-4 flex flex-col gap-4">
-                            {isDemo ? [
-                                { label: 'COMPUTER SCIENCE', count: '3,420', percentage: 90 },
-                                { label: 'BUSINESS & MBA', count: '2,890', percentage: 75 },
-                                { label: 'ENGINEERING', count: '2,100', percentage: 55 },
-                                { label: 'MEDICINE & LIFE SCIENCES', count: '1,650', percentage: 45 },
-                                { label: 'ARTS & DESIGN', count: '940', percentage: 25 },
-                            ].map((item) => (
+                            {interestsByCategory.length > 0 ? interestsByCategory.map((item) => (
                                 <div key={item.label} className="flex flex-col gap-1.5">
                                     <div className="flex justify-between items-center">
                                         <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{item.label}</span>
@@ -104,17 +182,17 @@ const UniversityDashboard = () => {
                     <div className="bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col overflow-hidden">
                         <div className="px-4 py-3 border-b border-slate-50 flex justify-between items-center">
                             <h3 className="text-sm font-black text-slate-900">Upcoming admission deadlines</h3>
-                            {isDemo && <button className="text-[#2b6cee] text-[10px] font-bold hover:underline">Calendar View</button>}
+                            <button className="text-[#2b6cee] text-[10px] font-bold hover:underline">Calendar View</button>
                         </div>
                         <div className="p-1 space-y-0.5">
-                            {isDemo ? deadlines.map((deadline) => (
-                                <div key={deadline.title} className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg transition-all border-b border-slate-50/50 last:border-0">
-                                    <div className={`flex flex-col items-center justify-center h-10 w-10 rounded-lg border border-slate-50 ${deadline.month === 'Oct' ? 'bg-rose-50 text-rose-600' : 'bg-blue-50 text-blue-600'}`}>
+                            {deadlines.length > 0 ? deadlines.map((deadline, idx) => (
+                                <div key={idx} className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg transition-all border-b border-slate-50/50 last:border-0">
+                                    <div className="flex flex-col items-center justify-center h-10 w-10 rounded-lg border border-slate-50 bg-blue-50 text-blue-600">
                                         <span className="text-[8px] font-black uppercase tracking-widest">{deadline.month}</span>
                                         <span className="text-base font-black leading-none">{deadline.day}</span>
                                     </div>
                                     <div className="flex-1">
-                                        <h4 className="text-[12px] font-black text-slate-900 leading-tight">{deadline.title}</h4>
+                                        <h4 className="text-[12px] font-black text-slate-900 leading-tight truncate">{deadline.title}</h4>
                                         <p className="text-[10px] text-slate-400 font-medium">{deadline.detail}</p>
                                     </div>
                                     <span className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-widest rounded-md ${deadline.statusColor}`}>
@@ -149,7 +227,6 @@ const UniversityDashboard = () => {
                     </div>
                     
                     <div className="relative h-48 w-full mt-2">
-                        {/* Horizontal Grid Lines */}
                         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-[0.03]">
                             {[...Array(5)].map((_, i) => (
                                 <div key={i} className="w-full h-px bg-black"></div>
@@ -157,37 +234,22 @@ const UniversityDashboard = () => {
                         </div>
 
                         <div className="absolute inset-0 flex items-end justify-between px-2">
-                            {(isDemo ? [
-                                35, 45, 50, 40, 65, 45, 55, 75, 40, 60, 50, 70, 45, 55, 65, 
-                                40, 75, 55, 65, 50, 45, 85, 40, 60, 55, 75, 45, 65, 50, 80
-                            ] : Array(30).fill(5)).map((h, i) => (
+                            {[35, 45, 50, 40, 65, 45, 55, 75, 40, 60, 50, 70, 45, 55, 65, 40, 75, 55, 65, 50, 45, 85, 40, 60, 55, 75, 45, 65, 50, 80].map((h, i) => (
                                 <div key={i} className="flex flex-col items-center flex-1 group">
                                     <div className="w-[3px] bg-[#2b6cee]/10 h-32 rounded-t-full relative">
                                         <div 
                                             className="absolute bottom-0 left-0 w-full bg-[#2b6cee]/30 rounded-t-full transition-all duration-700"
                                             style={{ height: `${h}%` }}
                                         ></div>
-                                        {i === 0 && isDemo && (
-                                            <div className="absolute top-[20%] left-[-2px] w-[7px] h-[3px] bg-[#2b6cee] rounded-full"></div>
-                                        )}
                                         {i % 7 === 0 && (
-                                            <div 
-                                                className="absolute bottom-[-24px] left-1/2 -translate-x-1/2 whitespace-nowrap text-[8px] font-black text-slate-400 uppercase tracking-widest"
-                                            >
-                                                {isDemo ? `Oct ${String(i + 1).padStart(2, '0')}` : '-'}
+                                            <div className="absolute bottom-[-24px] left-1/2 -translate-x-1/2 whitespace-nowrap text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                                                Oct {String(i + 1).padStart(2, '0')}
                                             </div>
                                         )}
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        {!isDemo && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-[2px] rounded-xl">
-                                <div className="text-center">
-                                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Awaiting initial engagement data...</p>
-                                </div>
-                            </div>
-                        )}
                     </div>
                     <div className="h-4"></div>
                 </div>

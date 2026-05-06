@@ -4,6 +4,7 @@ import { useNotification } from '../context/NotificationContext';
 import { useAuthAction } from '../hooks/useAuthAction';
 import LoginModal from '../components/LoginModal';
 import { getCombinedUniversities } from '../utils/universityData';
+import { universityService } from '../services/universityService';
 
 const CollegeDetails = () => {
     const [searchParams] = useSearchParams();
@@ -13,7 +14,63 @@ const CollegeDetails = () => {
     const stateUniversity = location.state?.college;
     const { executeAction, isLoginModalOpen, closeLoginModal } = useAuthAction();
 
-    const universities = useMemo(() => getCombinedUniversities(), []);
+    const [universities, setUniversities] = React.useState<any[]>(getCombinedUniversities());
+
+    React.useEffect(() => {
+        universityService.getAll().then(res => {
+            const backendUnis = Array.isArray(res) ? res : (res as any).data || [];
+            const mappedBackendUnis = backendUnis.map((uni: any) => ({
+                id: uni.id,
+                name: uni.name,
+                country: uni.country,
+                city: uni.city || 'Campus',
+                type: uni.type === 'public' ? 'Public University' : 'Private University',
+                globalRanking: uni.qsRanking || 100,
+                coursesCount: '0',
+                avgTuition: '$35,000',
+                livingExpense: '$1,500',
+                intakes: 'Fall / Winter',
+                partTimeRights: '20 hrs/week',
+                overview: uni.description || 'Institutional overview pending...',
+                course: 'General Studies',
+                courseType: 'Undergraduate',
+                tuitionValue: 35000,
+                livingCostValue: 15000,
+                intakeType: 'September',
+                budget: 'Moderate',
+                admissionSteps: [],
+                scholarships: [],
+                testRequirements: [],
+                deadlineFall: 'Varies',
+                deadlineWinter: 'Varies',
+                visaType: 'Student Visa',
+                processingTime: 'Varies',
+                loanInterestRate: 'N/A',
+                image: uni.logoUrl || "",
+                acceptanceRate: uni.acceptanceRate ? `${uni.acceptanceRate}%` : "85%",
+                rankingQS: uni.qsRanking ? `#${uni.qsRanking} QS` : "#100 QS",
+                studentsCount: uni.totalStudents?.toString() || "Updates Soon",
+                internationalStudents: uni.intlStudentsPct ? `${uni.intlStudentsPct}%` : "Updates Soon",
+                campusSize: uni.campusSizeAcres ? `${uni.campusSizeAcres} Acres` : "Updates Soon",
+                employability: "Updates Soon",
+                tags: [
+                    { icon: "trophy", text: uni.qsRanking ? `#${uni.qsRanking} QS` : '#100 QS', color: "text-primary" },
+                    { icon: "payments", text: `$35k / year`, color: "text-gray-400" },
+                    { icon: "analytics", text: uni.acceptanceRate ? `${uni.acceptanceRate}% Acceptance` : '85% Acceptance', color: "text-gray-400" }
+                ]
+            }));
+
+            setUniversities(prev => {
+                const merged = [...prev];
+                mappedBackendUnis.forEach((b: any) => {
+                    if (!merged.find(m => m.name.toLowerCase() === b.name.toLowerCase())) {
+                        merged.push(b);
+                    }
+                });
+                return merged;
+            });
+        }).catch(e => console.error("Failed to fetch backend universities", e));
+    }, []);
 
     const uni = useMemo(() => {
         // If passed via state, try to find a richer version in DB, or use state as fallback
@@ -21,17 +78,17 @@ const CollegeDetails = () => {
             const found = universities.find(u => u.name === stateUniversity.name);
             if (found) return {
                 ...found,
-                desc: found.overview || found.desc || "Information for this university is currently being updated.",
-                stats: found.stats || { acceptance: found.acceptanceRate || "N/A", salary: "N/A" },
-                ranking: found.rankingQS || found.globalRanking || found.ranking || "N/A"
-            };
+                desc: found.overview || (found as any).desc || "Information for this university is currently being updated.",
+                stats: (found as any).stats || { acceptance: found.acceptanceRate || "N/A", salary: "N/A" },
+                ranking: found.rankingQS || found.globalRanking || (found as any).ranking || "N/A"
+            } as any;
 
             return {
                 ...stateUniversity,
-                desc: stateUniversity.overview || "Information for this university is currently being updated.",
-                stats: { acceptance: stateUniversity.acceptanceRate || "N/A", salary: "N/A" },
-                ranking: stateUniversity.rankingQS || stateUniversity.globalRanking || "N/A"
-            };
+                desc: stateUniversity.overview || (stateUniversity as any).desc || "Information for this university is currently being updated.",
+                stats: (stateUniversity as any).stats || { acceptance: stateUniversity.acceptanceRate || "N/A", salary: "N/A" },
+                ranking: stateUniversity.rankingQS || stateUniversity.globalRanking || (stateUniversity as any).ranking || "N/A"
+            } as any;
         }
 
         if (!uniName) return null;
@@ -39,10 +96,10 @@ const CollegeDetails = () => {
         if (found) {
             return {
                 ...found,
-                desc: found.overview || found.desc || "Information for this university is currently being updated.",
-                stats: found.stats || { acceptance: found.acceptanceRate || "N/A", salary: "N/A" },
-                ranking: found.rankingQS || found.globalRanking || found.ranking || "N/A"
-            };
+                desc: found.overview || (found as any).desc || "Information for this university is currently being updated.",
+                stats: (found as any).stats || { acceptance: found.acceptanceRate || "N/A", salary: "N/A" },
+                ranking: found.rankingQS || found.globalRanking || (found as any).ranking || "N/A"
+            } as any;
         }
         return null;
     }, [uniName, stateUniversity, universities]);
@@ -57,9 +114,9 @@ const CollegeDetails = () => {
                     message: `You started an application for ${uni.name}`,
                     type: 'info',
                     icon: 'school',
-                    actionUrl: `/application/payment?name=${encodeURIComponent(uni.name)}`
+                    actionUrl: `/application/details?university=${encodeURIComponent(uni.name)}`
                 });
-                navigate(`/application/payment?name=${encodeURIComponent(uni.name)}`);
+                navigate(`/application/details?university=${encodeURIComponent(uni.name)}`);
             }
         });
     };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SuperAdminLayout from '../layouts/SuperAdminLayout';
+import { universityService } from '../services/universityService';
 
 const SuperAdminUniversityManagement = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -35,25 +36,112 @@ const SuperAdminUniversityManagement = () => {
         });
     };
 
-    const toggleBlockCreator = (name: string) => {
+    const toggleBlockCreator = async (name: string, uniName?: string) => {
+        const isBlocking = !blockedCreators.includes(name);
+        
+        // Update local state immediately for UI responsiveness
         setBlockedCreators(prev => 
-            prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]
+            isBlocking ? [...prev, name] : prev.filter(c => c !== name)
         );
+        localStorage.setItem('ea_blocked_creators', JSON.stringify(
+            isBlocking ? [...blockedCreators, name] : blockedCreators.filter(c => c !== name)
+        ));
+
+        // Persist Blocked Credentials for Login Page Check
+        if (uniName) {
+            const blockedCredsJSON = localStorage.getItem('ea_blocked_credentials');
+            let blockedCreds: any[] = blockedCredsJSON ? JSON.parse(blockedCredsJSON) : [];
+            const currentCreds = getCredentials(uniName, name);
+
+            if (isBlocking) {
+                // Add to blocked credentials
+                if (!blockedCreds.some(c => c.email === currentCreds.email && c.password === currentCreds.password)) {
+                    blockedCreds.push({ ...currentCreds, name });
+                }
+            } else {
+                // Remove from blocked credentials
+                blockedCreds = blockedCreds.filter(c => !(c.email === currentCreds.email && c.password === currentCreds.password));
+            }
+            localStorage.setItem('ea_blocked_credentials', JSON.stringify(blockedCreds));
+        }
+
+        // Sync with Backend if it's a real user
+        try {
+            const token = localStorage.getItem('ea_token') || localStorage.getItem('eaoverseas_token');
+            // First fetch users to find the ID of this creator
+            const res = await fetch('http://localhost:4000/api/admin/users', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const usersData = await res.json();
+            const users = usersData.data || [];
+            
+            // Look for user with same full name OR same email
+            let userMatch = users.find((u: any) => u.fullName.toLowerCase() === name.toLowerCase());
+            
+            if (!userMatch && uniName) {
+                const credentials = getCredentials(uniName, name);
+                userMatch = users.find((u: any) => u.email.toLowerCase() === credentials.email.toLowerCase());
+            }
+
+            if (userMatch) {
+                await fetch(`http://localhost:4000/api/admin/users/${userMatch.id}/status`, {
+                    method: 'PATCH',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({ isActive: !isBlocking })
+                });
+                console.log(`Backend status updated for ${name}: ${!isBlocking ? 'Active' : 'Suspended'}`);
+            }
+        } catch (error) {
+            console.error("Failed to sync block status with backend", error);
+        }
     };
 
-    const handleRegisterAndAssign = (uniId: number) => {
+    const handleRegisterAndAssign = async (uniId: number) => {
         if (!regForm.name || !regForm.email || !regForm.pass) return;
         
-        const newName = regForm.name;
-        setCreatorsList(prev => [...new Set([...prev, newName])]);
-        setManualCredentials(prev => ({
-            ...prev,
-            [newName]: { email: regForm.email, pass: regForm.pass }
-        }));
-        
-        toggleAssignment(uniId, newName);
-        setRegForm({ name: '', email: '', pass: '' });
-        setIsRegistering(false);
+        try {
+            // 1. Attempt Backend Registration
+            const res = await fetch('http://localhost:4000/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: regForm.email,
+                    password: regForm.pass,
+                    fullName: regForm.name,
+                    role: 'counsellor' // Register authors as counsellors
+                })
+            });
+
+            // Note: If user already exists, we might want to just proceed with assignment
+            // but for now we follow the flow.
+            
+            const newName = regForm.name;
+            setCreatorsList(prev => [...new Set([...prev, newName])]);
+            setManualCredentials(prev => ({
+                ...prev,
+                [newName]: { email: regForm.email, pass: regForm.pass }
+            }));
+            
+            toggleAssignment(uniId, newName);
+            setRegForm({ name: '', email: '', pass: '' });
+            setIsRegistering(false);
+            console.log(`Creator ${newName} registered in backend.`);
+        } catch (error) {
+            console.error("Registration failed, proceeding locally", error);
+            // Fallback to local state if backend fails
+            const newName = regForm.name;
+            setCreatorsList(prev => [...new Set([...prev, newName])]);
+            setManualCredentials(prev => ({
+                ...prev,
+                [newName]: { email: regForm.email, pass: regForm.pass }
+            }));
+            toggleAssignment(uniId, newName);
+            setRegForm({ name: '', email: '', pass: '' });
+            setIsRegistering(false);
+        }
     };
 
     const getCredentials = (uniName: string, creatorName: string) => {
@@ -141,11 +229,7 @@ const SuperAdminUniversityManagement = () => {
     const navigate = useNavigate();
     const itemsPerPage = 5;
 
-    const stats = [
-        { label: 'Active Partners', value: '98', icon: 'handshake', color: 'bg-blue-50 text-blue-600', trend: '82% of total' },
-        { label: 'Pending Requests', value: '12', icon: 'clock_loader_40', color: 'bg-amber-50 text-amber-600', trend: 'Requires attention', urgent: true },
-        { label: 'Suspended', value: '14', icon: 'block', color: 'bg-rose-50 text-rose-600', trend: '-2 since 2023' },
-    ];
+
 
     const [universities, setUniversities] = useState(() => {
         const saved = localStorage.getItem('ea_universities');
@@ -170,8 +254,30 @@ const SuperAdminUniversityManagement = () => {
         localStorage.setItem('ea_universities', JSON.stringify(universities));
     }, [universities]);
 
-    const handleOnboard = () => {
+    const handleOnboard = async () => {
         if (!uniForm.name || !uniForm.country) return;
+
+        try {
+            await universityService.create({
+                name: uniForm.name,
+                slug: uniForm.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                websiteUrl: uniForm.website,
+                country: uniForm.country,
+                city: uniForm.city || null,
+                logoUrl: uniForm.logo || null,
+                bannerUrl: uniForm.banner || null,
+                qsRanking: parseInt(uniForm.ranking.replace(/[^0-9]/g, '')) || null,
+                description: uniForm.overview || null,
+                type: uniForm.type.toLowerCase() === 'research' ? 'public' : uniForm.type.toLowerCase(),
+                establishedYear: parseInt(uniForm.estYear) || null,
+                totalStudents: parseInt(uniForm.totalStudents.replace(/[^0-9]/g, '')) || null,
+                campusSizeAcres: parseInt(uniForm.campusSize.replace(/[^0-9]/g, '')) || null,
+                acceptanceRate: parseFloat(uniForm.acceptanceRate) || null,
+                intlStudentsPct: parseFloat(uniForm.intlStudents) || null,
+            });
+        } catch (error) {
+            console.error("Failed to store university in backend:", error);
+        }
 
         const newUni = {
             ...uniForm, // Keep full data for profile page
@@ -204,10 +310,22 @@ const SuperAdminUniversityManagement = () => {
     };
 
     const deleteUniversity = (id: number) => {
-        if (window.confirm('Are you sure you want to delete this university?')) {
-            setUniversities(prev => prev.filter((u: any) => u.id !== id));
+        if (window.confirm('Are you sure you want to suspend this university?')) {
+            setUniversities(prev => prev.map((u: any) => 
+                u.id === id ? { ...u, status: 'Suspended' } : u
+            ));
         }
     };
+
+    const activeCount = universities.filter((u: any) => u.status === 'Active').length;
+    const pendingCount = universities.filter((u: any) => u.status === 'Pending').length;
+    const suspendedCount = universities.filter((u: any) => u.status === 'Suspended').length;
+
+    const stats = [
+        { label: 'Active Partners', value: activeCount.toString(), icon: 'handshake', color: 'bg-blue-50 text-blue-600', trend: `${activeCount > 0 ? Math.round((activeCount/universities.length)*100) : 0}% of total` },
+        { label: 'Pending Requests', value: pendingCount.toString(), icon: 'clock_loader_40', color: 'bg-amber-50 text-amber-600', trend: 'Requires attention', urgent: true },
+        { label: 'Suspended', value: suspendedCount.toString(), icon: 'block', color: 'bg-rose-50 text-rose-600', trend: 'Suspended from platform' },
+    ];
 
     const filteredUniversities = universities.filter((uni: { name: string; country: string; status: string }) => {
         const matchesSearch = uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -227,11 +345,15 @@ const SuperAdminUniversityManagement = () => {
                 {/* KPI Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {stats.map((stat: { label: string; icon: string; color: string; urgent?: boolean; value: string; trend: string }) => {
-                        const isClickable = stat.label === 'Active Partners';
+                        const isClickable = stat.label === 'Active Partners' || stat.label === 'Suspended';
+                        const handleClick = () => {
+                            if (stat.label === 'Active Partners') navigate('/superadmin/universities/active');
+                            if (stat.label === 'Suspended') navigate('/superadmin/universities/suspended');
+                        };
                         return (
                             <div 
                                 key={stat.label} 
-                                onClick={() => isClickable && navigate('/superadmin/universities/active')}
+                                onClick={handleClick}
                                 className={`bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 ${isClickable ? 'cursor-pointer hover:border-blue-300 hover:shadow-md transition-all' : ''}`}
                             >
                                 <div className="flex justify-between items-start">
@@ -392,13 +514,13 @@ const SuperAdminUniversityManagement = () => {
                                                 >
                                                     View Profile
                                                 </button>
-                                                <button
-                                                    onClick={() => deleteUniversity(uni.id)}
-                                                    className="size-8 flex items-center justify-center bg-rose-50 text-rose-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100"
-                                                    title="Delete University"
-                                                >
-                                                    <span className="material-symbols-outlined text-[18px]">delete</span>
-                                                </button>
+                                                    <button
+                                                        onClick={() => deleteUniversity(uni.id)}
+                                                        className="size-8 flex items-center justify-center bg-rose-50 text-rose-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100"
+                                                        title="Suspend University"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[18px]">block</span>
+                                                    </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -937,7 +1059,7 @@ const SuperAdminUniversityManagement = () => {
                                                         </div>
                                                     </div>
                                                     <button 
-                                                        onClick={() => toggleBlockCreator(expandedCreator.name)}
+                                                        onClick={() => toggleBlockCreator(expandedCreator.name, uni.name)}
                                                         className="px-4 py-1.5 bg-rose-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-rose-400 transition-all shadow-lg shadow-rose-900/40"
                                                     >
                                                         Unblock Creator
@@ -968,7 +1090,7 @@ const SuperAdminUniversityManagement = () => {
                                                     {expandedCreator.name !== 'Official' && (
                                                         <div className="pt-2 border-t border-white/5 flex justify-end">
                                                             <button 
-                                                                onClick={() => toggleBlockCreator(expandedCreator.name)}
+                                                                onClick={() => toggleBlockCreator(expandedCreator.name, uni.name)}
                                                                 className="flex items-center gap-1.5 text-rose-500 hover:text-rose-400 text-[9px] font-black uppercase tracking-widest transition-colors"
                                                             >
                                                                 <span className="material-symbols-outlined text-[14px]">person_remove</span>

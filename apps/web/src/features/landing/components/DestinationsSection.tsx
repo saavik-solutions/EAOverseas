@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DestinationsSection.css';
-import universityImg from '../../../assets/university_modern_building.png';
-import orbitGraphic from '../../../assets/destinations_orbit_graphic.png';
-import historicCampus from '../../../assets/university_historic_campus.png';
-import modernGlass from '../../../assets/university_modern_glass.png';
-import greenCampus from '../../../assets/university_green_campus.png';
-import classicHall from '../../../assets/university_classic_hall.png';
+import universityImg from '@/assets/university_modern_building.png';
+import orbitGraphic from '@/assets/destinations_orbit_graphic.png';
+import historicCampus from '@/assets/university_historic_campus.png';
+import modernGlass from '@/assets/university_modern_glass.png';
+import greenCampus from '@/assets/university_green_campus.png';
+import classicHall from '@/assets/university_classic_hall.png';
 
 // Fallback pool to ensure variety if we run out of unique single assets
 const imgPool = [historicCampus, modernGlass, greenCampus, classicHall, universityImg];

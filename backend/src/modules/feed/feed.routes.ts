@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
-import { getAllPosts, getPostBySlug, createPost, toggleLike, toggleBookmark } from './feed.controller';
+import { getAllPosts, getPostBySlug, createPost, updatePost, deletePost, toggleLike, toggleBookmark } from './feed.controller';
 
 export default async function feedRoutes(app: FastifyInstance) {
   // GET posts - optional auth to show user heart/upvote state
@@ -18,6 +18,14 @@ export default async function feedRoutes(app: FastifyInstance) {
   app.post('/', {
     preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
   }, createPost);
+
+  app.put('/:id', {
+    preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
+  }, updatePost);
+
+  app.delete('/:id', {
+    preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
+  }, deletePost);
 
   // Interactions
   app.post('/:id/like', {

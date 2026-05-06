@@ -1,0 +1,10 @@
+export { default as TestPrep } from './pages/TestPrep';
+export { default as TestOverview } from './pages/TestOverview';
+export { default as ListeningTest } from './pages/ListeningTest';
+export { default as SpeakingTest } from './pages/SpeakingTest';
+export { default as ReadingTestInstructions } from './pages/ReadingTestInstructions';
+export { default as ReadingTest } from './pages/ReadingTest';
+export { default as ReadingTestResult } from './pages/ReadingTestResult';
+export { default as ReadingTestSubmitted } from './pages/ReadingTestSubmitted';
+export { default as WritingTestInstructions } from './pages/WritingTestInstructions';
+export { default as WritingTest } from './pages/WritingTest';

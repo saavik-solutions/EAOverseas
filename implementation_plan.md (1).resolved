@@ -1,0 +1,536 @@
+# Folder Structure Restructuring Plan
+
+## Problem Statement
+
+The current codebase has **84 flat page files** dumped into a single `/pages` directory, **36 mixed components** with no categorization, hardcoded mock data scattered inside production contexts, no separation between features, and inconsistent patterns. This makes it nearly impossible to onboard developers, track ownership, or scale features independently.
+
+---
+
+## Current Structure (What's Wrong)
+
+```
+apps/web/src/
+├── pages/              ← 84 files FLAT. SuperAdmin, Student, Counsellor all mixed together
+│   ├── Login.tsx
+│   ├── CollegeFinder.tsx
+│   ├── SuperAdminNewPost.tsx
+│   ├── ConsultantDashboard.tsx
+│   ├── Accommodation.tsx    ← 60KB single file with hardcoded data
+│   ├── CountryDetails.tsx   ← 50KB single file
+│   └── ... (84 files)
+├── components/         ← 36 files mixed: modals, sections, layout, navigation
+├── context/            ← Auth + Profile + SavedItems + Notifications (mock data inside)
+├── services/           ← 4 API services with hardcoded localhost URLs
+├── layouts/            ← 4 layouts (good, but scattered)
+├── data/               ← Mock data files
+├── hooks/              ← 2 hooks
+├── shared/             ← 1 nested context
+├── features/           ← 1 empty-ish folder
+├── types/              ← 1 type declaration
+└── utils/              ← 1 utility
+```
+
+### Core Issues By Perspective
+
+| Perspective | Problem |
+|---|---|
+| **Product Manager** | Cannot tell which features are real vs mock. No feature ownership boundaries. No way to hand off "the visa module" to a developer. |
+| **UI/UX Designer** | No design system. Components mix business logic with presentation. No reusable UI primitives. CSS scattered (some in `.css` files, most in Tailwind inline). |
+| **Senior Engineer** | 84 flat files = zero discoverability. Mock data pollutes production contexts. No barrel exports. No feature isolation for testing. API URLs hardcoded across 4 different files. |
+| **Security** | Secrets in contexts. No input validation layer. Auth state mixed with UI state. No centralized API client with interceptors for token refresh. |
+| **Performance** | No code splitting — every page imported eagerly in App.tsx. 60KB component files. No lazy loading. |
+
+---
+
+## Proposed Structure
+
+### Frontend (`apps/web/src/`)
+
+```
+apps/web/src/
+│
+├── app/                              ← App shell & routing
+│   ├── App.tsx                       ← Master router (uses lazy imports)
+│   ├── routes/
+│   │   ├── public.routes.tsx         ← Landing, About, Terms, Countries, Blogs
+│   │   ├── auth.routes.tsx           ← Login, Signup, ForgotPassword, Verification
+│   │   ├── student.routes.tsx        ← Dashboard, Feed, Colleges, Profile, etc.
+│   │   ├── counsellor.routes.tsx     ← Counsellor dashboard, schedule, tasks
+│   │   ├── superadmin.routes.tsx     ← Admin panel routes
+│   │   └── university.routes.tsx     ← University portal routes
+│   └── providers/
+│       └── AppProviders.tsx          ← Composes all context providers in one place
+│
+├── config/                           ← Centralized configuration
+│   ├── api.config.ts                 ← Single source: API_BASE_URL, endpoints map
+│   ├── auth.config.ts                ← Google Client ID, JWT settings
+│   └── constants.ts                  ← App-wide constants (roles, categories, countries)
+│
+├── lib/                              ← Core infrastructure (framework-agnostic)
+│   ├── api-client.ts                 ← Centralized fetch wrapper with auth headers, error handling
+│   ├── storage.ts                    ← localStorage abstraction (get/set/remove with type safety)
+│   └── validators.ts                 ← Shared Zod schemas for client-side validation
+│
+├── hooks/                            ← Global custom hooks
+│   ├── useAuth.ts                    ← Re-export from auth context
+│   ├── useAuthAction.ts             ← Existing hook
+│   ├── useScrollAnimation.ts        ← Existing hook
+│   ├── useApi.ts                    ← Generic data fetching hook
+│   └── useDebounce.ts               ← For search inputs
+│
+├── components/                       ← SHARED UI components only (no business logic)
+│   ├── ui/                           ← Design system primitives
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Select.tsx
+│   │   ├── Modal.tsx
+│   │   ├── Badge.tsx
+│   │   ├── Card.tsx
+│   │   ├── Avatar.tsx
+│   │   ├── Spinner.tsx
+│   │   └── index.ts                  ← Barrel export
+│   ├── layout/                       ← Structural components
+│   │   ├── PageHeader.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── ScrollToTop.tsx
+│   │   └── ErrorBoundary.tsx         ← NEW: Catch rendering errors
+│   ├── feedback/                     ← User feedback components
+│   │   ├── NotificationBanner.tsx
+│   │   ├── NotificationDropdown.tsx
+│   │   └── ShareModal.tsx
+│   └── guards/
+│       └── ProtectedRoute.tsx        ← Route protection component
+│
+├── layouts/                          ← Page layout shells (unchanged, they're good)
+│   ├── MainLayout.tsx
+│   ├── SuperAdminLayout.tsx
+│   ├── ConsultantLayout.tsx
+│   └── UniversityLayout.tsx
+│
+├── features/                         ← FEATURE MODULES (the core restructure)
+│   │
+│   ├── auth/                         ← Authentication feature
+│   │   ├── pages/
+│   │   │   ├── Login.tsx
+│   │   │   ├── Signup.tsx
+│   │   │   ├── ForgotPassword.tsx
+│   │   │   └── Verification.tsx
+│   │   ├── components/
+│   │   │   └── LoginModal.tsx
+│   │   ├── context/
+│   │   │   └── AuthContext.tsx
+│   │   ├── services/
+│   │   │   └── auth.service.ts
+│   │   └── index.ts                  ← Public exports only
+│   │
+│   ├── feed/                         ← News & Content Feed
+│   │   ├── pages/
+│   │   │   ├── Feed.tsx
+│   │   │   └── FeedDetails.tsx
+│   │   ├── components/
+│   │   │   ├── FeedCard.tsx          ← Extracted from Feed.tsx
+│   │   │   └── FeedFilters.tsx       ← Extracted from Feed.tsx
+│   │   ├── services/
+│   │   │   └── feed.service.ts
+│   │   └── index.ts
+│   │
+│   ├── community/                    ← Community Forum
+│   │   ├── pages/
+│   │   │   └── CommunityFeed.tsx
+│   │   ├── components/
+│   │   │   ├── PostCard.tsx
+│   │   │   └── CommentThread.tsx
+│   │   ├── services/
+│   │   │   └── community.service.ts
+│   │   └── index.ts
+│   │
+│   ├── colleges/                     ← College Discovery
+│   │   ├── pages/
+│   │   │   ├── CollegeFinder.tsx
+│   │   │   ├── CollegeDetails.tsx
+│   │   │   ├── UniversityDirectory.tsx
+│   │   │   └── UniversityDetails.tsx
+│   │   ├── components/
+│   │   │   └── CollegeCard.tsx
+│   │   ├── services/
+│   │   │   └── university.service.ts
+│   │   └── index.ts
+│   │
+│   ├── courses/                      ← Course Discovery
+│   │   ├── pages/
+│   │   │   ├── Courses.tsx
+│   │   │   └── CourseDetails.tsx
+│   │   └── index.ts
+│   │
+│   ├── profile/                      ← User Profile Management
+│   │   ├── pages/
+│   │   │   ├── MyProfile.tsx
+│   │   │   ├── EditProfile.tsx
+│   │   │   ├── UserProfile.tsx
+│   │   │   ├── AccountSettings.tsx
+│   │   │   ├── NotificationPreferences.tsx
+│   │   │   ├── PrivacySecurity.tsx
+│   │   │   └── AcademicSnapshotDetails.tsx
+│   │   ├── wizard/                   ← Profile setup wizard
+│   │   │   ├── ProfileLayout.tsx
+│   │   │   ├── BasicInfo.tsx
+│   │   │   ├── Education.tsx
+│   │   │   ├── Goals.tsx
+│   │   │   └── ProfileCompleted.tsx
+│   │   ├── components/
+│   │   │   └── ConnectionsPopup.tsx
+│   │   ├── context/
+│   │   │   └── UserProfileContext.tsx
+│   │   └── index.ts
+│   │
+│   ├── applications/                 ← University Applications
+│   │   ├── pages/
+│   │   │   └── ApplicationDashboard.tsx
+│   │   ├── wizard/                   ← Multi-step application form
+│   │   │   ├── ApplicationLayout.tsx
+│   │   │   ├── ApplicationStart.tsx
+│   │   │   ├── InitiateApplication.tsx
+│   │   │   ├── PersonalDetails.tsx
+│   │   │   ├── AcademicDetails.tsx
+│   │   │   ├── Documents.tsx
+│   │   │   ├── Payment.tsx
+│   │   │   ├── Review.tsx
+│   │   │   └── ApplicationSubmitted.tsx
+│   │   └── index.ts
+│   │
+│   ├── documents/                    ← Document Management
+│   │   ├── pages/
+│   │   │   └── DocumentsDashboard.tsx
+│   │   └── index.ts
+│   │
+│   ├── saved-items/                  ← Bookmarks & Saved Items
+│   │   ├── pages/
+│   │   │   ├── SavedColleges.tsx
+│   │   │   ├── SavedCourses.tsx
+│   │   │   ├── SavedAccommodations.tsx
+│   │   │   └── SavedPosts.tsx
+│   │   ├── context/
+│   │   │   └── SavedItemsContext.tsx
+│   │   └── index.ts
+│   │
+│   ├── ai-assistant/                 ← Guide Buddy AI
+│   │   ├── pages/
+│   │   │   └── AskAI.tsx
+│   │   ├── services/
+│   │   │   └── ai.service.ts
+│   │   └── index.ts
+│   │
+│   ├── accommodation/                ← Student Housing
+│   │   ├── pages/
+│   │   │   ├── Accommodation.tsx
+│   │   │   └── AccommodationDetails.tsx
+│   │   ├── components/
+│   │   │   ├── AccommodationApplicationForm.tsx
+│   │   │   └── BookingModal.tsx
+│   │   └── index.ts
+│   │
+│   ├── visa/                         ← Visa Preparation
+│   │   ├── pages/
+│   │   │   ├── VisaPrep.tsx
+│   │   │   ├── ConfirmAdmission.tsx
+│   │   │   └── VisaDocumentUpload.tsx
+│   │   └── index.ts
+│   │
+│   ├── loans/                        ← Education Loans
+│   │   ├── pages/
+│   │   │   ├── LoanRequirements.tsx
+│   │   │   ├── LoanEligibility.tsx
+│   │   │   ├── LoanDocuments.tsx
+│   │   │   ├── LenderSelection.tsx
+│   │   │   └── LoanApplicationTimeline.tsx
+│   │   └── index.ts
+│   │
+│   ├── test-prep/                    ← IELTS Test Preparation
+│   │   ├── pages/
+│   │   │   ├── TestPrep.tsx
+│   │   │   ├── TestOverview.tsx
+│   │   │   ├── ListeningTest.tsx
+│   │   │   ├── SpeakingTest.tsx
+│   │   │   ├── ReadingTestInstructions.tsx
+│   │   │   ├── ReadingTest.tsx
+│   │   │   ├── ReadingTestResult.tsx
+│   │   │   ├── ReadingTestSubmitted.tsx
+│   │   │   ├── WritingTestInstructions.tsx
+│   │   │   └── WritingTest.tsx
+│   │   ├── components/
+│   │   │   └── ReadingSubmitModal.tsx
+│   │   ├── data/
+│   │   │   └── readingTestContent.ts
+│   │   └── index.ts
+│   │
+│   ├── consultations/                ← Counsellor Booking (Student side)
+│   │   ├── pages/
+│   │   │   ├── Consultant.tsx
+│   │   │   └── ConsultationWaitingRoom.tsx
+│   │   ├── components/
+│   │   │   ├── ConsultationBookingModal.tsx
+│   │   │   └── ConsultationSuccessModal.tsx
+│   │   └── index.ts
+│   │
+│   ├── counsellor-portal/            ← Counsellor Dashboard (Role-specific)
+│   │   ├── pages/
+│   │   │   ├── ConsultantDashboard.tsx
+│   │   │   ├── ConsultantStudents.tsx
+│   │   │   ├── ConsultantSchedule.tsx
+│   │   │   ├── ConsultantTasks.tsx
+│   │   │   ├── CounsellorProfile.tsx
+│   │   │   ├── CounsellingChat.tsx
+│   │   │   ├── PerformanceRatingOverview.tsx
+│   │   │   └── AssignedStudents.tsx
+│   │   ├── components/
+│   │   │   └── ConsultantSidebar.tsx
+│   │   └── index.ts
+│   │
+│   ├── superadmin/                   ← SuperAdmin Portal
+│   │   ├── pages/
+│   │   │   ├── Superadmin.tsx
+│   │   │   ├── SuperAdminUserManagement.tsx
+│   │   │   ├── SuperAdminUniversityManagement.tsx
+│   │   │   ├── SuperAdminUniversityProfile.tsx
+│   │   │   ├── SuperAdminPostFeedDashboard.tsx
+│   │   │   ├── SuperAdminNewPost.tsx
+│   │   │   └── SuperAdminPostDetails.tsx
+│   │   └── index.ts
+│   │
+│   ├── university-portal/            ← University Dashboard
+│   │   ├── pages/
+│   │   │   ├── UniversityDashboard.tsx
+│   │   │   ├── UniversityProfile.tsx
+│   │   │   ├── UniversityVerification.tsx
+│   │   │   └── UniversityPendingVerification.tsx
+│   │   ├── components/
+│   │   │   └── EnquireModal.tsx
+│   │   └── index.ts
+│   │
+│   ├── dashboard/                    ← Student home dashboard
+│   │   ├── pages/
+│   │   │   └── HomeDashboard.tsx
+│   │   └── index.ts
+│   │
+│   ├── explore/                      ← Public discovery pages
+│   │   ├── pages/
+│   │   │   ├── LandingPage.tsx
+│   │   │   ├── Countries.tsx
+│   │   │   ├── CountryDetails.tsx
+│   │   │   ├── AllDestinations.tsx
+│   │   │   └── Referrals.tsx
+│   │   ├── components/
+│   │   │   ├── HeroCarousel.tsx
+│   │   │   ├── DestinationsSection.tsx
+│   │   │   ├── ConsultantCTA.tsx
+│   │   │   ├── SupportSection.tsx
+│   │   │   └── StudentStoriesSection.tsx
+│   │   └── index.ts
+│   │
+│   ├── content/                      ← Static content pages
+│   │   ├── pages/
+│   │   │   ├── AboutUs.tsx
+│   │   │   ├── Team.tsx
+│   │   │   ├── ExpertProfile.tsx
+│   │   │   ├── Blogs.tsx
+│   │   │   ├── BlogDetails.tsx
+│   │   │   ├── Testimonials.tsx
+│   │   │   ├── StudentStory.tsx
+│   │   │   ├── TermsAndConditions.tsx
+│   │   │   ├── PrivacyPolicyPage.tsx
+│   │   │   └── CookiePolicyPage.tsx
+│   │   ├── components/
+│   │   │   ├── AboutUsSection.tsx
+│   │   │   └── TeamSection.tsx
+│   │   ├── data/
+│   │   │   ├── blogs.ts
+│   │   │   ├── experts.ts
+│   │   │   ├── studentStories.ts
+│   │   │   └── universities.ts
+│   │   └── index.ts
+│   │
+│   └── notifications/                ← Notification system
+│       ├── context/
+│       │   └── NotificationContext.tsx
+│       └── index.ts
+│
+├── styles/                           ← Consolidated CSS
+│   ├── index.css                     ← Global CSS + Tailwind directives
+│   ├── animations.css
+│   ├── components/
+│   │   ├── about-us.css
+│   │   ├── consultant-cta.css
+│   │   ├── destinations.css
+│   │   ├── footer.css
+│   │   ├── hero-carousel.css
+│   │   ├── navbar.css
+│   │   ├── student-stories.css
+│   │   ├── support.css
+│   │   └── team.css
+│   └── App.css
+│
+├── assets/                           ← Static assets (unchanged)
+│   ├── images/
+│   │   ├── about/
+│   │   ├── team/
+│   │   ├── universities/
+│   │   ├── hero/
+│   │   ├── stories/
+│   │   └── misc/
+│   └── logo.jpg
+│
+├── types/                            ← Global TypeScript types
+│   ├── assets.d.ts
+│   ├── user.types.ts
+│   ├── feed.types.ts
+│   └── university.types.ts
+│
+├── main.tsx                          ← Entry point
+└── vite-env.d.ts
+```
+
+### Backend (`backend/src/`)
+
+The backend is already reasonably well-structured. Small improvements:
+
+```
+backend/src/
+├── server.ts                          ← Entry point (unchanged)
+├── app.ts                             ← Plugin registration (unchanged)
+│
+├── config/                            ← NEW: Centralized config
+│   ├── env.ts                        ← Validated env loading with defaults
+│   └── constants.ts                  ← Role enums, limits, etc.
+│
+├── lib/                               ← Infrastructure (unchanged)
+│   ├── prisma.ts
+│   ├── nodemailer.ts
+│   ├── s3.ts
+│   └── middleware/
+│       └── authenticate.ts
+│
+├── modules/                           ← Feature modules (unchanged pattern)
+│   ├── auth/
+│   │   ├── auth.routes.ts
+│   │   ├── auth.controller.ts
+│   │   └── auth.service.ts
+│   ├── feed/
+│   │   ├── feed.routes.ts
+│   │   ├── feed.controller.ts
+│   │   └── feed.service.ts
+│   ├── universities/
+│   │   ├── universities.routes.ts
+│   │   ├── universities.controller.ts
+│   │   └── universities.service.ts
+│   ├── admin/
+│   │   ├── admin.routes.ts
+│   │   └── admin.controller.ts
+│   ├── community/
+│   │   ├── community.routes.ts
+│   │   ├── community.controller.ts
+│   │   └── community.service.ts
+│   ├── upload/
+│   │   ├── upload.routes.ts
+│   │   └── upload.controller.ts
+│   ├── mail/
+│   │   └── mail.service.ts
+│   └── profile/                      ← NEW: Profile CRUD (Future)
+│       ├── profile.routes.ts
+│       ├── profile.controller.ts
+│       └── profile.service.ts
+│
+├── shared/                            ← NEW: Cross-module utilities
+│   ├── errors/
+│   │   └── ApiError.ts              ← Standardized error class
+│   ├── validators/
+│   │   └── common.validators.ts     ← Shared Zod schemas
+│   └── types/
+│       └── request.types.ts         ← Extended Fastify request types
+│
+└── scripts/                           ← Dev/seed scripts (unchanged)
+    ├── get-admin.ts
+    ├── populate-feed.ts
+    ├── test-auth-logic.ts
+    └── verify-interactions.ts
+```
+
+---
+
+## Rationale By Perspective
+
+### 🎯 Senior Product Manager
+
+**Feature-first folders** map 1:1 to product features you can assign:
+- "Hand the `features/visa/` folder to Developer A"
+- "Developer B owns `features/superadmin/`"
+- "The `features/loans/` module is mock-only — mark it Phase 3"
+
+Each feature folder is **self-contained** with its own pages, components, services, and data. You can track progress per-feature.
+
+### 🎨 UI/UX Designer
+
+**Design system primitives** (`components/ui/`) are separated from business components:
+- `Button`, `Input`, `Modal`, `Card` — reusable across all features
+- Feature-specific components live inside their feature (e.g., `features/feed/components/FeedCard.tsx`)
+- CSS is consolidated in `styles/` with clear filenames
+
+### 🏗️ Senior Engineer
+
+- **Feature isolation:** Each feature can be developed, tested, and lazy-loaded independently
+- **No circular dependencies:** Features import from `components/ui/`, `lib/`, `config/`, `hooks/` — never from each other
+- **Barrel exports:** Each feature has an `index.ts` that exposes only its public API
+- **Route splitting:** Routes are grouped by role into separate files, enabling per-role code splitting
+- **Single API config:** One `config/api.config.ts` eliminates all hardcoded URLs
+- **Centralized API client:** One `lib/api-client.ts` with auth headers, error handling, token refresh
+
+### 🔒 Security & Compliance
+
+- **Auth isolated:** Authentication logic is encapsulated in `features/auth/` with clear boundaries
+- **Config separated:** Secrets and keys load from `config/` — no scattered `process.env` / `import.meta.env` calls
+- **Input validation:** `lib/validators.ts` provides a central place for all client-side validation
+- **Error boundaries:** `components/layout/ErrorBoundary.tsx` prevents sensitive error details leaking to UI
+- **API client interceptors:** Central place to add token refresh, request rate limiting, CSRF tokens
+
+### ⚡ Performance Optimization
+
+- **Lazy route loading:** `app/routes/*.routes.tsx` can use `React.lazy()` to code-split by feature
+- **Feature-scoped data:** Mock data lives inside its feature (`features/test-prep/data/`), not loaded globally
+- **Smaller bundles:** With feature isolation, unused features (visa, loans, test-prep) won't increase the initial bundle
+- **Asset organization:** Images organized into subdirectories for better caching strategies
+
+---
+
+## Migration Strategy
+
+> [!IMPORTANT]
+> This restructuring involves **moving files and updating imports only**. No code logic changes. Every feature continues to work exactly as it does today.
+
+### Phase A: Create Infrastructure (No breaking changes)
+1. Create `config/`, `lib/`, new `components/ui/`, `components/layout/`, `components/feedback/`, `components/guards/`
+2. Create `app/routes/` and `app/providers/`
+3. Create `styles/` directory
+
+### Phase B: Move Features (One at a time)
+Move each feature module sequentially, updating imports after each move:
+1. `features/auth/` (Login, Signup, Verification, AuthContext)
+2. `features/feed/` (Feed, FeedDetails, feedService)
+3. `features/superadmin/` (All SuperAdmin pages)
+4. `features/profile/` (Profile pages + wizard + context)
+5. ... continue for all 20 feature modules
+
+### Phase C: Cleanup
+1. Delete emptied `pages/`, old `context/`, old `services/` directories
+2. Update `App.tsx` to use route files
+3. Verify all imports resolve correctly
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> **Decision needed:** Should I execute this migration now? It will involve moving ~120 files and updating their import paths. All functionality will be preserved — this is purely a structural reorganization.
+
+> [!WARNING]  
+> **Risk consideration:** During migration, the Vite dev server will show errors temporarily as files move. The app will be fully functional again once all imports are updated. I recommend doing this while the dev servers are stopped.

@@ -4,14 +4,15 @@ import { FeedService } from './feed.service';
 const feedService = new FeedService();
 
 export const getAllPosts = async (request: FastifyRequest, reply: FastifyReply) => {
-  const { category, limit, universityId } = request.query as any;
+  const { category, limit, universityId, search } = request.query as any;
   const user = (request as any).user;
   
   const posts = await feedService.getAll({ 
     category, 
     universityId,
     limit: Number(limit) || 20,
-    userId: user?.id
+    userId: user?.id,
+    search
   });
   return posts;
 };
@@ -38,6 +39,24 @@ export const createPost = async (request: FastifyRequest, reply: FastifyReply) =
     authorId: user.id
   });
   return reply.status(201).send(post);
+};
+
+export const updatePost = async (request: FastifyRequest, reply: FastifyReply) => {
+  const { id } = request.params as { id: string };
+  const user = (request as any).user;
+  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+
+  const post = await feedService.update(id, request.body as any);
+  return reply.status(200).send(post);
+};
+
+export const deletePost = async (request: FastifyRequest, reply: FastifyReply) => {
+  const { id } = request.params as { id: string };
+  const user = (request as any).user;
+  if (!user) return reply.status(401).send({ error: 'Unauthorized' });
+
+  await feedService.delete(id);
+  return reply.status(200).send({ message: 'Post deleted successfully' });
 };
 
 export const toggleLike = async (request: FastifyRequest, reply: FastifyReply) => {

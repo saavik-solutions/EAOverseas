@@ -2,9 +2,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AboutUsSection.css';
-import img1 from '../../../assets/about_us_1.jpg';
-import img2 from '../../../assets/about_us_2.jpg';
-import img4 from '../../../assets/about_us_4.jpg';
+import img1 from '@/assets/about_us_1.jpg';
+import img2 from '@/assets/about_us_2.jpg';
+import img4 from '@/assets/about_us_4.jpg';
 
 const AboutUsSection = () => {
     const navigate = useNavigate();

@@ -4,14 +4,19 @@ import jwt from '@fastify/jwt';
 import multipart from '@fastify/multipart';
 import cookie from '@fastify/cookie';
 import { prisma } from './lib/prisma';
+import { connectMongoDB } from './lib/mongodb';
 import universityRoutes from './modules/universities/universities.routes';
 import authRoutes from './modules/auth/auth.routes';
 import feedRoutes from './modules/feed/feed.routes';
+import scraperRoutes from './modules/scraper/scraper.routes';
 import uploadRoutes from './modules/upload/upload.routes';
 import { communityRoutes } from './modules/community/community.routes';
 import path from 'path';
 import fastifyStatic from '@fastify/static';
+import fastifySocketIO from 'fastify-socket.io';
 import adminRoutes from './modules/admin/admin.routes';
+import chatRoutes from './modules/chat/chat.routes';
+import { registerChatSocket } from './modules/chat/chat.socket';
 
 const app: FastifyInstance = fastify({
   logger: {
@@ -25,6 +30,9 @@ const app: FastifyInstance = fastify({
 });
 
 export const buildApp = async () => {
+  // --- Connect Databases ---
+  await connectMongoDB();
+
   // --- Global Plugins ---
   
   // CORS configuration for Vite frontend
@@ -59,6 +67,14 @@ export const buildApp = async () => {
     prefix: '/uploads/',
   });
 
+  // Socket.io initialization
+  await app.register(fastifySocketIO, {
+    cors: {
+      origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:3000'],
+      methods: ['GET', 'POST'],
+    },
+  });
+
   // --- Health Check ---
   app.get('/api/health', async () => {
     return { status: 'ok', timestamp: new Date().toISOString() };
@@ -68,11 +84,16 @@ export const buildApp = async () => {
   await app.register(universityRoutes, { prefix: '/api/universities' });
   await app.register(authRoutes, { prefix: '/api/auth' });
   await app.register(feedRoutes, { prefix: '/api/feed' });
+  await app.register(scraperRoutes, { prefix: '/api/scraper' });
+  await app.register(chatRoutes, { prefix: '/api/chat' });
   await app.register(uploadRoutes, { prefix: '/api/upload' });
   await app.register(communityRoutes, { prefix: '/api/community' });
   await app.register(adminRoutes, { prefix: '/api/admin' });
   
   app.decorate('prisma', prisma);
+
+  // Register Socket Handlers
+  registerChatSocket(app);
 
   return app;
 };

@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { FeedService } from './feed.service';
+import { prisma } from '../../lib/prisma';
 
 const feedService = new FeedService();
 

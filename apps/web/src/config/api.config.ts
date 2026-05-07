@@ -46,6 +46,19 @@ export const ENDPOINTS = {
     USERS: `${API_BASE_URL}/api/admin/users`,
     USER_STATUS: (id: string) => `${API_BASE_URL}/api/admin/users/${id}/status`,
   },
+  // Scraper (Migrated to Fastify)
+  SCRAPER: {
+    START: `${API_BASE_URL}/api/scraper/start`,
+    STATUS: (jobId: string) => `${API_BASE_URL}/api/scraper/status/${jobId}`,
+    UNIVERSITIES: `${API_BASE_URL}/api/scraper/universities`,
+  },
+  // Chat (Migrated to Fastify)
+  CHAT: {
+    CONVERSATIONS: (userId: string) => `${API_BASE_URL}/api/chat/conversations/${userId}`,
+    MESSAGES: (conversationId: string) => `${API_BASE_URL}/api/chat/messages/${conversationId}`,
+    CREATE_CONVERSATION: `${API_BASE_URL}/api/chat/conversations`,
+    SOCKET: API_BASE_URL,
+  },
   // Health
   HEALTH: `${API_BASE_URL}/api/health`,
 } as const;

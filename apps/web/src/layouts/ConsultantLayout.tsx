@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import ConsultantSidebar from '@/features/counsellor-portal/components/ConsultantSidebar';
 import logo from '@/shared/assets/logo.jpg';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 
 const ConsultantLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);

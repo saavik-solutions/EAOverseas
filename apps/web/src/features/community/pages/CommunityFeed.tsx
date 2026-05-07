@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import LoginModal from '@/features/auth/components/LoginModal';
 import ShareModal from '@/features/shared-modals/ShareModal';
 import { communityService, type CommunityPost as ApiPost } from '@/features/community/services/communityService';

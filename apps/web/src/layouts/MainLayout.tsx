@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@/shared/components/layout/Sidebar';
 import logo from '@/shared/assets/logo.jpg';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import { useNotification } from '@/features/notifications/context/NotificationContext';
 import NotificationDropdown from '@/features/notifications/NotificationDropdown';
 import LoginModal from '@/features/auth/components/LoginModal';

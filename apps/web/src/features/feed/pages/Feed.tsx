@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '@/shared/components/layout/Sidebar';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import { feedService, PostResponse } from '@/features/feed/services/feedService';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 import LoginModal from '@/features/auth/components/LoginModal';
 import ShareModal from '@/features/shared-modals/ShareModal';

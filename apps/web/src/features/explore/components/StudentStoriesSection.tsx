@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import './StudentStoriesSection.css';
 import story1 from '@/shared/assets/story_card_manish.jpg';
 import story2 from '@/shared/assets/story_card_manisha.jpg';

@@ -3,7 +3,7 @@ import PageHeader from '@/shared/components/layout/PageHeader';
 import { jsPDF } from 'jspdf';
 import { universitiesData } from '@/features/content/data/universities';
 import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import LoginModal from '@/features/auth/components/LoginModal';
 
 const UniversityDetails = () => {

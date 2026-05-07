@@ -17,6 +17,7 @@ import fastifySocketIO from 'fastify-socket.io';
 import adminRoutes from './modules/admin/admin.routes';
 import chatRoutes from './modules/chat/chat.routes';
 import { registerChatSocket } from './modules/chat/chat.socket';
+import { registerRateLimiters } from './shared/middleware/rateLimiter';
 
 const app: FastifyInstance = fastify({
   logger: {
@@ -32,6 +33,9 @@ const app: FastifyInstance = fastify({
 export const buildApp = async () => {
   // --- Connect Databases ---
   await connectMongoDB();
+
+  // --- Rate Limiting ---
+  await registerRateLimiters(app);
 
   // --- Global Plugins ---
   

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useNotification } from '@/features/notifications/context/NotificationContext';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import NotificationDropdown from '@/features/notifications/NotificationDropdown';
 
 interface Breadcrumb {

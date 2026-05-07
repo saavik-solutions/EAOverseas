@@ -1,5 +1,7 @@
 // Auth feature — public exports
-export { AuthProvider, useAuth } from './context/AuthContext';
+export * from './store/authSlice';
+export * from './store/authApi';
+export { useAuth } from './hooks/useAuth';
 export { default as Login } from './pages/Login';
 export { default as Signup } from './pages/Signup';
 export { default as ForgotPassword } from './pages/ForgotPassword';

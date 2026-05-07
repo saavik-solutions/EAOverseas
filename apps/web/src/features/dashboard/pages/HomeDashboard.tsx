@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 import { incrementCount, decrementCount } from '@/shared/utils/dailyCounter';
 import { getCombinedUniversities } from '@/shared/utils/universityData';

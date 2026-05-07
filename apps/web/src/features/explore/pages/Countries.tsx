@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/shared/components/layout/Navbar';
 import Footer from '@/shared/components/layout/Footer';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 
 const Countries = () => {
     const navigate = useNavigate();

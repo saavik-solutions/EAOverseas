@@ -1,14 +1,15 @@
 import { FastifyInstance } from 'fastify';
 import { login, register, me, googleAuth, verifyOtp, resendOtp } from './auth.controller';
 import { authenticate } from '../../shared/middleware/authenticate';
+import { loginRateLimit, otpRateLimit, otpResendRateLimit } from '../../shared/middleware/rateLimiter';
 
 export default async function authRoutes(app: FastifyInstance) {
-  app.post('/login', login);
+  app.post('/login', { config: { rateLimit: loginRateLimit } }, login);
   app.post('/register', register);
   app.post('/google', googleAuth);
   app.get('/me', { preHandler: [authenticate] }, me);
   
   // OTP Verification Routes
-  app.post('/verify-otp', { preHandler: [authenticate] }, verifyOtp);
-  app.post('/resend-otp', { preHandler: [authenticate] }, resendOtp);
+  app.post('/verify-otp', { preHandler: [authenticate], config: { rateLimit: otpRateLimit } }, verifyOtp);
+  app.post('/resend-otp', { preHandler: [authenticate], config: { rateLimit: otpResendRateLimit } }, resendOtp);
 }

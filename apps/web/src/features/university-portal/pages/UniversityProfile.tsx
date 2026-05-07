@@ -4,7 +4,7 @@ import { universityService, UniversityData } from '@/features/colleges/services/
 import { PostResponse } from '@/features/feed/services/feedService';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import ShareModal from '@/features/shared-modals/ShareModal';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 
 const UniversityProfile = () => {

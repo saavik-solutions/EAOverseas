@@ -5,8 +5,9 @@ import { MongoUser } from './models/MongoUser';
 
 export const getConversations = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
-    const { userId } = req.params as any;
-    const userObj = await MongoUser.findOne({ firebaseUid: userId }) || await MongoUser.findById(userId);
+    const user = req.user;
+    const userObj = await MongoUser.findOne({ email: user.email }) || await MongoUser.findOne({ firebaseUid: user.id });
+    
     if (!userObj) return reply.status(404).send({ error: 'User not found' });
 
     const conversations = await Conversation.find({
@@ -42,9 +43,10 @@ export const getMessages = async (req: FastifyRequest, reply: FastifyReply) => {
 
 export const getOrCreateConversation = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
-    const { userId, targetUserId } = req.body as any;
+    const user = req.user;
+    const { targetUserId } = req.body as any;
 
-    const user1 = await MongoUser.findOne({ firebaseUid: userId }) || await MongoUser.findById(userId);
+    const user1 = await MongoUser.findOne({ email: user.email }) || await MongoUser.findOne({ firebaseUid: user.id });
     const user2 = await MongoUser.findOne({ firebaseUid: targetUserId }) || await MongoUser.findById(targetUserId);
 
     if (!user1 || !user2) return reply.status(404).send({ error: 'One or both users not found' });

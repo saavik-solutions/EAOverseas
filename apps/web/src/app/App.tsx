@@ -139,7 +139,7 @@ import SuperAdminConsultantRatings from '@/features/superadmin/pages/SuperAdminC
 import { SavedItemsProvider } from '@/features/saved-items/context/SavedItemsContext';
 import { UserProfileProvider } from '@/features/profile/context/UserProfileContext';
 import { NotificationProvider } from '@/features/notifications/context/NotificationContext';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import { PostsProvider } from '@/features/feed/services/PostsContext';
 import ProtectedRoute from '@/shared/components/ProtectedRoute';
 

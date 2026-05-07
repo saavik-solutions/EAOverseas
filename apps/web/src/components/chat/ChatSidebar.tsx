@@ -4,6 +4,11 @@ import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+import { 
+    useGetConversationsQuery, 
+    useCreateConversationMutation 
+} from '@/store/api/chatApi';
+
 interface Participant {
     _id: string;
     name: string;
@@ -38,34 +43,23 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     socket,
 }) => {
     const { userProfile } = useUserProfile();
-    const [conversations, setConversations] = useState<ConversationItem[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Participant[]>([]);
-    const [loading, setLoading] = useState(true);
     const [searching, setSearching] = useState(false);
 
-    const fetchConversations = useCallback(async () => {
-        try {
-            const res = await fetch(`${API_BASE}/api/chat/conversations/${currentUserId}`);
-            if (res.ok) {
-                const data = await res.json();
-                setConversations(data);
-            }
-        } catch (e) { console.error(e); }
-        finally { setLoading(false); }
-    }, [currentUserId]);
+    const { data: conversations = [], isLoading: loading, refetch } = useGetConversationsQuery(undefined, {
+        skip: !isOpen
+    });
 
-    useEffect(() => {
-        if (isOpen) fetchConversations();
-    }, [isOpen, fetchConversations]);
+    const [createConversation] = useCreateConversationMutation();
 
     // Refresh on conversation updates
     useEffect(() => {
         if (!socket) return;
-        const handler = () => fetchConversations();
+        const handler = () => refetch();
         socket.on('conversation_updated', handler);
         return () => { socket.off('conversation_updated', handler); };
-    }, [socket, fetchConversations]);
+    }, [socket, refetch]);
 
     // Search for users to chat with
     useEffect(() => {
@@ -84,22 +78,14 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             finally { setSearching(false); }
         }, 300);
         return () => clearTimeout(timeout);
-    }, [searchQuery, currentUserId, userProfile.connections]); // Added userProfile.connections to dependency array
+    }, [searchQuery, currentUserId, userProfile.connections]);
 
     const startConversation = async (targetUser: Participant) => {
         try {
-            const res = await fetch(`${API_BASE}/api/chat/conversation`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: currentUserId, targetUserId: targetUser._id })
-            });
-            if (res.ok) {
-                const conv = await res.json();
-                setSearchQuery('');
-                setSearchResults([]);
-                fetchConversations();
-                onSelectConversation(conv, targetUser);
-            }
+            const conv = await createConversation({ targetUserId: targetUser._id }).unwrap();
+            setSearchQuery('');
+            setSearchResults([]);
+            onSelectConversation(conv, targetUser);
         } catch (e) { console.error(e); }
     };
 

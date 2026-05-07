@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 
 interface UniversityLayoutProps {
     children: ReactNode;

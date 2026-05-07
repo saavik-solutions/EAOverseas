@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import LoginModal from '@/features/auth/components/LoginModal';
 
 const recommendedCourses = [

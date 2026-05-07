@@ -3,7 +3,7 @@ import PageHeader from '@/shared/components/layout/PageHeader';
 import BookingModal from '@/features/counsellor-portal/components/ConsultationBookingModal';
 import ConsultationSuccessModal from '@/features/counsellor-portal/components/ConsultationSuccessModal';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import LoginModal from '@/features/auth/components/LoginModal';
 

@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import logo from '@/shared/assets/logo.jpg';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 
 interface SuperAdminLayoutProps {
     children: ReactNode;

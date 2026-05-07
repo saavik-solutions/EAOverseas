@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '@/shared/components/layout/PageHeader';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 
 // Mock Data for Offer Letters
 const MOCK_OFFERS = [

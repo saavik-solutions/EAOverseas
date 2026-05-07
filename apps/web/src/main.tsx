@@ -2,7 +2,6 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './app/App'
-import { AuthProvider } from './features/auth/context/AuthContext'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 
 import { Provider } from 'react-redux'
@@ -14,9 +13,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <Provider store={store}>
-                <AuthProvider>
-                    <App />
-                </AuthProvider>
+                <App />
             </Provider>
         </GoogleOAuthProvider>
     </StrictMode>,

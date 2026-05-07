@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '@/shared/assets/logo.jpg';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 
 const ConsultantSidebar = ({ isOpen, onClose }) => {
     const { logout, user } = useAuth();

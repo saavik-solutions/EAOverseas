@@ -1,7 +1,7 @@
 import React from 'react';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import LoginModal from '@/features/auth/components/LoginModal';
 
 import { useNavigate } from 'react-router-dom';

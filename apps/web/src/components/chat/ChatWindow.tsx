@@ -3,10 +3,12 @@ import { Socket } from 'socket.io-client';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+import { useGetMessagesQuery } from '@/store/api/chatApi';
+
 interface Message {
     _id: string;
     conversationId: string;
-    senderId: { _id: string; name: string; avatarUrl?: string };
+    senderId: { _id: string; fullName?: string; name?: string; avatarUrl?: string };
     content: string;
     createdAt: string;
 }
@@ -32,26 +34,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     width,
     onResize,
 }) => {
+    const { data: initialMessages = [], isLoading: loading, refetch } = useGetMessagesQuery(conversationId);
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMsg, setNewMsg] = useState('');
-    const [loading, setLoading] = useState(true);
     const endRef = useRef<HTMLDivElement>(null);
     const dragRef = useRef<{ startX: number; startWidth: number } | null>(null);
 
-    // Fetch history
+    // Sync initial messages from RTK Query to local state
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const res = await fetch(`${API_BASE}/api/chat/messages/${conversationId}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setMessages(data);
-                }
-            } catch (e) { console.error(e); }
-            finally { setLoading(false); }
-        };
-        fetchMessages();
-    }, [conversationId]);
+        if (initialMessages) {
+            setMessages(initialMessages);
+        }
+    }, [initialMessages]);
 
     // Join room & listen
     useEffect(() => {

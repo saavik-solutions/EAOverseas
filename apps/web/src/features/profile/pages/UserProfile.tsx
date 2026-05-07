@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageHeader from '@/shared/components/layout/PageHeader';
-import { useAuth } from '@/features/auth/context/AuthContext';
+import { useAuth } from '@/features/auth';
 import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 
 const UserProfile = () => {

@@ -1,100 +1,250 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-const AuthContext = createContext(null);
+interface User {
+    id: string;
+    studentId?: string;
+    fullName: string;
+    email: string;
+    role?: string;
+    isDemo?: boolean;
+    createdAt?: string;
+    [key: string]: any;
+}
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+interface AuthContextType {
+    user: User | null;
+    login: (email: string, password: string) => Promise<User>;
+    loginWithGoogle: (token: string) => Promise<User>;
+    signup: (userDetails: any) => Promise<User>;
+    logout: () => void;
+    loading: boolean;
+    isLoginModalOpen: boolean;
+    setLoginModalOpen: (open: boolean) => void;
+    requireAuth: (callback: () => void) => void;
+    verifyOTP: (otp: string) => Promise<any>;
+    resendOTP: () => Promise<any>;
+}
 
-    useEffect(() => {
-        // Check local storage for persistent session
+const AuthContext = createContext<AuthContextType | null>(null);
+
+const API_BASE_URL = 'http://localhost:4000/api';
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [user, setUser] = useState<User | null>(() => {
         const storedUser = localStorage.getItem('eaoverseas_user');
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            try {
+                return JSON.parse(storedUser);
+            } catch (e) {
+                console.error("Failed to parse stored user", e);
+                return null;
+            }
         }
-        setLoading(false);
+        return null;
+    });
+    const [loading, setLoading] = useState(false);
+    const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+
+    useEffect(() => {
+        // Double check token validity if needed, but for now we trust localStorage
+        const storedToken = localStorage.getItem('eaoverseas_token');
+        if (!storedToken) {
+            setUser(null);
+        }
     }, []);
 
-    const login = (email, password) => {
-        return new Promise((resolve, reject) => {
-            // ADMIN LOGIN (Full/Demo Mode)
-            if (email === 'alex.j@example.com' && password === '5678') {
-                const adminUser = {
-                    name: 'Alex Johnson',
-                    email: 'alex.j@example.com',
-                    isDemo: true, // This flag enables all the AI/Pre-filled content
-                };
-                setUser(adminUser);
-                localStorage.setItem('eaoverseas_user', JSON.stringify(adminUser));
-                resolve(adminUser);
-                return;
-                return;
-            }
+    const login = async (email: string, password: string): Promise<User> => {
+        // 1. Check for Virtual Consultants in LocalStorage (added via SuperAdmin)
+        const savedConsultants = localStorage.getItem('eao_consultants');
+        if (savedConsultants) {
+            try {
+                const consultants = JSON.parse(savedConsultants);
+                const match = consultants.find((c: any) => 
+                    c.email.toLowerCase() === email.toLowerCase() && 
+                    c.password === password
+                );
 
-            // COUNSELLOR LOGIN (Demo Mode)
-            if (email === 'partner@counsellor.com' && password === 'COUNSELLOR2026') {
-                const counsellorUser = {
-                    name: 'Dr. Alex Morgan',
-                    email: 'partner@counsellor.com',
-                    role: 'Counsellor',
-                    isDemo: true,
-                };
-                setUser(counsellorUser);
-                localStorage.setItem('eaoverseas_user', JSON.stringify(counsellorUser));
-                resolve(counsellorUser);
-                return;
+                if (match) {
+                    console.log("[Auth] Virtual Consultant login detected:", match.name);
+                    const virtualUser: User = {
+                        id: match.id || match.name.replace(/\s+/g, '-').toLowerCase(),
+                        fullName: match.name,
+                        name: match.name,
+                        email: match.email,
+                        role: 'counsellor', // Force counsellor role for dashboard access
+                        avatar: match.avatar,
+                        isVirtual: true
+                    };
+                    setUser(virtualUser);
+                    localStorage.setItem('eaoverseas_token', 'virtual-token-' + Date.now());
+                    localStorage.setItem('eaoverseas_user', JSON.stringify(virtualUser));
+                    return virtualUser;
+                }
+            } catch (e) {
+                console.error("Error checking virtual consultants", e);
             }
+        }
 
-            // CHECK REGISTERED USERS
-            const registeredUsers = JSON.parse(localStorage.getItem('eaoverseas_registered_users') || '[]');
-            const foundUser = registeredUsers.find(u => u.email === email && u.password === password);
-
-            if (foundUser) {
-                // Ensure isDemo is false for real users
-                const realUser = { ...foundUser, isDemo: false };
-                delete realUser.password; // Don't store password in session
-                setUser(realUser);
-                localStorage.setItem('eaoverseas_user', JSON.stringify(realUser));
-                resolve(realUser);
-            } else {
-                reject(new Error('Invalid credentials. Only admin@eaoverseas.com or registered users allowed.'));
-            }
+        // 2. Fallback to API login for real users
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
         });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Login failed');
+        }
+
+        const { user: userData, token } = await response.json();
+        
+        const user: User = {
+            ...userData,
+            name: userData.fullName || userData.name
+        };
+
+        setUser(user);
+        localStorage.setItem('eaoverseas_token', token);
+        localStorage.setItem('eaoverseas_user', JSON.stringify(user));
+        return user;
     };
 
-    const signup = (userDetails) => {
-        return new Promise((resolve) => {
-            const newUser = {
-                ...userDetails,
-                isDemo: false, // Fresh account
-                createdAt: new Date().toISOString()
-            };
-
-            // Store in "DB" (localStorage)
-            const registeredUsers = JSON.parse(localStorage.getItem('eaoverseas_registered_users') || '[]');
-            registeredUsers.push(newUser);
-            localStorage.setItem('eaoverseas_registered_users', JSON.stringify(registeredUsers));
-
-            // Auto login
-            const sessionUser = { ...newUser };
-            delete sessionUser.password;
-            setUser(sessionUser);
-            localStorage.setItem('eaoverseas_user', JSON.stringify(sessionUser));
-
-            resolve(sessionUser);
+    const loginWithGoogle = async (token: string): Promise<User | any> => {
+        const response = await fetch(`${API_BASE_URL}/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token }),
         });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Google login failed');
+        }
+
+        const data = await response.json();
+        
+        // If new user, return info for signup finalization
+        if (data.isNewUser) {
+            return data;
+        }
+
+        const { user: userData, token: jwtToken } = data;
+        
+        const user: User = {
+            ...userData,
+            name: userData.fullName || userData.name
+        };
+
+        setUser(user);
+        localStorage.setItem('eaoverseas_token', jwtToken);
+        localStorage.setItem('eaoverseas_user', JSON.stringify(user));
+        return user;
+    };
+
+    const signup = async (userDetails: any): Promise<User> => {
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ...userDetails,
+                fullName: userDetails.name // Map frontend 'name' to backend 'fullName'
+            }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Signup failed');
+        }
+
+        const { user: userData, token } = await response.json();
+        
+        const user: User = {
+            ...userData,
+            name: userData.fullName || userData.name
+        };
+
+        setUser(user);
+        localStorage.setItem('eaoverseas_token', token);
+        localStorage.setItem('eaoverseas_user', JSON.stringify(user));
+        return user;
     };
 
     const logout = () => {
         setUser(null);
+        localStorage.removeItem('eaoverseas_token');
         localStorage.removeItem('eaoverseas_user');
     };
 
+    const requireAuth = (callback: () => void) => {
+        if (user) {
+            callback();
+        } else {
+            setLoginModalOpen(true);
+        }
+    };
+
+    const verifyOTP = async (otp: string): Promise<any> => {
+        const token = localStorage.getItem('eaoverseas_token');
+        const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ otp }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Verification failed');
+        }
+
+        const data = await response.json();
+        
+        // Update user object in state to reflect emailVerified: true
+        if (user) {
+            const updatedUser = { ...user, emailVerified: true };
+            setUser(updatedUser);
+            localStorage.setItem('eaoverseas_user', JSON.stringify(updatedUser));
+        }
+        
+        return data;
+    };
+
+    const resendOTP = async (): Promise<any> => {
+        const token = localStorage.getItem('eaoverseas_token');
+        const response = await fetch(`${API_BASE_URL}/auth/resend-otp`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to resend OTP');
+        }
+
+        return await response.json();
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+        <AuthContext.Provider value={{
+            user, login, loginWithGoogle, signup, logout, loading,
+            isLoginModalOpen, setLoginModalOpen, requireAuth,
+            verifyOTP, resendOTP
+        }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};

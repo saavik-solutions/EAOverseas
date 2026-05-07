@@ -7,7 +7,7 @@ import {
   deleteUniversity,
 } from './universities.controller';
 
-import { authenticate, authorize } from '../../lib/middleware/authenticate';
+import { authenticate, authorize } from '../../shared/middleware/authenticate';
 import { Role } from '../../lib/prisma';
 
 export default async function universityRoutes(app: FastifyInstance) {

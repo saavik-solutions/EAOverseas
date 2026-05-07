@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { login, register, me, googleAuth, verifyOtp, resendOtp } from './auth.controller';
-import { authenticate } from '../../lib/middleware/authenticate';
+import { authenticate } from '../../shared/middleware/authenticate';
 
 export default async function authRoutes(app: FastifyInstance) {
   app.post('/login', login);

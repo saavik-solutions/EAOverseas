@@ -8,6 +8,7 @@ dist/
 out/
 build/
 .turbo/
+*.tsbuildinfo
 
 # Environment variables
 .env
@@ -15,22 +16,40 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+*.env
+.env*
 
 # IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# OS files
 .DS_Store
 Thumbs.db
 
 # Prisma
 /backend/prisma/migrations/
+/packages/db/prisma/migrations/
 
 # Logs and Temp
+*.log
 tsc_errors.log
 temp_frontend/
 /brain/
-.pnpm-debug.log*
+/scratch/
+/tmp/
+
+# App Specific
+apps/web/dist/
+apps/admin/.next/
+apps/api/dist/
+backend/dist/
+
+# Scraper
+apps/api/scraper_engine/node_modules/
+apps/api/scraper_engine/dist/
+
+# Misc
+assets_list.txt
+pages_list.txt
+App.tsx.new

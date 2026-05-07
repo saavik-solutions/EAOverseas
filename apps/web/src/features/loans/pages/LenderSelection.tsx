@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import { Link, useNavigate } from 'react-router-dom';
-import ApplicationSubmittedModal from '@/features/application/ApplicationSubmittedModal';
+import ApplicationSubmittedModal from '@/features/loans/components/ApplicationSubmittedModal';
 
 const LenderSelection = () => {
     const navigate = useNavigate();

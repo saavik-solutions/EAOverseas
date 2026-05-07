@@ -10,7 +10,10 @@ interface UserIdentity {
     nationality: string;
     address: string;
     currentCountry: string;
+<<<<<<< HEAD
     country: string;
+=======
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     image: string | null;
     banner: string | null;
     profileStrength: number;
@@ -44,10 +47,13 @@ interface AcademicInfo {
 interface UserPreferences {
     countries: string[];
     intakes: string[];
+<<<<<<< HEAD
     programType: string;
     budget: string;
     timeline: string;
     factors: string[];
+=======
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 }
 
 interface UserReadiness {
@@ -86,7 +92,10 @@ interface UserProfile {
     documents: UserDocuments;
     applications: UserApplicationSummary[];
     connections: Record<string, string>;
+<<<<<<< HEAD
     incomingRequests: string[];
+=======
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 }
 
 interface UserProfileContextType {
@@ -98,9 +107,14 @@ interface UserProfileContextType {
     updateGuardian: (newGuardian: Partial<GuardianInfo>) => void;
     sendConnectionRequest: (targetUsername: string) => void;
     acceptConnectionRequest: (targetUsername: string) => void;
+<<<<<<< HEAD
     declineConnectionRequest: (targetUsername: string) => void;
     removeConnection: (targetUsername: string) => void;
     getConnectionDetails: () => { connected: any[]; incoming: any[] };
+=======
+    removeConnection: (targetUsername: string) => void;
+    getConnectionDetails: () => any[];
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     setUserProfile: React.Dispatch<React.SetStateAction<UserProfile>>;
 }
 
@@ -437,6 +451,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }));
     };
 
+<<<<<<< HEAD
     const declineConnectionRequest = (targetUsername: string) => {
         setUserProfile(prev => ({
             ...prev,
@@ -444,6 +459,8 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }));
     };
 
+=======
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     const removeConnection = (targetUsername: string) => {
         setUserProfile(prev => {
             const newConnections = { ...prev.connections };

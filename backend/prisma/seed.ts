@@ -1,3 +1,4 @@
+declare var process: any;
 import { PrismaClient, Role, DegreeType, UniversityType, FeedCategory, PostStatus } from './client';
 import bcrypt from 'bcryptjs';
 

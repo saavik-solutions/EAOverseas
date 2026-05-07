@@ -1,7 +1,12 @@
 import React, { ReactNode, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+<<<<<<< HEAD
 import logo from '@/assets/logo.jpg';
 import { useAuth } from '@/features/auth/context/AuthContext';
+=======
+import logo from '../assets/logo.jpg';
+import { useAuth } from '../shared/contexts/AuthContext';
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 
 interface SuperAdminLayoutProps {
     children: ReactNode;
@@ -18,18 +23,23 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
     const [isUniPortalOpen, setIsUniPortalOpen] = useState(
         location.pathname.startsWith('/superadmin/universit') || location.pathname.startsWith('/superadmin/university-portal')
     );
+    const [isActivityOpen, setIsActivityOpen] = useState(
+        location.pathname.startsWith('/superadmin/student-activity')
+    );
 
     const handleDropdownClick = (itemName: string) => {
         if (itemName === 'University Portal') setIsUniPortalOpen(!isUniPortalOpen);
+        if (itemName === 'Student Activity') setIsActivityOpen(!isActivityOpen);
     };
 
     const isDropdownOpen = (itemName: string) => {
         if (itemName === 'University Portal') return isUniPortalOpen;
+        if (itemName === 'Student Activity') return isActivityOpen;
         return false;
     };
 
     const menuItems = [
-        { name: 'Overview', icon: 'dashboard', path: '/superadmin' },
+        { name: 'Dashboard', icon: 'dashboard', path: '/superadmin' },
         { 
             name: 'University Portal', 
             icon: 'account_balance', 
@@ -39,10 +49,18 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
                 { name: 'Posts & Feed', icon: 'feed', path: '/superadmin/university-portal/posts-feed' }
             ]
         },
+        {
+            name: 'Student Activity',
+            icon: 'history_edu',
+            isDropdown: true,
+            children: [
+                { name: 'Universities', icon: 'school', path: '/superadmin/student-activity/universities' },
+                { name: 'Courses', icon: 'menu_book', path: '/superadmin/student-activity/courses' },
+                { name: 'Accommodation', icon: 'home_work', path: '/superadmin/student-activity/accommodation' }
+            ]
+        },
         { name: 'Consultants', icon: 'support_agent', path: '/superadmin/consultants' },
-        { name: 'Students', icon: 'group', path: '/superadmin/students' },
         { name: 'User Management', icon: 'manage_accounts', path: '/superadmin/users' },
-        { name: 'Revenue', icon: 'payments', path: '/superadmin/revenue' },
     ];
 
     return (
@@ -133,7 +151,7 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
                                     to={item.path!}
                                     onClick={() => setIsSidebarOpen(false)}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${(location.pathname === item.path ||
-                                        (item.name === 'Overview' && location.pathname === '/superadmin') ||
+                                        (item.name === 'Dashboard' && (location.pathname === '/superadmin' || location.pathname === '/superadmin/verifications')) ||
                                         (item.name === 'Universities' && (
                                             location.pathname.startsWith('/superadmin/university')
                                         )) ||
@@ -165,14 +183,6 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
                         <span className="text-sm font-bold">Sign Out</span>
                     </button>
 
-                    <div className="mt-4 flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl">
-                        <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuA5Qrrx8XIF5fczse7_DsDA50G-m4klPEPj-Jz8cPuwhtt-XPwa3SUP2BbNphmG7UchjPfCK28furJVIWSFqncb_cwqMhx2aKkNIZ1_81sua0geMEy6DJ-CshFMH-skwPAOnacVKBFKI-_hdSqcuUAOy091hJ5w4jSF4kGsHihaw6hhuUjjs9S00nZpBJbP9Hcpetr-4gV2s7Ghm3jaj3b87t7rPAy628R_kepXey4RQMBz7GU-HjXxfeJuZ0-PwmbLGQAVQyeAyGc")' }}></div>
-                        <div className="flex flex-col min-w-0">
-                            <p className="text-[#111318] text-xs font-bold truncate">James Wilson</p>
-                            <p className="text-slate-500 text-[10px] truncate">Admin View</p>
-                        </div>
-
-                    </div>
                 </div>
             </aside>
 

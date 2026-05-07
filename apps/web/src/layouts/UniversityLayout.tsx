@@ -1,6 +1,10 @@
 import React, { ReactNode, useState } from 'react';
 import { useNavigate, useLocation, Link, useParams } from 'react-router-dom';
+<<<<<<< HEAD
 import { useAuth } from '@/features/auth/context/AuthContext';
+=======
+import { useAuth } from '../shared/contexts/AuthContext';
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 
 interface UniversityLayoutProps {
     children: ReactNode;
@@ -23,13 +27,11 @@ const UniversityLayout: React.FC<UniversityLayoutProps> = ({ children, universit
         { name: 'Courses', icon: 'book', path: `/university-panel/${uniSlug}/courses` },
         { name: 'Admissions', icon: 'assignment_ind', path: `/university-panel/${uniSlug}/admissions` },
         { name: 'Scholarships', icon: 'workspace_premium', path: `/university-panel/${uniSlug}/scholarships` },
-        { name: 'Student Interest', icon: 'group', path: '#' },
-        { name: 'Analytics', icon: 'analytics', path: '#' },
         { name: 'Post Center', icon: 'feed', path: `/university-panel/${uniSlug}/post-center` },
     ];
 
     const bottomMenuItems = [
-        { name: 'University Profile', icon: 'account_balance', path: '#' },
+        { name: 'University Profile', icon: 'account_balance', path: `/university-panel/${uniSlug}/university-profile` },
     ];
 
     return (
@@ -108,7 +110,7 @@ const UniversityLayout: React.FC<UniversityLayoutProps> = ({ children, universit
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col lg:ml-64">
                 {/* Top Navigation */}
-                <header className="h-14 bg-white border-b border-[#e5e7eb] flex items-center justify-between px-4 lg:px-6 sticky top-0 z-10 w-full">
+                <header className="h-14 bg-white border-b border-[#e5e7eb] flex items-center justify-between px-4 lg:px-6 sticky top-0 z-40 w-full">
                     <div className="flex items-center gap-2">
                         <button 
                             className="lg:hidden p-2 text-[#616f89]"

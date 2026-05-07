@@ -1,5 +1,9 @@
 import { FastifyInstance, FastifyRequest } from 'fastify';
+<<<<<<< HEAD
 import { getAllPosts, getPostBySlug, createPost, updatePost, deletePost, toggleLike, toggleBookmark } from './feed.controller';
+=======
+import { getAllPosts, getPostBySlug, createPost, toggleLike, toggleBookmark, updatePostStatus, deletePost, updatePost, addComment, getComments } from './feed.controller';
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 
 export default async function feedRoutes(app: FastifyInstance) {
   // GET posts - optional auth to show user heart/upvote state
@@ -36,4 +40,22 @@ export default async function feedRoutes(app: FastifyInstance) {
   app.post('/:id/bookmark', {
     preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
   }, toggleBookmark);
+
+  app.patch('/:id/status', {
+    preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
+  }, updatePostStatus);
+  
+  app.delete('/:id', {
+    preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
+  }, deletePost);
+
+  app.put('/:id', {
+    preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
+  }, updatePost);
+
+  // Comments
+  app.get('/:id/comments', getComments);
+  app.post('/:id/comments', {
+    preHandler: [async (request: FastifyRequest) => await request.jwtVerify()]
+  }, addComment);
 }

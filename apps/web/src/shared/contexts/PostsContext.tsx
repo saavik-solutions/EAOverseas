@@ -130,6 +130,7 @@ export const PostsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         };
     }, []);
 
+<<<<<<< HEAD
     // Backup persistence for background updates
     React.useEffect(() => {
         if (isInitialMount.current) {
@@ -166,6 +167,11 @@ export const PostsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             setTimeout(() => persistPosts(next), 0);
             return next;
         });
+=======
+    const addPost = async (postData: any) => {
+        // The API call is now handled by the pages before calling addPost
+        await refreshPosts();
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     };
 
     const updatePost = (id: string | number, updatedPost: Post) => {
@@ -176,12 +182,18 @@ export const PostsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         });
     };
 
+<<<<<<< HEAD
     const deletePost = (id: string | number) => {
         setPosts(prev => {
             const next = prev.filter(post => post.id.toString() !== id.toString());
             setTimeout(() => persistPosts(next), 0);
             return next;
         });
+=======
+    const deletePost = async (id: string) => {
+        await feedService.delete(id);
+        await refreshPosts();
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     };
 
     const clearAllPosts = () => {

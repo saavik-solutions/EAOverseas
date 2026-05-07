@@ -1,32 +1,62 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 
+<<<<<<< HEAD
 export interface College {
     id?: string;
+=======
+interface College {
+    id: string;
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     name: string;
     [key: string]: any;
 }
 
+<<<<<<< HEAD
 export interface Course {
     id?: string;
+=======
+interface Course {
+    id: string;
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     title: string;
     university: string;
     [key: string]: any;
 }
 
+<<<<<<< HEAD
 export interface SavedPost {
     id?: string;
+=======
+interface SavedPost {
+    id: string;
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     title: string;
     [key: string]: any;
 }
 
+<<<<<<< HEAD
 export interface Accommodation {
     id?: string;
+=======
+interface Accommodation {
+    id: string;
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     title: string;
     [key: string]: any;
 }
 
+<<<<<<< HEAD
 export interface Application {
+=======
+interface Scholarship {
+    id: string | number;
+    title: string;
+    [key: string]: any;
+}
+
+interface Application {
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     id: number;
     university: string;
     location: string;
@@ -59,6 +89,10 @@ interface ProfileDocument {
     name: string;
     size: string;
     type: string;
+<<<<<<< HEAD
+=======
+    base64?: string;
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 }
 
 interface SavedItemsContextType {
@@ -72,6 +106,7 @@ interface SavedItemsContextType {
     isCourseSaved: (course: Course) => boolean;
     isAccommodationSaved: (acc: Accommodation) => boolean;
     isPostSaved: (post: SavedPost) => boolean;
+<<<<<<< HEAD
     savedAccommodations: Accommodation[];
     savedPosts: SavedPost[];
     myApplications: Application[];
@@ -79,6 +114,20 @@ interface SavedItemsContextType {
     submitApplication: (appData: any) => void;
     userProfile: UserProfile;
     profileDocuments: ProfileDocument[];
+=======
+    isScholarshipSaved: (sch: Scholarship) => boolean;
+    savedAccommodations: Accommodation[];
+    savedPosts: SavedPost[];
+    savedScholarships: Scholarship[];
+    myApplications: Application[];
+    withdrawApplication: (id: number) => void;
+    submitApplication: (appData: any) => void;
+    toggleScholarship: (sch: Scholarship) => void;
+    userProfile: UserProfile | null;
+    profileDocuments: ProfileDocument[];
+    updateUserProfile: (profile: Partial<UserProfile>) => void;
+    updateProfileDocuments: (docs: ProfileDocument[]) => void;
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 }
 
 const SavedItemsContext = createContext<SavedItemsContextType | null>(null);
@@ -99,6 +148,10 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const [savedCourses, setSavedCourses] = useState<Course[]>([]);
     const [savedAccommodations, setSavedAccommodations] = useState<Accommodation[]>([]);
     const [savedPosts, setSavedPosts] = useState<SavedPost[]>([]);
+<<<<<<< HEAD
+=======
+    const [savedScholarships, setSavedScholarships] = useState<Scholarship[]>([]);
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     const [myApplications, setMyApplications] = useState<Application[]>([]);
 
     // Load data when user changes
@@ -125,6 +178,12 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             const posts = localStorage.getItem(`savedPosts_${user.email}`);
             setSavedPosts(posts ? JSON.parse(posts) : []);
 
+<<<<<<< HEAD
+=======
+            const scholarships = localStorage.getItem(`savedScholarships_${user.email}`);
+            setSavedScholarships(scholarships ? JSON.parse(scholarships) : []);
+
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
             const applications = localStorage.getItem(`myApplications_${user.email}`);
             setMyApplications(applications ? JSON.parse(applications) : []);
         };
@@ -159,6 +218,15 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     useEffect(() => {
         if (user?.email) {
+<<<<<<< HEAD
+=======
+            localStorage.setItem(`savedScholarships_${user.email}`, JSON.stringify(savedScholarships));
+        }
+    }, [savedScholarships, user?.email]);
+
+    useEffect(() => {
+        if (user?.email) {
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
             localStorage.setItem(`myApplications_${user.email}`, JSON.stringify(myApplications));
         }
     }, [myApplications, user?.email]);
@@ -180,6 +248,13 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return post.id || post.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
 
+<<<<<<< HEAD
+=======
+    const getScholarshipId = (sch: Scholarship) => {
+        return String(sch.id) || sch.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    }
+
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     const withdrawApplication = (id: number) => {
         setMyApplications(prev => prev.filter(app => app.id !== id));
     };
@@ -245,6 +320,20 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         });
     };
 
+<<<<<<< HEAD
+=======
+    const toggleScholarship = (sch: Scholarship) => {
+        const id = getScholarshipId(sch);
+        setSavedScholarships(prev => {
+            if (prev.find(s => getScholarshipId(s) === id)) {
+                return prev.filter(s => getScholarshipId(s) !== id);
+            } else {
+                return [...prev, { ...sch, id }];
+            }
+        });
+    };
+
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     const isCollegeSaved = (college: College) => {
         const id = getCollegeId(college);
         return savedColleges.some(c => getCollegeId(c) === id);
@@ -264,6 +353,7 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         const id = getPostId(post);
         return savedPosts.some(p => getPostId(p) === id);
     };
+<<<<<<< HEAD
 
 
     // Mock User Profile Data
@@ -290,6 +380,25 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         { name: 'SOP_DataScience.pdf', size: '0.8 MB', type: 'sop' },
         { name: 'LOR_Professor_Smith.pdf', size: '1.5 MB', type: 'lor' }
     ]);
+=======
+
+    const isScholarshipSaved = (sch: Scholarship) => {
+        const id = getScholarshipId(sch);
+        return savedScholarships.some(s => getScholarshipId(s) === id);
+    };
+
+
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+    const [profileDocuments, setProfileDocuments] = useState<ProfileDocument[]>([]);
+
+    const updateUserProfile = (profile: Partial<UserProfile>) => {
+        setUserProfile(prev => prev ? { ...prev, ...profile } : profile as UserProfile);
+    };
+
+    const updateProfileDocuments = (docs: ProfileDocument[]) => {
+        setProfileDocuments(docs);
+    };
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 
     return (
         <SavedItemsContext.Provider value={{
@@ -303,13 +412,23 @@ export const SavedItemsProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             isCourseSaved,
             isAccommodationSaved,
             isPostSaved,
+<<<<<<< HEAD
             savedAccommodations,
             savedPosts,
+=======
+            isScholarshipSaved,
+            savedAccommodations,
+            savedPosts,
+            savedScholarships,
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
             myApplications,
             withdrawApplication,
             submitApplication,
+            toggleScholarship,
             userProfile,
-            profileDocuments
+            profileDocuments,
+            updateUserProfile,
+            updateProfileDocuments
         }}>
             {children}
         </SavedItemsContext.Provider>

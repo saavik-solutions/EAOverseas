@@ -2,9 +2,9 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export interface UniversityData {
     _id?: string;
-    university_id: string;
+    university_id?: string;
     name: string;
-    website: string;
+    website?: string;
     country: string;
     city: string;
     logoUrl?: string;
@@ -43,26 +43,38 @@ export const universityService = {
     },
 
     create: async (data: UniversityData) => {
+        const token = localStorage.getItem('eaoverseas_token');
         const res = await fetch(`${API_BASE}/api/universities`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            },
             body: JSON.stringify(data)
         });
         return handleResponse(res, 'Failed to onboard university');
     },
 
     update: async (id: string, data: Partial<UniversityData>) => {
+        const token = localStorage.getItem('eaoverseas_token');
         const res = await fetch(`${API_BASE}/api/universities/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            },
             body: JSON.stringify(data)
         });
         return handleResponse(res, 'Failed to update university');
     },
 
     delete: async (id: string) => {
+        const token = localStorage.getItem('eaoverseas_token');
         const res = await fetch(`${API_BASE}/api/universities/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            }
         });
         return handleResponse(res, 'Failed to remove university record');
     },

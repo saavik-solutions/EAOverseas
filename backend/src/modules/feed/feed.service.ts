@@ -1,11 +1,25 @@
 import { prisma } from '../../lib/prisma';
-import { Prisma } from '@prisma/client';
 
 export class FeedService {
+<<<<<<< HEAD
   async getAll(query: { category?: any; universityId?: string; limit?: number; userId?: string; search?: string }) {
     const where: any = {
       status: 'published',
     };
+=======
+  async getAll(query: { category?: any; universityId?: string; limit?: number; userId?: string; status?: string }) {
+    const where: any = {};
+    
+    if (query.status === 'all') {
+      // No status filter applied
+    } else if (query.status) {
+      where.status = query.status;
+    } else {
+      where.status = 'published';
+    }
+    
+    console.log('[FeedService] Prisma Where:', where);
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 
     if (query.category) {
       where.category = query.category;
@@ -60,8 +74,10 @@ export class FeedService {
   }
 
   async getBySlug(slug: string, userId?: string) {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+    console.log(`[FeedService] getBySlug: slug=${slug}, isUuid=${isUuid}`);
     const post = await prisma.feedPost.findUnique({
-      where: { slug },
+      where: isUuid ? { id: slug } : { slug },
       include: {
         author: {
           select: {
@@ -147,7 +163,26 @@ export class FeedService {
   }
 
   async create(data: any) {
+<<<<<<< HEAD
     const { title, content, category, tags, authorId, universityId, coverImageUrl, excerpt, ...rest } = data;
+=======
+    const { title, content, category, tags, authorId, universityId, coverImageUrl, ...rest } = data;
+    
+    // Map frontend types to DB enum
+    const categoryMap: Record<string, string> = {
+      'Article': 'articles',
+      'Scholarship': 'scholarships',
+      'Program': 'programs',
+      'Announcement': 'announcements',
+      'Event': 'events',
+      'Guide': 'guides',
+      'News': 'news',
+      'Webinar': 'webinars',
+      'Article ': 'articles' // handle trailing spaces if any
+    };
+
+    let mappedCategory = (categoryMap[category] || category || 'news').toLowerCase();
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     
     // Validate universityId (UUID expectation)
     const validUniId = (universityId && universityId !== 'all') ? universityId : null;
@@ -156,12 +191,16 @@ export class FeedService {
       data: {
         title,
         content,
-        category: category as any,
+        category: mappedCategory as any,
         tags: tags || [],
         authorId,
         universityId: validUniId,
+<<<<<<< HEAD
         coverImageUrl,
         excerpt,
+=======
+        coverImageUrl: coverImageUrl || null,
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
         slug: this.generateSlug(title),
         status: (data.status?.toLowerCase() as any) || 'published',
         publishedAt: data.status?.toLowerCase() === 'published' ? new Date() : null,
@@ -169,6 +208,7 @@ export class FeedService {
       }
     });
   }
+<<<<<<< HEAD
 
   async update(id: string, data: any) {
     const { title, content, category, tags, universityId, coverImageUrl, excerpt, status, authorId, ...rest } = data;
@@ -192,5 +232,95 @@ export class FeedService {
 
   async delete(id: string) {
     return await prisma.feedPost.delete({ where: { id } });
+=======
+  async updateStatus(id: string, status: string) {
+    console.log(`[FeedService] Updating post ${id} to status: ${status}`);
+    const data: any = {
+      status: status.toLowerCase() as any,
+    };
+
+    if (status.toLowerCase() === 'published') {
+      data.publishedAt = new Date();
+    }
+
+    return await prisma.feedPost.update({
+      where: { id },
+      data
+    });
+  }
+  async delete(id: string) {
+    return await prisma.feedPost.delete({
+      where: { id }
+    });
+  }
+  async update(id: string, data: any) {
+    const { title, content, category, tags, coverImageUrl, metadata, status } = data;
+    
+    const updateData: any = {
+      title,
+      content,
+      tags,
+      coverImageUrl,
+      metadata: metadata || {},
+    };
+
+    if (category) {
+      const categoryMap: Record<string, string> = {
+        'Article': 'articles',
+        'Scholarship': 'scholarships',
+        'Program': 'programs',
+        'Announcement': 'announcements',
+        'Event': 'events',
+        'Guide': 'guides',
+        'News': 'news',
+        'Webinar': 'webinars'
+      };
+      updateData.category = (categoryMap[category] || category).toLowerCase();
+    }
+
+    if (status) {
+      updateData.status = status.toLowerCase();
+      if (status.toLowerCase() === 'published') {
+        updateData.publishedAt = new Date();
+      }
+    }
+
+    return await prisma.feedPost.update({
+      where: { id },
+      data: updateData
+    });
+  }
+  async addComment(userId: string, postId: string, content: string) {
+    return await prisma.feedComment.create({
+      data: {
+        postId,
+        content,
+        authorId: userId
+      },
+      include: {
+        author: {
+          select: {
+            fullName: true,
+            avatarUrl: true
+          }
+        }
+      }
+    });
+  }
+
+  async getComments(postId: string) {
+    return await prisma.feedComment.findMany({
+      where: { postId },
+      include: {
+        author: {
+          select: {
+            fullName: true,
+            avatarUrl: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
   }
 }

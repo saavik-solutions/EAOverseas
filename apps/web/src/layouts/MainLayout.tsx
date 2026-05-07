@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import Sidebar from '@/components/layout/Sidebar';
 import logo from '@/assets/logo.jpg';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useNotification } from '@/features/notifications/context/NotificationContext';
 import NotificationDropdown from '@/components/feedback/NotificationDropdown';
 import LoginModal from '@/features/auth/components/LoginModal';
+=======
+import Sidebar from '../shared/components/layout/Sidebar';
+import logo from '../assets/logo.jpg';
+import { useAuth } from '../shared/contexts/AuthContext';
+import { useNotification } from '../shared/contexts/NotificationContext';
+import NotificationDropdown from '../shared/components/ui/NotificationDropdown';
+import LoginModal from '../shared/components/modals/LoginModal';
+>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 import { useRef, useEffect } from 'react';
 
 const MainLayout = () => {

@@ -1,0 +1,72 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3rem;
+    max-width: 1440px;
+    margin: 0 auto;
+    background: white;
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    /* fixed height for navbar stability */
+}
+
+.logo-image {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 3rem;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.navbar-cta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-signin {
+    background: transparent;
+    color: #111;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s;
+}
+
+.btn-signin:hover {
+    color: #2D83F2;
+}
+
+.btn-signup {
+    background-color: #2D83F2;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-signup:hover {
+    background-color: #1a6fd3;
+}

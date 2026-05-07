@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { getAllUsers, createUserAdmin, toggleUserStatus } from './admin.controller';
-import { authenticate, authorize } from '../../lib/middleware/authenticate';
+import { authenticate, authorize } from '../../shared/middleware/authenticate';
 import { Role } from '../../lib/prisma';
 
 export default async function adminRoutes(app: FastifyInstance) {

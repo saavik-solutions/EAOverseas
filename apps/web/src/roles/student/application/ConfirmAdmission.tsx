@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/ConfirmAdmission.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useAuth } from '@/shared/contexts/AuthContext';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 import { useAuth } from '../../../shared/contexts/AuthContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/ConfirmAdmission.tsx
 
 // Mock Data for Offer Letters
 const MOCK_OFFERS = [
@@ -299,4 +294,3 @@ const ConfirmAdmission = () => {
 };
 
 export default ConfirmAdmission;
-

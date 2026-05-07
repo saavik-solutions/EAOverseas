@@ -1,17 +1,12 @@
 import React from 'react';
 import { Outlet, useLocation, useSearchParams, Link } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/application/ApplicationLayout.tsx
-import Sidebar from '@/components/layout/Sidebar';
-=======
 import Sidebar from '../../../../shared/components/layout/Sidebar';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/wizard/ApplicationLayout.tsx
 
 const ApplicationLayout = () => {
     const location = useLocation();
     const [searchParams] = useSearchParams();
     const uniName = searchParams.get('university') || 'University';
     const courseName = searchParams.get('title');
-    const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
     // Determine current step based on path
     const getCurrentStep = () => {
@@ -54,7 +49,7 @@ const ApplicationLayout = () => {
 
     return (
         <div className="flex h-screen w-full bg-background-light overflow-hidden">
-            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+            <Sidebar />
 
             <div className="flex flex-col flex-1 h-full overflow-hidden">
                 {/* Header */}
@@ -137,4 +132,3 @@ const ApplicationLayout = () => {
 };
 
 export default ApplicationLayout;
-

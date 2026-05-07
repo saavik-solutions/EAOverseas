@@ -1,14 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/Testimonials.tsx
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { longFormStories } from '../data/studentStories';
-=======
 import Navbar from '../../shared/components/layout/Navbar';
 import Footer from '../../shared/components/layout/Footer';
 import { longFormStories } from '../../shared/data/studentStories';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/testimonials/Testimonials.tsx
 
 const Testimonials = () => {
     const [visibleCount, setVisibleCount] = React.useState(2);
@@ -225,4 +219,3 @@ const Testimonials = () => {
 };
 
 export default Testimonials;
-

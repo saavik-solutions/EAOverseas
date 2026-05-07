@@ -1,12 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/SavedColleges.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 import { useSavedItems } from '../../../shared/contexts/SavedItemsContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/saved/SavedColleges.tsx
 
 const SavedColleges = () => {
     const navigate = useNavigate();
@@ -113,4 +108,3 @@ const SavedColleges = () => {
 };
 
 export default SavedColleges;
-

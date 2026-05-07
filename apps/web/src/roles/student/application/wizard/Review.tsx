@@ -1,25 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useOutletContext, Link } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/application/Review.tsx
-import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
-import { useApplications, Application as GlobalApplication } from '@/shared/contexts/ApplicationsContext';
-=======
 import { useSavedItems } from '../../../../shared/contexts/SavedItemsContext';
 import { useAuth } from '../../../../shared/contexts/AuthContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/wizard/Review.tsx
 
 const Review = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-<<<<<<< HEAD:apps/web/src/pages/application/Review.tsx
-    const { uniName, courseName } = useOutletContext<{ uniName: string, courseName: string | null }>();
-    const { submitApplication: submitToSavedItems, userProfile, profileDocuments } = useSavedItems();
-    const { submitApplication: submitToGlobalPool } = useApplications();
-=======
     const { uniName, courseName } = useOutletContext();
     const { submitApplication, userProfile, profileDocuments } = useSavedItems();
     const displayDocs = profileDocuments || [];
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/wizard/Review.tsx
     const isCourseApplication = !!searchParams.get('title');
     const [agreed, setAgreed] = useState(false);
 
@@ -31,10 +20,6 @@ const Review = () => {
             return;
         }
 
-<<<<<<< HEAD:apps/web/src/pages/application/Review.tsx
-        // Submit to student's local saved items
-        submitToSavedItems({
-=======
         const applicationData = {
             id: `app_${Date.now()}`,
             studentName: userProfile?.fullName || user?.fullName || user?.name || 'Not provided',
@@ -71,42 +56,9 @@ const Review = () => {
         localStorage.setItem('student_applications', JSON.stringify([...existingApps, applicationData]));
 
         submitApplication({
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/wizard/Review.tsx
             universityName: uniName,
             courseName: courseName,
         });
-
-        // Submit to global applications pool for consultants/universities
-        const newGlobalId = `${isCourseApplication ? 'APP' : 'UNI'}-${Date.now().toString().slice(-4)}-${Math.floor(Math.random() * 900) + 100}`;
-
-        const newGlobalApplication: GlobalApplication = {
-            id: newGlobalId,
-            studentName: userProfile?.fullName || "Alex Morgan",
-            studentInitials: (userProfile?.fullName || "Alex Morgan").split(' ').map(n => n[0]).join('').toUpperCase(),
-            studentColor: 'blue',
-            type: isCourseApplication ? 'Program' : 'University',
-            targetName: courseName || 'General Admission',
-            institution: uniName,
-            status: 'Pending',
-            dateApplied: new Date().toISOString().split('T')[0],
-            studentCountry: userProfile?.residence || "United States",
-            priority: 'High',
-            mobileNumber: userProfile?.phone || "+1 (555) 123-4567",
-            email: userProfile?.email || "alex.morgan@example.com",
-            courseMajor: userProfile?.education?.major || "Computer Science",
-            gpa: userProfile?.education?.gpa || "3.8",
-            achievements: "Submitted via online portal.",
-            statement: "I am highly interested in this program/university.",
-            documents: {
-                transcript: profileDocuments?.find(d => d.type === 'transcripts' || d.name.toLowerCase().includes('transcript'))?.name,
-                passport: profileDocuments?.find(d => d.type === 'passport' || d.name.toLowerCase().includes('passport'))?.name,
-                sop: profileDocuments?.find(d => d.type === 'sop' || d.name.toLowerCase().includes('sop'))?.name,
-                cv: profileDocuments?.find(d => d.type === 'cv' || d.name.toLowerCase().includes('cv'))?.name,
-            }
-        };
-
-        submitToGlobalPool(newGlobalApplication);
-
         navigate(`/application/submitted?${searchParams.toString()}`);
     };
 
@@ -115,12 +67,7 @@ const Review = () => {
         navigate(-1);
     };
 
-<<<<<<< HEAD:apps/web/src/pages/application/Review.tsx
-    // Merge context docs with any local docs functionality if needed, for now just use context
-    const displayDocs = profileDocuments || [];
-=======
 
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/wizard/Review.tsx
 
     const ReviewSection = ({ title, icon, onEdit, children, autofilled }) => (
         <div className="border border-slate-200 rounded-xl overflow-hidden mb-6 relative group">
@@ -305,4 +252,3 @@ const Review = () => {
 };
 
 export default Review;
-

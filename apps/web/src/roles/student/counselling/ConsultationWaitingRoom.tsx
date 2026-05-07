@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/ConsultationWaitingRoom.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/counselling/ConsultationWaitingRoom.tsx
 
 const ConsultationWaitingRoom = () => {
     const location = useLocation();
@@ -340,4 +336,3 @@ const ConsultationWaitingRoom = () => {
 };
 
 export default ConsultationWaitingRoom;
-

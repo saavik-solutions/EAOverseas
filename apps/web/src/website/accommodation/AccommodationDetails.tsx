@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/AccommodationDetails.tsx
-import { accommodationData } from '@workspace/common';
-import ShareModal from '@/features/shared-modals/ShareModal';
-import LoginModal from '@/features/auth/LoginModal';
-import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
-import BookingModal from '@/features/shared-modals/BookingModal';
-import EnquireModal from '@/features/shared-modals/EnquireModal';
-=======
 import BookingModal from '../../shared/components/modals/BookingModal';
 import EnquireModal from '../../shared/components/modals/EnquireModal';
 import { useSavedItems } from '../../shared/contexts/SavedItemsContext';
@@ -64,7 +56,6 @@ const ShareModal = ({ isOpen, onClose, title }) => {
         </div>
     );
 };
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/accommodation/AccommodationDetails.tsx
 
 const AccommodationDetails = () => {
     const navigate = useNavigate();
@@ -113,12 +104,6 @@ const AccommodationDetails = () => {
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
                 title={title}
-                shareUrl={window.location.href}
-                preview={{
-                    title: title,
-                    subtitle: accLocation,
-                    image: displayImages[0]
-                }}
             />
 
             <div className="flex flex-1 justify-center py-5 px-4 md:px-10">
@@ -201,7 +186,7 @@ const AccommodationDetails = () => {
                                         <div key={catIdx}>
                                             <h4 className="text-[#111418] text-lg font-bold mb-4">{category}</h4>
                                             <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-4">
-                                                {(items as any[]).map((item, idx) => (
+                                                {items.map((item, idx) => (
                                                     <div key={idx} className="flex items-center gap-3 text-[#60728a]">
                                                         <span className="material-symbols-outlined text-[22px] shrink-0">{item.icon}</span>
                                                         <span className="text-sm font-medium">{item.label}</span>
@@ -335,6 +320,9 @@ const AccommodationDetails = () => {
                                         </button>
                                     </div>
                                 </div>
+
+                                {/* Support Card */}
+
                             </div>
                         </div>
                     </div>

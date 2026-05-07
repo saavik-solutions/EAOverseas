@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD:apps/web/src/pages/AssignedStudents.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/consultant/students/AssignedStudents.tsx
 
 const BASE_STUDENTS = Array.from({ length: 24 }, (_, i) => ({
     id: `EAS-${2000 + i}`,
@@ -121,4 +117,3 @@ const AssignedStudents = () => {
 };
 
 export default AssignedStudents;
-

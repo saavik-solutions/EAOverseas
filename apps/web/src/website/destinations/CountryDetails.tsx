@@ -1,14 +1,8 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/CountryDetails.tsx
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { useAuth } from '@/shared/contexts/AuthContext';
-=======
 import Navbar from '../../shared/components/layout/Navbar';
 import Footer from '../../shared/components/layout/Footer';
 import { useAuth } from '../../shared/contexts/AuthContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/destinations/CountryDetails.tsx
 import universityImg from '../features/landing/assets/university_modern_building.png';
 
 const CountryDetails = () => {
@@ -642,4 +636,3 @@ const CountryDetails = () => {
 };
 
 export default CountryDetails;
-

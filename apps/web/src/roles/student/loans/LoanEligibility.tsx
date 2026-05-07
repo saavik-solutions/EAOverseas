@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/LoanEligibility.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useNotification } from '@/shared/contexts/NotificationContext';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 import { useNotification } from '../../../shared/contexts/NotificationContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/loans/LoanEligibility.tsx
 
 // Custom Popup Component
 const EligibilityPopup = ({ isOpen, type, message, onClose }) => {
@@ -454,4 +449,3 @@ const LoanEligibility = () => {
 };
 
 export default LoanEligibility;
-

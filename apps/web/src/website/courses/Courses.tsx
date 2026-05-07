@@ -1,18 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/Courses.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useSavedItems, Course } from '@/shared/contexts/SavedItemsContext';
-import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import { useAuth } from '@/shared/contexts/AuthContext';
-import LoginModal from '@/features/auth/LoginModal';
-=======
 import PageHeader from '../../shared/components/layout/PageHeader';
 import { useSavedItems } from '../../shared/contexts/SavedItemsContext';
 import { useAuthAction } from '../../shared/hooks/useAuthAction';
 import { useAuth } from '../../shared/contexts/AuthContext';
 import LoginModal from '../../shared/components/modals/LoginModal';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/courses/Courses.tsx
 
 const recommendedCourses = [
     {
@@ -55,7 +47,7 @@ const recommendedCourses = [
 ];
 
 // Expanded to 10 courses
-const allCourses: Course[] = [
+const allCourses = [
     {
         title: "MSc Computer Science",
         university: "Stanford University",
@@ -569,4 +561,3 @@ const CourseCard = ({ course, navigate, isSaved, onToggle, onClick }) => (
 );
 
 export default Courses;
-

@@ -1,19 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/UniversityDirectory.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import LoginModal from '@/features/auth/LoginModal';
-
-import { universitiesData } from '@/data/universities';
-=======
 import PageHeader from '../../shared/components/layout/PageHeader';
 import { useAuthAction } from '../../shared/hooks/useAuthAction';
 import LoginModal from '../../shared/components/modals/LoginModal';
 
 import { University } from '../../shared/data/universities';
 import { getCombinedUniversities } from '../../shared/utils/universityData';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/universities/UniversityDirectory.tsx
 
 const UniversityDirectory = () => {
     const navigate = useNavigate();
@@ -27,14 +19,15 @@ const UniversityDirectory = () => {
         Intake: 'All'
     });
 
-    const countries = ['All', ...new Set(universitiesData.map(u => u.country))];
-    const courseTypes = ['All', ...new Set(universitiesData.map(u => u.courseType))];
+    const universitiesData = useMemo(() => getCombinedUniversities(), []);
+    const countries = ['All', ...new Set(universitiesData.map((u: University) => u.country))];
+    const courseTypes = ['All', ...new Set(universitiesData.map((u: University) => u.courseType))];
     const budgets = ['All', 'Budget', 'Moderate', 'Premium'];
-    const intakes = ['All', ...new Set(universitiesData.map(u => u.intakeType))];
+    const intakes = ['All', ...new Set(universitiesData.map((u: University) => u.intakeType))];
 
     const filteredUniversities = useMemo(() => {
         return universitiesData
-            .filter(uni => {
+            .filter((uni: University) => {
                 const matchesSearch = uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     uni.course.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -51,7 +44,7 @@ const UniversityDirectory = () => {
 
                 return matchesSearch && matchesCountry && matchesCourseType && matchesBudget && matchesIntake && matchesRanking;
             })
-            .sort((a, b) => a.globalRanking - b.globalRanking);
+            .sort((a: University, b: University) => a.globalRanking - b.globalRanking);
     }, [searchQuery, filters]);
 
     const handleFilterChange = (type: string, value: string) => {
@@ -310,4 +303,3 @@ const UniversityDirectory = () => {
 };
 
 export default UniversityDirectory;
-

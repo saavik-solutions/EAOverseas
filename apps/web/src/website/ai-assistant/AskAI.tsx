@@ -1,14 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-<<<<<<< HEAD:apps/web/src/pages/AskAI.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { generateAIResponse } from '../services/aiService';
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
-=======
 import PageHeader from '../../shared/components/layout/PageHeader';
 import { generateAIResponse } from '../services/aiService';
 import { useUserProfile } from '../../shared/contexts/UserProfileContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/ai-assistant/AskAI.tsx
 
 const AskAI = () => {
     const [inputValue, setInputValue] = useState('');
@@ -527,4 +521,3 @@ ${docsList || "None"}
 };
 
 export default AskAI;
-

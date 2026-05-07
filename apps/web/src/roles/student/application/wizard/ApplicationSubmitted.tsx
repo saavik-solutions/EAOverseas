@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/application/ApplicationSubmitted.tsx
-import Sidebar from '@/components/layout/Sidebar';
-=======
 import Sidebar from '../../../../shared/components/layout/Sidebar';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/wizard/ApplicationSubmitted.tsx
 
 const ApplicationSubmitted = () => {
     const navigate = useNavigate();
@@ -85,4 +81,3 @@ const ApplicationSubmitted = () => {
 };
 
 export default ApplicationSubmitted;
-

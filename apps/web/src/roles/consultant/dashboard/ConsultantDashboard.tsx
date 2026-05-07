@@ -1,15 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/ConsultantDashboard.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import NotificationBanner from '@/features/notifications/NotificationBanner';
-import { getDailyCount } from '@/shared/utils/dailyCounter';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 import NotificationBanner from '../../../shared/components/ui/NotificationBanner';
 import { useAuth } from '../../../shared/contexts/AuthContext';
 import { getDailyCount } from '../../../shared/utils/dailyCounter';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/consultant/dashboard/ConsultantDashboard.tsx
 
 const ConsultantDashboard = () => {
     // State for dynamically loaded sessions
@@ -251,4 +245,3 @@ const ConsultantDashboard = () => {
 };
 
 export default ConsultantDashboard;
-

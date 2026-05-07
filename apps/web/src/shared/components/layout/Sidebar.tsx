@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useSearchParams, useNavigate } from 'react-router-dom';
-<<<<<<<< HEAD:apps/web/src/components/layout/Sidebar.tsx
-import logo from '@/assets/logo.jpg';
-import { useAuth } from '@/features/auth/context/AuthContext';
-========
 import logo from '../assets/logo.jpg';
 import { useAuth } from '../contexts/AuthContext';
->>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/shared/components/layout/Sidebar.tsx
 
 
 

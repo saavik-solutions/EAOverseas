@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/VisaPrep.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useNotification } from '@/shared/contexts/NotificationContext';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 import { useNotification } from '../../../shared/contexts/NotificationContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/visa/VisaPrep.tsx
 
 const VisaPrep = () => {
     const navigate = useNavigate();
@@ -203,4 +198,3 @@ const VisaPrep = () => {
 };
 
 export default VisaPrep;
-

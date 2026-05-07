@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-<<<<<<< HEAD:apps/web/src/pages/CounsellingChat.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/counselling/CounsellingChat.tsx
 
 const CounsellingChat = () => {
     const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -369,4 +365,3 @@ const CounsellingChat = () => {
 };
 
 export default CounsellingChat;
-

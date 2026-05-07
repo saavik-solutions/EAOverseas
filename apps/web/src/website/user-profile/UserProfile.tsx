@@ -1,30 +1,8 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/UserProfile.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useAuth } from '@/shared/contexts/AuthContext';
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
-
-interface PeerInfo {
-    username: string;
-    name: string;
-    email: string;
-    image: string;
-    role: string;
-}
-
-const MOCK_USERS_DB: PeerInfo[] = [
-    { username: 'chamia', name: 'Chamia', email: 'chamia@k.com', image: 'https://ui-avatars.com/api/?name=Chamia&background=0D8ABC&color=fff', role: 'Student' },
-    { username: 'emily_r', name: 'Emily Rose', email: 'emily.r@example.com', image: 'https://ui-avatars.com/api/?name=Emily+Rose&background=random', role: 'Alumni' },
-    { username: 'david_k', name: 'David Kim', email: 'david.k@example.com', image: 'https://ui-avatars.com/api/?name=David+Kim&background=random', role: 'Student' },
-    { username: 'sarah_m', name: 'Sarah Miller', email: 'sarah.m@example.com', image: 'https://ui-avatars.com/api/?name=Sarah+Miller&background=random', role: 'Mentor' },
-    { username: 'michael_b', name: 'Michael Brown', email: 'michael.b@example.com', image: 'https://ui-avatars.com/api/?name=Michael+Brown&background=random', role: 'Student' }
-];
-=======
 import PageHeader from '../../shared/components/layout/PageHeader';
 import { useAuth } from '../../shared/contexts/AuthContext';
 import { useUserProfile } from '../../shared/contexts/UserProfileContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/user-profile/UserProfile.tsx
 
 const UserProfile = () => {
     const { username } = useParams();
@@ -34,20 +12,17 @@ const UserProfile = () => {
 
     // Determine if we are viewing our own profile
     // Simple check: if no username param or username matches logged in user's name (simplified)
-    const isOwnProfile = !username || (user && user.name === username) || (user && user.email.split('@')[0] === username);
-
-    // Dynamic Lookup for Peer Profiles
-    const peerInfo = !isOwnProfile ? MOCK_USERS_DB.find(u => u.username === username) : null;
+    const isOwnProfile = !username || (user && user.name === username);
 
     // Use auth user data if available and matching, otherwise fallback or empty
-    const displayUser: any = isOwnProfile ? user : (peerInfo || { name: username, isDemo: true });
+    const displayUser = isOwnProfile ? user : { name: username, isDemo: true }; // Fallback for public viewing
 
     // Mock Data for Demo/Admin User
     const demoData = {
         name: displayUser?.name || "User Profile",
         email: displayUser?.email || "user@example.com",
-        avatar: peerInfo?.image || "https://lh3.googleusercontent.com/aida-public/AB6AXuDchVeb3pnQlG7miYN4K2qZ3FvzJ_BraFfz7fnE81y6daVb93_nRvdtmIe5JhDRWYUdniaxDtf5aOMeFEmMH_uKnO3jaGZcMIiV1OOqhbDuBV6iZMmHNro2d4fd1I_yoys75ES60YwCpQFin-dgLs6XN1pmJKBT70K1ONBeTAzsRG_HEHX5AC6ICuZkdmV5cHJyejbkmy13_hZS_EZFXELG3W2x0JXa01xdub5lXyGmShDjpaGpE5ehLI9I3fJvA-46_b0sixf8Fdg",
-        role: peerInfo?.role || "Student",
+        avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDchVeb3pnQlG7miYN4K2qZ3FvzJ_BraFfz7fnE81y6daVb93_nRvdtmIe5JhDRWYUdniaxDtf5aOMeFEmMH_uKnO3jaGZcMIiV1OOqhbDuBV6iZMmHNro2d4fd1I_yoys75ES60YwCpQFin-dgLs6XN1pmJKBT70K1ONBeTAzsRG_HEHX5AC6ICuZkdmV5cHJyejbkmy13_hZS_EZFXELG3W2x0JXa01xdub5lXyGmShDjpaGpE5ehLI9I3fJvA-46_b0sixf8Fdg",
+        role: "Student",
         strength: 85,
         gpa: "3.8",
         ielts: "7.5",
@@ -127,8 +102,7 @@ const UserProfile = () => {
                                 {(() => {
                                     // Calculate connections (simulated for verified profiles or public view)
                                     // For simplicity: if viewing own profile, show actual count. If public, show 1 if connected, else 0 or random
-                                    const effectiveUsername = peerInfo?.username || profileData.name;
-                                    const isConnected = userProfile.connections?.[effectiveUsername] === 'connected';
+                                    const isConnected = userProfile.connections?.[profileData.name] === 'connected';
                                     const count = isOwnProfile ? Object.values(userProfile.connections || {}).filter(s => s === 'connected').length : (isConnected ? 1 : 0);
 
                                     return (
@@ -142,35 +116,26 @@ const UserProfile = () => {
                             {/* Connect Button */}
                             {!isOwnProfile && (
                                 (() => {
-                                    const effectiveUsername = peerInfo?.username || profileData.name;
-                                    const status = userProfile.connections?.[effectiveUsername]; // undefined, 'pending', 'connected'
+                                    const status = userProfile.connections?.[profileData.name]; // undefined, 'pending', 'connected'
 
                                     const handleConnect = () => {
-                                        sendConnectionRequest(effectiveUsername);
+                                        sendConnectionRequest(profileData.name);
 
                                         // Simulate acceptance after 3 seconds for demo
                                         setTimeout(() => {
-                                            acceptConnectionRequest(effectiveUsername);
-                                        }, 4000);
-                                    };
-
-                                    const handleMessage = () => {
-                                        // Navigate back to feed with chat auto-open param
-                                        navigate(`/community-feed?chatWith=${effectiveUsername}`);
+                                            acceptConnectionRequest(profileData.name);
+                                        }, 3000);
                                     };
 
                                     if (status === 'connected') {
                                         return (
                                             <div className="w-full flex items-center gap-1 group">
-                                                <button
-                                                    onClick={handleMessage}
-                                                    className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors text-sm shadow-md shadow-indigo-200"
-                                                >
-                                                    <span className="material-symbols-outlined text-[18px]">chat</span>
-                                                    <span>Message</span>
+                                                <button disabled className="flex-1 bg-green-50 border border-green-200 text-green-700 font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 cursor-default text-sm">
+                                                    <span className="material-symbols-outlined text-[18px]">check</span>
+                                                    <span>Connected</span>
                                                 </button>
                                                 <button
-                                                    onClick={() => removeConnection(effectiveUsername)}
+                                                    onClick={() => removeConnection(profileData.name)}
                                                     className="w-10 py-2 bg-gray-50 border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 rounded-lg flex items-center justify-center transition-colors"
                                                     title="Disconnect"
                                                 >
@@ -183,8 +148,8 @@ const UserProfile = () => {
                                     if (status === 'pending') {
                                         return (
                                             <button disabled className="w-full bg-gray-100 text-gray-500 font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 cursor-not-allowed text-sm">
-                                                <span className="material-symbols-outlined text-[18px] animate-pulse">send</span>
-                                                <span>Request Sent</span>
+                                                <span className="material-symbols-outlined text-[18px]">pending</span>
+                                                <span>Pending</span>
                                             </button>
                                         );
                                     }
@@ -290,4 +255,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-

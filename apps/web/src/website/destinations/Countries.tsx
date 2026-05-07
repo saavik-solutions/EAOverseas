@@ -1,14 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/Countries.tsx
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { useAuth } from '@/shared/contexts/AuthContext';
-=======
 import Navbar from '../../shared/components/layout/Navbar';
 import Footer from '../../shared/components/layout/Footer';
 import { useAuth } from '../../shared/contexts/AuthContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/destinations/Countries.tsx
 
 const Countries = () => {
     const navigate = useNavigate();
@@ -288,4 +282,3 @@ const Countries = () => {
 };
 
 export default Countries;
-

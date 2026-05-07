@@ -1,11 +1,6 @@
 import React from 'react';
-<<<<<<< HEAD:apps/web/src/pages/TermsAndConditions.tsx
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-=======
 import Navbar from '../../shared/components/layout/Navbar';
 import Footer from '../../shared/components/layout/Footer';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/legal/TermsAndConditions.tsx
 
 const TermsAndConditions = () => {
     return (
@@ -262,4 +257,3 @@ const TermsAndConditions = () => {
 };
 
 export default TermsAndConditions;
-

@@ -1,10 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/LoanRequirements.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/loans/LoanRequirements.tsx
 
 const LoanRequirements = () => {
     const navigate = useNavigate();
@@ -206,4 +202,3 @@ const LoanRequirements = () => {
 };
 
 export default LoanRequirements;
-

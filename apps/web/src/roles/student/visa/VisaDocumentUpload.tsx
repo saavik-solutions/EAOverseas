@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD:apps/web/src/pages/VisaDocumentUpload.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/visa/VisaDocumentUpload.tsx
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const DOCUMENT_SECTIONS = [
@@ -225,4 +221,3 @@ const VisaDocumentUpload = () => {
 };
 
 export default VisaDocumentUpload;
-

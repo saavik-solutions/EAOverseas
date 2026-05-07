@@ -1,14 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/AboutUs.tsx
-import { useAuth } from '@/shared/contexts/AuthContext';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-=======
 import { useAuth } from '../../shared/contexts/AuthContext';
 import Navbar from '../../shared/components/layout/Navbar';
 import Footer from '../../shared/components/layout/Footer';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/about/AboutUs.tsx
 import blogDestinations from '../features/landing/assets/blog_destinations.png';
 import blogIelts from '../features/landing/assets/blog_ielts.png';
 import blogVisa from '../features/landing/assets/blog_visa.png';
@@ -419,4 +413,3 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
-

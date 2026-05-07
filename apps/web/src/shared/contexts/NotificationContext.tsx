@@ -79,4 +79,3 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         </NotificationContext.Provider>
     );
 };
-

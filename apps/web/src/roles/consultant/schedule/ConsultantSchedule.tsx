@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD:apps/web/src/pages/ConsultantSchedule.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/consultant/schedule/ConsultantSchedule.tsx
 
 const ConsultantSchedule = () => {
     // UI State
@@ -22,111 +18,96 @@ const ConsultantSchedule = () => {
     const [currentDate, setCurrentDate] = useState(new Date()); // The reference date for the current view
     const [weekDates, setWeekDates] = useState([]);
 
-    // Schedule Data State (Mock Database)
-    const [scheduleItems, setScheduleItems] = useState([
-        // Automatic lunch slots for Mon-Sat (13:00-14:00) - Sunday excluded
-        // { id: 101, dayIndex: 0 ... } REMOVED
-        { id: 102, dayIndex: 1, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 103, dayIndex: 2, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 104, dayIndex: 3, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 105, dayIndex: 4, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 106, dayIndex: 5, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 107, dayIndex: 6, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        // Sample booked meeting
-        {
-            id: 2,
-            dayIndex: 2, // Tuesday
-            date: null,
-            startTime: '10:00',
-            endTime: '11:00',
-            type: 'booked',
-            title: 'Booked',
-            details: 'Alice Wang - Prep'
+    // Schedule Data State (Mock Database) - Load from LocalStorage immediately or use defaults
+    const [scheduleItems, setScheduleItems] = useState(() => {
+        const saved = localStorage.getItem('eao_consultant_schedule');
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                console.error("Error parsing schedule items", e);
+            }
         }
-    ]);
+        // Default lunch slots for Mon-Sat (13:00-14:00) - Sunday excluded
+        return [
+            { id: 102, dayIndex: 1, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
+            { id: 103, dayIndex: 2, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
+            { id: 104, dayIndex: 3, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
+            { id: 105, dayIndex: 4, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
+            { id: 106, dayIndex: 5, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
+            { id: 107, dayIndex: 6, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' }
+        ];
+    });
+
+    // Save schedule to LocalStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('eao_consultant_schedule', JSON.stringify(scheduleItems));
+    }, [scheduleItems]);
 
     // Leave Management State
     const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
     const [selectedLeaveDate, setSelectedLeaveDate] = useState(null);
+    const [leaveStep, setLeaveStep] = useState(1); // 1: Selection, 2: Reason
+    const [leaveType, setLeaveType] = useState('full'); // 'full' | 'half'
+    const [isMultiDay, setIsMultiDay] = useState(false);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [leaveReason, setLeaveReason] = useState('');
+    const [leaveAttachment, setLeaveAttachment] = useState(null);
 
-    // Mobile UI State
-    const [showMobileStats, setShowMobileStats] = useState(false);
-
-    const handleDayHeaderClick = (date) => {
+    const handleDayHeaderClick = (date: Date) => {
         if (date.getDay() === 0) return; // Ignore Sunday
         setSelectedLeaveDate(date);
+        setEndDate(date);
+        setIsMultiDay(false);
+        setLeaveStep(1);
+        setLeaveType('full');
+        setLeaveReason('');
+        setLeaveAttachment(null);
         setIsLeaveModalOpen(true);
     };
 
-    const handleApplyLeave = (type) => {
-        if (!selectedLeaveDate) return;
+    const handleApplyLeave = () => {
+        if (!selectedLeaveDate || !leaveReason) return;
 
-        const dayIndex = selectedLeaveDate.getDay();
-        let newSlots = [];
-        const baseId = Date.now();
+        const requests = [];
+        const start = new Date(selectedLeaveDate);
+        const end = isMultiDay && endDate ? new Date(endDate) : new Date(selectedLeaveDate);
 
-        if (type === 'full') {
-            newSlots.push({
-                id: baseId,
-                dayIndex: dayIndex,
-                startTime: '09:00',
-                endTime: '17:00',
-                type: 'blocked',
-                status: 'pending', // Initially pending
-                title: 'Full Day Leave',
-                details: 'Pending Approval'
-            });
-        } else if (type === 'half-morning') {
-            newSlots.push({
-                id: baseId,
-                dayIndex: dayIndex,
-                startTime: '09:00',
-                endTime: '13:00',
-                type: 'blocked',
-                status: 'pending', // Initially pending
-                title: 'Half Day Leave',
-                details: 'Pending Approval'
-            });
-        } else if (type === 'half-afternoon') {
-            newSlots.push({
-                id: baseId,
-                dayIndex: dayIndex,
-                startTime: '14:00',
-                endTime: '18:00',
-                type: 'blocked',
-                status: 'pending', // Initially pending
-                title: 'Half Day Leave',
-                details: 'Pending Approval'
-            });
+        // Ensure end is not before start
+        if (end < start) return;
+
+        const current = new Date(start);
+        while (current <= end) {
+            if (current.getDay() !== 0) { // Skip Sundays
+                requests.push({
+                    id: Math.floor(Date.now() + Math.random() * 1000),
+                    dayIndex: current.getDay(),
+                    date: current.toLocaleDateString(),
+                    startTime: leaveType === 'full' ? '09:00' : '13:00',
+                    endTime: '17:00',
+                    type: 'blocked',
+                    status: 'pending',
+                    title: leaveType === 'full' ? 'Full Day Holiday' : 'Half Day Holiday',
+                    details: leaveReason,
+                    attachment: leaveAttachment ? (leaveAttachment as any).name : null,
+                    consultantName: 'Elena Rodriguez',
+                    consultantEmail: 'elena.r@eaoverseas.com',
+                    applyDate: new Date().toLocaleDateString()
+                });
+            }
+            current.setDate(current.getDate() + 1);
         }
 
-        setScheduleItems(prev => [...prev, ...newSlots]);
+        setScheduleItems(prev => [...prev, ...requests]);
         setIsLeaveModalOpen(false);
         setSelectedLeaveDate(null);
-
-        // Simulate Admin Approval after 2 seconds
-        setTimeout(() => {
-            setScheduleItems(prevItems =>
-                prevItems.map(item =>
-                    item.id === baseId
-                        ? { ...item, status: 'approved', details: 'Full Day Leave' } // details will be updated based on title logic if needed, or generic 'On Leave'
-                        : item
-                )
-            );
-            // Refine details update based on type
-            setScheduleItems(prevItems =>
-                prevItems.map(item => {
-                    if (item.id === baseId) {
-                        let newDetails = 'On Leave';
-                        if (type === 'half-morning') newDetails = 'Morning Leave';
-                        if (type === 'half-afternoon') newDetails = 'Afternoon Leave';
-                        return { ...item, status: 'approved', details: newDetails };
-                    }
-                    return item;
-                })
-            );
-        }, 2000);
+        setEndDate(null);
+        setIsMultiDay(false);
+        setLeaveStep(1);
+        setLeaveReason('');
     };
+
+
 
     // Update the displayed week whenever 'currentDate' changes
     useEffect(() => {
@@ -430,17 +411,7 @@ const ConsultantSchedule = () => {
         <div className="flex flex-col flex-1 h-full overflow-hidden bg-gray-50/50">
             <PageHeader
                 title="Manage My Availability"
-                actions={
-                    <button
-                        onClick={() => setShowMobileStats(!showMobileStats)}
-                        className="xl:hidden flex items-center gap-2 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-sm font-bold border border-blue-100 active:scale-95 transition-all"
-                    >
-                        <span className="material-symbols-outlined text-[20px]">
-                            {showMobileStats ? 'close' : 'bar_chart'}
-                        </span>
-                        {showMobileStats ? 'Close Stats' : 'View Availability'}
-                    </button>
-                }
+                actions={headerActions}
             />
 
             <main className="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
@@ -449,9 +420,9 @@ const ConsultantSchedule = () => {
                     {/* Main Grid Layout */}
                     <div className="flex flex-col xl:flex-row gap-6 h-full flex-1 min-h-[600px]">
                         {/* Left Column: Calendar */}
-                        <div className="flex-1 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200 flex flex-col overflow-hidden w-full">
+                        <div className="flex-1 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200 flex flex-col overflow-hidden">
                             {/* Calendar Toolbar */}
-                            <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white">
+                            <div className="p-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4 bg-white">
                                 <div className="flex items-center gap-2 bg-gray-50 p-1 rounded-lg">
                                     <button
                                         onClick={() => setView('week')}
@@ -477,24 +448,24 @@ const ConsultantSchedule = () => {
                                         <span className="text-lg font-bold text-gray-900 min-w-[140px] text-center">Year {currentDate.getFullYear()} Stats</span>
                                     )}
                                 </div>
-                                <div className="flex flex-wrap gap-4 text-sm font-medium">
+                                <div className="flex gap-4 text-sm font-medium">
                                     {view === 'week' && (
                                         <>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-yellow-100 border border-yellow-500"></span>
-                                                <span className="text-gray-400 whitespace-nowrap">Lunch</span>
+                                                <span className="text-gray-400">Lunch</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-orange-100 border border-orange-500"></span>
-                                                <span className="text-gray-400 whitespace-nowrap">Pending</span>
+                                                <span className="text-gray-400">Pending</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-gray-100 border border-gray-400"></span>
-                                                <span className="text-gray-400 whitespace-nowrap">Booked</span>
+                                                <span className="text-gray-400">Booked</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full bg-red-50 border border-red-400"></span>
-                                                <span className="text-gray-400 whitespace-nowrap">Blocked</span>
+                                                <span className="text-gray-400">Blocked</span>
                                             </div>
                                         </>
                                     )}
@@ -503,203 +474,178 @@ const ConsultantSchedule = () => {
 
                             {/* Calendar Views */}
                             {view === 'week' ? (
-                                <div className="flex-1 overflow-auto relative bg-white">
-                                    <div className="min-w-[650px] h-full flex flex-col">
-                                        {/* Header Row (Days) */}
-                                        <div className="grid grid-cols-8 border-b border-gray-200 sticky top-0 bg-white z-30 shadow-sm w-full">
-                                            <div className="p-3 text-xs font-semibold text-gray-500 text-center border-r border-gray-200 flex items-center justify-center">Time</div>
+                                <div className="flex-1 overflow-y-auto relative bg-white">
+                                    {/* Header Row (Days) */}
+                                    <div className="grid grid-cols-8 border-b border-gray-200 sticky top-0 bg-white z-30 shadow-sm">
+                                        <div className="p-3 text-xs font-semibold text-gray-500 text-center border-r border-gray-200 flex items-center justify-center">Time</div>
 
-                                            {weekDates.map((date, index) => {
-                                                const today = new Date();
-                                                const isToday = date.getDate() === today.getDate() &&
-                                                    date.getMonth() === today.getMonth() &&
-                                                    date.getFullYear() === today.getFullYear();
-                                                const isSunday = date.getDay() === 0;
+                                        {weekDates.map((date, index) => {
+                                            const today = new Date();
+                                            const isToday = date.getDate() === today.getDate() &&
+                                                date.getMonth() === today.getMonth() &&
+                                                date.getFullYear() === today.getFullYear();
+                                            const isSunday = date.getDay() === 0;
 
-                                                const daysMap = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-                                                const dayName = daysMap[date.getDay()];
+                                            const daysMap = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                                            const dayName = daysMap[date.getDay()];
 
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        onClick={() => handleDayHeaderClick(date)}
-                                                        className={`p-3 text-center border-r border-gray-200 transition-colors ${!isSunday ? 'cursor-pointer hover:bg-gray-50' : ''} ${isToday ? 'bg-blue-600/5' : ''} ${isSunday ? 'bg-green-50/50' : ''}`}
-                                                        title={!isSunday ? "Click to set Leave" : "Holiday"}
-                                                    >
-                                                        <div className={`text-xs font-medium ${isToday ? 'text-blue-600' : isSunday ? 'text-green-600' : 'text-gray-500'}`}>{dayName}</div>
-                                                        <div className={`text-sm font-bold ${isToday ? 'text-blue-600 bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-1' : isSunday ? 'text-green-600 mt-1' : 'text-gray-900 mt-1'}`}>
-                                                            {date.getDate()}
-                                                        </div>
-                                                        {isSunday && (
-                                                            <div className="mt-1">
-                                                                <span className="text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-full border border-green-200">
-                                                                    Holiday
-                                                                </span>
-                                                            </div>
-                                                        )}
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => handleDayHeaderClick(date)}
+                                                    className={`p-3 text-center border-r border-gray-200 transition-colors ${!isSunday ? 'cursor-pointer hover:bg-gray-50' : ''} ${isToday ? 'bg-blue-600/5' : ''} ${isSunday ? 'bg-green-50/50' : ''}`}
+                                                    title={!isSunday ? "Click to set Leave" : "Holiday"}
+                                                >
+                                                    <div className={`text-xs font-medium ${isToday ? 'text-blue-600' : isSunday ? 'text-green-600' : 'text-gray-500'}`}>{dayName}</div>
+                                                    <div className={`text-sm font-bold ${isToday ? 'text-blue-600 bg-blue-100 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-1' : isSunday ? 'text-green-600 mt-1' : 'text-gray-900 mt-1'}`}>
+                                                        {date.getDate()}
                                                     </div>
-                                                );
-                                            })}
+                                                    {isSunday && (
+                                                        <div className="mt-1">
+                                                            <span className="text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-full border border-green-200">
+                                                                Holiday
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+
+                                    {/* Time Slots Grid */}
+                                    <div className="grid grid-cols-8 relative h-[800px]">
+                                        {/* Time Labels */}
+                                        <div className="col-span-1 border-r border-gray-200">
+                                            {['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'].map(time => (
+                                                <div key={time} className="h-20 border-b border-gray-100 relative">
+                                                    <span className="absolute top-2 right-2 text-xs text-gray-400 bg-white px-1">{time}</span>
+                                                </div>
+                                            ))}
                                         </div>
 
-
-                                        {/* Time Slots Grid */}
-                                        <div className="grid grid-cols-8 relative h-[800px] w-full">
-                                            {/* Time Labels */}
-                                            <div className="col-span-1 border-r border-gray-200">
-                                                {['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'].map(time => (
-                                                    <div key={time} className="h-20 border-b border-gray-100 relative">
-                                                        <span className="absolute top-2 right-2 text-xs text-gray-400 bg-white px-1">{time}</span>
-                                                    </div>
-                                                ))}
+                                        {/* Columns container */}
+                                        <div className="col-span-7 grid grid-cols-7 relative">
+                                            {/* Background Lines */}
+                                            <div className="absolute inset-0 flex flex-col pointer-events-none z-0">
+                                                {[...Array(8)].map((_, i) => <div key={i} className="h-20 border-b border-gray-100 w-full border-dashed"></div>)}
                                             </div>
 
-                                            {/* Columns container */}
-                                            <div className="col-span-7 grid grid-cols-7 relative">
-                                                {/* Background Lines */}
-                                                <div className="absolute inset-0 flex flex-col pointer-events-none z-0">
-                                                    {[...Array(8)].map((_, i) => <div key={i} className="h-20 border-b border-gray-100 w-full border-dashed"></div>)}
-                                                </div>
+                                            {/* Day Columns */}
+                                            {weekDates.map((date, colIndex) => (
+                                                <div
+                                                    key={colIndex}
+                                                    className="border-r border-gray-100 h-full relative group/col"
+                                                    onClick={(e) => handleGridClick(e, date)}
+                                                >
+                                                    {/* Hover effect for adding slot */}
+                                                    <div className="absolute inset-0 bg-blue-50/0 group-hover/col:bg-blue-50/10 transition-colors pointer-events-none"></div>
 
-                                                {/* Day Columns */}
-                                                {weekDates.map((date, colIndex) => (
-                                                    <div
-                                                        key={colIndex}
-                                                        className="border-r border-gray-100 h-full relative group/col"
-                                                        onClick={(e) => handleGridClick(e, date)}
-                                                    >
-                                                        {/* Hover effect for adding slot */}
-                                                        <div className="absolute inset-0 bg-blue-50/0 group-hover/col:bg-blue-50/10 transition-colors pointer-events-none"></div>
+                                                    {/* Events for this day */}
+                                                    {scheduleItems
+                                                        .filter(item => item.dayIndex === date.getDay())
+                                                        .map(item => {
+                                                            const top = getPositionFromTime(item.startTime);
+                                                            const height = getHeightFromDuration(item.startTime, item.endTime);
 
-                                                        {/* Events for this day */}
-                                                        {scheduleItems
-                                                            .filter(item => item.dayIndex === date.getDay())
-                                                            .map(item => {
-                                                                const top = getPositionFromTime(item.startTime);
-                                                                const height = getHeightFromDuration(item.startTime, item.endTime);
+                                                            let bgClass = "bg-emerald-50 border-emerald-500 text-emerald-700";
+                                                            let iconName = "";
 
-                                                                let bgClass = "bg-emerald-50 border-emerald-500 text-emerald-700";
-                                                                let iconName = "";
-
-                                                                if (item.type === 'booked') {
-                                                                    bgClass = "bg-gray-100 border-gray-500 text-gray-700";
-                                                                    iconName = "lock";
-                                                                } else if (item.type === 'blocked') {
-                                                                    // Check if it's a lunch break
-                                                                    if (item.title === 'Lunch Break') {
-                                                                        bgClass = "bg-yellow-50 border-yellow-500 text-yellow-700 opacity-90";
-                                                                        iconName = "restaurant";
+                                                             if (item.type === 'booked') {
+                                                                bgClass = "bg-gray-100 border-gray-500 text-gray-700";
+                                                                iconName = "lock";
+                                                            } else if (item.type === 'blocked') {
+                                                                // Check if it's a lunch break
+                                                                if (item.title === 'Lunch Break') {
+                                                                    bgClass = "bg-yellow-50 border-yellow-500 text-yellow-700 opacity-90";
+                                                                    iconName = "restaurant";
+                                                                } else {
+                                                                    // Check status: pending, approved, rejected
+                                                                    if (item.status === 'pending') {
+                                                                        bgClass = "bg-orange-50 border-double border-orange-400 text-orange-700 opacity-90 ring-4 ring-orange-50/50";
+                                                                        iconName = "schedule";
+                                                                    } else if (item.status === 'approved') {
+                                                                        bgClass = "bg-emerald-50 border-emerald-500 text-emerald-700 opacity-100 shadow-sm border-l-[6px]";
+                                                                        iconName = "verified";
+                                                                    } else if (item.status === 'rejected') {
+                                                                        bgClass = "bg-rose-50 border-rose-500 text-rose-700 opacity-80 striped-background border-l-[6px]";
+                                                                        iconName = "cancel";
                                                                     } else {
-                                                                        // @ts-ignore - status exists on leave items
-                                                                        if (item.status === 'pending') {
-                                                                            bgClass = "bg-orange-50 border-orange-500 text-orange-700 opacity-90";
-                                                                            iconName = "schedule";
-                                                                        } else {
-                                                                            bgClass = "bg-red-50 border-red-500 text-red-700 opacity-80 striped-background";
-                                                                            iconName = "block";
-                                                                        }
+                                                                        bgClass = "bg-gray-50 border-gray-300 text-gray-500";
+                                                                        iconName = "block";
                                                                     }
                                                                 }
+                                                            }
 
-                                                                return (
-                                                                    <div
-                                                                        key={item.id}
-                                                                        className={`absolute w-[95%] left-[2.5%] border-l-4 rounded px-2 py-1 cursor-pointer hover:shadow-md transition-all z-10 flex flex-col justify-between group/event ${bgClass}`}
-                                                                        style={{ top: `${top}px`, height: `${height}px` }}
-                                                                        onClick={(e) => {
-                                                                            // Prevent deletion of lunch breaks
-                                                                            if (item.type === 'blocked' && item.title !== 'Lunch Break') {
-                                                                                handleRemoveSlot(e, item.id);
-                                                                            }
-                                                                        }}
-                                                                    >
-                                                                        <div>
-                                                                            <div className="flex items-center gap-1">
-                                                                                {iconName && <span className="material-symbols-outlined text-[14px]">{iconName}</span>}
-                                                                                <span className="text-xs font-bold">{item.title}</span>
+                                                                    return (
+                                                                <div
+                                                                    key={item.id}
+                                                                    className={`absolute w-[95%] left-[2.5%] border-l-4 rounded px-2 py-1 cursor-pointer hover:shadow-md transition-all z-10 flex flex-col justify-between group/event ${bgClass}`}
+                                                                    style={{ top: `${top}px`, height: `${height}px` }}
+                                                                >
+                                                                    <div>
+                                                                        <div className="flex items-center justify-between gap-1 w-full">
+                                                                            <div className="flex items-center gap-1 min-w-0">
+                                                                                {iconName && <span className="material-symbols-outlined text-[14px] shrink-0">{iconName}</span>}
+                                                                                <span className="text-xs font-black truncate leading-tight uppercase tracking-tight">{item.title}</span>
                                                                             </div>
-                                                                            <div className="text-[10px] opacity-80">{item.startTime} - {item.endTime}</div>
-                                                                            {item.details && <div className="text-[10px] mt-1 font-medium">{item.details}</div>}
+                                                                            {item.status === 'pending' && (
+                                                                                <span className="text-[8px] font-black bg-orange-600 text-white px-1.5 py-0.5 rounded-full animate-pulse tracking-widest shrink-0">PENDING</span>
+                                                                            )}
                                                                         </div>
-
-                                                                        {/* Delete/Edit Action - only for non-lunch blocked slots */}
-                                                                        {item.type === 'blocked' && item.title !== 'Lunch Break' && (
-                                                                            <div className="flex justify-end opacity-0 group-hover/event:opacity-100 transition-opacity">
-                                                                                <button className="hover:bg-black/5 p-0.5 rounded"><span className="material-symbols-outlined text-[16px]">close</span></button>
+                                                                        <div className="text-[10px] font-bold opacity-70 mt-0.5">{item.startTime} - {item.endTime}</div>
+                                                                        {item.details && (
+                                                                            <div className="text-[10px] mt-2 font-bold bg-white/40 p-1.5 rounded-lg border border-current/10 italic leading-snug truncate">
+                                                                                "{item.details}"
                                                                             </div>
                                                                         )}
                                                                     </div>
-                                                                );
-                                                            })}
-                                                    </div>
-                                                ))}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                </div>
+                                            ))}
 
-                                            </div>
+                                            {/* Current Time Indicator logic could go here attached to correct column */}
                                         </div>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex-1 overflow-auto bg-white p-4 sm:p-6">
-                                    <div className="min-w-[700px]">
-                                        <table className="w-full text-left border-collapse">
-                                            <thead>
-                                                <tr className="border-b border-gray-200">
-                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm">Month ({currentDate.getFullYear()})</th>
-                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Working Hours</th>
-                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Meetings Joined</th>
-                                                    <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Time Blocked</th>
+                                <div className="flex-1 overflow-y-auto bg-white p-6">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr className="border-b border-gray-200">
+                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm">Month ({currentDate.getFullYear()})</th>
+                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Working Hours</th>
+                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Meetings Joined</th>
+                                                <th className="py-3 px-4 font-bold text-gray-500 text-sm text-right">Time Blocked</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {monthlyStats.map((month, idx) => (
+                                                <tr
+                                                    key={idx}
+                                                    className={`border-b border-gray-50 hover:bg-gray-50 transition-colors
+                                                        ${month.isCurrent ? 'bg-blue-50/50' : ''}
+                                                        ${month.isPast ? 'opacity-60 grayscale' : ''}
+                                                    `}
+                                                >
+                                                    <td className="py-3 px-4 font-semibold text-gray-800 flex items-center gap-2">
+                                                        {month.name}
+                                                        {month.isCurrent && <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">CURRENT</span>}
+                                                    </td>
+                                                    <td className="py-3 px-4 text-right font-medium text-emerald-600">{month.workingHours}h</td>
+                                                    <td className="py-3 px-4 text-right font-medium text-gray-700">{month.bookedCount}</td>
+                                                    <td className="py-3 px-4 text-right font-medium text-red-500">{month.blockedHours}h</td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {monthlyStats.map((month, idx) => (
-                                                    <tr
-                                                        key={idx}
-                                                        className={`border-b border-gray-50 hover:bg-gray-50 transition-colors
-                                                            ${month.isCurrent ? 'bg-blue-50/50' : ''}
-                                                            ${month.isPast ? 'opacity-60 grayscale' : ''}
-                                                        `}
-                                                    >
-                                                        <td className="py-3 px-4 font-semibold text-gray-800 flex items-center gap-2">
-                                                            {month.name}
-                                                            {month.isCurrent && <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold">CURRENT</span>}
-                                                        </td>
-                                                        <td className="py-3 px-4 text-right font-medium text-emerald-600">{month.workingHours}h</td>
-                                                        <td className="py-3 px-4 text-right font-medium text-gray-700">{month.bookedCount}</td>
-                                                        <td className="py-3 px-4 text-right font-medium text-red-500">{month.blockedHours}h</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                             )}
                         </div>
                         {/* Right Column: Settings & Summary */}
-                        {/* Mobile Drawer Overlay */}
-                        {showMobileStats && (
-                            <div
-                                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[80] xl:hidden animate-in fade-in duration-200"
-                                onClick={() => setShowMobileStats(false)}
-                            />
-                        )}
-
-                        <div className={`
-                            xl:w-[320px] flex flex-col gap-6 shrink-0
-                            ${showMobileStats
-                                ? 'fixed bottom-0 left-0 right-0 z-[90] bg-gray-50 border-t border-gray-200 p-6 max-h-[80vh] overflow-y-auto animate-in slide-in-from-bottom duration-300 rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)]'
-                                : 'hidden xl:flex'
-                            }
-                        `}>
-                            {/* Stats Header for Mobile Drawer */}
-                            <div className="xl:hidden flex items-center justify-between mb-2">
-                                <h3 className="text-xl font-bold text-gray-900">Availability Insights</h3>
-                                <button
-                                    onClick={() => setShowMobileStats(false)}
-                                    className="p-2 hover:bg-gray-200 rounded-full transition-colors"
-                                >
-                                    <span className="material-symbols-outlined">close</span>
-                                </button>
-                            </div>
+                        <div className="w-full xl:w-[320px] flex flex-col gap-6 shrink-0 md:hidden xl:flex">
                             {/* Dynamic Stats Card */}
                             <div className="bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200 p-5">
                                 {view === 'week' ? (
@@ -718,11 +664,7 @@ const ConsultantSchedule = () => {
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-<<<<<<< HEAD:apps/web/src/pages/ConsultantSchedule.tsx
-                                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(parseFloat(stat.available) / 8) * 100}%` }}></div>
-=======
                                                             <div className="h-full bg-blue-500 rounded-full" style={{ width: `${(parseFloat(stat.available as unknown as string) / 8) * 100}%` }}></div>
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/consultant/schedule/ConsultantSchedule.tsx
                                                         </div>
                                                         <span className="w-8 text-right font-medium">{stat.available}h</span>
                                                     </div>
@@ -791,56 +733,142 @@ const ConsultantSchedule = () => {
             {/* Leave Management Modal */}
             {isLeaveModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                    <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-                            <h3 className="font-bold text-gray-900">Manage Availability</h3>
-                            <button onClick={() => setIsLeaveModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-                                <span className="material-symbols-outlined">close</span>
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200 border border-gray-100">
+                        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
+                            <div className="flex flex-col">
+                                <h3 className="font-black text-gray-900 tracking-tight">Request Holiday</h3>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{selectedLeaveDate?.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                            </div>
+                            <button onClick={() => setIsLeaveModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors bg-gray-50 p-1.5 rounded-full">
+                                <span className="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </div>
                         <div className="p-6">
-                            <div className="mb-6">
-                                <p className="text-sm text-gray-500 mb-2">Selected Date</p>
-                                <div className="font-medium text-lg text-gray-900 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-blue-600">calendar_month</span>
-                                    {selectedLeaveDate?.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                            {leaveStep === 1 ? (
+                                <div className="space-y-4 animate-in slide-in-from-right-4 duration-300">
+                                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 mb-4">
+                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Multi-day Leave?</span>
+                                        <button 
+                                            onClick={() => setIsMultiDay(!isMultiDay)}
+                                            className={`w-10 h-5 rounded-full transition-all relative ${isMultiDay ? 'bg-blue-600' : 'bg-slate-200'}`}
+                                        >
+                                            <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${isMultiDay ? 'left-6' : 'left-1'}`}></div>
+                                        </button>
+                                    </div>
+
+                                    {isMultiDay && (
+                                        <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 animate-in slide-in-from-top-2 duration-300">
+                                            <label className="text-[9px] font-black text-blue-600 uppercase tracking-widest block mb-2">End Date</label>
+                                            <input 
+                                                type="date" 
+                                                min={selectedLeaveDate ? new Date(selectedLeaveDate.getTime() + 86400000).toISOString().split('T')[0] : ''}
+                                                onChange={(e) => setEndDate(new Date(e.target.value))}
+                                                className="w-full p-2.5 bg-white border border-blue-200 rounded-lg text-xs font-bold text-blue-700 focus:ring-2 focus:ring-blue-100 outline-none"
+                                            />
+                                            <p className="text-[9px] text-blue-400 font-bold mt-2 italic">* Sundays will be automatically skipped</p>
+                                        </div>
+                                    )}
+
+                                    <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2">Duration</p>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        <button
+                                            onClick={() => { setLeaveType('full'); setLeaveStep(2); }}
+                                            className="w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:bg-blue-50 hover:border-blue-200 transition-all flex items-center justify-between group"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <div className="size-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                                                    <span className="material-symbols-outlined">event_available</span>
+                                                </div>
+                                                <div>
+                                                    <div className="font-black text-gray-900 group-hover:text-blue-900 leading-none">Full Day Holiday</div>
+                                                    <div className="text-[10px] text-gray-400 font-bold uppercase mt-1.5">09:00 AM - 05:00 PM</div>
+                                                </div>
+                                            </div>
+                                            <span className="material-symbols-outlined text-gray-300 group-hover:text-blue-600">chevron_right</span>
+                                        </button>
+
+                                        {!isMultiDay && (
+                                            <button
+                                                onClick={() => { setLeaveType('half'); setLeaveStep(2); }}
+                                                className="w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:bg-amber-50 hover:border-amber-200 transition-all flex items-center justify-between group"
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div className="size-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all shadow-sm">
+                                                        <span className="material-symbols-outlined">partly_cloudy_day</span>
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-black text-gray-900 group-hover:text-amber-900 leading-none">Half Day Holiday</div>
+                                                        <div className="text-[10px] text-gray-400 font-bold uppercase mt-1.5">09:00 AM - 01:00 PM</div>
+                                                    </div>
+                                                </div>
+                                                <span className="material-symbols-outlined text-gray-200 group-hover:text-amber-300">chevron_right</span>
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                <button
-                                    onClick={() => handleApplyLeave('half-morning')}
-                                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-all flex items-center justify-between group"
-                                >
-                                    <div>
-                                        <div className="font-semibold text-gray-900 group-hover:text-blue-700">Half Day Leave (Morning)</div>
-                                        <div className="text-xs text-gray-500">Block 09:00 - 13:00</div>
+                            ) : (
+                                <div className="space-y-4 animate-in slide-in-from-right-4 duration-300">
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Reason for holiday</p>
+                                        <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${leaveType === 'full' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'}`}>
+                                            {leaveType === 'full' ? 'FULL DAY' : 'HALF DAY'}
+                                        </span>
                                     </div>
-                                    <span className="material-symbols-outlined text-gray-300 group-hover:text-blue-600">wb_sunny</span>
-                                </button>
-
-                                <button
-                                    onClick={() => handleApplyLeave('half-afternoon')}
-                                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-orange-50 hover:border-orange-200 transition-all flex items-center justify-between group"
-                                >
-                                    <div>
-                                        <div className="font-semibold text-gray-900 group-hover:text-orange-700">Half Day Leave (Afternoon)</div>
-                                        <div className="text-xs text-gray-500">Block 14:00 - 18:00</div>
+                                    <div className="relative">
+                                        <textarea 
+                                            autoFocus
+                                            value={leaveReason}
+                                            onChange={(e) => setLeaveReason(e.target.value)}
+                                            placeholder="Please write your excuse here..."
+                                            className="w-full h-32 p-4 rounded-xl border-2 border-gray-100 focus:border-blue-500 outline-none text-sm font-medium resize-none transition-all placeholder:text-gray-300"
+                                        />
+                                        <div className="absolute bottom-3 right-3 text-[10px] font-bold text-gray-400">
+                                            {leaveReason.length} characters
+                                        </div>
                                     </div>
-                                    <span className="material-symbols-outlined text-gray-300 group-hover:text-orange-600">wb_twilight</span>
-                                </button>
 
-                                <button
-                                    onClick={() => handleApplyLeave('full')}
-                                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-red-50 hover:border-red-200 transition-all flex items-center justify-between group"
-                                >
-                                    <div>
-                                        <div className="font-semibold text-gray-900 group-hover:text-red-700">Full Day Leave</div>
-                                        <div className="text-xs text-gray-500">Block 09:00 - 17:00</div>
+                                    {/* Attachment Section */}
+                                    <div className="flex flex-col gap-2">
+                                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Supporting Document (Optional)</p>
+                                        {!leaveAttachment ? (
+                                            <label className="w-full h-12 flex items-center justify-center gap-2 border-2 border-dashed border-gray-100 rounded-xl cursor-pointer hover:border-blue-200 hover:bg-blue-50/30 transition-all text-xs font-bold text-gray-400 hover:text-blue-600">
+                                                <input 
+                                                    type="file" 
+                                                    className="hidden" 
+                                                    onChange={(e) => setLeaveAttachment(e.target.files?.[0] || null)}
+                                                />
+                                                <span className="material-symbols-outlined text-[18px]">upload_file</span>
+                                                Upload Attachment
+                                            </label>
+                                        ) : (
+                                            <div className="w-full p-2.5 rounded-xl border-2 border-blue-100 bg-blue-50/50 flex items-center justify-between">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                    <span className="material-symbols-outlined text-blue-600 text-[20px]">description</span>
+                                                    <span className="text-[11px] font-bold text-blue-900 truncate">{leaveAttachment.name}</span>
+                                                </div>
+                                                <button onClick={() => setLeaveAttachment(null)} className="p-1 hover:bg-blue-100 rounded-lg text-blue-400 hover:text-blue-600 transition-colors">
+                                                    <span className="material-symbols-outlined text-[18px]">close</span>
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
-                                    <span className="material-symbols-outlined text-gray-300 group-hover:text-red-600">block</span>
-                                </button>
-                            </div>
+                                    <div className="flex gap-2">
+                                        <button 
+                                            onClick={() => setLeaveStep(1)}
+                                            className="flex-1 py-3 text-xs font-black text-gray-400 hover:bg-gray-50 rounded-xl transition-all uppercase tracking-widest"
+                                        >
+                                            Back
+                                        </button>
+                                        <button 
+                                            onClick={handleApplyLeave}
+                                            disabled={!leaveReason.trim()}
+                                            className={`flex-[2] py-3 text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg ${leaveReason.trim() ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 text-gray-300 cursor-not-allowed'}`}
+                                        >
+                                            Submit Request
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -850,4 +878,3 @@ const ConsultantSchedule = () => {
 };
 
 export default ConsultantSchedule;
-

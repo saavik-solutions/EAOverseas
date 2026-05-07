@@ -1,14 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/AccountSettings.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
-import { useAuth } from '@/shared/contexts/AuthContext';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 import { useUserProfile } from '../../../shared/contexts/UserProfileContext';
 import { useAuth } from '../../../shared/contexts/AuthContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/settings/AccountSettings.tsx
 
 const AccountSettings = () => {
     const navigate = useNavigate();
@@ -315,4 +309,3 @@ const AccountSettings = () => {
 };
 
 export default AccountSettings;
-

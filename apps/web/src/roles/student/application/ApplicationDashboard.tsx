@@ -1,10 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/ApplicationDashboard.tsx
-import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
-=======
 import { useSavedItems } from '../../../shared/contexts/SavedItemsContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/ApplicationDashboard.tsx
 
 const ApplicationDashboard = () => {
     const navigate = useNavigate();
@@ -274,4 +270,3 @@ const ApplicationDashboard = () => {
 };
 
 export default ApplicationDashboard;
-

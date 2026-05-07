@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD:apps/web/src/pages/LenderSelection.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { Link, useNavigate } from 'react-router-dom';
-import ApplicationSubmittedModal from '@/features/application/ApplicationSubmittedModal';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 import { Link, useNavigate } from 'react-router-dom';
 import ApplicationSubmittedModal from '../../../shared/components/modals/ApplicationSubmittedModal';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/loans/LenderSelection.tsx
 
 const LenderSelection = () => {
     const navigate = useNavigate();
@@ -235,4 +229,3 @@ const LenderSelection = () => {
 };
 
 export default LenderSelection;
-

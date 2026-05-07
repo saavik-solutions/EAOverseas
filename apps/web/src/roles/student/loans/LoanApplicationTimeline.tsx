@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD:apps/web/src/pages/LoanApplicationTimeline.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/loans/LoanApplicationTimeline.tsx
 import { useLocation, Link } from 'react-router-dom';
 
 const LoanApplicationTimeline = () => {
@@ -223,4 +219,3 @@ const LoanApplicationTimeline = () => {
 };
 
 export default LoanApplicationTimeline;
-

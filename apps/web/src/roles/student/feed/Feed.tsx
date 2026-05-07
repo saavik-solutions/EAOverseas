@@ -1,15 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/Feed.tsx
-import Sidebar from '@/components/layout/Sidebar';
-import PageHeader from '@/components/layout/PageHeader';
-import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import { useAuth } from '@/shared/contexts/AuthContext';
-import { useSavedItems } from '@/shared/contexts/SavedItemsContext';
-import { usePosts, Post } from '@/shared/contexts/PostsContext';
-import LoginModal from '@/features/auth/LoginModal';
-import ShareModal from '@/features/shared-modals/ShareModal';
-=======
 import Sidebar from '../../shared/components/Sidebar';
 import PageHeader from '../../shared/components/PageHeader';
 import { feedService, PostResponse } from '../services/feedService';
@@ -18,96 +8,111 @@ import { useAuth } from '../../shared/contexts/AuthContext';
 import { useSavedItems } from '../../shared/contexts/SavedItemsContext';
 import LoginModal from '../../shared/components/LoginModal';
 import ShareModal from '../../shared/components/ShareModal';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/feed/Feed.tsx
 
 const Feed = () => {
-    const { posts } = usePosts();
     const navigate = useNavigate();
+    const [posts, setPosts] = useState<PostResponse[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     // State for Filter Bar
     const [activeCountry, setActiveCountry] = useState('All Countries');
-    const { user, requireAuth, setLoginModalOpen } = useAuth();
+    const { user, requireAuth } = useAuth();
     const { togglePost, isPostSaved } = useSavedItems();
     const [activeTopic, setActiveTopic] = useState('All Topics');
     const [sortBy, setSortBy] = useState('Newest');
 
     // Share Modal State
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-<<<<<<< HEAD:apps/web/src/pages/Feed.tsx
-    const [shareData, setShareData] = useState(null);
-=======
     const [shareData, setShareData] = useState<PostResponse | null>(null);
     const [expandedComments, setExpandedComments] = useState<string | null>(null);
     const [comments, setComments] = useState<any[]>([]);
     const [commentInput, setCommentInput] = useState('');
     const [isCommenting, setIsCommenting] = useState(false);
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/feed/Feed.tsx
 
     const countries = ['All Countries', 'USA', 'UK', 'Canada', 'Germany', 'Australia', 'Europe', 'Global'];
-    const topics = ['All Topics', 'Admissions', 'Policy Update', 'Scholarship', 'Event & Webinar'];
+    const topics = ['All Topics', 'Admissions', 'Scholarships', 'Visas', 'Accomodation', 'Career Advice', 'Routine'];
+
+    const fetchPosts = useCallback(async () => {
+        try {
+            setLoading(true);
+            const data = await feedService.getAll();
+            setPosts(data);
+            setError(null);
+        } catch (err: any) {
+            console.error('Failed to fetch posts:', err);
+            setError('Failed to load feed. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchPosts();
+    }, [fetchPosts]);
 
     // Helper to get country from location string
-    const getCountryFromLocation = (location: string) => {
+    const getCountryFromLocation = (location?: string) => {
         if (!location) return 'Global';
         const loc = location.toUpperCase();
-        if (loc.includes('USA') || loc.includes('US') || loc.includes('UNITED STATES') || loc.includes('HARVARD') || loc.includes('STANFORD') || loc.includes('MIT') || loc.includes('COLUMBIA') || loc.includes('NEW YORK')) return 'USA';
-        if (loc.includes('UK') || loc.includes('UNITED KINGDOM') || loc.includes('LONDON') || loc.includes('OXFORD') || loc.includes('CAMBRIDGE') || loc.includes('MANCHESTER')) return 'UK';
-        if (loc.includes('CANADA') || loc.includes('TORONTO') || loc.includes('VANCOUVER') || loc.includes('MCGILL')) return 'Canada';
-        if (loc.includes('GERMANY') || loc.includes('BERLIN') || loc.includes('MUNICH') || loc.includes('TUM ')) return 'Germany';
-        if (loc.includes('AUSTRALIA') || loc.includes('MELBOURNE') || loc.includes('SYDNEY') || loc.includes('UNSW')) return 'Australia';
-        if (loc.includes('SWITZERLAND') || loc.includes('EUROPE') || loc.includes('ETH')) return 'Europe';
+        if (loc.includes('USA') || loc.includes('US')) return 'USA';
+        if (loc.includes('UK') || loc.includes('UNITED KINGDOM') || loc.includes('LONDON')) return 'UK';
+        if (loc.includes('CANADA') || loc.includes('TORONTO')) return 'Canada';
+        if (loc.includes('GERMANY') || loc.includes('BERLIN') || loc.includes('MUNICH')) return 'Germany';
+        if (loc.includes('AUSTRALIA') || loc.includes('MELBOURNE') || loc.includes('SYDNEY')) return 'Australia';
+        if (loc.includes('SWITZERLAND') || loc.includes('EUROPE')) return 'Europe';
         return 'Global';
     };
 
+    const handleLike = async (id: string) => {
+        requireAuth(async () => {
+            try {
+                await feedService.toggleLike(id);
+                // Optimistic UI or Fetch
+                const data = await feedService.getAll();
+                setPosts(data);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    };
+
+
     const filteredPosts = posts.filter(post => {
         // 1. Filter by Country
-        const postCountry = getCountryFromLocation(post.location);
-        const matchesCountry = activeCountry === 'All Countries' || postCountry === activeCountry || (activeCountry === 'Europe' && post.tags.includes('#Europe'));
+        const postCountry = getCountryFromLocation(post.metadata?.location);
+        const matchesCountry = activeCountry === 'All Countries' || postCountry === activeCountry || (activeCountry === 'Europe' && (post.tags || []).includes('Europe'));
 
         // 2. Filter by Topic (Pills)
         let matchesTopic = true;
         if (activeTopic !== 'All Topics') {
-            const lTopic = activeTopic.toLowerCase().replace(/s$/, ''); // singularize
-            const postLabel = post.label.toLowerCase().replace(/s$/, '');
-            const postTags = (post.tags || []).map(t => t.toLowerCase().replace(/s$/, ''));
-
-            if (activeTopic === 'Admissions') matchesTopic = postLabel.includes('admission');
-            else if (activeTopic === 'Scholarship') matchesTopic = postLabel.includes('scholarship');
-            else if (activeTopic === 'Policy Update') matchesTopic = postLabel.includes('policy');
-            else if (activeTopic === 'Event & Webinar') matchesTopic = postLabel.includes('event') || postLabel.includes('webinar');
-            else matchesTopic = postTags.some(tag => tag.includes(lTopic) || lTopic.includes(tag));
+            const label = post.category.toLowerCase();
+            if (activeTopic === 'Admissions') matchesTopic = label.includes('admission');
+            else if (activeTopic === 'Scholarships') matchesTopic = label.includes('scholarship');
+            else if (activeTopic === 'Visas') matchesTopic = label.includes('visa');
+            else if (activeTopic === 'Accomodation') matchesTopic = label.includes('accomodation');
+            else if (activeTopic === 'Career Advice') matchesTopic = label.includes('career');
+            else if (activeTopic === 'Routine') matchesTopic = label.includes('routine');
+            else matchesTopic = (post.tags || []).some(tag => tag.toLowerCase().includes(activeTopic.toLowerCase()));
         }
 
-        // 3. Filter by Status (Only show published)
-        const matchesStatus = !post.status || post.status === 'Published';
-
-        return matchesCountry && matchesTopic && matchesStatus;
+        return matchesCountry && matchesTopic;
     }).sort((a, b) => {
-        // Try to sort by ID descending (since our IDs are currently Date.now() for new posts)
-        // Mock posts like 'daad' will sort lower than numeric timestamps
-        const idA = isNaN(Number(a.id)) ? 0 : Number(a.id);
-        const idB = isNaN(Number(b.id)) ? 0 : Number(b.id);
-
-        if (idA !== idB) return idB - idA;
-        return 0; // Default order
+        if (sortBy === 'Most Saved') return (b.likeCount || 0) - (a.likeCount || 0);
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
-
-    const openShareModal = (postId: string | number) => {
-        requireAuth(() => {
-            const post = posts.find(p => p.id.toString() === postId.toString());
-            setShareData(post || null);
-            setIsShareModalOpen(true);
-        });
+    const openShareModal = (post: PostResponse) => {
+        setShareData(post);
+        setIsShareModalOpen(true);
     };
 
-    const handleSave = (post: Post) => {
+    const handleSave = (post: any) => {
         requireAuth(() => {
             togglePost(post);
         });
     };
 
-<<<<<<< HEAD:apps/web/src/pages/Feed.tsx
-=======
     const toggleComments = async (postId: string) => {
         if (expandedComments === postId) {
             setExpandedComments(null);
@@ -140,7 +145,6 @@ const Feed = () => {
             }
         });
     };
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/feed/Feed.tsx
 
     const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setActiveCountry(e.target.value);
@@ -183,8 +187,6 @@ const Feed = () => {
                 <div className="p-4 md:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 lg:gap-8 max-w-7xl mx-auto">
 
                     <div className="flex flex-col gap-6">
-
-
 
                         {/* Enhanced Filter Bar - Slider Style */}
                         <div className="flex flex-col gap-4">
@@ -232,12 +234,6 @@ const Feed = () => {
 
                             {/* Horizontal Filters Container */}
                             <div className="flex flex-col gap-3">
-                                {/* Country Slider */}
-                                {/* Country Filter Removed (Moved to top) */}
-
-                                {/* Topic Slider */}
-
-                                {/* Topic Slider */}
                                 <div className="flex items-center gap-2 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wider shrink-0 mr-1">Topic</span>
                                     {topics.map((topic) => (
@@ -258,7 +254,34 @@ const Feed = () => {
 
                         {/* Feed Posts */}
                         <div className="flex flex-col gap-4 md:gap-6">
-                            {filteredPosts.length === 0 ? (
+                            {loading ? (
+                                <div className="flex flex-col gap-6">
+                                    {[1, 2, 3].map(i => (
+                                        <div key={i} className="bg-white border border-gray-200 rounded-xl p-5 animate-pulse">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="h-2 w-20 bg-gray-200 rounded" />
+                                                    <div className="h-3 w-32 bg-gray-200 rounded" />
+                                                </div>
+                                            </div>
+                                            <div className="h-48 bg-gray-200 rounded-xl mb-4" />
+                                            <div className="h-4 w-3/4 bg-gray-200 rounded mb-2" />
+                                            <div className="h-4 w-1/2 bg-gray-200 rounded" />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : error ? (
+                                <div className="text-center py-20 bg-white rounded-xl border border-red-100">
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-50 mb-4">
+                                        <span className="material-symbols-outlined text-red-400 !text-[32px]">error</span>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-gray-900">{error}</h3>
+                                    <button onClick={fetchPosts} className="mt-4 px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                                        Try Again
+                                    </button>
+                                </div>
+                            ) : filteredPosts.length === 0 ? (
                                 <div className="text-center py-20 bg-white rounded-xl border border-gray-200">
                                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
                                         <span className="material-symbols-outlined text-gray-400 !text-[32px]">filter_list_off</span>
@@ -270,57 +293,69 @@ const Feed = () => {
                                     </button>
                                 </div>
                             ) : (
-                                filteredPosts.map((post) => (
-                                    <article
-                                        key={post.id}
-                                        onClick={() => requireAuth(() => navigate(`/feed-details/${post.id}`))}
-                                        className="flex flex-col bg-white border border-gray-200 rounded-xl p-3 md:p-5 hover:border-blue-200 hover:shadow-sm transition-all group cursor-pointer"
-                                    >
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-3">
-                                                <div onClick={(e) => { e.stopPropagation(); requireAuth(() => navigate(`/institution/${encodeURIComponent(post.institution)}`)); }} className="group/inst flex items-center gap-3 cursor-pointer">
-                                                    <div className="w-7 h-7 md:w-10 md:h-10 rounded-full overflow-hidden bg-gray-50 flex items-center justify-center border border-gray-100 relative shrink-0 group-hover/inst:border-blue-200 transition-colors">
-                                                        <img className="w-full h-full object-contain p-0.5" alt={`${post.institution} Logo`} src={post.logo} />
-                                                    </div>
-                                                    <div className="flex flex-col">
-                                                        <span className="text-[9px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">{post.location}</span>
-                                                        <span className="text-[11px] md:text-sm font-bold text-gray-900 group-hover/inst:text-blue-600 transition-colors hover:underline">{post.institution}</span>
+                                filteredPosts.map((post) => {
+                                    const instName = post.university?.name || post.metadata?.universityName || 'EAOverseas';
+                                    const instLogo = post.university?.logoUrl || post.metadata?.universityLogo || '/logo.png';
+                                    const instLocation = post.metadata?.location || post.university?.country || 'Global';
+                                    const universitySlug = post.university?.slug || encodeURIComponent(instName);
+                                    
+                                    const isLiked = post.userInteractions?.includes('like');
+
+                                    return (
+                                        <article
+                                            key={post.id}
+                                            onClick={() => navigate(`/feed-details/${post.slug}`) }
+                                            className="flex flex-col bg-white border border-gray-200 rounded-xl p-3 md:p-5 hover:border-blue-200 hover:shadow-sm transition-all group cursor-pointer"
+                                        >
+                                            <div className="flex items-center justify-between mb-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div onClick={(e) => { e.stopPropagation(); navigate(`/institution/${universitySlug}`); }} className="group/inst flex items-center gap-3 cursor-pointer">
+                                                        <div className="w-7 h-7 md:w-10 md:h-10 rounded-full overflow-hidden bg-gray-50 flex items-center justify-center border border-gray-100 relative shrink-0 group-hover/inst:border-blue-200 transition-colors">
+                                                            <img className="w-full h-full object-contain p-0.5" alt={`${instName} Logo`} src={instLogo} />
+                                                        </div>
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[9px] md:text-xs font-bold text-gray-500 uppercase tracking-wider">{instLocation}</span>
+                                                            <span className="text-[11px] md:text-sm font-bold text-gray-900 group-hover/inst:text-blue-600 transition-colors hover:underline">{instName}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <span className={`px-1.5 py-0.5 md:px-3 md:py-1 rounded-full text-[9px] md:text-xs font-semibold border bg-blue-50 text-blue-700 border-blue-100 uppercase`}>
+                                                    {post.category}
+                                                </span>
                                             </div>
-                                            <span className={`px-1.5 py-0.5 md:px-3 md:py-1 rounded-full text-[9px] md:text-xs font-semibold border ${post.labelColor || 'bg-blue-50 text-blue-700 border-blue-100'}`}>
-                                                {post.label}
-                                            </span>
-                                        </div>
-                                        <div className="mb-4">
-                                            <img src={post.banner} className="w-full h-36 md:h-64 object-cover rounded-xl mb-3 md:mb-4 border border-gray-100" />
-                                            <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors">{post.title}</h3>
+                                            <div className="mb-4">
+                                                {post.coverImageUrl && (
+                                                    <img src={post.coverImageUrl} className="w-full h-36 md:h-64 object-cover rounded-xl mb-3 md:mb-4 border border-gray-100" />
+                                                )}
+                                                <h3 className="text-base md:text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-blue-600 transition-colors">{post.title}</h3>
 
-                                            {/* Grid Details */}
-                                            <div className="flex flex-wrap gap-y-2 gap-x-3 md:gap-x-6 text-[11px] md:text-sm text-gray-600 mb-4 bg-gray-50 p-2 md:p-3 rounded-lg border border-gray-100">
-                                                {post.grid && post.grid.map((item, idx) => (
-                                                    <div key={idx} className="flex items-center gap-1.5 md:gap-2">
-                                                        {item.alert && <span className="material-symbols-outlined text-[14px] md:text-[16px] text-orange-600">schedule</span>}
-                                                        <span className={`font-medium ${item.alert ? 'text-orange-600' : ''}`}>
-                                                            {item.alert ? `${item.label}: ${item.value}` : item.value}
-                                                        </span>
+                                                {/* Grid Details from Metadata */}
+                                                {(post.metadata?.tuitionFee || post.metadata?.programDuration) && (
+                                                    <div className="flex flex-wrap gap-y-2 gap-x-3 md:gap-x-6 text-[11px] md:text-sm text-gray-600 mb-4 bg-gray-50 p-2 md:p-3 rounded-lg border border-gray-100">
+                                                        {post.metadata.tuitionFee && (
+                                                            <div className="flex items-center gap-1.5 md:gap-2">
+                                                                <span className="font-medium text-slate-500">Tuition:</span>
+                                                                <span className="font-semibold text-slate-900">{post.metadata.tuitionFee}</span>
+                                                            </div>
+                                                        )}
+                                                        {post.metadata.programDuration && (
+                                                            <div className="flex items-center gap-1.5 md:gap-2">
+                                                                <span className="font-medium text-slate-500">Duration:</span>
+                                                                <span className="font-semibold text-slate-900">{post.metadata.programDuration}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
+                                                )}
+
+                                                <div className="text-[11px] md:text-sm text-gray-600 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: post.content }}></div>
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                {post.tags && post.tags.map((tag, idx) => (
+                                                    <span key={idx} className="px-1.5 py-0.5 md:px-2 md:py-1 rounded bg-gray-100 text-gray-600 text-[10px] md:text-xs font-medium border border-gray-200">{tag}</span>
                                                 ))}
                                             </div>
 
-<<<<<<< HEAD:apps/web/src/pages/Feed.tsx
-                                            <div className="text-[11px] md:text-sm text-gray-600 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: post.about }}></div>
-                                        </div>
-
-                                        <div className="flex items-center gap-2">
-                                            {post.tags && post.tags.map((tag, idx) => (
-                                                <span key={idx} className="px-1.5 py-0.5 md:px-2 md:py-1 rounded bg-gray-100 text-gray-600 text-[10px] md:text-xs font-medium border border-gray-200">{tag}</span>
-                                            ))}
-                                        </div>
-
-                                        <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-4">
-                                            <div className="flex items-center gap-1">
-=======
                                             <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className="flex items-center gap-1 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100">
@@ -355,31 +390,13 @@ const Feed = () => {
                                                         </button>
                                                     </div>
                                                 </div>
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/feed/Feed.tsx
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); requireAuth(() => handleSave(post)); }}
-                                                    className={`p-1.5 md:p-2 rounded-lg transition-colors ${isPostSaved(post) ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'}`}
-                                                    title={isPostSaved(post) ? "Unsave" : "Save"}
+                                                    onClick={(e) => { e.stopPropagation(); navigate(`/feed-details/${post.slug}`); }}
+                                                    className="hidden md:block px-4 py-1.5 md:px-6 md:py-2 bg-blue-600 border border-transparent text-white text-xs md:text-sm font-semibold rounded-lg shadow-sm hover:bg-blue-700 transition-colors"
                                                 >
-                                                    <span className={`material-symbols-outlined text-[18px] md:text-[22px] ${isPostSaved(post) ? '!fill-current' : ''}`}>
-                                                        {isPostSaved(post) ? 'bookmark' : 'bookmark_border'}
-                                                    </span>
-                                                </button>
-                                                <button onClick={(e) => { e.stopPropagation(); openShareModal(post.id); }} className="p-1.5 md:p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Share">
-                                                    <span className="material-symbols-outlined text-[18px] md:text-[22px]">share</span>
+                                                    View Details
                                                 </button>
                                             </div>
-<<<<<<< HEAD:apps/web/src/pages/Feed.tsx
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); requireAuth(() => navigate(`/feed-details/${post.id}`)); }}
-                                                className="px-4 py-1.5 md:px-6 md:py-2 bg-blue-600 border border-transparent text-white text-xs md:text-sm font-semibold rounded-lg shadow-sm hover:bg-blue-700 transition-colors"
-                                            >
-                                                View Details
-                                            </button>
-                                        </div>
-                                    </article>
-                                ))
-=======
 
                                             {/* Comment Section */}
                                             {expandedComments === post.id && (
@@ -439,7 +456,6 @@ const Feed = () => {
                                         </article>
                                     );
                                 })
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/feed/Feed.tsx
                             )}
                         </div>
 
@@ -506,31 +522,6 @@ const Feed = () => {
                             </div>
                         </div>
 
-                        {/* Top Countries */}
-                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div className="flex items-center gap-2 mb-4 text-purple-600">
-                                <span className="material-symbols-outlined text-[20px]">public</span>
-                                <h3 className="font-bold text-gray-900 text-sm">Top Countries This Week</h3>
-                            </div>
-                            <div className="flex flex-col gap-3">
-                                {[
-                                    { country: 'USA', flag: '🇺🇸', trend: '+12%' },
-                                    { country: 'Germany', flag: '🇩🇪', trend: '+8%' },
-                                    { country: 'UK', flag: '🇬🇧', trend: '+5%' },
-                                ].map((item, idx) => (
-                                    <div key={idx} onClick={() => { }} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-lg shadow-sm border border-gray-200">
-                                                {item.flag}
-                                            </div>
-                                            <span className="text-sm font-medium text-gray-700">{item.country}</span>
-                                        </div>
-                                        <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">{item.trend}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
                         {/* Quick Tip Widget */}
                         <div className="bg-blue-50 p-5 rounded-xl border border-blue-100">
                             <div className="flex items-center gap-2 mb-2 text-blue-700">
@@ -541,11 +532,9 @@ const Feed = () => {
                                 Early applicants have a 40% higher chance of securing scholarships. Don't wait for the deadline!
                             </p>
                         </div>
-
                     </div>
                 </div>
             </main>
-
 
             {/* Share Modal */}
             {shareData && (
@@ -553,17 +542,16 @@ const Feed = () => {
                     isOpen={isShareModalOpen}
                     onClose={() => setIsShareModalOpen(false)}
                     title="Share Opportunity"
-                    shareUrl={`https://eaoverseas.com/feed/${shareData.id}`}
+                    shareUrl={`${window.location.origin}/feed-details/${shareData.slug}`}
                     preview={{
                         title: shareData.title,
-                        subtitle: shareData.institution,
-                        image: shareData.banner
+                        subtitle: shareData.university?.name || shareData.metadata?.universityName || 'EAOverseas',
+                        image: shareData.coverImageUrl || ''
                     }}
                 />
             )}
-        </div >
+        </div>
     );
 };
 
 export default Feed;
-

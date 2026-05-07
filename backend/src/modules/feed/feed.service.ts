@@ -1,12 +1,6 @@
 import { prisma } from '../../lib/prisma';
 
 export class FeedService {
-<<<<<<< HEAD
-  async getAll(query: { category?: any; universityId?: string; limit?: number; userId?: string; search?: string }) {
-    const where: any = {
-      status: 'published',
-    };
-=======
   async getAll(query: { category?: any; universityId?: string; limit?: number; userId?: string; status?: string }) {
     const where: any = {};
     
@@ -19,17 +13,9 @@ export class FeedService {
     }
     
     console.log('[FeedService] Prisma Where:', where);
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 
     if (query.category) {
       where.category = query.category;
-    }
-
-    if (query.search) {
-      where.OR = [
-        { title: { contains: query.search, mode: 'insensitive' } },
-        { content: { contains: query.search, mode: 'insensitive' } },
-      ];
     }
 
     if (query.universityId && query.universityId !== 'all') {
@@ -163,9 +149,6 @@ export class FeedService {
   }
 
   async create(data: any) {
-<<<<<<< HEAD
-    const { title, content, category, tags, authorId, universityId, coverImageUrl, excerpt, ...rest } = data;
-=======
     const { title, content, category, tags, authorId, universityId, coverImageUrl, ...rest } = data;
     
     // Map frontend types to DB enum
@@ -182,7 +165,6 @@ export class FeedService {
     };
 
     let mappedCategory = (categoryMap[category] || category || 'news').toLowerCase();
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     
     // Validate universityId (UUID expectation)
     const validUniId = (universityId && universityId !== 'all') ? universityId : null;
@@ -195,12 +177,7 @@ export class FeedService {
         tags: tags || [],
         authorId,
         universityId: validUniId,
-<<<<<<< HEAD
-        coverImageUrl,
-        excerpt,
-=======
         coverImageUrl: coverImageUrl || null,
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
         slug: this.generateSlug(title),
         status: (data.status?.toLowerCase() as any) || 'published',
         publishedAt: data.status?.toLowerCase() === 'published' ? new Date() : null,
@@ -208,31 +185,6 @@ export class FeedService {
       }
     });
   }
-<<<<<<< HEAD
-
-  async update(id: string, data: any) {
-    const { title, content, category, tags, universityId, coverImageUrl, excerpt, status, authorId, ...rest } = data;
-    const updateData: any = {};
-    if (title) { updateData.title = title; updateData.slug = this.generateSlug(title); }
-    if (content) updateData.content = content;
-    if (category) updateData.category = category as any;
-    if (tags) updateData.tags = tags;
-    if (universityId !== undefined) updateData.universityId = universityId === 'all' ? null : universityId;
-    if (coverImageUrl !== undefined) updateData.coverImageUrl = coverImageUrl;
-    if (excerpt !== undefined) updateData.excerpt = excerpt;
-    if (status) updateData.status = status.toLowerCase() as any;
-    
-    // Store remaining attributes in metadata
-    if (Object.keys(rest).length > 0) {
-      updateData.metadata = rest;
-    }
-
-    return await prisma.feedPost.update({ where: { id }, data: updateData });
-  }
-
-  async delete(id: string) {
-    return await prisma.feedPost.delete({ where: { id } });
-=======
   async updateStatus(id: string, status: string) {
     console.log(`[FeedService] Updating post ${id} to status: ${status}`);
     const data: any = {
@@ -321,6 +273,5 @@ export class FeedService {
       },
       orderBy: { createdAt: 'desc' }
     });
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
   }
 }

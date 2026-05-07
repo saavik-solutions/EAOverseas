@@ -1,10 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/DocumentsDashboard.tsx
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
-=======
 import { useUserProfile } from '../../../shared/contexts/UserProfileContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/documents/DocumentsDashboard.tsx
 
 const DocumentsDashboard = () => {
     const navigate = useNavigate();
@@ -331,4 +327,3 @@ const DocumentsDashboard = () => {
 };
 
 export default DocumentsDashboard;
-

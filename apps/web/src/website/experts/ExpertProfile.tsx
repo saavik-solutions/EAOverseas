@@ -1,14 +1,8 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/ExpertProfile.tsx
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { experts } from '../data/experts';
-=======
 import Navbar from '../../shared/components/layout/Navbar';
 import Footer from '../../shared/components/layout/Footer';
 import { experts } from '../../shared/data/experts';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/experts/ExpertProfile.tsx
 
 const ExpertProfile = () => {
     const { expertId } = useParams();
@@ -96,4 +90,3 @@ const ExpertProfile = () => {
 };
 
 export default ExpertProfile;
-

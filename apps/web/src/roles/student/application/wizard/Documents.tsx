@@ -49,8 +49,6 @@ const Documents = () => {
     const isCourseApplication = !!searchParams.get('title');
 
     const handleNext = () => {
-<<<<<<< HEAD:apps/web/src/pages/application/Documents.tsx
-=======
         // Save uploaded docs with base64 content to context for Review + Counsellor view
         const uploadedDocs = Object.values(fileData).map((d: any) => ({
             name: d.name,
@@ -59,7 +57,6 @@ const Documents = () => {
             base64: d.base64
         }));
         updateProfileDocuments(uploadedDocs);
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/application/wizard/Documents.tsx
         navigate(`/application/review?${searchParams.toString()}`);
     };
 
@@ -171,4 +168,3 @@ const Documents = () => {
 };
 
 export default Documents;
-

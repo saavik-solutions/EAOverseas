@@ -1,19 +1,15 @@
 import React, { useState, useRef } from 'react';
 import './TeamSection.css';
-import riyaImg from '@/assets/riya_mehta.png';
-import arjunImg from '@/assets/arjun_singh.png';
-import snehaImg from '@/assets/sneha_kapoor.png';
-import rohanImg from '@/assets/rohan_mehra.png';
-import anjaliImg from '@/assets/anjali_rao.png';
-import kabirImg from '@/assets/kabir_malhotra.png';
+import riyaImg from '../assets/riya_mehta.png';
+import arjunImg from '../assets/arjun_singh.png';
+import snehaImg from '../assets/sneha_kapoor.png';
+import rohanImg from '../assets/rohan_mehra.png';
+import anjaliImg from '../assets/anjali_rao.png';
+import kabirImg from '../assets/kabir_malhotra.png';
 
 import { useNavigate } from 'react-router-dom';
 
-<<<<<<< HEAD:apps/web/src/features/landing/components/TeamSection.tsx
-import { experts } from '@/features/content/data/experts';
-=======
 import { experts } from '../../../shared/data/experts';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/shared/landing-sections/TeamSection.tsx
 
 const TeamSection = () => {
     const navigate = useNavigate();

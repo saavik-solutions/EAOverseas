@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<<< HEAD:apps/web/src/features/notifications/NotificationDropdown.tsx
-import { useNotification } from '@/shared/contexts/NotificationContext';
-========
 import { useNotification } from '../contexts/NotificationContext';
->>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/shared/components/ui/NotificationDropdown.tsx
 import { useNavigate } from 'react-router-dom';
 
 const NotificationDropdown = ({ onClose }) => {
@@ -107,4 +103,3 @@ const NotificationDropdown = ({ onClose }) => {
 };
 
 export default NotificationDropdown;
-

@@ -1,13 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/Verification.tsx
-=======
 import { useAuth } from '../../../shared/contexts/AuthContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/auth/verification/Verification.tsx
 
 const Verification = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { verifyOTP, resendOTP } = useAuth();
+
+    const [otp, setOtp] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [resending, setResending] = useState(false);
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const handleVerify = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setIsSubmitting(true);
+
+        try {
+            await verifyOTP(otp);
+            setSuccessMessage('Email verified successfully!');
+            setTimeout(() => {
+                const from = location.state?.from || '/feed';
+                navigate(from);
+            }, 1500);
+        } catch (err: any) {
+            setError(err.message || 'Invalid verification code');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleResend = async () => {
+        setError('');
+        setResending(true);
+        try {
+            await resendOTP();
+            setSuccessMessage('New verification code sent to your email');
+            setTimeout(() => setSuccessMessage(''), 5000);
+        } catch (err: any) {
+            setError(err.message || 'Failed to resend code');
+        } finally {
+            setResending(false);
+        }
+    };
 
     return (
         <div className="flex min-h-screen bg-white font-display overflow-hidden">
@@ -48,29 +85,59 @@ const Verification = () => {
                         <p className="text-slate-500">We've sent a verification code to your email address. Please enter it below.</p>
                     </div>
 
+                    {/* Messages */}
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium animate-shake">
+                            {error}
+                        </div>
+                    )}
+                    {successMessage && (
+                        <div className="mb-6 p-4 bg-green-50 border border-green-100 text-green-600 rounded-xl text-sm font-medium animate-fade-in">
+                            {successMessage}
+                        </div>
+                    )}
+
                     {/* Form */}
-                    <form className="space-y-6" onSubmit={(e) => {
-                        e.preventDefault();
-                        const from = location.state?.from || '/profile-setup';
-                        navigate(from);
-                    }}>
+                    <form className="space-y-6" onSubmit={handleVerify}>
                         <div className="space-y-1.5">
                             <label className="text-sm font-bold text-slate-900 ml-1">Verification Code</label>
                             <input
                                 type="text"
-                                className="w-full h-12 px-4 rounded-xl bg-gray-50 border-gray-200 border focus:bg-white focus:border-[#0d6cf2] focus:ring-4 focus:ring-[#0d6cf2]/10 transition-all outline-none text-slate-900 font-medium placeholder:text-gray-400 tracking-widest text-center text-lg"
-                                placeholder="• • • • • •"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                className="w-full h-12 px-4 rounded-xl bg-gray-50 border-gray-200 border focus:bg-white focus:border-[#0d6cf2] focus:ring-4 focus:ring-[#0d6cf2]/10 transition-all outline-none text-slate-900 font-bold placeholder:text-gray-400 tracking-[0.5em] text-center text-xl"
+                                placeholder="••••••"
                                 maxLength={6}
                                 required
                             />
                         </div>
 
-                        <button className="w-full h-12 bg-[#0d6cf2] hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 text-white font-bold rounded-xl transition-all">
-                            Verify Email
+                        <button 
+                            disabled={isSubmitting || otp.length < 6}
+                            className={`w-full h-12 bg-[#0d6cf2] hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 ${isSubmitting || otp.length < 6 ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        >
+                            {isSubmitting ? (
+                                <>
+                                    <div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <span>Verifying...</span>
+                                </>
+                            ) : (
+                                'Verify Email'
+                            )}
                         </button>
 
                         <div className="text-center pt-2">
-                            <p className="text-slate-500 text-sm">Didn't receive code? <button type="button" className="text-[#0d6cf2] font-bold hover:underline bg-transparent border-none cursor-pointer">Resend</button></p>
+                            <p className="text-slate-500 text-sm">
+                                Didn't receive code? 
+                                <button 
+                                    type="button" 
+                                    onClick={handleResend}
+                                    disabled={resending}
+                                    className="ml-1 text-[#0d6cf2] font-bold hover:underline bg-transparent border-none cursor-pointer disabled:opacity-50"
+                                >
+                                    {resending ? 'Sending...' : 'Resend'}
+                                </button>
+                            </p>
                         </div>
                         <div className="text-center">
                             <Link to="/signup" className="text-slate-400 text-sm font-medium hover:text-slate-600 transition-colors flex items-center justify-center gap-1">
@@ -86,4 +153,3 @@ const Verification = () => {
 };
 
 export default Verification;
-

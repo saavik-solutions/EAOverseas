@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<<< HEAD:apps/web/src/features/superadmin/pages/SuperAdminPostFeedDashboard.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import { feedService, PostResponse } from '@/features/feed/services/feedService';
-import { usePosts, Post } from '@/features/feed/services/PostsContext';
-import { universityService, UniversityData } from '@/features/colleges/services/universityService';
-import SuperAdminLayout from '@/layouts/SuperAdminLayout';
-========
 import PageHeader from '../components/layout/PageHeader';
 import { feedService, PostResponse } from '../services/feedService';
 import { usePosts, Post } from '../../../shared/contexts/PostsContext';
 import SuperAdminLayout from '../layouts/SuperAdminLayout';
->>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/feed-management/SuperAdminPostFeedDashboard.tsx
 
 const TYPE_COLORS: Record<string, string> = {
     Article: 'bg-blue-100 text-blue-700',
@@ -115,7 +107,8 @@ const SuperAdminPostFeedDashboard = () => {
     const handleDelete = async (id: string) => {
         if (window.confirm('Are you sure you want to permanently remove this post from the cloud?')) {
             try {
-                await feedService.delete(id);
+                // In a real app we'd call feedService.delete(id)
+                deletePost(id); // Using context for now to simulate if no backend delete yet
                 setApiPosts(prev => prev.filter(p => p.id !== id));
             } catch (err) {
                 console.error('Delete failed', err);

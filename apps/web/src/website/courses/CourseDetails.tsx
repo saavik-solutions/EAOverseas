@@ -1,16 +1,9 @@
 import React, { useMemo } from 'react';
 import { useSearchParams, useNavigate, Link, useLocation } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/CourseDetails.tsx
-import { useSavedItems, Course } from '@/shared/contexts/SavedItemsContext';
-import { useNotification } from '@/shared/contexts/NotificationContext';
-import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import LoginModal from '@/features/auth/LoginModal';
-=======
 import { useSavedItems } from '../../shared/contexts/SavedItemsContext';
 import { useNotification } from '../../shared/contexts/NotificationContext';
 import { useAuthAction } from '../../shared/hooks/useAuthAction';
 import LoginModal from '../../shared/components/modals/LoginModal';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/courses/CourseDetails.tsx
 
 const CourseDetails = () => {
     const [searchParams] = useSearchParams();
@@ -25,7 +18,7 @@ const CourseDetails = () => {
 
     // Mock Data - In a real app, this would come from an API or shared context
     // Merging recommendedCourses and allCourses from Courses.jsx structure
-    const coursesDB: Course[] = [
+    const coursesDB = [
         {
             title: "MS in Computer Science",
             university: "Arizona State University",
@@ -111,7 +104,7 @@ const CourseDetails = () => {
         { uni: "University of Amsterdam", loc: "Netherlands", intake: "Sep 2024", tuition: "€18,000", match: 82, matchLabel: "High Match", logo: "history_edu" },
     ];
 
-    const course = useMemo((): Course => {
+    const course = useMemo(() => {
         // 1. Use State Data if available (from SavedCourses)
         if (stateCourse) {
             // Attempt to merge with DB data if possible for richer details
@@ -605,4 +598,3 @@ const CourseDetails = () => {
 };
 
 export default CourseDetails;
-

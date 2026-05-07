@@ -1,35 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-import SuperAdminLayout from '@/layouts/SuperAdminLayout';
-import CreateUniversityModal from '@/features/universities/components/CreateUniversityModal';
-import AddManagerModal from '@/features/universities/components/AddManagerModal';
-import ManageMembersModal from '@/features/universities/components/ManageMembersModal';
-import { usePosts } from '@/shared/contexts/PostsContext';
-
-=======
 import SuperAdminLayout from '../layouts/SuperAdminLayout';
 import { universityService } from '../services/universityService';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
 
 const SuperAdminUniversityManagement = () => {
-    const { clearAllPosts } = usePosts();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('All Status');
     const [currentPage, setCurrentPage] = useState(1);
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [showAddManagerModal, setShowAddManagerModal] = useState(false);
-    const [showManageMembersModal, setShowManageMembersModal] = useState(false);
-    const [selectedUniForManager, setSelectedUniForManager] = useState<any>(null);
-    const [activePopoverId, setActivePopoverId] = useState<number | null>(null);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isAssignPopupOpen, setIsAssignPopupOpen] = useState(false);
+    const [assigningUniId, setAssigningUniId] = useState<number | null>(null);
+    const [expandedCreator, setExpandedCreator] = useState<{ uniId: number, name: string } | null>(null);
+    const [blockedCreators, setBlockedCreators] = useState<string[]>([]);
+    const [popupAssigningUniId, setPopupAssigningUniId] = useState<number | null>(null);
+    const [creatorsList, setCreatorsList] = useState(['Alex Rivera', 'Sarah Chen', 'Michael Scott', 'Emma Wilson', 'James Bond', 'Tony Stark']);
+    const [manualCredentials, setManualCredentials] = useState<Record<string, { email: string, pass: string }>>({});
+    const [regForm, setRegForm] = useState({ name: '', email: '', pass: '' });
+    const [isRegistering, setIsRegistering] = useState(false);
 
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-    const [popoverSearch, setPopoverSearch] = useState('');
-    const navigate = useNavigate();
-    const itemsPerPage = 5;
-
-    const creators: any[] = [];
-=======
     const [assignments, setAssignments] = useState<Record<number, string[]>>({
         1: ['Alex Rivera'],
         2: ['Sarah Chen', 'Emma Wilson']
@@ -241,93 +229,31 @@ const SuperAdminUniversityManagement = () => {
     const navigate = useNavigate();
     const itemsPerPage = 5;
 
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
 
 
     const [universities, setUniversities] = useState(() => {
-        const saved = localStorage.getItem('eaoverseas_universities');
+        const saved = localStorage.getItem('ea_universities');
         if (saved) return JSON.parse(saved);
         return [
             // Page 1
-            {
-                id: 1, name: 'University of Toronto', country: 'Canada', courses: 142, status: 'Active', rating: 4.8, students: 1240, email: 'admissions@utoronto.ca', managers: [
-                    { id: 'MGR-7721', name: 'Sarah Wilson', email: 'admissions@utoronto.ca', password: 'TORONTO_ADMIN_9921', isBlocked: false },
-                    { id: 'MGR-6418', name: 'kalua', email: 'admissions@utoronto.ca', password: 'KALUA_UT_8821', isBlocked: false }
-                ]
-            },
-            { id: 2, name: 'King\'s College London', country: 'UK', courses: 86, status: 'Active', rating: 4.7, students: 840, email: 'admissions@kcl.ac.uk', managers: [] },
-            { id: 3, name: 'University of Melbourne', country: 'Australia', courses: 215, status: 'Pending', rating: 4.9, students: 0, email: 'admissions@unimelb.edu.au', managers: [] },
-            { id: 4, name: 'Technical University of Munich', country: 'Germany', courses: 94, status: 'Active', rating: 4.6, students: 620, email: 'admissions@tum.de', managers: [{ id: 'MGR-1120', name: 'David Miller', email: 'admissions@tum.de', password: 'TUM_ACCESS_2290', isBlocked: false }] },
-            { id: 5, name: 'Nanyang Technological University', country: 'Singapore', courses: 112, status: 'Suspended', rating: 4.8, students: 0, email: 'admissions@ntu.edu.sg', managers: [] },
+            { id: 1, name: 'University of Toronto', country: 'Canada', courses: 142, status: 'Active', rating: 4.8, students: 1240 },
+            { id: 2, name: 'King\'s College London', country: 'UK', courses: 86, status: 'Active', rating: 4.7, students: 840 },
+            { id: 3, name: 'University of Melbourne', country: 'Australia', courses: 215, status: 'Pending', rating: 4.9, students: 0 },
+            { id: 4, name: 'Technical University of Munich', country: 'Germany', courses: 94, status: 'Active', rating: 4.6, students: 620 },
+            { id: 5, name: 'Nanyang Technological University', country: 'Singapore', courses: 112, status: 'Suspended', rating: 4.8, students: 0 },
             // Page 2
-            { id: 6, name: 'Harvard University', country: 'USA', courses: 310, status: 'Active', rating: 4.9, students: 2100, email: 'admissions@harvard.edu', managers: [{ id: 'MGR-8891', name: 'Emma Rose', email: 'admissions@harvard.edu', password: 'HARVARD_SEC_1123', isBlocked: false }] },
-            { id: 7, name: 'Oxford University', country: 'UK', courses: 280, status: 'Active', rating: 4.9, students: 1850, email: 'admissions@ox.ac.uk', managers: [{ id: 'MGR-2351', name: 'Michael Chen', email: 'admissions@ox.ac.uk', password: 'OXFORD_MGR_4451', isBlocked: false }] },
-            { id: 8, name: 'ETH Zurich', country: 'Switzerland', courses: 120, status: 'Active', rating: 4.7, students: 950, email: 'admissions@ethz.ch', managers: [] },
-            { id: 9, name: 'University of Tokyo', country: 'Japan', courses: 180, status: 'Pending', rating: 4.6, students: 0, email: 'admissions@u-tokyo.ac.jp', managers: [] },
-            { id: 10, name: 'McGill University', country: 'Canada', courses: 155, status: 'Active', rating: 4.7, students: 1100, email: 'admissions@mcgill.ca', managers: [] },
+            { id: 6, name: 'Harvard University', country: 'USA', courses: 310, status: 'Active', rating: 4.9, students: 2100 },
+            { id: 7, name: 'Oxford University', country: 'UK', courses: 280, status: 'Active', rating: 4.9, students: 1850 },
+            { id: 8, name: 'ETH Zurich', country: 'Switzerland', courses: 120, status: 'Active', rating: 4.7, students: 950 },
+            { id: 9, name: 'University of Tokyo', country: 'Japan', courses: 180, status: 'Pending', rating: 4.6, students: 0 },
+            { id: 10, name: 'McGill University', country: 'Canada', courses: 155, status: 'Active', rating: 4.7, students: 1100 },
         ];
     });
 
-    const totalCount = universities.length;
-    const applicationCount = 1284; // Mock value as per provided design
-
-    const stats = [
-        { label: 'Total Universities', value: totalCount.toString(), icon: 'school', color: 'bg-blue-50 text-blue-600', trend: 'Global Network', trending: false, urgent: false },
-        { label: 'Top Performers', value: '20', icon: 'local_fire_department', color: 'bg-indigo-50 text-indigo-600', trend: 'Highest application volume', trending: true, urgent: false },
-        { label: 'Applications', value: applicationCount.toString(), icon: 'description', color: 'bg-emerald-50 text-emerald-600', trend: '+12.5% this month', trending: true, urgent: false },
-    ];
-
-    // Sync universities to localStorage
-    useEffect(() => {
-        localStorage.setItem('eaoverseas_universities', JSON.stringify(universities));
+    React.useEffect(() => {
+        localStorage.setItem('ea_universities', JSON.stringify(universities));
     }, [universities]);
 
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-    // Seed initial managers into the authentication system
-    useEffect(() => {
-        try {
-            const rawUsers = localStorage.getItem('eaoverseas_registered_users');
-            const registeredUsers = Array.isArray(JSON.parse(rawUsers || '[]')) ? JSON.parse(rawUsers || '[]') : [];
-            let updated = false;
-
-            universities.forEach(uni => {
-                uni.managers?.forEach((mgr: any) => {
-                    const existingIdx = registeredUsers.findIndex((u: any) => u.email.toLowerCase().trim() === mgr.email.toLowerCase().trim());
-                    if (existingIdx === -1) {
-                        registeredUsers.push({
-                            id: mgr.id,
-                            name: mgr.name,
-                            email: mgr.email,
-                            password: mgr.password,
-                            role: 'University',
-                            university: uni.name,
-                            country: uni.country, // Add country for localization
-                            isDemo: true,
-                            isBlocked: !!mgr.isBlocked
-                        });
-                        updated = true;
-                    } else {
-                        // Ensure university and country are always in sync for visibility
-                        let changed = false;
-                        if (registeredUsers[existingIdx].university !== uni.name) {
-                            registeredUsers[existingIdx].university = uni.name;
-                            changed = true;
-                        }
-                        if (registeredUsers[existingIdx].country !== uni.country) {
-                            registeredUsers[existingIdx].country = uni.country;
-                            changed = true;
-                        }
-                        if (changed) updated = true;
-                    }
-                });
-            });
-
-            if (updated) {
-                localStorage.setItem('eaoverseas_registered_users', JSON.stringify(registeredUsers));
-            }
-        } catch (e) {
-            console.error("Failed to sync registered users", e);
-=======
     const handleOnboard = async () => {
         if (!uniForm.name || !uniForm.country) return;
 
@@ -388,46 +314,9 @@ const SuperAdminUniversityManagement = () => {
             setUniversities(prev => prev.map((u: any) => 
                 u.id === id ? { ...u, status: 'Suspended' } : u
             ));
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
         }
-    }, [universities]);
-
-
-    const handleAddManager = (uniId: number, managerData: any) => {
-        setUniversities(prev => prev.map(uni =>
-            uni.id === uniId ? { ...uni, managers: [...(uni.managers || []), managerData].slice(0, 4) } : uni
-        ));
-
-        // Persist to authentication system
-        const registeredUsers = JSON.parse(localStorage.getItem('eaoverseas_registered_users') || '[]');
-        registeredUsers.push({
-            id: managerData.id,
-            name: managerData.name,
-            email: managerData.email,
-            password: managerData.password,
-            role: 'University',
-            university: universities.find(uni => uni.id === uniId)?.name || '',
-            country: universities.find(uni => uni.id === uniId)?.country || '',
-            isDemo: false,
-            isBlocked: false
-        });
-        localStorage.setItem('eaoverseas_registered_users', JSON.stringify(registeredUsers));
     };
 
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-    const handleRemoveManager = (uniId: number, managerId: string) => {
-        setUniversities(prev => prev.map(uni =>
-            uni.id === uniId ? { ...uni, managers: (uni.managers || []).filter((m: any) => m.id !== managerId) } : uni
-        ));
-    };
-
-
-    const filteredCreators = creators.filter(c =>
-        c.name.toLowerCase().includes(popoverSearch.toLowerCase())
-    );
-
-    const filteredUniversities = universities.filter(uni => {
-=======
     const activeCount = universities.filter((u: any) => u.status === 'Active').length;
     const pendingCount = universities.filter((u: any) => u.status === 'Pending').length;
     const suspendedCount = universities.filter((u: any) => u.status === 'Suspended').length;
@@ -438,7 +327,6 @@ const SuperAdminUniversityManagement = () => {
     ];
 
     const filteredUniversities = universities.filter((uni: { name: string; country: string; status: string }) => {
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
         const matchesSearch = uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             uni.country.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = selectedStatus === 'All Status' || uni.status === selectedStatus;
@@ -456,22 +344,6 @@ const SuperAdminUniversityManagement = () => {
         <SuperAdminLayout title="University Management">
             <div className="p-2 md:p-8 flex flex-col gap-3 md:gap-6">
                 {/* KPI Cards */}
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {stats.map((stat) => (
-                        <div
-                            key={stat.label}
-                            onClick={() => {
-                                if (stat.label === 'Total Universities') navigate('/Superadmin/active-partners');
-                                if (stat.label === 'Top Performers') navigate('/Superadmin/top-performers');
-                                if (stat.label === 'Applications') navigate('/Superadmin/applications');
-                            }}
-                            className={`bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 ${['Total Universities', 'Top Performers', 'Applications'].includes(stat.label) ? 'cursor-pointer hover:border-[#2b6cee] hover:shadow-md transition-all group/card' : ''}`}
-                        >
-                            <div className="flex justify-between items-start">
-                                <div className={`${stat.color} p-2 rounded-lg ${stat.label === 'Total Universities' ? 'group-hover/card:bg-blue-600 group-hover/card:text-white transition-colors' : ''}`}>
-                                    <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
-=======
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                     {stats.map((stat: { label: string; icon: string; color: string; urgent?: boolean; value: string; trend: string }) => {
                         const isClickable = stat.label === 'Active Partners' || stat.label === 'Suspended';
@@ -501,32 +373,14 @@ const SuperAdminUniversityManagement = () => {
                                     <span className={`text-[9px] md:text-[10px] font-bold ${stat.urgent ? 'text-rose-500' : 'text-slate-400'}`}>
                                         {stat.trend}
                                     </span>
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
                                 </div>
-                                {stat.urgent && (
-                                    <span className="bg-rose-100 text-rose-600 text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Urgent</span>
-                                )}
-                                {stat.trending && (
-                                    <span className="bg-indigo-100 text-indigo-600 text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Trending</span>
-                                )}
                             </div>
-                            <div>
-                                {stat.label !== 'Top Performers' && (
-                                    <h3 className="text-xl font-bold text-slate-900">{stat.value}</h3>
-                                )}
-                                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">{stat.label}</p>
-                            </div>
-                            <div className="pt-2 border-t border-slate-50">
-                                <span className={`text-[10px] font-bold ${stat.urgent ? 'text-rose-500' : stat.trending ? 'text-indigo-500' : 'text-slate-400'}`}>
-                                    {stat.trend}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 {/* Table Section */}
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col relative">
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
                     {/* Table Toolbar */}
                     <div className="p-3 md:p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
                         <div className="flex items-center gap-2 md:gap-4">
@@ -540,22 +394,6 @@ const SuperAdminUniversityManagement = () => {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                             </div>
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => setShowManageMembersModal(true)}
-                                className="bg-slate-100 text-slate-600 px-5 py-2 rounded-lg text-sm font-bold hover:bg-slate-200 transition-all flex items-center gap-2"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">group</span>
-                                Manage
-                            </button>
-                            <button
-                                onClick={() => setShowCreateModal(true)}
-                                className="bg-[#2b6cee] text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-[#2b6cee]/90 transition-all shadow-md shadow-[#2b6cee]/20 flex items-center gap-2"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">add</span>
-=======
                             <select
                                 className="px-2 md:px-4 py-1.5 md:py-2 border border-slate-200 rounded-lg text-xs md:text-sm font-semibold text-slate-600 bg-white hover:bg-slate-50 transition-all outline-none cursor-pointer"
                                 value={selectedStatus}
@@ -579,31 +417,16 @@ const SuperAdminUniversityManagement = () => {
                                 onClick={() => setIsAddModalOpen(true)}
                                 className="flex-1 md:flex-none bg-[#2b6cee] text-white px-3 md:px-6 py-2 md:py-2.5 rounded-xl text-[11px] md:text-sm font-bold hover:bg-[#2b6cee]/90 transition-all shadow-lg shadow-blue-100 flex items-center justify-center gap-1.5">
                                 <span className="material-symbols-outlined text-[18px] md:text-[20px]">add</span>
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
                                 Add University
                             </button>
                         </div>
                     </div>
 
                     {/* Table Data */}
-                    <div className="overflow-x-visible">
+                    <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-slate-50/50">
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">University Detail</th>
-                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Country</th>
-                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Courses</th>
-                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Active Students</th>
-                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Managed By</th>
-                                    <th className="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {paginatedUniversities.map((uni, index) => (
-                                    <tr key={uni.id || (uni as any).tempId} className="hover:bg-slate-50/80 transition-colors">
-                                        <td className="px-6 py-4">
-=======
                                     <th className="px-2 md:px-6 py-2 md:py-4 text-[9px] md:text-[11px] font-bold text-slate-500 uppercase tracking-wider">University Detail</th>
                                     <th className="hidden md:table-cell px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Country</th>
                                     <th className="hidden md:table-cell px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">Courses</th>
@@ -616,85 +439,10 @@ const SuperAdminUniversityManagement = () => {
                                 {paginatedUniversities.map((uni: { id: number; name: string; country: string; courses: number; students: number; rating: number; status: string }) => (
                                     <tr key={uni.id} className="hover:bg-slate-50/80 transition-colors">
                                         <td className="px-2 md:px-6 py-2 md:py-4">
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
                                             <div className="flex items-center gap-3">
                                                 <div className="size-8 md:size-10 rounded-lg bg-blue-100 flex items-center justify-center text-[#2b6cee] font-bold text-base md:text-lg shrink-0">
                                                     {uni.name.charAt(0)}
                                                 </div>
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-                                                <div className="flex flex-col">
-                                                    <span className="text-sm font-bold text-slate-900">{uni.name}</span>
-                                                    {uni.id && (
-                                                        <span className="text-[10px] text-slate-400 font-medium">ID: UNI-{uni.id.toString().padStart(4, '0')}</span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td className="px-6 py-4 text-center">
-                                            <span className="text-xs font-semibold text-slate-600">{uni.country}</span>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <span className="text-xs font-bold text-slate-900">
-                                                {Array.isArray(uni.courses) ? uni.courses.length : uni.courses}
-                                            </span>
-                                        </td>
-
-                                        <td className="px-6 py-4 text-center">
-                                            <span className="text-xs font-bold text-slate-900">{uni.students.toLocaleString()}</span>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <div className="relative flex justify-center">
-                                                {uni.managers && uni.managers.length > 0 ? (
-                                                    <div className="flex flex-col items-center gap-2">
-                                                        <div className="flex -space-x-2">
-                                                            {uni.managers.map((m: any) => (
-                                                                <div key={m.id} className="size-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-[8px] font-bold ring-2 ring-white shadow-sm border border-indigo-200" title={m.name}>
-                                                                    {m.name.charAt(0)}
-                                                                </div>
-                                                            ))}
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSelectedUniForManager(uni);
-                                                                    setActivePopoverId(activePopoverId === uni.id ? null : uni.id);
-                                                                }}
-                                                                className="size-6 rounded-lg bg-white border border-slate-200 text-slate-400 flex items-center justify-center hover:bg-[#2b6cee] hover:text-white transition-all ring-2 ring-white shadow-sm"
-                                                            >
-                                                                <span className="material-symbols-outlined text-[14px]">add</span>
-                                                            </button>
-                                                        </div>
-                                                        <span className="text-[9px] text-[#2b6cee] font-bold uppercase tracking-wider">{uni.managers.length} Assigned</span>
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedUniForManager(uni);
-                                                            setActivePopoverId(activePopoverId === uni.id ? null : uni.id);
-                                                        }}
-                                                        className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-all text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5"
-                                                    >
-                                                        <span className="material-symbols-outlined text-[14px]">person_add</span>
-                                                        Manage
-                                                    </button>
-                                                )}
-
-
-                                                {/* Assignment Popover */}
-                                                {activePopoverId === uni.id && (
-                                                    <>
-                                                        <div className="fixed inset-0 z-40" onClick={() => setActivePopoverId(null)}></div>
-                                                        <div className={`absolute ${index >= paginatedUniversities.length - 2 ? 'bottom-full mb-2' : 'top-full mt-2'} left-1/2 -translate-x-1/2 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200`}>
-                                                            <div className="p-3 border-b border-slate-50 bg-slate-50/50">
-                                                                <h6 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Manage Personnel</h6>
-                                                            </div>
-                                                            <div className="max-h-64 overflow-y-auto p-1.5 space-y-1.5">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setShowAddManagerModal(true);
-                                                                        setActivePopoverId(null);
-                                                                    }}
-                                                                    className="w-full flex items-center gap-3 p-2.5 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all group border border-dashed border-indigo-200"
-=======
                                                 <div className="flex flex-col min-w-0">
                                                     <span className="text-xs md:text-sm font-bold text-slate-900 truncate">{uni.name}</span>
                                                     <div className="flex items-center gap-2">
@@ -749,72 +497,23 @@ const SuperAdminUniversityManagement = () => {
                                                                         ? 'bg-blue-50 text-[#2b6cee]' 
                                                                         : 'text-slate-600 hover:bg-slate-50'
                                                                     } ${blockedCreators.includes(creator) ? 'opacity-40 grayscale cursor-not-allowed' : 'cursor-pointer'}`}
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
                                                                 >
-                                                                    <div className="size-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
-                                                                        <span className="material-symbols-outlined text-[20px]">person_add</span>
-                                                                    </div>
                                                                     <div className="flex flex-col items-start">
-                                                                        <span className="text-xs font-bold uppercase tracking-wider">Add Manager</span>
-                                                                        <span className="text-[9px] text-slate-400 font-medium">New Unique Credentials</span>
+                                                                        <span className={blockedCreators.includes(creator) ? 'line-through decoration-rose-500 decoration-1' : ''}>{creator}</span>
+                                                                        {blockedCreators.includes(creator) && <span className="text-[7px] font-black text-rose-500 bg-rose-50 px-1 rounded mt-0.5 uppercase tracking-widest">Suspended</span>}
+                                                                    </div>
+                                                                    <div className="flex items-center gap-1.5">
+                                                                        {(assignments[uni.id] || []).includes(creator) && (
+                                                                            <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                                                                        )}
                                                                     </div>
                                                                 </button>
-
-                                                                {uni.managers && uni.managers.length > 0 && (
-                                                                    <div className="pt-2 border-t border-slate-50">
-                                                                        <p className="px-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Existing Managers</p>
-                                                                        {uni.managers.map((m: any) => (
-                                                                            <div key={m.id} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-xl group transition-all">
-                                                                                <div className="flex items-center gap-2">
-                                                                                    <div className="size-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-[10px] font-bold uppercase">
-                                                                                        {m.name.charAt(0)}
-                                                                                    </div>
-                                                                                    <div className="flex flex-col">
-                                                                                        <span className="text-xs font-bold text-slate-700">{m.name}</span>
-                                                                                        <span className="text-[8px] text-slate-400 font-mono font-bold tracking-tighter">{m.id}</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                )}
-
-                                                                {!uni.managers?.length && (
-                                                                    <div className="p-6 text-center text-xs text-slate-400 italic">No managers assigned yet</div>
-                                                                )}
-                                                            </div>
+                                                            ))}
                                                         </div>
                                                     </>
                                                 )}
-
                                             </div>
                                         </td>
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center justify-end">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <button
-                                                        onClick={() => navigate('/university/management', { state: { university: uni } })}
-                                                        className="size-8 bg-blue-50 text-[#2b6cee] rounded-lg hover:bg-[#2b6cee] hover:text-white transition-all flex items-center justify-center shadow-sm"
-                                                        title="View Scholarships"
-                                                    >
-                                                        <span className="material-symbols-outlined text-[18px]">settings_suggest</span>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => navigate('/university/post-center', { state: { university: uni } })}
-                                                        className="size-8 bg-blue-50 text-[#2b6cee] rounded-lg hover:bg-[#2b6cee] hover:text-white transition-all flex items-center justify-center shadow-sm"
-                                                        title="View Post Center"
-                                                    >
-                                                        <span className="material-symbols-outlined text-[18px]">post_add</span>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => navigate(`/Superadmin/university/${uni.id || 'new'}`, { state: { university: uni } })}
-                                                        className="px-4 py-1.5 bg-[#2b6cee]/10 text-[#2b6cee] text-xs font-bold rounded-lg hover:bg-[#2b6cee] hover:text-white transition-all whitespace-nowrap"
-                                                    >
-                                                        View Profile
-                                                    </button>
-                                                </div>
-=======
                                         <td className="px-2 md:px-6 py-2 md:py-4">
                                             <div className="flex items-center justify-end gap-1.5 md:gap-2 text-right">
                                                 <button
@@ -831,11 +530,8 @@ const SuperAdminUniversityManagement = () => {
                                                     >
                                                         <span className="material-symbols-outlined text-[16px] md:text-[18px]">block</span>
                                                     </button>
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
                                             </div>
                                         </td>
-
-
                                     </tr>
                                 ))}
                             </tbody>
@@ -876,97 +572,129 @@ const SuperAdminUniversityManagement = () => {
                             </button>
                         </div>
                     </div>
-                    {/* System Maintenance */}
-                    <div className="mt-8 p-6 bg-slate-50 border border-slate-200 rounded-xl">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h3 className="text-sm font-bold text-slate-900 mb-1 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-orange-500">warning</span>
-                                    System Maintenance
-                                </h3>
-                                <p className="text-xs text-slate-500">If your browser storage is full (Storage Full alert), use this to reset all university posts.</p>
-                            </div>
-                            <button
-                                onClick={clearAllPosts}
-                                className="px-4 py-2 bg-white border border-red-200 text-red-600 font-bold rounded-lg hover:bg-red-50 transition-all text-xs shadow-sm"
-                            >
-                                Reset System Feed
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <CreateUniversityModal
-                isOpen={showCreateModal}
-                onClose={() => setShowCreateModal(false)}
-                onSubmit={(data) => {
-                    const newUniversitySpec = {
-                        ...data,
-                        tempId: Date.now(),
-                        name: data.displayName || data.legalName,
-                        country: data.country,
-                        courses: data.programName ? [{
-                            name: data.programName,
-                            duration: data.programDuration,
-                            start: data.applicationDeadline,
-                            price: 'See brochure'
-                        }] : [],
-                        rating: 0,
-                        students: 0,
-                        managers: []
+            {/* Modal Overlay */}
+            {isAddModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        
+                        {/* Header */}
+                        <div className="flex items-start justify-between p-6 border-b border-slate-100">
+                            <div>
+                                <h2 className="text-xl font-black text-[#111318] flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-[#2b6cee]">school</span>
+                                    Onboard New University
+                                </h2>
+                                <p className="text-[13px] text-slate-500 italic mt-1 font-medium">Configure institutional details and strategic positioning.</p>
+                            </div>
+                            <button onClick={() => setIsAddModalOpen(false)} className="p-2 border border-slate-200 rounded-xl text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-colors">
+                                <span className="material-symbols-outlined text-[20px]">close</span>
+                            </button>
+                        </div>
 
-                    };
-                    setUniversities([newUniversitySpec as any, ...universities]);
-                    setShowCreateModal(false);
-                }}
+                        {/* Scrolling Form Body */}
+                        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+                            <div className="flex flex-col gap-8">
+                                
+                                {/* Basic Information */}
+                                <div className="space-y-4">
+                                    <h3 className="flex items-center gap-2 text-xs font-black text-[#2b6cee] uppercase tracking-wider">
+                                        <span className="material-symbols-outlined text-[18px]">info</span>
+                                        Basic Information
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">University Name <span className="text-rose-500">*</span></label>
+                                            <input type="text" value={uniForm.name} onChange={e => updateForm('name', e.target.value)} placeholder="Enter official institutional name" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Official Website <span className="text-rose-500">*</span></label>
+                                            <input type="text" value={uniForm.website} onChange={e => updateForm('website', e.target.value)} placeholder="https://university.edu" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-1.5 pt-2">
+                                        <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Institutional Overview</label>
+                                        <textarea 
+                                            value={uniForm.overview} 
+                                            onChange={e => updateForm('overview', e.target.value)}
+                                            placeholder="Write a brief overview about the university..." 
+                                            rows={4} 
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all resize-none"
+                                        ></textarea>
+                                    </div>
+                                </div>
 
+                                {/* Institutional Profile */}
+                                <div className="space-y-4">
+                                    <h3 className="flex items-center gap-2 text-xs font-black text-[#2b6cee] uppercase tracking-wider">
+                                        <span className="material-symbols-outlined text-[18px]">account_balance</span>
+                                        Institutional Profile
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Type</label>
+                                            <select value={uniForm.type} onChange={e => updateForm('type', e.target.value)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all">
+                                                <option value="Public">Public</option>
+                                                <option value="Private">Private</option>
+                                                <option value="Research">Research</option>
+                                            </select>
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Est. Year</label>
+                                            <input type="text" value={uniForm.estYear} onChange={e => updateForm('estYear', e.target.value)} placeholder="YYYY" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Total Students</label>
+                                            <input type="text" value={uniForm.totalStudents} onChange={e => updateForm('totalStudents', e.target.value)} placeholder="Number" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Global Ranking</label>
+                                            <input type="text" value={uniForm.ranking} onChange={e => updateForm('ranking', e.target.value)} placeholder="e.g. #42 QS" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                    </div>
 
+                                    {/* Success Metrics */}
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Int'l Students</label>
+                                            <input type="text" value={uniForm.intlStudents} onChange={e => updateForm('intlStudents', e.target.value)} placeholder="e.g. 13,000+" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Acceptance Rate</label>
+                                            <input type="text" value={uniForm.acceptanceRate} onChange={e => updateForm('acceptanceRate', e.target.value)} placeholder="e.g. 88%" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Employability</label>
+                                            <input type="text" value={uniForm.employability} onChange={e => updateForm('employability', e.target.value)} placeholder="e.g. 92%" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
 
-            />
-            <AddManagerModal
-                isOpen={showAddManagerModal}
-                onClose={() => setShowAddManagerModal(false)}
-                universityName={selectedUniForManager?.name || ''}
-                universityEmail={selectedUniForManager?.email || 'admissions@university.edu'}
-                onAdd={(manager) => handleAddManager(selectedUniForManager.id, manager)}
-            />
-            <ManageMembersModal
-                isOpen={showManageMembersModal}
-                onClose={() => setShowManageMembersModal(false)}
-                members={universities.flatMap(uni =>
-                    (uni.managers || []).map((m: any) => ({
-                        id: m.id,
-                        name: m.name,
-                        university: uni.name,
-                        startDate: '2024-01-01', // Default or track in state
-                        endDate: '2025-01-01',
-                        progress: 100,
-                        status: m.isBlocked ? 'Past' : 'Current',
-                        loginEmail: m.email,
-                        loginPassword: m.password,
-                        isBlocked: !!m.isBlocked,
-                        country: uni.country
-                    }))
-                )}
-                onToggleBlock={(memberId) => {
-                    setUniversities(prev => prev.map(uni => ({
-                        ...uni,
-                        managers: (uni.managers || []).map((m: any) =>
-                            m.id === memberId ? { ...m, isBlocked: !m.isBlocked } : m
-                        )
-                    })));
+                                {/* Geography & Campus */}
+                                <div className="space-y-4">
+                                    <h3 className="flex items-center gap-2 text-xs font-black text-[#2b6cee] uppercase tracking-wider">
+                                        <span className="material-symbols-outlined text-[18px]">location_on</span>
+                                        Geography & Campus
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Country <span className="text-rose-500">*</span></label>
+                                            <input type="text" value={uniForm.country} onChange={e => updateForm('country', e.target.value)} placeholder="e.g. United Kingdom" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">City</label>
+                                            <input type="text" value={uniForm.city} onChange={e => updateForm('city', e.target.value)} placeholder="e.g. London" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                        <div className="flex flex-col gap-1.5">
+                                            <label className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Campus Size</label>
+                                            <input type="text" value={uniForm.campusSize} onChange={e => updateForm('campusSize', e.target.value)} placeholder="e.g. 500 Acres" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2b6cee]/20 focus:border-[#2b6cee] transition-all" />
+                                        </div>
+                                    </div>
+                                </div>
 
-<<<<<<< HEAD:apps/web/src/pages/SuperAdminUniversityManagement.tsx
-                    // Sync to authentication system
-                    const registeredUsers = JSON.parse(localStorage.getItem('eaoverseas_registered_users') || '[]');
-                    const updatedUsers = registeredUsers.map((u: any) =>
-                        u.id === memberId ? { ...u, isBlocked: !u.isBlocked } : u
-                    );
-                    localStorage.setItem('eaoverseas_registered_users', JSON.stringify(updatedUsers));
-                }}
-            />
-=======
                                 {/* Financial Estimates */}
                                 <div className="space-y-4">
                                     <h3 className="flex items-center gap-2 text-xs font-black text-[#2b6cee] uppercase tracking-wider">
@@ -1402,10 +1130,8 @@ const SuperAdminUniversityManagement = () => {
                     </div>
                 </div>
             )}
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/university-management/SuperAdminUniversityManagement.tsx
         </SuperAdminLayout>
     );
 };
 
 export default SuperAdminUniversityManagement;
-

@@ -10,10 +10,6 @@ interface UserIdentity {
     nationality: string;
     address: string;
     currentCountry: string;
-<<<<<<< HEAD
-    country: string;
-=======
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     image: string | null;
     banner: string | null;
     profileStrength: number;
@@ -47,13 +43,6 @@ interface AcademicInfo {
 interface UserPreferences {
     countries: string[];
     intakes: string[];
-<<<<<<< HEAD
-    programType: string;
-    budget: string;
-    timeline: string;
-    factors: string[];
-=======
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 }
 
 interface UserReadiness {
@@ -92,10 +81,6 @@ interface UserProfile {
     documents: UserDocuments;
     applications: UserApplicationSummary[];
     connections: Record<string, string>;
-<<<<<<< HEAD
-    incomingRequests: string[];
-=======
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
 }
 
 interface UserProfileContextType {
@@ -107,14 +92,8 @@ interface UserProfileContextType {
     updateGuardian: (newGuardian: Partial<GuardianInfo>) => void;
     sendConnectionRequest: (targetUsername: string) => void;
     acceptConnectionRequest: (targetUsername: string) => void;
-<<<<<<< HEAD
-    declineConnectionRequest: (targetUsername: string) => void;
-    removeConnection: (targetUsername: string) => void;
-    getConnectionDetails: () => { connected: any[]; incoming: any[] };
-=======
     removeConnection: (targetUsername: string) => void;
     getConnectionDetails: () => any[];
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     setUserProfile: React.Dispatch<React.SetStateAction<UserProfile>>;
 }
 
@@ -150,7 +129,6 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
             nationality: '',
             address: '',
             currentCountry: '',
-            country: '',
             image: null,
             banner: null,
             profileStrength: 0
@@ -180,11 +158,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
         },
         preferences: {
             countries: [],
-            intakes: [],
-            programType: '',
-            budget: '',
-            timeline: '',
-            factors: []
+            intakes: []
         },
         readiness: {
             visaStatus: 'Not Started',
@@ -197,8 +171,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
             identity: []
         },
         applications: [],
-        connections: {},
-        incomingRequests: []
+        connections: {}
     });
 
     const mockProfile: UserProfile = {
@@ -211,7 +184,6 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
             nationality: 'Indian',
             address: '123 Main St, Apt 4B',
             currentCountry: 'India',
-            country: 'India',
             image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwOf0s3pAzKqObTWJ9nRCMKaHDRDwvbDhO9sFXL0JQPG24TX6Z_QyJf55dIzkQoAgus8p8gE38nhnMt-PtfxoIMmzdNxhbDqCbPOz3cJuQoDrXO3I2wPvGsHzn8GfsBCJjHLcJR6SWs04u4ihpPaW9VUI-XlrPhYvmL9DsG3dAwc-Z__Zgxhq892QgjQtEKSwUpVnOD_0jhVBEl-K53XBePLsXdfX5R9f-sto6ECHWwMTa-erfA_QfrmenNf9BKHj7OrZp-7cdMZ4',
             banner: null,
             profileStrength: 85
@@ -241,11 +213,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
         },
         preferences: {
             countries: ['United Kingdom', 'Canada', 'Germany'],
-            intakes: ['Fall 2024', 'Spring 2025'],
-            programType: 'Masters',
-            budget: '30k_50k',
-            timeline: '3_6_months',
-            factors: ['scholarships', 'ranking']
+            intakes: ['Fall 2024', 'Spring 2025']
         },
         readiness: {
             visaStatus: 'On Track',
@@ -275,8 +243,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
             'chamia': 'connected',
             'emily_r': 'connected',
             'sarah_m': 'connected'
-        },
-        incomingRequests: ['michael_b']
+        }
     };
 
     const [userProfile, setUserProfile] = useState<UserProfile>(getEmptyProfile());
@@ -365,40 +332,21 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
                         return prev;
                     }
 
-                    // 3. Fallback: Initialize fresh but WITH Auth Context data
+                    // 3. Fallback: Initialize fresh
                     const freshProfile = getEmptyProfile();
                     return {
                         ...freshProfile,
                         identity: {
                             ...freshProfile.identity,
-                            name: user.name || user.fullName || '',
+                            name: user.name,
                             email: user.email,
-                            image: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || user.fullName || 'User') + '&background=random'
+                            image: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=random'
                         }
                     };
                 });
             }
         }
-    }, [user?.email, user?.name, user?.fullName]);
-
-    // Proactive sync Effect: If Auth user changes (e.g. name update), push to Profile Identity
-    useEffect(() => {
-        if (user && !user.isDemo) {
-            setUserProfile(prev => {
-                if (prev.identity.name !== (user.name || user.fullName) || prev.identity.email !== user.email) {
-                    return {
-                        ...prev,
-                        identity: {
-                            ...prev.identity,
-                            name: user.name || user.fullName || prev.identity.name,
-                            email: user.email || prev.identity.email
-                        }
-                    };
-                }
-                return prev;
-            });
-        }
-    }, [user?.name, user?.fullName, user?.email]);
+    }, [user?.email]);
 
     // Save to LocalStorage whenever profile changes (if it's a real user)
     useEffect(() => {
@@ -446,21 +394,10 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const acceptConnectionRequest = (targetUsername: string) => {
         setUserProfile(prev => ({
             ...prev,
-            connections: { ...prev.connections, [targetUsername]: 'connected' },
-            incomingRequests: prev.incomingRequests.filter(u => u !== targetUsername)
+            connections: { ...prev.connections, [targetUsername]: 'connected' }
         }));
     };
 
-<<<<<<< HEAD
-    const declineConnectionRequest = (targetUsername: string) => {
-        setUserProfile(prev => ({
-            ...prev,
-            incomingRequests: prev.incomingRequests.filter(u => u !== targetUsername)
-        }));
-    };
-
-=======
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508
     const removeConnection = (targetUsername: string) => {
         setUserProfile(prev => {
             const newConnections = { ...prev.connections };
@@ -477,23 +414,17 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
             .filter(([_, status]) => status === 'connected')
             .map(([username]) => username);
 
-        const incomingUsernames = userProfile.incomingRequests || [];
-
-        const mapUser = (username: string) => {
+        // Return details from DB or generate a placeholder if not found
+        return connectedUsernames.map(username => {
             const user = MOCK_USERS_DB.find(u => u.username === username);
             return user || {
                 username,
-                name: username,
+                name: username, // Fallback
                 email: 'hidden',
                 image: `https://ui-avatars.com/api/?name=${username}&background=random`,
                 role: 'User'
             };
-        };
-
-        return {
-            connected: connectedUsernames.map(mapUser),
-            incoming: incomingUsernames.map(mapUser)
-        };
+        });
     };
 
     return (
@@ -506,7 +437,6 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
             updateGuardian,
             sendConnectionRequest,
             acceptConnectionRequest,
-            declineConnectionRequest,
             removeConnection,
             getConnectionDetails,
             setUserProfile
@@ -515,4 +445,3 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
         </UserProfileContext.Provider>
     );
 };
-

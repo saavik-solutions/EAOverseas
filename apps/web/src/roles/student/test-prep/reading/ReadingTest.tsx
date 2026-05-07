@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/ReadingTest.tsx
-import { readingTestData } from '@workspace/common';
-import ReadingSubmitModal from '@/features/test-prep/ReadingSubmitModal';
-=======
 import { readingTestData } from '../data/readingTestContent';
 import ReadingSubmitModal from '../../../../shared/components/modals/ReadingSubmitModal';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/test-prep/reading/ReadingTest.tsx
 
 const ReadingTest = () => {
     const navigate = useNavigate();
@@ -335,4 +330,3 @@ const ReadingTest = () => {
 };
 
 export default ReadingTest;
-

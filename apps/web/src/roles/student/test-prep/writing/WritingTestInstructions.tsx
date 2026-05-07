@@ -95,4 +95,3 @@ const WritingTestInstructions = () => {
 };
 
 export default WritingTestInstructions;
-

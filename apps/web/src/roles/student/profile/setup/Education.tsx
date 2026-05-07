@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/profile/Education.tsx
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
-=======
 import { useUserProfile } from '../../../../shared/contexts/UserProfileContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/profile/setup/Education.tsx
 
 const Education = () => {
     const navigate = useNavigate();
@@ -141,4 +137,3 @@ const Education = () => {
 };
 
 export default Education;
-

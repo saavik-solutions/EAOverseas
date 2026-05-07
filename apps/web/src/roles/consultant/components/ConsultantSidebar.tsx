@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-<<<<<<<< HEAD:apps/web/src/features/counsellor-portal/components/ConsultantSidebar.tsx
-import logo from '@/assets/logo.jpg';
-import { useAuth } from '@/features/auth/context/AuthContext';
-========
 import logo from '../assets/logo.jpg';
 import { useAuth } from '../../../shared/contexts/AuthContext';
->>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/consultant/components/ConsultantSidebar.tsx
 
 const ConsultantSidebar = ({ isOpen, onClose }) => {
     const { logout, user } = useAuth();

@@ -1,16 +1,4 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD:apps/web/src/pages/LandingPage.tsx
-import Navbar from '@/components/layout/Navbar';
-import SupportSection from '@/features/landing/components/SupportSection';
-import DestinationsSection from '@/features/landing/components/DestinationsSection';
-import StudentStoriesSection from '@/features/landing/components/StudentStoriesSection';
-import AboutUsSection from '@/features/landing/components/AboutUsSection';
-import TeamSection from '@/features/landing/components/TeamSection';
-import ConsultantCTA from '@/features/consultant/ConsultantCTA';
-import Footer from '@/components/layout/Footer';
-import HeroCarousel from '@/features/landing/components/HeroCarousel';
-import ConsultationBookingModal from '@/features/consultant/ConsultationBookingModal';
-=======
 import Navbar from '../../shared/components/layout/Navbar';
 import SupportSection from './components/SupportSection';
 import DestinationsSection from './components/DestinationsSection';
@@ -21,21 +9,20 @@ import ConsultantCTA from './components/ConsultantCTA';
 import Footer from '../../shared/components/layout/Footer';
 import HeroCarousel from './components/HeroCarousel';
 import ConsultationBookingModal from '../../shared/components/modals/ConsultationBookingModal';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/home/LandingPage.tsx
 import { useNavigate } from 'react-router-dom';
 
 // Import assets
-import destinationsHero from '@/assets/destinations_hero.png';
-import studentStoryHero from '@/assets/student_story_hero.png';
-import loanHeroImage from '@/assets/loan_hero.png';
-import mainHeroImage from '@/assets/hero_mobile_cartoon.png';
-import mobileHeroImage from '@/assets/hero_mobile_cartoon.png';
-import whatsappIcon from '@/assets/icon_whatsapp.png';
-import story1 from '@/assets/g1.png';
-import story2 from '@/assets/b 1.png';
-import story3 from '@/assets/g 2.png';
-import topBar from '@/assets/sq 1.png';
-import bottomBar from '@/assets/sq 2.png';
+import destinationsHero from '../assets/destinations_hero.png';
+import studentStoryHero from '../assets/student_story_hero.png';
+import loanHeroImage from '../assets/loan_hero.png';
+import mainHeroImage from '../assets/hero_mobile_cartoon.png';
+import mobileHeroImage from '../assets/hero_mobile_cartoon.png';
+import whatsappIcon from '../assets/icon_whatsapp.png';
+import story1 from '../assets/g1.png';
+import story2 from '../assets/b 1.png';
+import story3 from '../assets/g 2.png';
+import topBar from '../assets/sq 1.png';
+import bottomBar from '../assets/sq 2.png';
 
 const LandingPage = () => {
     const navigate = useNavigate();
@@ -332,4 +319,3 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-

@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/AcademicSnapshotDetails.tsx
-import PageHeader from '@/components/layout/PageHeader';
-
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
-=======
 import PageHeader from '../../../shared/components/layout/PageHeader';
 
 import { useUserProfile } from '../../../shared/contexts/UserProfileContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/student/performance/AcademicSnapshotDetails.tsx
 
 const AcademicSnapshotDetails = () => {
     const { userProfile } = useUserProfile();
@@ -329,4 +323,3 @@ const AcademicInfoCard = ({ label, value, onEdit }) => (
 );
 
 export default AcademicSnapshotDetails;
-

@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/pages/CounsellorProfile.tsx
-import PageHeader from '@/components/layout/PageHeader';
-=======
 import PageHeader from '../../shared/components/PageHeader';
 import { useAuth } from '../../shared/contexts/AuthContext';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/consultant/profile/CounsellorProfile.tsx
 
 const CounsellorProfile = () => {
     const { user } = useAuth();
@@ -299,4 +295,3 @@ const CounsellorProfile = () => {
 };
 
 export default CounsellorProfile;
-

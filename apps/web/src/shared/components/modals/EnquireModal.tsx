@@ -226,4 +226,3 @@ const EnquireModal = ({ isOpen, onClose, accommodation }) => {
 };
 
 export default EnquireModal;
-

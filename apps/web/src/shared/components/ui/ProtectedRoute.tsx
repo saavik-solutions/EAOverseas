@@ -1,10 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-<<<<<<<< HEAD:apps/web/src/components/guards/ProtectedRoute.tsx
-import { useAuth } from '@/features/auth/context/AuthContext';
-========
 import { useAuth } from '../contexts/AuthContext';
->>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/shared/components/ui/ProtectedRoute.tsx
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

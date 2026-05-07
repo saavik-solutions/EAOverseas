@@ -1,13 +1,4 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD:apps/web/src/pages/Consultant.tsx
-import PageHeader from '@/components/layout/PageHeader';
-import BookingModal from '@/features/consultant/ConsultationBookingModal';
-import ConsultationSuccessModal from '@/features/consultant/ConsultationSuccessModal';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/shared/contexts/AuthContext';
-import { useAuthAction } from '@/shared/hooks/useAuthAction';
-import LoginModal from '@/features/auth/LoginModal';
-=======
 import PageHeader from '../../shared/components/layout/PageHeader';
 import BookingModal from '../../shared/components/modals/ConsultationBookingModal';
 import ConsultationSuccessModal from '../../shared/components/modals/ConsultationSuccessModal';
@@ -15,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/contexts/AuthContext';
 import { useAuthAction } from '../../shared/hooks/useAuthAction';
 import LoginModal from '../../shared/components/modals/LoginModal';
->>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/website/consultants/Consultant.tsx
 
 const Consultant = () => {
     // State for form interaction (basic mock state)
@@ -336,4 +326,3 @@ const Consultant = () => {
 };
 
 export default Consultant;
-

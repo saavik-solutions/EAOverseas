@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import logo from '@/assets/logo.jpg';
+import logo from '../assets/logo.jpg';
 
 const ConsultationBookingModal = ({ isOpen, onClose, onConfirm }) => {
     const [isVisible, setIsVisible] = useState(false);
@@ -84,12 +84,7 @@ const ConsultationBookingModal = ({ isOpen, onClose, onConfirm }) => {
                 <div
                     key={day}
                     role="button"
-                    onClick={() => {
-                        if (!isPast) {
-                            setSelectedDate(date);
-                            setSelectedTime(null);
-                        }
-                    }}
+                    onClick={() => !isPast && (setSelectedDate(date) || setSelectedTime(null))}
                     style={{
                         transform: 'none',
                         rotate: '0deg',
@@ -393,4 +388,3 @@ const ConsultationBookingModal = ({ isOpen, onClose, onConfirm }) => {
 };
 
 export default ConsultationBookingModal;
-

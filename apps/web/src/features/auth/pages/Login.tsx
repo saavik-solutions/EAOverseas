@@ -50,7 +50,8 @@ const Login = () => {
         'University': { email: 'admin@university.edu', pass: 'UNIV2026' },
         'Counsellor': { email: 'partner@counsellor.com', pass: 'COUNSELLOR2026' },
         'Vendors': { email: 'vendor@services.com', pass: 'VENDOR2026' },
-        'Chief Counsel': { email: 'chief@counsel.com', pass: 'CHIEF2026' }
+        'Chief Counsel': { email: 'chief@counsel.com', pass: 'CHIEF2026' },
+        'Super Admin': { email: 'admin@eaoverseas.com', pass: 'Admin@123' }
     };
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -188,7 +189,7 @@ const Login = () => {
                         {/* Role Selection Tabs with Dropdown */}
                         <div className="flex gap-2">
                             <div className="bg-gray-100 p-1 rounded-lg flex gap-1 flex-1">
-                                {['Student', 'University', 'Counsellor'].map((role) => (
+                                {['Student', 'University', 'Counsellor', 'Super Admin'].map((role) => (
                                     <button
                                         key={role}
                                         type="button"
@@ -252,6 +253,7 @@ const Login = () => {
                                 {selectedRole === 'Counsellor' && "Connect with students, manage appointments, and guide applications."}
                                 {selectedRole === 'Vendors' && "Manage vendor services, partnerships, and service offerings."}
                                 {selectedRole === 'Chief Counsel' && "Oversee legal compliance, counsellor operations, and strategic decisions."}
+                                {selectedRole === 'Super Admin' && "Global oversight of the entire EAOverseas platform, users, and content."}
                             </p>
                         </div>
 

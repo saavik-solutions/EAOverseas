@@ -56,8 +56,8 @@ export const CommunityController = {
     const { id } = request.params as any;
     const { value } = request.body as any;
 
-    if (!['up', 'down'].includes(value)) {
-      return reply.status(400).send({ error: 'value must be "up" or "down"' });
+    if (!['like', 'dislike'].includes(value)) {
+      return reply.status(400).send({ error: 'value must be "like" or "dislike"' });
     }
 
     const result = await service.togglePostVote(userId, id, value);
@@ -90,8 +90,8 @@ export const CommunityController = {
     const { id } = request.params as any;
     const { value } = request.body as any;
 
-    if (!['up', 'down'].includes(value)) {
-      return reply.status(400).send({ error: 'value must be "up" or "down"' });
+    if (!['like', 'dislike'].includes(value)) {
+      return reply.status(400).send({ error: 'value must be "like" or "dislike"' });
     }
 
     const result = await service.toggleCommentVote(userId, id, value);

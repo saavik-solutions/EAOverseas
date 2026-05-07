@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { readingTestData } from '@/features/test-prep/data/readingTestContent';
-import ReadingSubmitModal from '@/features/test-prep/components/ReadingSubmitModal';
+import ReadingSubmitModal from '@/features/test-prep/ReadingSubmitModal';
 
 const ReadingTest = () => {
     const navigate = useNavigate();

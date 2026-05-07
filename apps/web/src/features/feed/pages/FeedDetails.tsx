@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { feedService, PostResponse } from '@/features/feed/services/feedService';
-import ShareModal from '@/components/feedback/ShareModal';
+import ShareModal from '@/features/shared-modals/ShareModal';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 

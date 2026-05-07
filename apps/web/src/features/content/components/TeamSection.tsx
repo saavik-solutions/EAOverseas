@@ -1,9 +1,9 @@
 import React from 'react';
 import './TeamSection.css';
-import edrikImg from '@/assets/team_edrik.jpg';
-import laraImg from '@/assets/team_lara.jpg';
-import samImg from '@/assets/team_sam.jpg';
-import suiImg from '@/assets/team_sui.jpg';
+import edrikImg from '@/shared/assets/team_edrik.jpg';
+import laraImg from '@/shared/assets/team_lara.jpg';
+import samImg from '@/shared/assets/team_sam.jpg';
+import suiImg from '@/shared/assets/team_sui.jpg';
 
 const TeamSection = () => {
     const team = [

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Socket } from 'socket.io-client';
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
+import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 

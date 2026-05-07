@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 
 const ConsultationWaitingRoom = () => {
     const location = useLocation();

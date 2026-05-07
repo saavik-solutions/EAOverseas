@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { useUserProfile } from '@/features/profile/context/UserProfileContext';
-import ConnectionsPopup from '@/features/profile/components/ConnectionsPopup';
+import ConnectionsPopup from '@/features/community/ConnectionsPopup';
 
 const MyProfile = () => {
     const navigate = useNavigate();

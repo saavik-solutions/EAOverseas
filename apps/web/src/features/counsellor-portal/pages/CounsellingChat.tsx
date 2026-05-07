@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 
 const CounsellingChat = () => {
     const [selectedStudent, setSelectedStudent] = useState<any>(null);

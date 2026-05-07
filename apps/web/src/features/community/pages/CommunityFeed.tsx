@@ -1,21 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-<<<<<<< HEAD:apps/web/src/features/community/pages/CommunityFeed.tsx
-import { Link, useNavigate } from 'react-router-dom';
-import PageHeader from '@/components/layout/PageHeader';
-import { useAuthAction } from '@/hooks/useAuthAction';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import PageHeader from '@/shared/components/layout/PageHeader';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import LoginModal from '@/features/auth/components/LoginModal';
-import ShareModal from '@/components/feedback/ShareModal';
+import ShareModal from '@/features/shared-modals/ShareModal';
 import { communityService, type CommunityPost as ApiPost } from '@/features/community/services/communityService';
-=======
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import { useAuthAction } from '../hooks/useAuthAction';
-import { useAuth } from '../context/AuthContext';
-import LoginModal from '../components/LoginModal';
-import ShareModal from '../components/ShareModal';
-import { communityService, type CommunityPost as ApiPost } from '../services/communityService';
->>>>>>> origin/manikanth:apps/web/src/pages/CommunityFeed.tsx
 
 const formatCommunityDate = (date: Date) => {
     const day = date.getDate();

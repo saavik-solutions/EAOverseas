@@ -1,4 +1,4 @@
-import { University, universitiesData as staticUniversities } from '../data/universities';
+import { University, universitiesData as staticUniversities } from '@/features/content/data/universities';
 
 export interface AdminUniversity {
     id: number;

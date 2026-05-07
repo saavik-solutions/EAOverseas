@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { universityService, UniversityData } from '@/features/colleges/services/universityService';
 import { PostResponse } from '@/features/feed/services/feedService';
-import PageHeader from '@/components/layout/PageHeader';
-import ShareModal from '@/components/feedback/ShareModal';
+import PageHeader from '@/shared/components/layout/PageHeader';
+import ShareModal from '@/features/shared-modals/ShareModal';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 

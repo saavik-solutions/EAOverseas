@@ -1,6 +1,6 @@
 import React from 'react';
-import PageHeader from '@/components/layout/PageHeader';
-import { useAuthAction } from '@/hooks/useAuthAction';
+import PageHeader from '@/shared/components/layout/PageHeader';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import LoginModal from '@/features/auth/components/LoginModal';
 

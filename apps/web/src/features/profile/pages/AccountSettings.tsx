@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 import { useAuth } from '@/features/auth/context/AuthContext';
 

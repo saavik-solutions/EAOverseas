@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 interface College {
     id: string;

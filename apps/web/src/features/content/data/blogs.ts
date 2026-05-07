@@ -1,6 +1,6 @@
-import blogDestinations from '@/features/landing/assets/blog_destinations.png';
-import blogIelts from '@/features/landing/assets/blog_ielts.png';
-import blogVisa from '@/features/landing/assets/blog_visa.png';
+const blogDestinations = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=2000&auto=format&fit=crop';
+const blogIelts = 'https://images.unsplash.com/photo-1544650030-3c698474c3c9?q=80&w=2000&auto=format&fit=crop';
+const blogVisa = 'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?q=80&w=2000&auto=format&fit=crop';
 
 export const blogs = [
     {

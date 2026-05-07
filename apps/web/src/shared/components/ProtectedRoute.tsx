@@ -1,44 +1,40 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/shared/contexts/AuthContext';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 interface ProtectedRouteProps {
-    children: React.ReactNode;
-    requiredRoles?: string[];
+  children: React.ReactNode;
+  allowedRoles?: string[];
 }
 
-/**
- * Guards routes so only authenticated users can access them.
- * Unauthenticated users are redirected to /login with the intended
- * destination stored in `state.from` for post-login redirect.
- */
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRoles }) => {
-    const { user, loading } = useAuth();
-    const location = useLocation();
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
+  const { user, loading } = useAuth();
+  const location = useLocation();
 
-    // Still loading auth state — show nothing (avoid flash)
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-white">
-                <span className="material-symbols-outlined text-4xl text-[#0d6cf2] animate-spin">progress_activity</span>
-            </div>
-        );
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    // Redirect to login but save the current location to redirect back after login
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (allowedRoles && user) {
+    const userRole = (user.role || 'student').toLowerCase();
+    const normalizedRoles = allowedRoles.map(r => r.toLowerCase());
+    
+    if (!normalizedRoles.includes(userRole)) {
+      console.warn(`User role ${userRole} not authorized for this route. Allowed: ${normalizedRoles.join(', ')}`);
+      return <Navigate to="/" replace />;
     }
+  }
 
-    // Not authenticated → redirect to login
-    if (!user) {
-        return <Navigate to="/login" state={{ from: location.pathname }} replace />;
-    }
-
-    // Role check (if specified)
-    if (requiredRoles && requiredRoles.length > 0) {
-        const userRole = (user.role || '').toLowerCase();
-        if (!requiredRoles.map(r => r.toLowerCase()).includes(userRole)) {
-            return <Navigate to="/landing" replace />;
-        }
-    }
-
-    return <>{children}</>;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

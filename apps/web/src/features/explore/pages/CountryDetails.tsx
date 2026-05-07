@@ -1,9 +1,9 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import Navbar from '@/shared/components/layout/Navbar';
+import Footer from '@/shared/components/layout/Footer';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import universityImg from '@/features/landing/assets/university_modern_building.png';
+import universityImg from '@/shared/assets/university_modern_building.png';
 
 const CountryDetails = () => {
     const { countryCode } = useParams();

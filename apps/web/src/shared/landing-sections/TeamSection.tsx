@@ -9,7 +9,7 @@ import kabirImg from '../assets/kabir_malhotra.png';
 
 import { useNavigate } from 'react-router-dom';
 
-import { experts } from '../../../shared/data/experts';
+import { experts } from '@/features/content/data/experts';
 
 const TeamSection = () => {
     const navigate = useNavigate();

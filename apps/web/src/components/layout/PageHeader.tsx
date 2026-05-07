@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useNotification } from '@/features/notifications/context/NotificationContext';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import NotificationDropdown from '@/components/feedback/NotificationDropdown';
+import NotificationDropdown from '@/features/notifications/NotificationDropdown';
 
 interface Breadcrumb {
     label: string;
@@ -87,7 +87,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [
                         )}
                     </div>
                 )}
-<<<<<<< HEAD
 
                 {user && (
                     <>
@@ -108,10 +107,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [
                         </button>
                     </>
                 )}
-
-
-=======
->>>>>>> origin/manikanth
             </div>
         </header>
     );

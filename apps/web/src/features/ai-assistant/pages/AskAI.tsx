@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { generateAIResponse } from '@/features/ai-assistant/services/aiService';
 import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 

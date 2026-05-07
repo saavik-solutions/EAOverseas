@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import BookingModal from '@/features/accommodation/components/BookingModal';
-import EnquireModal from '@/features/university-portal/components/EnquireModal';
+import EnquireModal from '@/features/shared-modals/EnquireModal';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 
 const ShareModal = ({ isOpen, onClose, title }) => {

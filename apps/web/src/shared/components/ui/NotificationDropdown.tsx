@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNotification } from '../contexts/NotificationContext';
+import { useNotification } from '@/features/notifications/context/NotificationContext';
 import { useNavigate } from 'react-router-dom';
 
 const NotificationDropdown = ({ onClose }) => {

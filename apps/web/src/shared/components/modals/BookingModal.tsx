@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import AccommodationApplicationForm from './AccommodationApplicationForm';
+import AccommodationApplicationForm from '@/features/accommodation/AccommodationApplicationForm';
 
 interface BookingModalProps {
     isOpen: boolean;

@@ -1,15 +1,9 @@
 import React, { useMemo } from 'react';
 import { useSearchParams, useNavigate, Link, useLocation } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/features/colleges/pages/CollegeDetails.tsx
 import { useNotification } from '@/features/notifications/context/NotificationContext';
-import { useAuthAction } from '@/hooks/useAuthAction';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import LoginModal from '@/features/auth/components/LoginModal';
-=======
-import { useNotification } from '../context/NotificationContext';
-import { useAuthAction } from '../hooks/useAuthAction';
-import LoginModal from '../components/LoginModal';
-import { getCombinedUniversities } from '../utils/universityData';
->>>>>>> origin/manikanth:apps/web/src/pages/CollegeDetails.tsx
+import { getCombinedUniversities } from '@/shared/utils/universityData';
 
 const CollegeDetails = () => {
     const [searchParams] = useSearchParams();

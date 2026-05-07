@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-<<<<<<<< HEAD:apps/web/src/features/superadmin/pages/SuperAdminNewPost.tsx
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { universityService, UniversityData } from '@/features/colleges/services/universityService';
 import { feedService } from '@/features/feed/services/feedService';
 import { usePosts } from '@/features/feed/services/PostsContext';
 import SuperAdminLayout from '@/layouts/SuperAdminLayout';
-========
-import PageHeader from '../components/layout/PageHeader';
-import { universityService, UniversityData } from '../services/universityService';
-import { feedService } from '../services/feedService';
-import { usePosts } from '../../../shared/contexts/PostsContext';
-import SuperAdminLayout from '../layouts/SuperAdminLayout';
->>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/feed-management/SuperAdminNewPost.tsx
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type PostType = 'Article' | 'Scholarship' | 'Announcement' | 'Event' | 'Guide' | 'News' | 'Webinar' | 'Program';
@@ -60,7 +52,6 @@ interface PostForm {
     scheduledTime: string;
     featuredPost: boolean;
     allowComments: boolean;
-    pinToTop: boolean;
     pinToTop: boolean;
     sendNotification: boolean;
     // Dynamic Grid (Highlights)

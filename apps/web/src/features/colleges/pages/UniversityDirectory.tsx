@@ -1,15 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '@/components/layout/PageHeader';
-import { useAuthAction } from '@/hooks/useAuthAction';
+import PageHeader from '@/shared/components/layout/PageHeader';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import LoginModal from '@/features/auth/components/LoginModal';
 
-<<<<<<< HEAD:apps/web/src/features/colleges/pages/UniversityDirectory.tsx
-import { universitiesData, University } from '@/features/content/data/universities';
-=======
-import { University } from '../data/universities';
-import { getCombinedUniversities } from '../utils/universityData';
->>>>>>> origin/manikanth:apps/web/src/pages/UniversityDirectory.tsx
+import { University } from '@/features/content/data/universities';
+import { getCombinedUniversities } from '@/shared/utils/universityData';
 
 const UniversityDirectory = () => {
     const navigate = useNavigate();

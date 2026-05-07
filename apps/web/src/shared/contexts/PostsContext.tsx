@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
-import { feedService } from '../../services/feedService';
+import { feedService } from '@/features/feed/services/feedService';
 
 export interface Post {
     id: string;

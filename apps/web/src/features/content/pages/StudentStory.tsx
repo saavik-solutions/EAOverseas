@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import Navbar from '@/shared/components/layout/Navbar';
+import Footer from '@/shared/components/layout/Footer';
 import { longFormStories } from '@/features/content/data/studentStories';
 
 const StudentStory = () => {

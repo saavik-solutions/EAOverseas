@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUserProfile } from '@/shared/contexts/UserProfileContext';
+import { useUserProfile } from '@/features/profile/context/UserProfileContext';
 
 const ConnectionsPopup = ({ isOpen, onClose }) => {
     const popupRef = useRef(null);

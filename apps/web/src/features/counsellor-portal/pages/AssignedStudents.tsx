@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 
 const BASE_STUDENTS = Array.from({ length: 24 }, (_, i) => ({
     id: `EAS-${2000 + i}`,

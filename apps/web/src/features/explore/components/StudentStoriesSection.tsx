@@ -2,10 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import './StudentStoriesSection.css';
-import story1 from '@/assets/story_card_manish.jpg';
-import story2 from '@/assets/story_card_manisha.jpg';
-import story3 from '@/assets/story_card_sanjukta.jpg';
-import story4 from '@/assets/student_girl.jpg';
+import story1 from '@/shared/assets/story_card_manish.jpg';
+import story2 from '@/shared/assets/story_card_manisha.jpg';
+import story3 from '@/shared/assets/story_card_sanjukta.jpg';
+import story4 from '@/shared/assets/student_girl.jpg';
 
 const StudentStoriesSection = () => {
     const navigate = useNavigate();

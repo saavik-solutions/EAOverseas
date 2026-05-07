@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useSearchParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 import { useNotification } from '@/features/notifications/context/NotificationContext';
-import { useAuthAction } from '@/hooks/useAuthAction';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import LoginModal from '@/features/auth/components/LoginModal';
 
 const CourseDetails = () => {

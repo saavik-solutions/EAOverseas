@@ -8,10 +8,10 @@ import ishitaImg from '../features/landing/assets/ishita_verma.png';
 import vikramImg from '../features/landing/assets/vikram_iyer.png';
 
 // New team member images
-import ceoImg from '../features/landing/assets/team_sui.jpg';
-import graphicImg from '../features/landing/assets/team_lara.jpg';
-import frontendImg from '../features/landing/assets/team_sam.jpg';
-import backendImg from '../features/landing/assets/team_edrik.jpg';
+import ceoImg from '@/shared/assets/team_sui.jpg';
+import graphicImg from '@/shared/assets/team_lara.jpg';
+import frontendImg from '@/shared/assets/team_sam.jpg';
+import backendImg from '@/shared/assets/team_edrik.jpg';
 
 export const experts = [
     {

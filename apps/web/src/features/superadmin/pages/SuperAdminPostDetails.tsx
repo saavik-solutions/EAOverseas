@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-<<<<<<<< HEAD:apps/web/src/features/superadmin/pages/SuperAdminPostDetails.tsx
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { feedService, PostResponse } from '@/features/feed/services/feedService';
 import { usePosts, Post } from '@/features/feed/services/PostsContext';
 import SuperAdminLayout from '@/layouts/SuperAdminLayout';
-========
-import PageHeader from '../components/layout/PageHeader';
-import { feedService, PostResponse } from '../services/feedService';
-import { usePosts, Post } from '../../../shared/contexts/PostsContext';
-import SuperAdminLayout from '../layouts/SuperAdminLayout';
->>>>>>>> 7d774d0124ee288730b3f4fb5cbb7f3b9b6a5508:apps/web/src/roles/super-admin/feed-management/SuperAdminPostDetails.tsx
 
 const TYPE_COLORS: Record<string, string> = {
     Article: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -119,16 +112,11 @@ const SuperAdminPostDetails = () => {
     const handleDelete = async () => {
         if (window.confirm('This action cannot be undone. Are you sure you want to delete this post from the cloud?')) {
             try {
-<<<<<<< HEAD:apps/web/src/features/superadmin/pages/SuperAdminPostDetails.tsx
                 if (post.id) {
                     await feedService.delete(post.id);
+                    deletePost(post.id);
                 }
-                navigate('/Superadmin/university-portal/posts-feed');
-=======
-                // await feedService.delete(postId);
-                deletePost(post.id);
                 navigate('/superadmin/university-portal/posts-feed');
->>>>>>> origin/manikanth:apps/web/src/pages/SuperAdminPostDetails.tsx
             } catch (err) {
                 console.error('Delete failed', err);
             }

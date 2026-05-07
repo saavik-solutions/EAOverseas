@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD:apps/web/src/features/dashboard/pages/HomeDashboard.tsx
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import { useUserProfile } from '@/features/profile/context/UserProfileContext';
-import { incrementCount, decrementCount } from '@/utils/dailyCounter';
-=======
-import PageHeader from '../components/PageHeader';
-import { useSavedItems } from '../context/SavedItemsContext';
-import { useAuth } from '../context/AuthContext';
-import { useUserProfile } from '../context/UserProfileContext';
-import { incrementCount, decrementCount } from '../utils/dailyCounter';
-import { getCombinedUniversities } from '../utils/universityData';
->>>>>>> origin/manikanth:apps/web/src/pages/HomeDashboard.tsx
+import { incrementCount, decrementCount } from '@/shared/utils/dailyCounter';
+import { getCombinedUniversities } from '@/shared/utils/universityData';
 
 const HomeDashboard = () => {
     const navigate = useNavigate();

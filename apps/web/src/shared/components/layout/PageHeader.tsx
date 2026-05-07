@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useNotification } from '../contexts/NotificationContext';
-import { useAuth } from '../contexts/AuthContext';
-import NotificationDropdown from './NotificationDropdown';
+import { useNotification } from '@/features/notifications/context/NotificationContext';
+import { useAuth } from '@/features/auth/context/AuthContext';
+import NotificationDropdown from '@/features/notifications/NotificationDropdown';
 
 interface Breadcrumb {
     label: string;

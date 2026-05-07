@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 export const useAuthAction = () => {
     const { user } = useAuth();

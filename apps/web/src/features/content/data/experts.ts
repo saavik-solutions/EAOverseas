@@ -1,17 +1,17 @@
-import riyaImg from '@/features/landing/assets/riya_mehta.png';
-import arjunImg from '@/features/landing/assets/arjun_singh.png';
-import snehaImg from '@/features/landing/assets/sneha_kapoor.png';
-import rohanImg from '@/features/landing/assets/rohan_mehra.png';
-import anjaliImg from '@/features/landing/assets/anjali_rao.png';
-import kabirImg from '@/features/landing/assets/kabir_malhotra.png';
-import ishitaImg from '@/features/landing/assets/ishita_verma.png';
-import vikramImg from '@/features/landing/assets/vikram_iyer.png';
+const riyaImg = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop';
+const arjunImg = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&auto=format&fit=crop';
+const snehaImg = 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop';
+const rohanImg = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop';
+const anjaliImg = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop';
+const kabirImg = 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop';
+const ishitaImg = 'https://images.unsplash.com/photo-1531123897727-8f129e16fd3c?q=80&w=400&auto=format&fit=crop';
+const vikramImg = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop';
 
 // New team member images
-import ceoImg from '@/features/landing/assets/team_sui.jpg';
-import graphicImg from '@/features/landing/assets/team_lara.jpg';
-import frontendImg from '@/features/landing/assets/team_sam.jpg';
-import backendImg from '@/features/landing/assets/team_edrik.jpg';
+import ceoImg from '@/shared/assets/team_sui.jpg';
+import graphicImg from '@/shared/assets/team_lara.jpg';
+import frontendImg from '@/shared/assets/team_sam.jpg';
+import backendImg from '@/shared/assets/team_edrik.jpg';
 
 export const experts = [
     {

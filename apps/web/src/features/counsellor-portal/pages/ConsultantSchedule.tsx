@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 
 const ConsultantSchedule = () => {
     // UI State
@@ -18,28 +18,8 @@ const ConsultantSchedule = () => {
     const [currentDate, setCurrentDate] = useState(new Date()); // The reference date for the current view
     const [weekDates, setWeekDates] = useState([]);
 
-<<<<<<< HEAD:apps/web/src/features/counsellor-portal/pages/ConsultantSchedule.tsx
-    // Schedule Data State (Mock Database)
-    const [scheduleItems, setScheduleItems] = useState<any[]>([
-        // Automatic lunch slots for Mon-Sat (13:00-14:00) - Sunday excluded
-        // { id: 101, dayIndex: 0 ... } REMOVED
-        { id: 102, dayIndex: 1, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 103, dayIndex: 2, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 104, dayIndex: 3, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 105, dayIndex: 4, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 106, dayIndex: 5, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        { id: 107, dayIndex: 6, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-        // Sample booked meeting
-        {
-            id: 2,
-            dayIndex: 2, // Tuesday
-            date: null,
-            startTime: '10:00',
-            endTime: '11:00',
-            type: 'booked',
-            title: 'Booked',
-            details: 'Alice Wang - Prep'
-=======
+
+
     // Schedule Data State (Mock Database) - Load from LocalStorage immediately or use defaults
     const [scheduleItems, setScheduleItems] = useState(() => {
         const saved = localStorage.getItem('eao_consultant_schedule');
@@ -49,7 +29,6 @@ const ConsultantSchedule = () => {
             } catch (e) {
                 console.error("Error parsing schedule items", e);
             }
->>>>>>> origin/manikanth:apps/web/src/pages/ConsultantSchedule.tsx
         }
         // Default lunch slots for Mon-Sat (13:00-14:00) - Sunday excluded
         return [
@@ -58,9 +37,12 @@ const ConsultantSchedule = () => {
             { id: 104, dayIndex: 3, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
             { id: 105, dayIndex: 4, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
             { id: 106, dayIndex: 5, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
-            { id: 107, dayIndex: 6, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' }
+            { id: 107, dayIndex: 6, date: null, startTime: '13:00', endTime: '14:00', type: 'blocked', title: 'Lunch Break', details: 'Automatic' },
+            { id: 2, dayIndex: 2, date: null, startTime: '10:00', endTime: '11:00', type: 'booked', title: 'Booked', details: 'Alice Wang - Prep' }
         ];
     });
+
+
 
     // Save schedule to LocalStorage whenever it changes
     useEffect(() => {

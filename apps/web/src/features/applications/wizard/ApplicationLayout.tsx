@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation, useSearchParams, Link } from 'react-router-dom';
-import Sidebar from '@/components/layout/Sidebar';
+import Sidebar from '@/shared/components/layout/Sidebar';
 
 const ApplicationLayout = () => {
     const location = useLocation();

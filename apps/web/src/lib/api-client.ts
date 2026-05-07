@@ -3,8 +3,8 @@
  * Provides authenticated fetch wrapper with error handling
  */
 
-import { API_BASE_URL } from '../config/api.config';
-import { AUTH_CONFIG } from '../config/auth.config';
+import { API_BASE_URL } from '@/config/api.config';
+import { AUTH_CONFIG } from '@/config/auth.config';
 
 interface RequestOptions extends RequestInit {
   skipAuth?: boolean;

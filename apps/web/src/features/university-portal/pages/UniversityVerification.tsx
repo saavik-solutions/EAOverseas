@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '@/assets/logo.jpg';
+import logo from '@/shared/assets/logo.jpg';
 
 const UniversityVerification = () => {
     const [formData, setFormData] = useState({

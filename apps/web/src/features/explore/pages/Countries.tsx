@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import Navbar from '@/shared/components/layout/Navbar';
+import Footer from '@/shared/components/layout/Footer';
 import { useAuth } from '@/features/auth/context/AuthContext';
 
 const Countries = () => {

@@ -1,8 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { jsPDF } from 'jspdf';
 import { universitiesData } from '@/features/content/data/universities';
-import { useAuthAction } from '@/hooks/useAuthAction';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import LoginModal from '@/features/auth/components/LoginModal';
 

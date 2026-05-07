@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import SupportSection from '@/features/landing/components/SupportSection';
-import DestinationsSection from '@/features/landing/components/DestinationsSection';
-import StudentStoriesSection from '@/features/landing/components/StudentStoriesSection';
-import AboutUsSection from '@/features/landing/components/AboutUsSection';
-import TeamSection from '@/features/landing/components/TeamSection';
-import ConsultantCTA from '@/features/landing/components/ConsultantCTA';
-import Footer from '@/components/layout/Footer';
-import HeroCarousel from '@/features/landing/components/HeroCarousel';
-import ConsultationBookingModal from '@/features/consultations/components/ConsultationBookingModal';
+import Navbar from '@/shared/components/layout/Navbar';
+import SupportSection from '@/features/explore/components/SupportSection';
+import DestinationsSection from '@/features/explore/components/DestinationsSection';
+import StudentStoriesSection from '@/features/explore/components/StudentStoriesSection';
+import AboutUsSection from '@/features/content/components/AboutUsSection';
+import TeamSection from '@/features/content/components/TeamSection';
+import ConsultantCTA from '@/features/counsellor-portal/components/ConsultantCTA';
+import Footer from '@/shared/components/layout/Footer';
+import HeroCarousel from '@/features/explore/components/HeroCarousel';
+import ConsultationBookingModal from '@/features/counsellor-portal/components/ConsultationBookingModal';
 import { useNavigate } from 'react-router-dom';
 
 // Import assets
-import destinationsHero from '@/assets/destinations_hero.png';
-import studentStoryHero from '@/assets/student_story_hero.png';
-import loanHeroImage from '@/assets/loan_hero.png';
-import mainHeroImage from '@/assets/hero_mobile_cartoon.png';
-import mobileHeroImage from '@/assets/hero_mobile_cartoon.png';
-import whatsappIcon from '@/assets/icon_whatsapp.png';
-import story1 from '@/assets/g1.png';
-import story2 from '@/assets/b 1.png';
-import story3 from '@/assets/g 2.png';
-import topBar from '@/assets/sq 1.png';
-import bottomBar from '@/assets/sq 2.png';
+import destinationsHero from '@/shared/assets/destinations_hero.png';
+import studentStoryHero from '@/shared/assets/student_story_hero.png';
+import loanHeroImage from '@/shared/assets/loan_hero.png';
+import mainHeroImage from '@/shared/assets/images/misc/hero_mobile_cartoon.png';
+import mobileHeroImage from '@/shared/assets/images/misc/hero_mobile_cartoon.png';
+import whatsappIcon from '@/shared/assets/icon_whatsapp.png';
+import story1 from '@/shared/assets/images/misc/g1.png';
+import story2 from '@/shared/assets/images/misc/b 1.png';
+import story3 from '@/shared/assets/images/misc/g 2.png';
+import topBar from '@/shared/assets/images/misc/sq 1.png';
+import bottomBar from '@/shared/assets/images/misc/sq 2.png';
 
 const LandingPage = () => {
     const navigate = useNavigate();

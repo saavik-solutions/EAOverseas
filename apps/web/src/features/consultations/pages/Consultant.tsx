@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import PageHeader from '@/components/layout/PageHeader';
-import BookingModal from '@/features/consultations/components/ConsultationBookingModal';
-import ConsultationSuccessModal from '@/features/consultations/components/ConsultationSuccessModal';
+import PageHeader from '@/shared/components/layout/PageHeader';
+import BookingModal from '@/features/counsellor-portal/components/ConsultationBookingModal';
+import ConsultationSuccessModal from '@/features/counsellor-portal/components/ConsultationSuccessModal';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/context/AuthContext';
-import { useAuthAction } from '@/hooks/useAuthAction';
+import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import LoginModal from '@/features/auth/components/LoginModal';
 
 const Consultant = () => {

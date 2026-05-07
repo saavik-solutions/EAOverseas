@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PageHeader from '@/components/layout/PageHeader';
+import PageHeader from '@/shared/components/layout/PageHeader';
 import { useNavigate } from 'react-router-dom';
 
 const TestOverview = () => {

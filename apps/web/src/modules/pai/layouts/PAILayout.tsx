@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Header from '@/components/layout/Header';
-import PAISidebar from './PAISidebar';
+import Header from '@/shared/components/layout/Header';
+import PAISidebar from '@/modules/pai/layouts/PAISidebar';
 
 const PAILayout = ({ children }: { children: React.ReactNode }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);

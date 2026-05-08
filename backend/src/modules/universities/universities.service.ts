@@ -1,5 +1,4 @@
 import { prisma } from '../../lib/prisma';
-import { Prisma } from '@prisma/client';
 
 export class UniversityService {
   async getAll(query: { search?: string; country?: string }) {

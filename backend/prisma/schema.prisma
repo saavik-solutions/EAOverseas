@@ -41,6 +41,7 @@ model User {
   savedColleges     SavedCollege[]
   testScores        TestScore[]
   documents         UserDocument[]
+  feedComments      FeedComment[]
   profile           UserProfile?
 
   @@map("users")
@@ -215,6 +216,7 @@ model FeedPost {
   updatedAt     DateTime          @updatedAt @map("updated_at")
   dislikeCount  Int               @default(0) @map("dislike_count")
   interactions  FeedInteraction[]
+  comments      FeedComment[]
   author        User              @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   university    University?       @relation(fields: [universityId], references: [id], onDelete: Cascade)
 
@@ -232,6 +234,19 @@ model FeedInteraction {
 
   @@unique([userId, postId, type])
   @@map("feed_interactions")
+}
+
+model FeedComment {
+  id        String   @id @default(uuid()) @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
+  authorId  String   @map("author_id") @db.Uuid
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  post      FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("feed_comments")
 }
 
 model University {

@@ -280,21 +280,12 @@ exports.Prisma.FeedPostScalarFieldEnum = {
   isPinned: 'isPinned',
   viewCount: 'viewCount',
   likeCount: 'likeCount',
-  dislikeCount: 'dislikeCount',
   bookmarkCount: 'bookmarkCount',
   metadata: 'metadata',
   publishedAt: 'publishedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.FeedCommentScalarFieldEnum = {
-  id: 'id',
-  postId: 'postId',
-  authorId: 'authorId',
-  content: 'content',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  dislikeCount: 'dislikeCount'
 };
 
 exports.Prisma.FeedInteractionScalarFieldEnum = {
@@ -466,14 +457,13 @@ exports.Prisma.CommunityPostScalarFieldEnum = {
   tags: 'tags',
   isQuestion: 'isQuestion',
   isAnonymous: 'isAnonymous',
-  voteScore: 'voteScore',
-  likeCount: 'likeCount',
-  dislikeCount: 'dislikeCount',
   commentCount: 'commentCount',
   isPinned: 'isPinned',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  dislikeCount: 'dislikeCount',
+  likeCount: 'likeCount'
 };
 
 exports.Prisma.CommunityCommentScalarFieldEnum = {
@@ -484,12 +474,11 @@ exports.Prisma.CommunityCommentScalarFieldEnum = {
   text: 'text',
   isAnswer: 'isAnswer',
   isBest: 'isBest',
-  voteScore: 'voteScore',
-  likeCount: 'likeCount',
-  dislikeCount: 'dislikeCount',
   isDeleted: 'isDeleted',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  dislikeCount: 'dislikeCount',
+  likeCount: 'likeCount'
 };
 
 exports.Prisma.CommunityVoteScalarFieldEnum = {
@@ -497,8 +486,8 @@ exports.Prisma.CommunityVoteScalarFieldEnum = {
   userId: 'userId',
   postId: 'postId',
   commentId: 'commentId',
-  value: 'value',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  value: 'value'
 };
 
 exports.Prisma.SortOrder = {
@@ -610,9 +599,9 @@ exports.PostStatus = exports.$Enums.PostStatus = {
 
 exports.InteractionType = exports.$Enums.InteractionType = {
   like: 'like',
-  dislike: 'dislike',
   bookmark: 'bookmark',
-  view: 'view'
+  view: 'view',
+  dislike: 'dislike'
 };
 
 exports.UniversityType = exports.$Enums.UniversityType = {
@@ -684,8 +673,6 @@ exports.CommunityCategory = exports.$Enums.CommunityCategory = {
 };
 
 exports.VoteValue = exports.$Enums.VoteValue = {
-  up: 'up',
-  down: 'down',
   like: 'like',
   dislike: 'dislike'
 };
@@ -701,7 +688,6 @@ exports.Prisma.ModelName = {
   EducationHistory: 'EducationHistory',
   UserDocument: 'UserDocument',
   FeedPost: 'FeedPost',
-  FeedComment: 'FeedComment',
   FeedInteraction: 'FeedInteraction',
   University: 'University',
   UniversityCourse: 'UniversityCourse',

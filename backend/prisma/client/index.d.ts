@@ -64,11 +64,6 @@ export type UserDocument = $Result.DefaultSelection<Prisma.$UserDocumentPayload>
  */
 export type FeedPost = $Result.DefaultSelection<Prisma.$FeedPostPayload>
 /**
- * Model FeedComment
- * 
- */
-export type FeedComment = $Result.DefaultSelection<Prisma.$FeedCommentPayload>
-/**
  * Model FeedInteraction
  * 
  */
@@ -237,9 +232,9 @@ export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
 
 export const InteractionType: {
   like: 'like',
-  dislike: 'dislike',
   bookmark: 'bookmark',
-  view: 'view'
+  view: 'view',
+  dislike: 'dislike'
 };
 
 export type InteractionType = (typeof InteractionType)[keyof typeof InteractionType]
@@ -341,8 +336,6 @@ export type CommunityCategory = (typeof CommunityCategory)[keyof typeof Communit
 
 
 export const VoteValue: {
-  up: 'up',
-  down: 'down',
   like: 'like',
   dislike: 'dislike'
 };
@@ -649,16 +642,6 @@ export class PrismaClient<
     * ```
     */
   get feedPost(): Prisma.FeedPostDelegate<ExtArgs>;
-
-  /**
-   * `prisma.feedComment`: Exposes CRUD operations for the **FeedComment** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more FeedComments
-    * const feedComments = await prisma.feedComment.findMany()
-    * ```
-    */
-  get feedComment(): Prisma.FeedCommentDelegate<ExtArgs>;
 
   /**
    * `prisma.feedInteraction`: Exposes CRUD operations for the **FeedInteraction** model.
@@ -1230,7 +1213,6 @@ export namespace Prisma {
     EducationHistory: 'EducationHistory',
     UserDocument: 'UserDocument',
     FeedPost: 'FeedPost',
-    FeedComment: 'FeedComment',
     FeedInteraction: 'FeedInteraction',
     University: 'University',
     UniversityCourse: 'UniversityCourse',
@@ -1258,7 +1240,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "apiKey" | "refreshToken" | "emailOTP" | "phoneOTP" | "userProfile" | "testScore" | "educationHistory" | "userDocument" | "feedPost" | "feedComment" | "feedInteraction" | "university" | "universityCourse" | "courseRequirement" | "courseFee" | "savedCollege" | "aIComparison" | "actionPlan" | "application" | "communityPost" | "communityComment" | "communityVote"
+      modelProps: "user" | "apiKey" | "refreshToken" | "emailOTP" | "phoneOTP" | "userProfile" | "testScore" | "educationHistory" | "userDocument" | "feedPost" | "feedInteraction" | "university" | "universityCourse" | "courseRequirement" | "courseFee" | "savedCollege" | "aIComparison" | "actionPlan" | "application" | "communityPost" | "communityComment" | "communityVote"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1959,76 +1941,6 @@ export namespace Prisma {
           count: {
             args: Prisma.FeedPostCountArgs<ExtArgs>
             result: $Utils.Optional<FeedPostCountAggregateOutputType> | number
-          }
-        }
-      }
-      FeedComment: {
-        payload: Prisma.$FeedCommentPayload<ExtArgs>
-        fields: Prisma.FeedCommentFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.FeedCommentFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.FeedCommentFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>
-          }
-          findFirst: {
-            args: Prisma.FeedCommentFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.FeedCommentFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>
-          }
-          findMany: {
-            args: Prisma.FeedCommentFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>[]
-          }
-          create: {
-            args: Prisma.FeedCommentCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>
-          }
-          createMany: {
-            args: Prisma.FeedCommentCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.FeedCommentCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>[]
-          }
-          delete: {
-            args: Prisma.FeedCommentDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>
-          }
-          update: {
-            args: Prisma.FeedCommentUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>
-          }
-          deleteMany: {
-            args: Prisma.FeedCommentDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.FeedCommentUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.FeedCommentUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FeedCommentPayload>
-          }
-          aggregate: {
-            args: Prisma.FeedCommentAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateFeedComment>
-          }
-          groupBy: {
-            args: Prisma.FeedCommentGroupByArgs<ExtArgs>
-            result: $Utils.Optional<FeedCommentGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.FeedCommentCountArgs<ExtArgs>
-            result: $Utils.Optional<FeedCommentCountAggregateOutputType> | number
           }
         }
       }
@@ -3033,41 +2945,39 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    refreshTokens: number
-    emailOtps: number
-    testScores: number
-    educationHistory: number
-    documents: number
-    feedPosts: number
-    feedInteractions: number
-    feedComments: number
-    savedColleges: number
-    aiComparisons: number
     actionPlans: number
-    applications: number
+    aiComparisons: number
     apiKeys: number
-    communityPosts: number
+    applications: number
     communityComments: number
+    communityPosts: number
     communityVotes: number
+    educationHistory: number
+    emailOtps: number
+    feedInteractions: number
+    feedPosts: number
+    refreshTokens: number
+    savedColleges: number
+    testScores: number
+    documents: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
-    emailOtps?: boolean | UserCountOutputTypeCountEmailOtpsArgs
-    testScores?: boolean | UserCountOutputTypeCountTestScoresArgs
-    educationHistory?: boolean | UserCountOutputTypeCountEducationHistoryArgs
-    documents?: boolean | UserCountOutputTypeCountDocumentsArgs
-    feedPosts?: boolean | UserCountOutputTypeCountFeedPostsArgs
-    feedInteractions?: boolean | UserCountOutputTypeCountFeedInteractionsArgs
-    feedComments?: boolean | UserCountOutputTypeCountFeedCommentsArgs
-    savedColleges?: boolean | UserCountOutputTypeCountSavedCollegesArgs
-    aiComparisons?: boolean | UserCountOutputTypeCountAiComparisonsArgs
     actionPlans?: boolean | UserCountOutputTypeCountActionPlansArgs
-    applications?: boolean | UserCountOutputTypeCountApplicationsArgs
+    aiComparisons?: boolean | UserCountOutputTypeCountAiComparisonsArgs
     apiKeys?: boolean | UserCountOutputTypeCountApiKeysArgs
-    communityPosts?: boolean | UserCountOutputTypeCountCommunityPostsArgs
+    applications?: boolean | UserCountOutputTypeCountApplicationsArgs
     communityComments?: boolean | UserCountOutputTypeCountCommunityCommentsArgs
+    communityPosts?: boolean | UserCountOutputTypeCountCommunityPostsArgs
     communityVotes?: boolean | UserCountOutputTypeCountCommunityVotesArgs
+    educationHistory?: boolean | UserCountOutputTypeCountEducationHistoryArgs
+    emailOtps?: boolean | UserCountOutputTypeCountEmailOtpsArgs
+    feedInteractions?: boolean | UserCountOutputTypeCountFeedInteractionsArgs
+    feedPosts?: boolean | UserCountOutputTypeCountFeedPostsArgs
+    refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
+    savedColleges?: boolean | UserCountOutputTypeCountSavedCollegesArgs
+    testScores?: boolean | UserCountOutputTypeCountTestScoresArgs
+    documents?: boolean | UserCountOutputTypeCountDocumentsArgs
   }
 
   // Custom InputTypes
@@ -3084,64 +2994,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountRefreshTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RefreshTokenWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountEmailOtpsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EmailOTPWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountTestScoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TestScoreWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountEducationHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: EducationHistoryWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserDocumentWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountFeedPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedPostWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountFeedInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedInteractionWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountFeedCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedCommentWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountSavedCollegesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SavedCollegeWhereInput
+  export type UserCountOutputTypeCountActionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActionPlanWhereInput
   }
 
   /**
@@ -3154,8 +3008,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountActionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ActionPlanWhereInput
+  export type UserCountOutputTypeCountApiKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiKeyWhereInput
   }
 
   /**
@@ -3168,8 +3022,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountApiKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApiKeyWhereInput
+  export type UserCountOutputTypeCountCommunityCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommunityCommentWhereInput
   }
 
   /**
@@ -3182,15 +3036,64 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountCommunityCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommunityCommentWhereInput
+  export type UserCountOutputTypeCountCommunityVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommunityVoteWhereInput
   }
 
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountCommunityVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CommunityVoteWhereInput
+  export type UserCountOutputTypeCountEducationHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EducationHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountEmailOtpsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailOTPWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFeedInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedInteractionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFeedPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedPostWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountRefreshTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RefreshTokenWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSavedCollegesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedCollegeWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTestScoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TestScoreWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserDocumentWhereInput
   }
 
 
@@ -3200,12 +3103,10 @@ export namespace Prisma {
 
   export type FeedPostCountOutputType = {
     interactions: number
-    comments: number
   }
 
   export type FeedPostCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     interactions?: boolean | FeedPostCountOutputTypeCountInteractionsArgs
-    comments?: boolean | FeedPostCountOutputTypeCountCommentsArgs
   }
 
   // Custom InputTypes
@@ -3226,26 +3127,19 @@ export namespace Prisma {
     where?: FeedInteractionWhereInput
   }
 
-  /**
-   * FeedPostCountOutputType without action
-   */
-  export type FeedPostCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedCommentWhereInput
-  }
-
 
   /**
    * Count Type UniversityCountOutputType
    */
 
   export type UniversityCountOutputType = {
-    courses: number
     feedPosts: number
+    courses: number
   }
 
   export type UniversityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    courses?: boolean | UniversityCountOutputTypeCountCoursesArgs
     feedPosts?: boolean | UniversityCountOutputTypeCountFeedPostsArgs
+    courses?: boolean | UniversityCountOutputTypeCountCoursesArgs
   }
 
   // Custom InputTypes
@@ -3262,15 +3156,15 @@ export namespace Prisma {
   /**
    * UniversityCountOutputType without action
    */
-  export type UniversityCountOutputTypeCountCoursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UniversityCourseWhereInput
+  export type UniversityCountOutputTypeCountFeedPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedPostWhereInput
   }
 
   /**
    * UniversityCountOutputType without action
    */
-  export type UniversityCountOutputTypeCountFeedPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedPostWhereInput
+  export type UniversityCountOutputTypeCountCoursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UniversityCourseWhereInput
   }
 
 
@@ -3279,17 +3173,17 @@ export namespace Prisma {
    */
 
   export type UniversityCourseCountOutputType = {
-    savedBy: number
-    comparisons: number
     actionPlans: number
+    comparisons: number
     applications: number
+    savedBy: number
   }
 
   export type UniversityCourseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    savedBy?: boolean | UniversityCourseCountOutputTypeCountSavedByArgs
-    comparisons?: boolean | UniversityCourseCountOutputTypeCountComparisonsArgs
     actionPlans?: boolean | UniversityCourseCountOutputTypeCountActionPlansArgs
+    comparisons?: boolean | UniversityCourseCountOutputTypeCountComparisonsArgs
     applications?: boolean | UniversityCourseCountOutputTypeCountApplicationsArgs
+    savedBy?: boolean | UniversityCourseCountOutputTypeCountSavedByArgs
   }
 
   // Custom InputTypes
@@ -3306,8 +3200,8 @@ export namespace Prisma {
   /**
    * UniversityCourseCountOutputType without action
    */
-  export type UniversityCourseCountOutputTypeCountSavedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SavedCollegeWhereInput
+  export type UniversityCourseCountOutputTypeCountActionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActionPlanWhereInput
   }
 
   /**
@@ -3320,15 +3214,15 @@ export namespace Prisma {
   /**
    * UniversityCourseCountOutputType without action
    */
-  export type UniversityCourseCountOutputTypeCountActionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ActionPlanWhereInput
+  export type UniversityCourseCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationWhereInput
   }
 
   /**
    * UniversityCourseCountOutputType without action
    */
-  export type UniversityCourseCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicationWhereInput
+  export type UniversityCourseCountOutputTypeCountSavedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedCollegeWhereInput
   }
 
 
@@ -3699,23 +3593,22 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     lastLoginAt?: boolean
-    refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
-    emailOtps?: boolean | User$emailOtpsArgs<ExtArgs>
-    profile?: boolean | User$profileArgs<ExtArgs>
-    testScores?: boolean | User$testScoresArgs<ExtArgs>
-    educationHistory?: boolean | User$educationHistoryArgs<ExtArgs>
-    documents?: boolean | User$documentsArgs<ExtArgs>
-    feedPosts?: boolean | User$feedPostsArgs<ExtArgs>
-    feedInteractions?: boolean | User$feedInteractionsArgs<ExtArgs>
-    feedComments?: boolean | User$feedCommentsArgs<ExtArgs>
-    savedColleges?: boolean | User$savedCollegesArgs<ExtArgs>
-    aiComparisons?: boolean | User$aiComparisonsArgs<ExtArgs>
     actionPlans?: boolean | User$actionPlansArgs<ExtArgs>
-    applications?: boolean | User$applicationsArgs<ExtArgs>
+    aiComparisons?: boolean | User$aiComparisonsArgs<ExtArgs>
     apiKeys?: boolean | User$apiKeysArgs<ExtArgs>
-    communityPosts?: boolean | User$communityPostsArgs<ExtArgs>
+    applications?: boolean | User$applicationsArgs<ExtArgs>
     communityComments?: boolean | User$communityCommentsArgs<ExtArgs>
+    communityPosts?: boolean | User$communityPostsArgs<ExtArgs>
     communityVotes?: boolean | User$communityVotesArgs<ExtArgs>
+    educationHistory?: boolean | User$educationHistoryArgs<ExtArgs>
+    emailOtps?: boolean | User$emailOtpsArgs<ExtArgs>
+    feedInteractions?: boolean | User$feedInteractionsArgs<ExtArgs>
+    feedPosts?: boolean | User$feedPostsArgs<ExtArgs>
+    refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
+    savedColleges?: boolean | User$savedCollegesArgs<ExtArgs>
+    testScores?: boolean | User$testScoresArgs<ExtArgs>
+    documents?: boolean | User$documentsArgs<ExtArgs>
+    profile?: boolean | User$profileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3758,23 +3651,22 @@ export namespace Prisma {
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
-    emailOtps?: boolean | User$emailOtpsArgs<ExtArgs>
-    profile?: boolean | User$profileArgs<ExtArgs>
-    testScores?: boolean | User$testScoresArgs<ExtArgs>
-    educationHistory?: boolean | User$educationHistoryArgs<ExtArgs>
-    documents?: boolean | User$documentsArgs<ExtArgs>
-    feedPosts?: boolean | User$feedPostsArgs<ExtArgs>
-    feedInteractions?: boolean | User$feedInteractionsArgs<ExtArgs>
-    feedComments?: boolean | User$feedCommentsArgs<ExtArgs>
-    savedColleges?: boolean | User$savedCollegesArgs<ExtArgs>
-    aiComparisons?: boolean | User$aiComparisonsArgs<ExtArgs>
     actionPlans?: boolean | User$actionPlansArgs<ExtArgs>
-    applications?: boolean | User$applicationsArgs<ExtArgs>
+    aiComparisons?: boolean | User$aiComparisonsArgs<ExtArgs>
     apiKeys?: boolean | User$apiKeysArgs<ExtArgs>
-    communityPosts?: boolean | User$communityPostsArgs<ExtArgs>
+    applications?: boolean | User$applicationsArgs<ExtArgs>
     communityComments?: boolean | User$communityCommentsArgs<ExtArgs>
+    communityPosts?: boolean | User$communityPostsArgs<ExtArgs>
     communityVotes?: boolean | User$communityVotesArgs<ExtArgs>
+    educationHistory?: boolean | User$educationHistoryArgs<ExtArgs>
+    emailOtps?: boolean | User$emailOtpsArgs<ExtArgs>
+    feedInteractions?: boolean | User$feedInteractionsArgs<ExtArgs>
+    feedPosts?: boolean | User$feedPostsArgs<ExtArgs>
+    refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
+    savedColleges?: boolean | User$savedCollegesArgs<ExtArgs>
+    testScores?: boolean | User$testScoresArgs<ExtArgs>
+    documents?: boolean | User$documentsArgs<ExtArgs>
+    profile?: boolean | User$profileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3782,23 +3674,22 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
-      emailOtps: Prisma.$EmailOTPPayload<ExtArgs>[]
-      profile: Prisma.$UserProfilePayload<ExtArgs> | null
-      testScores: Prisma.$TestScorePayload<ExtArgs>[]
-      educationHistory: Prisma.$EducationHistoryPayload<ExtArgs>[]
-      documents: Prisma.$UserDocumentPayload<ExtArgs>[]
-      feedPosts: Prisma.$FeedPostPayload<ExtArgs>[]
-      feedInteractions: Prisma.$FeedInteractionPayload<ExtArgs>[]
-      feedComments: Prisma.$FeedCommentPayload<ExtArgs>[]
-      savedColleges: Prisma.$SavedCollegePayload<ExtArgs>[]
-      aiComparisons: Prisma.$AIComparisonPayload<ExtArgs>[]
       actionPlans: Prisma.$ActionPlanPayload<ExtArgs>[]
-      applications: Prisma.$ApplicationPayload<ExtArgs>[]
+      aiComparisons: Prisma.$AIComparisonPayload<ExtArgs>[]
       apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
-      communityPosts: Prisma.$CommunityPostPayload<ExtArgs>[]
+      applications: Prisma.$ApplicationPayload<ExtArgs>[]
       communityComments: Prisma.$CommunityCommentPayload<ExtArgs>[]
+      communityPosts: Prisma.$CommunityPostPayload<ExtArgs>[]
       communityVotes: Prisma.$CommunityVotePayload<ExtArgs>[]
+      educationHistory: Prisma.$EducationHistoryPayload<ExtArgs>[]
+      emailOtps: Prisma.$EmailOTPPayload<ExtArgs>[]
+      feedInteractions: Prisma.$FeedInteractionPayload<ExtArgs>[]
+      feedPosts: Prisma.$FeedPostPayload<ExtArgs>[]
+      refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
+      savedColleges: Prisma.$SavedCollegePayload<ExtArgs>[]
+      testScores: Prisma.$TestScorePayload<ExtArgs>[]
+      documents: Prisma.$UserDocumentPayload<ExtArgs>[]
+      profile: Prisma.$UserProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4181,23 +4072,22 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    refreshTokens<T extends User$refreshTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany"> | Null>
-    emailOtps<T extends User$emailOtpsArgs<ExtArgs> = {}>(args?: Subset<T, User$emailOtpsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailOTPPayload<ExtArgs>, T, "findMany"> | Null>
-    profile<T extends User$profileArgs<ExtArgs> = {}>(args?: Subset<T, User$profileArgs<ExtArgs>>): Prisma__UserProfileClient<$Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
-    testScores<T extends User$testScoresArgs<ExtArgs> = {}>(args?: Subset<T, User$testScoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestScorePayload<ExtArgs>, T, "findMany"> | Null>
-    educationHistory<T extends User$educationHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$educationHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationHistoryPayload<ExtArgs>, T, "findMany"> | Null>
-    documents<T extends User$documentsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserDocumentPayload<ExtArgs>, T, "findMany"> | Null>
-    feedPosts<T extends User$feedPostsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedPostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findMany"> | Null>
-    feedInteractions<T extends User$feedInteractionsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedInteractionPayload<ExtArgs>, T, "findMany"> | Null>
-    feedComments<T extends User$feedCommentsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findMany"> | Null>
-    savedColleges<T extends User$savedCollegesArgs<ExtArgs> = {}>(args?: Subset<T, User$savedCollegesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedCollegePayload<ExtArgs>, T, "findMany"> | Null>
-    aiComparisons<T extends User$aiComparisonsArgs<ExtArgs> = {}>(args?: Subset<T, User$aiComparisonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AIComparisonPayload<ExtArgs>, T, "findMany"> | Null>
     actionPlans<T extends User$actionPlansArgs<ExtArgs> = {}>(args?: Subset<T, User$actionPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActionPlanPayload<ExtArgs>, T, "findMany"> | Null>
-    applications<T extends User$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany"> | Null>
+    aiComparisons<T extends User$aiComparisonsArgs<ExtArgs> = {}>(args?: Subset<T, User$aiComparisonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AIComparisonPayload<ExtArgs>, T, "findMany"> | Null>
     apiKeys<T extends User$apiKeysArgs<ExtArgs> = {}>(args?: Subset<T, User$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany"> | Null>
-    communityPosts<T extends User$communityPostsArgs<ExtArgs> = {}>(args?: Subset<T, User$communityPostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityPostPayload<ExtArgs>, T, "findMany"> | Null>
+    applications<T extends User$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany"> | Null>
     communityComments<T extends User$communityCommentsArgs<ExtArgs> = {}>(args?: Subset<T, User$communityCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityCommentPayload<ExtArgs>, T, "findMany"> | Null>
+    communityPosts<T extends User$communityPostsArgs<ExtArgs> = {}>(args?: Subset<T, User$communityPostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityPostPayload<ExtArgs>, T, "findMany"> | Null>
     communityVotes<T extends User$communityVotesArgs<ExtArgs> = {}>(args?: Subset<T, User$communityVotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityVotePayload<ExtArgs>, T, "findMany"> | Null>
+    educationHistory<T extends User$educationHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$educationHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationHistoryPayload<ExtArgs>, T, "findMany"> | Null>
+    emailOtps<T extends User$emailOtpsArgs<ExtArgs> = {}>(args?: Subset<T, User$emailOtpsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailOTPPayload<ExtArgs>, T, "findMany"> | Null>
+    feedInteractions<T extends User$feedInteractionsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedInteractionPayload<ExtArgs>, T, "findMany"> | Null>
+    feedPosts<T extends User$feedPostsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedPostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findMany"> | Null>
+    refreshTokens<T extends User$refreshTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany"> | Null>
+    savedColleges<T extends User$savedCollegesArgs<ExtArgs> = {}>(args?: Subset<T, User$savedCollegesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedCollegePayload<ExtArgs>, T, "findMany"> | Null>
+    testScores<T extends User$testScoresArgs<ExtArgs> = {}>(args?: Subset<T, User$testScoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestScorePayload<ExtArgs>, T, "findMany"> | Null>
+    documents<T extends User$documentsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserDocumentPayload<ExtArgs>, T, "findMany"> | Null>
+    profile<T extends User$profileArgs<ExtArgs> = {}>(args?: Subset<T, User$profileArgs<ExtArgs>>): Prisma__UserProfileClient<$Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4557,198 +4447,23 @@ export namespace Prisma {
   }
 
   /**
-   * User.refreshTokens
+   * User.actionPlans
    */
-  export type User$refreshTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$actionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RefreshToken
+     * Select specific fields to fetch from the ActionPlan
      */
-    select?: RefreshTokenSelect<ExtArgs> | null
+    select?: ActionPlanSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: RefreshTokenInclude<ExtArgs> | null
-    where?: RefreshTokenWhereInput
-    orderBy?: RefreshTokenOrderByWithRelationInput | RefreshTokenOrderByWithRelationInput[]
-    cursor?: RefreshTokenWhereUniqueInput
+    include?: ActionPlanInclude<ExtArgs> | null
+    where?: ActionPlanWhereInput
+    orderBy?: ActionPlanOrderByWithRelationInput | ActionPlanOrderByWithRelationInput[]
+    cursor?: ActionPlanWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: RefreshTokenScalarFieldEnum | RefreshTokenScalarFieldEnum[]
-  }
-
-  /**
-   * User.emailOtps
-   */
-  export type User$emailOtpsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the EmailOTP
-     */
-    select?: EmailOTPSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EmailOTPInclude<ExtArgs> | null
-    where?: EmailOTPWhereInput
-    orderBy?: EmailOTPOrderByWithRelationInput | EmailOTPOrderByWithRelationInput[]
-    cursor?: EmailOTPWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: EmailOTPScalarFieldEnum | EmailOTPScalarFieldEnum[]
-  }
-
-  /**
-   * User.profile
-   */
-  export type User$profileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserProfile
-     */
-    select?: UserProfileSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserProfileInclude<ExtArgs> | null
-    where?: UserProfileWhereInput
-  }
-
-  /**
-   * User.testScores
-   */
-  export type User$testScoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TestScore
-     */
-    select?: TestScoreSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TestScoreInclude<ExtArgs> | null
-    where?: TestScoreWhereInput
-    orderBy?: TestScoreOrderByWithRelationInput | TestScoreOrderByWithRelationInput[]
-    cursor?: TestScoreWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: TestScoreScalarFieldEnum | TestScoreScalarFieldEnum[]
-  }
-
-  /**
-   * User.educationHistory
-   */
-  export type User$educationHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the EducationHistory
-     */
-    select?: EducationHistorySelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: EducationHistoryInclude<ExtArgs> | null
-    where?: EducationHistoryWhereInput
-    orderBy?: EducationHistoryOrderByWithRelationInput | EducationHistoryOrderByWithRelationInput[]
-    cursor?: EducationHistoryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: EducationHistoryScalarFieldEnum | EducationHistoryScalarFieldEnum[]
-  }
-
-  /**
-   * User.documents
-   */
-  export type User$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserDocument
-     */
-    select?: UserDocumentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserDocumentInclude<ExtArgs> | null
-    where?: UserDocumentWhereInput
-    orderBy?: UserDocumentOrderByWithRelationInput | UserDocumentOrderByWithRelationInput[]
-    cursor?: UserDocumentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserDocumentScalarFieldEnum | UserDocumentScalarFieldEnum[]
-  }
-
-  /**
-   * User.feedPosts
-   */
-  export type User$feedPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedPost
-     */
-    select?: FeedPostSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedPostInclude<ExtArgs> | null
-    where?: FeedPostWhereInput
-    orderBy?: FeedPostOrderByWithRelationInput | FeedPostOrderByWithRelationInput[]
-    cursor?: FeedPostWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FeedPostScalarFieldEnum | FeedPostScalarFieldEnum[]
-  }
-
-  /**
-   * User.feedInteractions
-   */
-  export type User$feedInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedInteraction
-     */
-    select?: FeedInteractionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedInteractionInclude<ExtArgs> | null
-    where?: FeedInteractionWhereInput
-    orderBy?: FeedInteractionOrderByWithRelationInput | FeedInteractionOrderByWithRelationInput[]
-    cursor?: FeedInteractionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FeedInteractionScalarFieldEnum | FeedInteractionScalarFieldEnum[]
-  }
-
-  /**
-   * User.feedComments
-   */
-  export type User$feedCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    where?: FeedCommentWhereInput
-    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
-    cursor?: FeedCommentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
-  }
-
-  /**
-   * User.savedColleges
-   */
-  export type User$savedCollegesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SavedCollege
-     */
-    select?: SavedCollegeSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SavedCollegeInclude<ExtArgs> | null
-    where?: SavedCollegeWhereInput
-    orderBy?: SavedCollegeOrderByWithRelationInput | SavedCollegeOrderByWithRelationInput[]
-    cursor?: SavedCollegeWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: SavedCollegeScalarFieldEnum | SavedCollegeScalarFieldEnum[]
+    distinct?: ActionPlanScalarFieldEnum | ActionPlanScalarFieldEnum[]
   }
 
   /**
@@ -4772,23 +4487,23 @@ export namespace Prisma {
   }
 
   /**
-   * User.actionPlans
+   * User.apiKeys
    */
-  export type User$actionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$apiKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ActionPlan
+     * Select specific fields to fetch from the ApiKey
      */
-    select?: ActionPlanSelect<ExtArgs> | null
+    select?: ApiKeySelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ActionPlanInclude<ExtArgs> | null
-    where?: ActionPlanWhereInput
-    orderBy?: ActionPlanOrderByWithRelationInput | ActionPlanOrderByWithRelationInput[]
-    cursor?: ActionPlanWhereUniqueInput
+    include?: ApiKeyInclude<ExtArgs> | null
+    where?: ApiKeyWhereInput
+    orderBy?: ApiKeyOrderByWithRelationInput | ApiKeyOrderByWithRelationInput[]
+    cursor?: ApiKeyWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ActionPlanScalarFieldEnum | ActionPlanScalarFieldEnum[]
+    distinct?: ApiKeyScalarFieldEnum | ApiKeyScalarFieldEnum[]
   }
 
   /**
@@ -4812,23 +4527,23 @@ export namespace Prisma {
   }
 
   /**
-   * User.apiKeys
+   * User.communityComments
    */
-  export type User$apiKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$communityCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ApiKey
+     * Select specific fields to fetch from the CommunityComment
      */
-    select?: ApiKeySelect<ExtArgs> | null
+    select?: CommunityCommentSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ApiKeyInclude<ExtArgs> | null
-    where?: ApiKeyWhereInput
-    orderBy?: ApiKeyOrderByWithRelationInput | ApiKeyOrderByWithRelationInput[]
-    cursor?: ApiKeyWhereUniqueInput
+    include?: CommunityCommentInclude<ExtArgs> | null
+    where?: CommunityCommentWhereInput
+    orderBy?: CommunityCommentOrderByWithRelationInput | CommunityCommentOrderByWithRelationInput[]
+    cursor?: CommunityCommentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ApiKeyScalarFieldEnum | ApiKeyScalarFieldEnum[]
+    distinct?: CommunityCommentScalarFieldEnum | CommunityCommentScalarFieldEnum[]
   }
 
   /**
@@ -4852,26 +4567,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.communityComments
-   */
-  export type User$communityCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityComment
-     */
-    select?: CommunityCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityCommentInclude<ExtArgs> | null
-    where?: CommunityCommentWhereInput
-    orderBy?: CommunityCommentOrderByWithRelationInput | CommunityCommentOrderByWithRelationInput[]
-    cursor?: CommunityCommentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CommunityCommentScalarFieldEnum | CommunityCommentScalarFieldEnum[]
-  }
-
-  /**
    * User.communityVotes
    */
   export type User$communityVotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4889,6 +4584,181 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CommunityVoteScalarFieldEnum | CommunityVoteScalarFieldEnum[]
+  }
+
+  /**
+   * User.educationHistory
+   */
+  export type User$educationHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationHistory
+     */
+    select?: EducationHistorySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationHistoryInclude<ExtArgs> | null
+    where?: EducationHistoryWhereInput
+    orderBy?: EducationHistoryOrderByWithRelationInput | EducationHistoryOrderByWithRelationInput[]
+    cursor?: EducationHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EducationHistoryScalarFieldEnum | EducationHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.emailOtps
+   */
+  export type User$emailOtpsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailOTP
+     */
+    select?: EmailOTPSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailOTPInclude<ExtArgs> | null
+    where?: EmailOTPWhereInput
+    orderBy?: EmailOTPOrderByWithRelationInput | EmailOTPOrderByWithRelationInput[]
+    cursor?: EmailOTPWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmailOTPScalarFieldEnum | EmailOTPScalarFieldEnum[]
+  }
+
+  /**
+   * User.feedInteractions
+   */
+  export type User$feedInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedInteraction
+     */
+    select?: FeedInteractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedInteractionInclude<ExtArgs> | null
+    where?: FeedInteractionWhereInput
+    orderBy?: FeedInteractionOrderByWithRelationInput | FeedInteractionOrderByWithRelationInput[]
+    cursor?: FeedInteractionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedInteractionScalarFieldEnum | FeedInteractionScalarFieldEnum[]
+  }
+
+  /**
+   * User.feedPosts
+   */
+  export type User$feedPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedPost
+     */
+    select?: FeedPostSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedPostInclude<ExtArgs> | null
+    where?: FeedPostWhereInput
+    orderBy?: FeedPostOrderByWithRelationInput | FeedPostOrderByWithRelationInput[]
+    cursor?: FeedPostWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedPostScalarFieldEnum | FeedPostScalarFieldEnum[]
+  }
+
+  /**
+   * User.refreshTokens
+   */
+  export type User$refreshTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RefreshToken
+     */
+    select?: RefreshTokenSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RefreshTokenInclude<ExtArgs> | null
+    where?: RefreshTokenWhereInput
+    orderBy?: RefreshTokenOrderByWithRelationInput | RefreshTokenOrderByWithRelationInput[]
+    cursor?: RefreshTokenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RefreshTokenScalarFieldEnum | RefreshTokenScalarFieldEnum[]
+  }
+
+  /**
+   * User.savedColleges
+   */
+  export type User$savedCollegesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedCollege
+     */
+    select?: SavedCollegeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedCollegeInclude<ExtArgs> | null
+    where?: SavedCollegeWhereInput
+    orderBy?: SavedCollegeOrderByWithRelationInput | SavedCollegeOrderByWithRelationInput[]
+    cursor?: SavedCollegeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedCollegeScalarFieldEnum | SavedCollegeScalarFieldEnum[]
+  }
+
+  /**
+   * User.testScores
+   */
+  export type User$testScoresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestScore
+     */
+    select?: TestScoreSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestScoreInclude<ExtArgs> | null
+    where?: TestScoreWhereInput
+    orderBy?: TestScoreOrderByWithRelationInput | TestScoreOrderByWithRelationInput[]
+    cursor?: TestScoreWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TestScoreScalarFieldEnum | TestScoreScalarFieldEnum[]
+  }
+
+  /**
+   * User.documents
+   */
+  export type User$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserDocument
+     */
+    select?: UserDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserDocumentInclude<ExtArgs> | null
+    where?: UserDocumentWhereInput
+    orderBy?: UserDocumentOrderByWithRelationInput | UserDocumentOrderByWithRelationInput[]
+    cursor?: UserDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserDocumentScalarFieldEnum | UserDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * User.profile
+   */
+  export type User$profileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserProfile
+     */
+    select?: UserProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserProfileInclude<ExtArgs> | null
+    where?: UserProfileWhereInput
   }
 
   /**
@@ -13297,15 +13167,15 @@ export namespace Prisma {
   export type FeedPostAvgAggregateOutputType = {
     viewCount: number | null
     likeCount: number | null
-    dislikeCount: number | null
     bookmarkCount: number | null
+    dislikeCount: number | null
   }
 
   export type FeedPostSumAggregateOutputType = {
     viewCount: number | null
     likeCount: number | null
-    dislikeCount: number | null
     bookmarkCount: number | null
+    dislikeCount: number | null
   }
 
   export type FeedPostMinAggregateOutputType = {
@@ -13322,11 +13192,11 @@ export namespace Prisma {
     isPinned: boolean | null
     viewCount: number | null
     likeCount: number | null
-    dislikeCount: number | null
     bookmarkCount: number | null
     publishedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    dislikeCount: number | null
   }
 
   export type FeedPostMaxAggregateOutputType = {
@@ -13343,11 +13213,11 @@ export namespace Prisma {
     isPinned: boolean | null
     viewCount: number | null
     likeCount: number | null
-    dislikeCount: number | null
     bookmarkCount: number | null
     publishedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    dislikeCount: number | null
   }
 
   export type FeedPostCountAggregateOutputType = {
@@ -13365,12 +13235,12 @@ export namespace Prisma {
     isPinned: number
     viewCount: number
     likeCount: number
-    dislikeCount: number
     bookmarkCount: number
     metadata: number
     publishedAt: number
     createdAt: number
     updatedAt: number
+    dislikeCount: number
     _all: number
   }
 
@@ -13378,15 +13248,15 @@ export namespace Prisma {
   export type FeedPostAvgAggregateInputType = {
     viewCount?: true
     likeCount?: true
-    dislikeCount?: true
     bookmarkCount?: true
+    dislikeCount?: true
   }
 
   export type FeedPostSumAggregateInputType = {
     viewCount?: true
     likeCount?: true
-    dislikeCount?: true
     bookmarkCount?: true
+    dislikeCount?: true
   }
 
   export type FeedPostMinAggregateInputType = {
@@ -13403,11 +13273,11 @@ export namespace Prisma {
     isPinned?: true
     viewCount?: true
     likeCount?: true
-    dislikeCount?: true
     bookmarkCount?: true
     publishedAt?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
   }
 
   export type FeedPostMaxAggregateInputType = {
@@ -13424,11 +13294,11 @@ export namespace Prisma {
     isPinned?: true
     viewCount?: true
     likeCount?: true
-    dislikeCount?: true
     bookmarkCount?: true
     publishedAt?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
   }
 
   export type FeedPostCountAggregateInputType = {
@@ -13446,12 +13316,12 @@ export namespace Prisma {
     isPinned?: true
     viewCount?: true
     likeCount?: true
-    dislikeCount?: true
     bookmarkCount?: true
     metadata?: true
     publishedAt?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
     _all?: true
   }
 
@@ -13556,12 +13426,12 @@ export namespace Prisma {
     isPinned: boolean
     viewCount: number
     likeCount: number
-    dislikeCount: number
     bookmarkCount: number
     metadata: JsonValue | null
     publishedAt: Date | null
     createdAt: Date
     updatedAt: Date
+    dislikeCount: number
     _count: FeedPostCountAggregateOutputType | null
     _avg: FeedPostAvgAggregateOutputType | null
     _sum: FeedPostSumAggregateOutputType | null
@@ -13598,16 +13468,15 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: boolean
     likeCount?: boolean
-    dislikeCount?: boolean
     bookmarkCount?: boolean
     metadata?: boolean
     publishedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dislikeCount?: boolean
+    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     university?: boolean | FeedPost$universityArgs<ExtArgs>
-    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
-    comments?: boolean | FeedPost$commentsArgs<ExtArgs>
     _count?: boolean | FeedPostCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedPost"]>
 
@@ -13626,12 +13495,12 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: boolean
     likeCount?: boolean
-    dislikeCount?: boolean
     bookmarkCount?: boolean
     metadata?: boolean
     publishedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dislikeCount?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
     university?: boolean | FeedPost$universityArgs<ExtArgs>
   }, ExtArgs["result"]["feedPost"]>
@@ -13651,19 +13520,18 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: boolean
     likeCount?: boolean
-    dislikeCount?: boolean
     bookmarkCount?: boolean
     metadata?: boolean
     publishedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dislikeCount?: boolean
   }
 
   export type FeedPostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     university?: boolean | FeedPost$universityArgs<ExtArgs>
-    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
-    comments?: boolean | FeedPost$commentsArgs<ExtArgs>
     _count?: boolean | FeedPostCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FeedPostIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13674,10 +13542,9 @@ export namespace Prisma {
   export type $FeedPostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FeedPost"
     objects: {
+      interactions: Prisma.$FeedInteractionPayload<ExtArgs>[]
       author: Prisma.$UserPayload<ExtArgs>
       university: Prisma.$UniversityPayload<ExtArgs> | null
-      interactions: Prisma.$FeedInteractionPayload<ExtArgs>[]
-      comments: Prisma.$FeedCommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13694,12 +13561,12 @@ export namespace Prisma {
       isPinned: boolean
       viewCount: number
       likeCount: number
-      dislikeCount: number
       bookmarkCount: number
       metadata: Prisma.JsonValue | null
       publishedAt: Date | null
       createdAt: Date
       updatedAt: Date
+      dislikeCount: number
     }, ExtArgs["result"]["feedPost"]>
     composites: {}
   }
@@ -14064,10 +13931,9 @@ export namespace Prisma {
    */
   export interface Prisma__FeedPostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    interactions<T extends FeedPost$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedInteractionPayload<ExtArgs>, T, "findMany"> | Null>
     author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     university<T extends FeedPost$universityArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$universityArgs<ExtArgs>>): Prisma__UniversityClient<$Result.GetResult<Prisma.$UniversityPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
-    interactions<T extends FeedPost$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedInteractionPayload<ExtArgs>, T, "findMany"> | Null>
-    comments<T extends FeedPost$commentsArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14111,12 +13977,12 @@ export namespace Prisma {
     readonly isPinned: FieldRef<"FeedPost", 'Boolean'>
     readonly viewCount: FieldRef<"FeedPost", 'Int'>
     readonly likeCount: FieldRef<"FeedPost", 'Int'>
-    readonly dislikeCount: FieldRef<"FeedPost", 'Int'>
     readonly bookmarkCount: FieldRef<"FeedPost", 'Int'>
     readonly metadata: FieldRef<"FeedPost", 'Json'>
     readonly publishedAt: FieldRef<"FeedPost", 'DateTime'>
     readonly createdAt: FieldRef<"FeedPost", 'DateTime'>
     readonly updatedAt: FieldRef<"FeedPost", 'DateTime'>
+    readonly dislikeCount: FieldRef<"FeedPost", 'Int'>
   }
     
 
@@ -14435,21 +14301,6 @@ export namespace Prisma {
   }
 
   /**
-   * FeedPost.university
-   */
-  export type FeedPost$universityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the University
-     */
-    select?: UniversitySelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UniversityInclude<ExtArgs> | null
-    where?: UniversityWhereInput
-  }
-
-  /**
    * FeedPost.interactions
    */
   export type FeedPost$interactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14470,23 +14321,18 @@ export namespace Prisma {
   }
 
   /**
-   * FeedPost.comments
+   * FeedPost.university
    */
-  export type FeedPost$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type FeedPost$universityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FeedComment
+     * Select specific fields to fetch from the University
      */
-    select?: FeedCommentSelect<ExtArgs> | null
+    select?: UniversitySelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FeedCommentInclude<ExtArgs> | null
-    where?: FeedCommentWhereInput
-    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
-    cursor?: FeedCommentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
+    include?: UniversityInclude<ExtArgs> | null
+    where?: UniversityWhereInput
   }
 
   /**
@@ -14501,957 +14347,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FeedPostInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model FeedComment
-   */
-
-  export type AggregateFeedComment = {
-    _count: FeedCommentCountAggregateOutputType | null
-    _min: FeedCommentMinAggregateOutputType | null
-    _max: FeedCommentMaxAggregateOutputType | null
-  }
-
-  export type FeedCommentMinAggregateOutputType = {
-    id: string | null
-    postId: string | null
-    authorId: string | null
-    content: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type FeedCommentMaxAggregateOutputType = {
-    id: string | null
-    postId: string | null
-    authorId: string | null
-    content: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type FeedCommentCountAggregateOutputType = {
-    id: number
-    postId: number
-    authorId: number
-    content: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type FeedCommentMinAggregateInputType = {
-    id?: true
-    postId?: true
-    authorId?: true
-    content?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type FeedCommentMaxAggregateInputType = {
-    id?: true
-    postId?: true
-    authorId?: true
-    content?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type FeedCommentCountAggregateInputType = {
-    id?: true
-    postId?: true
-    authorId?: true
-    content?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type FeedCommentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which FeedComment to aggregate.
-     */
-    where?: FeedCommentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of FeedComments to fetch.
-     */
-    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: FeedCommentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` FeedComments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` FeedComments.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned FeedComments
-    **/
-    _count?: true | FeedCommentCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: FeedCommentMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: FeedCommentMaxAggregateInputType
-  }
-
-  export type GetFeedCommentAggregateType<T extends FeedCommentAggregateArgs> = {
-        [P in keyof T & keyof AggregateFeedComment]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateFeedComment[P]>
-      : GetScalarType<T[P], AggregateFeedComment[P]>
-  }
-
-
-
-
-  export type FeedCommentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedCommentWhereInput
-    orderBy?: FeedCommentOrderByWithAggregationInput | FeedCommentOrderByWithAggregationInput[]
-    by: FeedCommentScalarFieldEnum[] | FeedCommentScalarFieldEnum
-    having?: FeedCommentScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: FeedCommentCountAggregateInputType | true
-    _min?: FeedCommentMinAggregateInputType
-    _max?: FeedCommentMaxAggregateInputType
-  }
-
-  export type FeedCommentGroupByOutputType = {
-    id: string
-    postId: string
-    authorId: string
-    content: string
-    createdAt: Date
-    updatedAt: Date
-    _count: FeedCommentCountAggregateOutputType | null
-    _min: FeedCommentMinAggregateOutputType | null
-    _max: FeedCommentMaxAggregateOutputType | null
-  }
-
-  type GetFeedCommentGroupByPayload<T extends FeedCommentGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<FeedCommentGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof FeedCommentGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], FeedCommentGroupByOutputType[P]>
-            : GetScalarType<T[P], FeedCommentGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type FeedCommentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    postId?: boolean
-    authorId?: boolean
-    content?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
-    author?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["feedComment"]>
-
-  export type FeedCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    postId?: boolean
-    authorId?: boolean
-    content?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
-    author?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["feedComment"]>
-
-  export type FeedCommentSelectScalar = {
-    id?: boolean
-    postId?: boolean
-    authorId?: boolean
-    content?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type FeedCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
-    author?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type FeedCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
-    author?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $FeedCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "FeedComment"
-    objects: {
-      post: Prisma.$FeedPostPayload<ExtArgs>
-      author: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      postId: string
-      authorId: string
-      content: string
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["feedComment"]>
-    composites: {}
-  }
-
-  type FeedCommentGetPayload<S extends boolean | null | undefined | FeedCommentDefaultArgs> = $Result.GetResult<Prisma.$FeedCommentPayload, S>
-
-  type FeedCommentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<FeedCommentFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: FeedCommentCountAggregateInputType | true
-    }
-
-  export interface FeedCommentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeedComment'], meta: { name: 'FeedComment' } }
-    /**
-     * Find zero or one FeedComment that matches the filter.
-     * @param {FeedCommentFindUniqueArgs} args - Arguments to find a FeedComment
-     * @example
-     * // Get one FeedComment
-     * const feedComment = await prisma.feedComment.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends FeedCommentFindUniqueArgs>(args: SelectSubset<T, FeedCommentFindUniqueArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
-
-    /**
-     * Find one FeedComment that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {FeedCommentFindUniqueOrThrowArgs} args - Arguments to find a FeedComment
-     * @example
-     * // Get one FeedComment
-     * const feedComment = await prisma.feedComment.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends FeedCommentFindUniqueOrThrowArgs>(args: SelectSubset<T, FeedCommentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
-
-    /**
-     * Find the first FeedComment that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FeedCommentFindFirstArgs} args - Arguments to find a FeedComment
-     * @example
-     * // Get one FeedComment
-     * const feedComment = await prisma.feedComment.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends FeedCommentFindFirstArgs>(args?: SelectSubset<T, FeedCommentFindFirstArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
-
-    /**
-     * Find the first FeedComment that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FeedCommentFindFirstOrThrowArgs} args - Arguments to find a FeedComment
-     * @example
-     * // Get one FeedComment
-     * const feedComment = await prisma.feedComment.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends FeedCommentFindFirstOrThrowArgs>(args?: SelectSubset<T, FeedCommentFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
-
-    /**
-     * Find zero or more FeedComments that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FeedCommentFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all FeedComments
-     * const feedComments = await prisma.feedComment.findMany()
-     * 
-     * // Get first 10 FeedComments
-     * const feedComments = await prisma.feedComment.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const feedCommentWithIdOnly = await prisma.feedComment.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends FeedCommentFindManyArgs>(args?: SelectSubset<T, FeedCommentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findMany">>
-
-    /**
-     * Create a FeedComment.
-     * @param {FeedCommentCreateArgs} args - Arguments to create a FeedComment.
-     * @example
-     * // Create one FeedComment
-     * const FeedComment = await prisma.feedComment.create({
-     *   data: {
-     *     // ... data to create a FeedComment
-     *   }
-     * })
-     * 
-     */
-    create<T extends FeedCommentCreateArgs>(args: SelectSubset<T, FeedCommentCreateArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "create">, never, ExtArgs>
-
-    /**
-     * Create many FeedComments.
-     * @param {FeedCommentCreateManyArgs} args - Arguments to create many FeedComments.
-     * @example
-     * // Create many FeedComments
-     * const feedComment = await prisma.feedComment.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends FeedCommentCreateManyArgs>(args?: SelectSubset<T, FeedCommentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many FeedComments and returns the data saved in the database.
-     * @param {FeedCommentCreateManyAndReturnArgs} args - Arguments to create many FeedComments.
-     * @example
-     * // Create many FeedComments
-     * const feedComment = await prisma.feedComment.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many FeedComments and only return the `id`
-     * const feedCommentWithIdOnly = await prisma.feedComment.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends FeedCommentCreateManyAndReturnArgs>(args?: SelectSubset<T, FeedCommentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "createManyAndReturn">>
-
-    /**
-     * Delete a FeedComment.
-     * @param {FeedCommentDeleteArgs} args - Arguments to delete one FeedComment.
-     * @example
-     * // Delete one FeedComment
-     * const FeedComment = await prisma.feedComment.delete({
-     *   where: {
-     *     // ... filter to delete one FeedComment
-     *   }
-     * })
-     * 
-     */
-    delete<T extends FeedCommentDeleteArgs>(args: SelectSubset<T, FeedCommentDeleteArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "delete">, never, ExtArgs>
-
-    /**
-     * Update one FeedComment.
-     * @param {FeedCommentUpdateArgs} args - Arguments to update one FeedComment.
-     * @example
-     * // Update one FeedComment
-     * const feedComment = await prisma.feedComment.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends FeedCommentUpdateArgs>(args: SelectSubset<T, FeedCommentUpdateArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "update">, never, ExtArgs>
-
-    /**
-     * Delete zero or more FeedComments.
-     * @param {FeedCommentDeleteManyArgs} args - Arguments to filter FeedComments to delete.
-     * @example
-     * // Delete a few FeedComments
-     * const { count } = await prisma.feedComment.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends FeedCommentDeleteManyArgs>(args?: SelectSubset<T, FeedCommentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more FeedComments.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FeedCommentUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many FeedComments
-     * const feedComment = await prisma.feedComment.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends FeedCommentUpdateManyArgs>(args: SelectSubset<T, FeedCommentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one FeedComment.
-     * @param {FeedCommentUpsertArgs} args - Arguments to update or create a FeedComment.
-     * @example
-     * // Update or create a FeedComment
-     * const feedComment = await prisma.feedComment.upsert({
-     *   create: {
-     *     // ... data to create a FeedComment
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the FeedComment we want to update
-     *   }
-     * })
-     */
-    upsert<T extends FeedCommentUpsertArgs>(args: SelectSubset<T, FeedCommentUpsertArgs<ExtArgs>>): Prisma__FeedCommentClient<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
-
-
-    /**
-     * Count the number of FeedComments.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FeedCommentCountArgs} args - Arguments to filter FeedComments to count.
-     * @example
-     * // Count the number of FeedComments
-     * const count = await prisma.feedComment.count({
-     *   where: {
-     *     // ... the filter for the FeedComments we want to count
-     *   }
-     * })
-    **/
-    count<T extends FeedCommentCountArgs>(
-      args?: Subset<T, FeedCommentCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], FeedCommentCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a FeedComment.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FeedCommentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends FeedCommentAggregateArgs>(args: Subset<T, FeedCommentAggregateArgs>): Prisma.PrismaPromise<GetFeedCommentAggregateType<T>>
-
-    /**
-     * Group by FeedComment.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {FeedCommentGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends FeedCommentGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: FeedCommentGroupByArgs['orderBy'] }
-        : { orderBy?: FeedCommentGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, FeedCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeedCommentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the FeedComment model
-   */
-  readonly fields: FeedCommentFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for FeedComment.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__FeedCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    post<T extends FeedPostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeedPostDefaultArgs<ExtArgs>>): Prisma__FeedPostClient<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the FeedComment model
-   */ 
-  interface FeedCommentFieldRefs {
-    readonly id: FieldRef<"FeedComment", 'String'>
-    readonly postId: FieldRef<"FeedComment", 'String'>
-    readonly authorId: FieldRef<"FeedComment", 'String'>
-    readonly content: FieldRef<"FeedComment", 'String'>
-    readonly createdAt: FieldRef<"FeedComment", 'DateTime'>
-    readonly updatedAt: FieldRef<"FeedComment", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * FeedComment findUnique
-   */
-  export type FeedCommentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * Filter, which FeedComment to fetch.
-     */
-    where: FeedCommentWhereUniqueInput
-  }
-
-  /**
-   * FeedComment findUniqueOrThrow
-   */
-  export type FeedCommentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * Filter, which FeedComment to fetch.
-     */
-    where: FeedCommentWhereUniqueInput
-  }
-
-  /**
-   * FeedComment findFirst
-   */
-  export type FeedCommentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * Filter, which FeedComment to fetch.
-     */
-    where?: FeedCommentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of FeedComments to fetch.
-     */
-    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for FeedComments.
-     */
-    cursor?: FeedCommentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` FeedComments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` FeedComments.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of FeedComments.
-     */
-    distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
-  }
-
-  /**
-   * FeedComment findFirstOrThrow
-   */
-  export type FeedCommentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * Filter, which FeedComment to fetch.
-     */
-    where?: FeedCommentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of FeedComments to fetch.
-     */
-    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for FeedComments.
-     */
-    cursor?: FeedCommentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` FeedComments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` FeedComments.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of FeedComments.
-     */
-    distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
-  }
-
-  /**
-   * FeedComment findMany
-   */
-  export type FeedCommentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * Filter, which FeedComments to fetch.
-     */
-    where?: FeedCommentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of FeedComments to fetch.
-     */
-    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing FeedComments.
-     */
-    cursor?: FeedCommentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` FeedComments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` FeedComments.
-     */
-    skip?: number
-    distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
-  }
-
-  /**
-   * FeedComment create
-   */
-  export type FeedCommentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * The data needed to create a FeedComment.
-     */
-    data: XOR<FeedCommentCreateInput, FeedCommentUncheckedCreateInput>
-  }
-
-  /**
-   * FeedComment createMany
-   */
-  export type FeedCommentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many FeedComments.
-     */
-    data: FeedCommentCreateManyInput | FeedCommentCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * FeedComment createManyAndReturn
-   */
-  export type FeedCommentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many FeedComments.
-     */
-    data: FeedCommentCreateManyInput | FeedCommentCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * FeedComment update
-   */
-  export type FeedCommentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * The data needed to update a FeedComment.
-     */
-    data: XOR<FeedCommentUpdateInput, FeedCommentUncheckedUpdateInput>
-    /**
-     * Choose, which FeedComment to update.
-     */
-    where: FeedCommentWhereUniqueInput
-  }
-
-  /**
-   * FeedComment updateMany
-   */
-  export type FeedCommentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update FeedComments.
-     */
-    data: XOR<FeedCommentUpdateManyMutationInput, FeedCommentUncheckedUpdateManyInput>
-    /**
-     * Filter which FeedComments to update
-     */
-    where?: FeedCommentWhereInput
-  }
-
-  /**
-   * FeedComment upsert
-   */
-  export type FeedCommentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * The filter to search for the FeedComment to update in case it exists.
-     */
-    where: FeedCommentWhereUniqueInput
-    /**
-     * In case the FeedComment found by the `where` argument doesn't exist, create a new FeedComment with this data.
-     */
-    create: XOR<FeedCommentCreateInput, FeedCommentUncheckedCreateInput>
-    /**
-     * In case the FeedComment was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<FeedCommentUpdateInput, FeedCommentUncheckedUpdateInput>
-  }
-
-  /**
-   * FeedComment delete
-   */
-  export type FeedCommentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    /**
-     * Filter which FeedComment to delete.
-     */
-    where: FeedCommentWhereUniqueInput
-  }
-
-  /**
-   * FeedComment deleteMany
-   */
-  export type FeedCommentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which FeedComments to delete
-     */
-    where?: FeedCommentWhereInput
-  }
-
-  /**
-   * FeedComment without action
-   */
-  export type FeedCommentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
   }
 
 
@@ -15619,8 +14514,8 @@ export namespace Prisma {
     postId?: boolean
     type?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     post?: boolean | FeedPostDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedInteraction"]>
 
   export type FeedInteractionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15629,8 +14524,8 @@ export namespace Prisma {
     postId?: boolean
     type?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     post?: boolean | FeedPostDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedInteraction"]>
 
   export type FeedInteractionSelectScalar = {
@@ -15642,19 +14537,19 @@ export namespace Prisma {
   }
 
   export type FeedInteractionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     post?: boolean | FeedPostDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type FeedInteractionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     post?: boolean | FeedPostDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $FeedInteractionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FeedInteraction"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       post: Prisma.$FeedPostPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16026,8 +14921,8 @@ export namespace Prisma {
    */
   export interface Prisma__FeedInteractionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     post<T extends FeedPostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeedPostDefaultArgs<ExtArgs>>): Prisma__FeedPostClient<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16752,8 +15647,8 @@ export namespace Prisma {
     dataVerifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    courses?: boolean | University$coursesArgs<ExtArgs>
     feedPosts?: boolean | University$feedPostsArgs<ExtArgs>
+    courses?: boolean | University$coursesArgs<ExtArgs>
     _count?: boolean | UniversityCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["university"]>
 
@@ -16810,8 +15705,8 @@ export namespace Prisma {
   }
 
   export type UniversityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    courses?: boolean | University$coursesArgs<ExtArgs>
     feedPosts?: boolean | University$feedPostsArgs<ExtArgs>
+    courses?: boolean | University$coursesArgs<ExtArgs>
     _count?: boolean | UniversityCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UniversityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -16819,8 +15714,8 @@ export namespace Prisma {
   export type $UniversityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "University"
     objects: {
-      courses: Prisma.$UniversityCoursePayload<ExtArgs>[]
       feedPosts: Prisma.$FeedPostPayload<ExtArgs>[]
+      courses: Prisma.$UniversityCoursePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -17210,8 +16105,8 @@ export namespace Prisma {
    */
   export interface Prisma__UniversityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    courses<T extends University$coursesArgs<ExtArgs> = {}>(args?: Subset<T, University$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UniversityCoursePayload<ExtArgs>, T, "findMany"> | Null>
     feedPosts<T extends University$feedPostsArgs<ExtArgs> = {}>(args?: Subset<T, University$feedPostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findMany"> | Null>
+    courses<T extends University$coursesArgs<ExtArgs> = {}>(args?: Subset<T, University$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UniversityCoursePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17578,26 +16473,6 @@ export namespace Prisma {
   }
 
   /**
-   * University.courses
-   */
-  export type University$coursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UniversityCourse
-     */
-    select?: UniversityCourseSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UniversityCourseInclude<ExtArgs> | null
-    where?: UniversityCourseWhereInput
-    orderBy?: UniversityCourseOrderByWithRelationInput | UniversityCourseOrderByWithRelationInput[]
-    cursor?: UniversityCourseWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UniversityCourseScalarFieldEnum | UniversityCourseScalarFieldEnum[]
-  }
-
-  /**
    * University.feedPosts
    */
   export type University$feedPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17615,6 +16490,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeedPostScalarFieldEnum | FeedPostScalarFieldEnum[]
+  }
+
+  /**
+   * University.courses
+   */
+  export type University$coursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UniversityCourse
+     */
+    select?: UniversityCourseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UniversityCourseInclude<ExtArgs> | null
+    where?: UniversityCourseWhereInput
+    orderBy?: UniversityCourseOrderByWithRelationInput | UniversityCourseOrderByWithRelationInput[]
+    cursor?: UniversityCourseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UniversityCourseScalarFieldEnum | UniversityCourseScalarFieldEnum[]
   }
 
   /**
@@ -17902,13 +16797,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    university?: boolean | UniversityDefaultArgs<ExtArgs>
-    requirements?: boolean | UniversityCourse$requirementsArgs<ExtArgs>
-    fees?: boolean | UniversityCourse$feesArgs<ExtArgs>
-    savedBy?: boolean | UniversityCourse$savedByArgs<ExtArgs>
-    comparisons?: boolean | UniversityCourse$comparisonsArgs<ExtArgs>
     actionPlans?: boolean | UniversityCourse$actionPlansArgs<ExtArgs>
+    comparisons?: boolean | UniversityCourse$comparisonsArgs<ExtArgs>
     applications?: boolean | UniversityCourse$applicationsArgs<ExtArgs>
+    fees?: boolean | UniversityCourse$feesArgs<ExtArgs>
+    requirements?: boolean | UniversityCourse$requirementsArgs<ExtArgs>
+    savedBy?: boolean | UniversityCourse$savedByArgs<ExtArgs>
+    university?: boolean | UniversityDefaultArgs<ExtArgs>
     _count?: boolean | UniversityCourseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["universityCourse"]>
 
@@ -17948,13 +16843,13 @@ export namespace Prisma {
   }
 
   export type UniversityCourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    university?: boolean | UniversityDefaultArgs<ExtArgs>
-    requirements?: boolean | UniversityCourse$requirementsArgs<ExtArgs>
-    fees?: boolean | UniversityCourse$feesArgs<ExtArgs>
-    savedBy?: boolean | UniversityCourse$savedByArgs<ExtArgs>
-    comparisons?: boolean | UniversityCourse$comparisonsArgs<ExtArgs>
     actionPlans?: boolean | UniversityCourse$actionPlansArgs<ExtArgs>
+    comparisons?: boolean | UniversityCourse$comparisonsArgs<ExtArgs>
     applications?: boolean | UniversityCourse$applicationsArgs<ExtArgs>
+    fees?: boolean | UniversityCourse$feesArgs<ExtArgs>
+    requirements?: boolean | UniversityCourse$requirementsArgs<ExtArgs>
+    savedBy?: boolean | UniversityCourse$savedByArgs<ExtArgs>
+    university?: boolean | UniversityDefaultArgs<ExtArgs>
     _count?: boolean | UniversityCourseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UniversityCourseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17964,13 +16859,13 @@ export namespace Prisma {
   export type $UniversityCoursePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "UniversityCourse"
     objects: {
-      university: Prisma.$UniversityPayload<ExtArgs>
-      requirements: Prisma.$CourseRequirementPayload<ExtArgs> | null
-      fees: Prisma.$CourseFeePayload<ExtArgs> | null
-      savedBy: Prisma.$SavedCollegePayload<ExtArgs>[]
-      comparisons: Prisma.$AIComparisonPayload<ExtArgs>[]
       actionPlans: Prisma.$ActionPlanPayload<ExtArgs>[]
+      comparisons: Prisma.$AIComparisonPayload<ExtArgs>[]
       applications: Prisma.$ApplicationPayload<ExtArgs>[]
+      fees: Prisma.$CourseFeePayload<ExtArgs> | null
+      requirements: Prisma.$CourseRequirementPayload<ExtArgs> | null
+      savedBy: Prisma.$SavedCollegePayload<ExtArgs>[]
+      university: Prisma.$UniversityPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -18351,13 +17246,13 @@ export namespace Prisma {
    */
   export interface Prisma__UniversityCourseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    university<T extends UniversityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UniversityDefaultArgs<ExtArgs>>): Prisma__UniversityClient<$Result.GetResult<Prisma.$UniversityPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    requirements<T extends UniversityCourse$requirementsArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$requirementsArgs<ExtArgs>>): Prisma__CourseRequirementClient<$Result.GetResult<Prisma.$CourseRequirementPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
-    fees<T extends UniversityCourse$feesArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$feesArgs<ExtArgs>>): Prisma__CourseFeeClient<$Result.GetResult<Prisma.$CourseFeePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
-    savedBy<T extends UniversityCourse$savedByArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedCollegePayload<ExtArgs>, T, "findMany"> | Null>
-    comparisons<T extends UniversityCourse$comparisonsArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$comparisonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AIComparisonPayload<ExtArgs>, T, "findMany"> | Null>
     actionPlans<T extends UniversityCourse$actionPlansArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$actionPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActionPlanPayload<ExtArgs>, T, "findMany"> | Null>
+    comparisons<T extends UniversityCourse$comparisonsArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$comparisonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AIComparisonPayload<ExtArgs>, T, "findMany"> | Null>
     applications<T extends UniversityCourse$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany"> | Null>
+    fees<T extends UniversityCourse$feesArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$feesArgs<ExtArgs>>): Prisma__CourseFeeClient<$Result.GetResult<Prisma.$CourseFeePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    requirements<T extends UniversityCourse$requirementsArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$requirementsArgs<ExtArgs>>): Prisma__CourseRequirementClient<$Result.GetResult<Prisma.$CourseRequirementPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    savedBy<T extends UniversityCourse$savedByArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourse$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedCollegePayload<ExtArgs>, T, "findMany"> | Null>
+    university<T extends UniversityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UniversityDefaultArgs<ExtArgs>>): Prisma__UniversityClient<$Result.GetResult<Prisma.$UniversityPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18719,53 +17614,23 @@ export namespace Prisma {
   }
 
   /**
-   * UniversityCourse.requirements
+   * UniversityCourse.actionPlans
    */
-  export type UniversityCourse$requirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UniversityCourse$actionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CourseRequirement
+     * Select specific fields to fetch from the ActionPlan
      */
-    select?: CourseRequirementSelect<ExtArgs> | null
+    select?: ActionPlanSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CourseRequirementInclude<ExtArgs> | null
-    where?: CourseRequirementWhereInput
-  }
-
-  /**
-   * UniversityCourse.fees
-   */
-  export type UniversityCourse$feesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CourseFee
-     */
-    select?: CourseFeeSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CourseFeeInclude<ExtArgs> | null
-    where?: CourseFeeWhereInput
-  }
-
-  /**
-   * UniversityCourse.savedBy
-   */
-  export type UniversityCourse$savedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SavedCollege
-     */
-    select?: SavedCollegeSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SavedCollegeInclude<ExtArgs> | null
-    where?: SavedCollegeWhereInput
-    orderBy?: SavedCollegeOrderByWithRelationInput | SavedCollegeOrderByWithRelationInput[]
-    cursor?: SavedCollegeWhereUniqueInput
+    include?: ActionPlanInclude<ExtArgs> | null
+    where?: ActionPlanWhereInput
+    orderBy?: ActionPlanOrderByWithRelationInput | ActionPlanOrderByWithRelationInput[]
+    cursor?: ActionPlanWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: SavedCollegeScalarFieldEnum | SavedCollegeScalarFieldEnum[]
+    distinct?: ActionPlanScalarFieldEnum | ActionPlanScalarFieldEnum[]
   }
 
   /**
@@ -18789,26 +17654,6 @@ export namespace Prisma {
   }
 
   /**
-   * UniversityCourse.actionPlans
-   */
-  export type UniversityCourse$actionPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ActionPlan
-     */
-    select?: ActionPlanSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ActionPlanInclude<ExtArgs> | null
-    where?: ActionPlanWhereInput
-    orderBy?: ActionPlanOrderByWithRelationInput | ActionPlanOrderByWithRelationInput[]
-    cursor?: ActionPlanWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ActionPlanScalarFieldEnum | ActionPlanScalarFieldEnum[]
-  }
-
-  /**
    * UniversityCourse.applications
    */
   export type UniversityCourse$applicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18826,6 +17671,56 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * UniversityCourse.fees
+   */
+  export type UniversityCourse$feesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CourseFee
+     */
+    select?: CourseFeeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CourseFeeInclude<ExtArgs> | null
+    where?: CourseFeeWhereInput
+  }
+
+  /**
+   * UniversityCourse.requirements
+   */
+  export type UniversityCourse$requirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CourseRequirement
+     */
+    select?: CourseRequirementSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CourseRequirementInclude<ExtArgs> | null
+    where?: CourseRequirementWhereInput
+  }
+
+  /**
+   * UniversityCourse.savedBy
+   */
+  export type UniversityCourse$savedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedCollege
+     */
+    select?: SavedCollegeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedCollegeInclude<ExtArgs> | null
+    where?: SavedCollegeWhereInput
+    orderBy?: SavedCollegeOrderByWithRelationInput | SavedCollegeOrderByWithRelationInput[]
+    cursor?: SavedCollegeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedCollegeScalarFieldEnum | SavedCollegeScalarFieldEnum[]
   }
 
   /**
@@ -21393,8 +20288,8 @@ export namespace Prisma {
     priority?: boolean
     notes?: boolean
     savedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["savedCollege"]>
 
   export type SavedCollegeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -21404,8 +20299,8 @@ export namespace Prisma {
     priority?: boolean
     notes?: boolean
     savedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["savedCollege"]>
 
   export type SavedCollegeSelectScalar = {
@@ -21418,19 +20313,19 @@ export namespace Prisma {
   }
 
   export type SavedCollegeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type SavedCollegeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $SavedCollegePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SavedCollege"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       course: Prisma.$UniversityCoursePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -21803,8 +20698,8 @@ export namespace Prisma {
    */
   export interface Prisma__SavedCollegeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     course<T extends UniversityCourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourseDefaultArgs<ExtArgs>>): Prisma__UniversityCourseClient<$Result.GetResult<Prisma.$UniversityCoursePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22442,9 +21337,9 @@ export namespace Prisma {
     cached?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
     actionPlans?: boolean | AIComparison$actionPlansArgs<ExtArgs>
+    course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | AIComparisonCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aIComparison"]>
 
@@ -22465,8 +21360,8 @@ export namespace Prisma {
     cached?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aIComparison"]>
 
   export type AIComparisonSelectScalar = {
@@ -22489,22 +21384,22 @@ export namespace Prisma {
   }
 
   export type AIComparisonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
     actionPlans?: boolean | AIComparison$actionPlansArgs<ExtArgs>
+    course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | AIComparisonCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AIComparisonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $AIComparisonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AIComparison"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      course: Prisma.$UniversityCoursePayload<ExtArgs>
       actionPlans: Prisma.$ActionPlanPayload<ExtArgs>[]
+      course: Prisma.$UniversityCoursePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22887,9 +21782,9 @@ export namespace Prisma {
    */
   export interface Prisma__AIComparisonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    course<T extends UniversityCourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourseDefaultArgs<ExtArgs>>): Prisma__UniversityCourseClient<$Result.GetResult<Prisma.$UniversityCoursePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     actionPlans<T extends AIComparison$actionPlansArgs<ExtArgs> = {}>(args?: Subset<T, AIComparison$actionPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActionPlanPayload<ExtArgs>, T, "findMany"> | Null>
+    course<T extends UniversityCourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourseDefaultArgs<ExtArgs>>): Prisma__UniversityCourseClient<$Result.GetResult<Prisma.$UniversityCoursePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -23529,9 +22424,9 @@ export namespace Prisma {
     completionPct?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     comparison?: boolean | AIComparisonDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["actionPlan"]>
 
   export type ActionPlanSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -23546,9 +22441,9 @@ export namespace Prisma {
     completionPct?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     comparison?: boolean | AIComparisonDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["actionPlan"]>
 
   export type ActionPlanSelectScalar = {
@@ -23566,22 +22461,22 @@ export namespace Prisma {
   }
 
   export type ActionPlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     comparison?: boolean | AIComparisonDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ActionPlanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     comparison?: boolean | AIComparisonDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ActionPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ActionPlan"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       comparison: Prisma.$AIComparisonPayload<ExtArgs>
       course: Prisma.$UniversityCoursePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -23959,9 +22854,9 @@ export namespace Prisma {
    */
   export interface Prisma__ActionPlanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     comparison<T extends AIComparisonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AIComparisonDefaultArgs<ExtArgs>>): Prisma__AIComparisonClient<$Result.GetResult<Prisma.$AIComparisonPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     course<T extends UniversityCourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourseDefaultArgs<ExtArgs>>): Prisma__UniversityCourseClient<$Result.GetResult<Prisma.$UniversityCoursePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24628,8 +23523,8 @@ export namespace Prisma {
     decisionAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -24650,8 +23545,8 @@ export namespace Prisma {
     decisionAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectScalar = {
@@ -24675,19 +23570,19 @@ export namespace Prisma {
   }
 
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     course?: boolean | UniversityCourseDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Application"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       course: Prisma.$UniversityCoursePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -25071,8 +23966,8 @@ export namespace Prisma {
    */
   export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     course<T extends UniversityCourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UniversityCourseDefaultArgs<ExtArgs>>): Prisma__UniversityCourseClient<$Result.GetResult<Prisma.$UniversityCoursePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -25464,17 +24359,15 @@ export namespace Prisma {
   }
 
   export type CommunityPostAvgAggregateOutputType = {
-    voteScore: number | null
-    likeCount: number | null
-    dislikeCount: number | null
     commentCount: number | null
+    dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityPostSumAggregateOutputType = {
-    voteScore: number | null
-    likeCount: number | null
-    dislikeCount: number | null
     commentCount: number | null
+    dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityPostMinAggregateOutputType = {
@@ -25486,14 +24379,13 @@ export namespace Prisma {
     category: $Enums.CommunityCategory | null
     isQuestion: boolean | null
     isAnonymous: boolean | null
-    voteScore: number | null
-    likeCount: number | null
-    dislikeCount: number | null
     commentCount: number | null
     isPinned: boolean | null
     isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityPostMaxAggregateOutputType = {
@@ -25505,14 +24397,13 @@ export namespace Prisma {
     category: $Enums.CommunityCategory | null
     isQuestion: boolean | null
     isAnonymous: boolean | null
-    voteScore: number | null
-    likeCount: number | null
-    dislikeCount: number | null
     commentCount: number | null
     isPinned: boolean | null
     isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityPostCountAggregateOutputType = {
@@ -25525,30 +24416,27 @@ export namespace Prisma {
     tags: number
     isQuestion: number
     isAnonymous: number
-    voteScore: number
-    likeCount: number
-    dislikeCount: number
     commentCount: number
     isPinned: number
     isDeleted: number
     createdAt: number
     updatedAt: number
+    dislikeCount: number
+    likeCount: number
     _all: number
   }
 
 
   export type CommunityPostAvgAggregateInputType = {
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     commentCount?: true
+    dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityPostSumAggregateInputType = {
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     commentCount?: true
+    dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityPostMinAggregateInputType = {
@@ -25560,14 +24448,13 @@ export namespace Prisma {
     category?: true
     isQuestion?: true
     isAnonymous?: true
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     commentCount?: true
     isPinned?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityPostMaxAggregateInputType = {
@@ -25579,14 +24466,13 @@ export namespace Prisma {
     category?: true
     isQuestion?: true
     isAnonymous?: true
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     commentCount?: true
     isPinned?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityPostCountAggregateInputType = {
@@ -25599,14 +24485,13 @@ export namespace Prisma {
     tags?: true
     isQuestion?: true
     isAnonymous?: true
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     commentCount?: true
     isPinned?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
+    likeCount?: true
     _all?: true
   }
 
@@ -25706,14 +24591,13 @@ export namespace Prisma {
     tags: string[]
     isQuestion: boolean
     isAnonymous: boolean
-    voteScore: number
-    likeCount: number
-    dislikeCount: number
     commentCount: number
     isPinned: boolean
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date
+    dislikeCount: number
+    likeCount: number
     _count: CommunityPostCountAggregateOutputType | null
     _avg: CommunityPostAvgAggregateOutputType | null
     _sum: CommunityPostSumAggregateOutputType | null
@@ -25745,16 +24629,15 @@ export namespace Prisma {
     tags?: boolean
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: boolean
-    likeCount?: boolean
-    dislikeCount?: boolean
     commentCount?: boolean
     isPinned?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    author?: boolean | UserDefaultArgs<ExtArgs>
+    dislikeCount?: boolean
+    likeCount?: boolean
     comments?: boolean | CommunityPost$commentsArgs<ExtArgs>
+    author?: boolean | UserDefaultArgs<ExtArgs>
     votes?: boolean | CommunityPost$votesArgs<ExtArgs>
     _count?: boolean | CommunityPostCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["communityPost"]>
@@ -25769,14 +24652,13 @@ export namespace Prisma {
     tags?: boolean
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: boolean
-    likeCount?: boolean
-    dislikeCount?: boolean
     commentCount?: boolean
     isPinned?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dislikeCount?: boolean
+    likeCount?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["communityPost"]>
 
@@ -25790,19 +24672,18 @@ export namespace Prisma {
     tags?: boolean
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: boolean
-    likeCount?: boolean
-    dislikeCount?: boolean
     commentCount?: boolean
     isPinned?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dislikeCount?: boolean
+    likeCount?: boolean
   }
 
   export type CommunityPostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    author?: boolean | UserDefaultArgs<ExtArgs>
     comments?: boolean | CommunityPost$commentsArgs<ExtArgs>
+    author?: boolean | UserDefaultArgs<ExtArgs>
     votes?: boolean | CommunityPost$votesArgs<ExtArgs>
     _count?: boolean | CommunityPostCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -25813,8 +24694,8 @@ export namespace Prisma {
   export type $CommunityPostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CommunityPost"
     objects: {
-      author: Prisma.$UserPayload<ExtArgs>
       comments: Prisma.$CommunityCommentPayload<ExtArgs>[]
+      author: Prisma.$UserPayload<ExtArgs>
       votes: Prisma.$CommunityVotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -25827,14 +24708,13 @@ export namespace Prisma {
       tags: string[]
       isQuestion: boolean
       isAnonymous: boolean
-      voteScore: number
-      likeCount: number
-      dislikeCount: number
       commentCount: number
       isPinned: boolean
       isDeleted: boolean
       createdAt: Date
       updatedAt: Date
+      dislikeCount: number
+      likeCount: number
     }, ExtArgs["result"]["communityPost"]>
     composites: {}
   }
@@ -26199,8 +25079,8 @@ export namespace Prisma {
    */
   export interface Prisma__CommunityPostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     comments<T extends CommunityPost$commentsArgs<ExtArgs> = {}>(args?: Subset<T, CommunityPost$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityCommentPayload<ExtArgs>, T, "findMany"> | Null>
+    author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     votes<T extends CommunityPost$votesArgs<ExtArgs> = {}>(args?: Subset<T, CommunityPost$votesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityVotePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -26240,14 +25120,13 @@ export namespace Prisma {
     readonly tags: FieldRef<"CommunityPost", 'String[]'>
     readonly isQuestion: FieldRef<"CommunityPost", 'Boolean'>
     readonly isAnonymous: FieldRef<"CommunityPost", 'Boolean'>
-    readonly voteScore: FieldRef<"CommunityPost", 'Int'>
-    readonly likeCount: FieldRef<"CommunityPost", 'Int'>
-    readonly dislikeCount: FieldRef<"CommunityPost", 'Int'>
     readonly commentCount: FieldRef<"CommunityPost", 'Int'>
     readonly isPinned: FieldRef<"CommunityPost", 'Boolean'>
     readonly isDeleted: FieldRef<"CommunityPost", 'Boolean'>
     readonly createdAt: FieldRef<"CommunityPost", 'DateTime'>
     readonly updatedAt: FieldRef<"CommunityPost", 'DateTime'>
+    readonly dislikeCount: FieldRef<"CommunityPost", 'Int'>
+    readonly likeCount: FieldRef<"CommunityPost", 'Int'>
   }
     
 
@@ -26633,15 +25512,13 @@ export namespace Prisma {
   }
 
   export type CommunityCommentAvgAggregateOutputType = {
-    voteScore: number | null
-    likeCount: number | null
     dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityCommentSumAggregateOutputType = {
-    voteScore: number | null
-    likeCount: number | null
     dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityCommentMinAggregateOutputType = {
@@ -26652,12 +25529,11 @@ export namespace Prisma {
     text: string | null
     isAnswer: boolean | null
     isBest: boolean | null
-    voteScore: number | null
-    likeCount: number | null
-    dislikeCount: number | null
     isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityCommentMaxAggregateOutputType = {
@@ -26668,12 +25544,11 @@ export namespace Prisma {
     text: string | null
     isAnswer: boolean | null
     isBest: boolean | null
-    voteScore: number | null
-    likeCount: number | null
-    dislikeCount: number | null
     isDeleted: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    dislikeCount: number | null
+    likeCount: number | null
   }
 
   export type CommunityCommentCountAggregateOutputType = {
@@ -26684,26 +25559,23 @@ export namespace Prisma {
     text: number
     isAnswer: number
     isBest: number
-    voteScore: number
-    likeCount: number
-    dislikeCount: number
     isDeleted: number
     createdAt: number
     updatedAt: number
+    dislikeCount: number
+    likeCount: number
     _all: number
   }
 
 
   export type CommunityCommentAvgAggregateInputType = {
-    voteScore?: true
-    likeCount?: true
     dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityCommentSumAggregateInputType = {
-    voteScore?: true
-    likeCount?: true
     dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityCommentMinAggregateInputType = {
@@ -26714,12 +25586,11 @@ export namespace Prisma {
     text?: true
     isAnswer?: true
     isBest?: true
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityCommentMaxAggregateInputType = {
@@ -26730,12 +25601,11 @@ export namespace Prisma {
     text?: true
     isAnswer?: true
     isBest?: true
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
+    likeCount?: true
   }
 
   export type CommunityCommentCountAggregateInputType = {
@@ -26746,12 +25616,11 @@ export namespace Prisma {
     text?: true
     isAnswer?: true
     isBest?: true
-    voteScore?: true
-    likeCount?: true
-    dislikeCount?: true
     isDeleted?: true
     createdAt?: true
     updatedAt?: true
+    dislikeCount?: true
+    likeCount?: true
     _all?: true
   }
 
@@ -26849,12 +25718,11 @@ export namespace Prisma {
     text: string
     isAnswer: boolean
     isBest: boolean
-    voteScore: number
-    likeCount: number
-    dislikeCount: number
     isDeleted: boolean
     createdAt: Date
     updatedAt: Date
+    dislikeCount: number
+    likeCount: number
     _count: CommunityCommentCountAggregateOutputType | null
     _avg: CommunityCommentAvgAggregateOutputType | null
     _sum: CommunityCommentSumAggregateOutputType | null
@@ -26884,16 +25752,15 @@ export namespace Prisma {
     text?: boolean
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: boolean
-    likeCount?: boolean
-    dislikeCount?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
+    dislikeCount?: boolean
+    likeCount?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
     parent?: boolean | CommunityComment$parentArgs<ExtArgs>
     replies?: boolean | CommunityComment$repliesArgs<ExtArgs>
+    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
     votes?: boolean | CommunityComment$votesArgs<ExtArgs>
     _count?: boolean | CommunityCommentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["communityComment"]>
@@ -26906,15 +25773,14 @@ export namespace Prisma {
     text?: boolean
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: boolean
-    likeCount?: boolean
-    dislikeCount?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
+    dislikeCount?: boolean
+    likeCount?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
     parent?: boolean | CommunityComment$parentArgs<ExtArgs>
+    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["communityComment"]>
 
   export type CommunityCommentSelectScalar = {
@@ -26925,35 +25791,34 @@ export namespace Prisma {
     text?: boolean
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: boolean
-    likeCount?: boolean
-    dislikeCount?: boolean
     isDeleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dislikeCount?: boolean
+    likeCount?: boolean
   }
 
   export type CommunityCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     parent?: boolean | CommunityComment$parentArgs<ExtArgs>
     replies?: boolean | CommunityComment$repliesArgs<ExtArgs>
+    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
     votes?: boolean | CommunityComment$votesArgs<ExtArgs>
     _count?: boolean | CommunityCommentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CommunityCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     parent?: boolean | CommunityComment$parentArgs<ExtArgs>
+    post?: boolean | CommunityPostDefaultArgs<ExtArgs>
   }
 
   export type $CommunityCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CommunityComment"
     objects: {
-      post: Prisma.$CommunityPostPayload<ExtArgs>
       author: Prisma.$UserPayload<ExtArgs>
       parent: Prisma.$CommunityCommentPayload<ExtArgs> | null
       replies: Prisma.$CommunityCommentPayload<ExtArgs>[]
+      post: Prisma.$CommunityPostPayload<ExtArgs>
       votes: Prisma.$CommunityVotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -26964,12 +25829,11 @@ export namespace Prisma {
       text: string
       isAnswer: boolean
       isBest: boolean
-      voteScore: number
-      likeCount: number
-      dislikeCount: number
       isDeleted: boolean
       createdAt: Date
       updatedAt: Date
+      dislikeCount: number
+      likeCount: number
     }, ExtArgs["result"]["communityComment"]>
     composites: {}
   }
@@ -27334,10 +26198,10 @@ export namespace Prisma {
    */
   export interface Prisma__CommunityCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    post<T extends CommunityPostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CommunityPostDefaultArgs<ExtArgs>>): Prisma__CommunityPostClient<$Result.GetResult<Prisma.$CommunityPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     parent<T extends CommunityComment$parentArgs<ExtArgs> = {}>(args?: Subset<T, CommunityComment$parentArgs<ExtArgs>>): Prisma__CommunityCommentClient<$Result.GetResult<Prisma.$CommunityCommentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     replies<T extends CommunityComment$repliesArgs<ExtArgs> = {}>(args?: Subset<T, CommunityComment$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityCommentPayload<ExtArgs>, T, "findMany"> | Null>
+    post<T extends CommunityPostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CommunityPostDefaultArgs<ExtArgs>>): Prisma__CommunityPostClient<$Result.GetResult<Prisma.$CommunityPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     votes<T extends CommunityComment$votesArgs<ExtArgs> = {}>(args?: Subset<T, CommunityComment$votesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityVotePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -27375,12 +26239,11 @@ export namespace Prisma {
     readonly text: FieldRef<"CommunityComment", 'String'>
     readonly isAnswer: FieldRef<"CommunityComment", 'Boolean'>
     readonly isBest: FieldRef<"CommunityComment", 'Boolean'>
-    readonly voteScore: FieldRef<"CommunityComment", 'Int'>
-    readonly likeCount: FieldRef<"CommunityComment", 'Int'>
-    readonly dislikeCount: FieldRef<"CommunityComment", 'Int'>
     readonly isDeleted: FieldRef<"CommunityComment", 'Boolean'>
     readonly createdAt: FieldRef<"CommunityComment", 'DateTime'>
     readonly updatedAt: FieldRef<"CommunityComment", 'DateTime'>
+    readonly dislikeCount: FieldRef<"CommunityComment", 'Int'>
+    readonly likeCount: FieldRef<"CommunityComment", 'Int'>
   }
     
 
@@ -27783,8 +26646,8 @@ export namespace Prisma {
     userId: string | null
     postId: string | null
     commentId: string | null
-    value: $Enums.VoteValue | null
     createdAt: Date | null
+    value: $Enums.VoteValue | null
   }
 
   export type CommunityVoteMaxAggregateOutputType = {
@@ -27792,8 +26655,8 @@ export namespace Prisma {
     userId: string | null
     postId: string | null
     commentId: string | null
-    value: $Enums.VoteValue | null
     createdAt: Date | null
+    value: $Enums.VoteValue | null
   }
 
   export type CommunityVoteCountAggregateOutputType = {
@@ -27801,8 +26664,8 @@ export namespace Prisma {
     userId: number
     postId: number
     commentId: number
-    value: number
     createdAt: number
+    value: number
     _all: number
   }
 
@@ -27812,8 +26675,8 @@ export namespace Prisma {
     userId?: true
     postId?: true
     commentId?: true
-    value?: true
     createdAt?: true
+    value?: true
   }
 
   export type CommunityVoteMaxAggregateInputType = {
@@ -27821,8 +26684,8 @@ export namespace Prisma {
     userId?: true
     postId?: true
     commentId?: true
-    value?: true
     createdAt?: true
+    value?: true
   }
 
   export type CommunityVoteCountAggregateInputType = {
@@ -27830,8 +26693,8 @@ export namespace Prisma {
     userId?: true
     postId?: true
     commentId?: true
-    value?: true
     createdAt?: true
+    value?: true
     _all?: true
   }
 
@@ -27912,8 +26775,8 @@ export namespace Prisma {
     userId: string
     postId: string | null
     commentId: string | null
-    value: $Enums.VoteValue
     createdAt: Date
+    value: $Enums.VoteValue
     _count: CommunityVoteCountAggregateOutputType | null
     _min: CommunityVoteMinAggregateOutputType | null
     _max: CommunityVoteMaxAggregateOutputType | null
@@ -27938,11 +26801,11 @@ export namespace Prisma {
     userId?: boolean
     postId?: boolean
     commentId?: boolean
-    value?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    post?: boolean | CommunityVote$postArgs<ExtArgs>
+    value?: boolean
     comment?: boolean | CommunityVote$commentArgs<ExtArgs>
+    post?: boolean | CommunityVote$postArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["communityVote"]>
 
   export type CommunityVoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -27950,11 +26813,11 @@ export namespace Prisma {
     userId?: boolean
     postId?: boolean
     commentId?: boolean
-    value?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    post?: boolean | CommunityVote$postArgs<ExtArgs>
+    value?: boolean
     comment?: boolean | CommunityVote$commentArgs<ExtArgs>
+    post?: boolean | CommunityVote$postArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["communityVote"]>
 
   export type CommunityVoteSelectScalar = {
@@ -27962,35 +26825,35 @@ export namespace Prisma {
     userId?: boolean
     postId?: boolean
     commentId?: boolean
-    value?: boolean
     createdAt?: boolean
+    value?: boolean
   }
 
   export type CommunityVoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    post?: boolean | CommunityVote$postArgs<ExtArgs>
     comment?: boolean | CommunityVote$commentArgs<ExtArgs>
+    post?: boolean | CommunityVote$postArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type CommunityVoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    post?: boolean | CommunityVote$postArgs<ExtArgs>
     comment?: boolean | CommunityVote$commentArgs<ExtArgs>
+    post?: boolean | CommunityVote$postArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $CommunityVotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CommunityVote"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      post: Prisma.$CommunityPostPayload<ExtArgs> | null
       comment: Prisma.$CommunityCommentPayload<ExtArgs> | null
+      post: Prisma.$CommunityPostPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
       postId: string | null
       commentId: string | null
-      value: $Enums.VoteValue
       createdAt: Date
+      value: $Enums.VoteValue
     }, ExtArgs["result"]["communityVote"]>
     composites: {}
   }
@@ -28355,9 +27218,9 @@ export namespace Prisma {
    */
   export interface Prisma__CommunityVoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
-    post<T extends CommunityVote$postArgs<ExtArgs> = {}>(args?: Subset<T, CommunityVote$postArgs<ExtArgs>>): Prisma__CommunityPostClient<$Result.GetResult<Prisma.$CommunityPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     comment<T extends CommunityVote$commentArgs<ExtArgs> = {}>(args?: Subset<T, CommunityVote$commentArgs<ExtArgs>>): Prisma__CommunityCommentClient<$Result.GetResult<Prisma.$CommunityCommentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    post<T extends CommunityVote$postArgs<ExtArgs> = {}>(args?: Subset<T, CommunityVote$postArgs<ExtArgs>>): Prisma__CommunityPostClient<$Result.GetResult<Prisma.$CommunityPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28391,8 +27254,8 @@ export namespace Prisma {
     readonly userId: FieldRef<"CommunityVote", 'String'>
     readonly postId: FieldRef<"CommunityVote", 'String'>
     readonly commentId: FieldRef<"CommunityVote", 'String'>
-    readonly value: FieldRef<"CommunityVote", 'VoteValue'>
     readonly createdAt: FieldRef<"CommunityVote", 'DateTime'>
+    readonly value: FieldRef<"CommunityVote", 'VoteValue'>
   }
     
 
@@ -28711,21 +27574,6 @@ export namespace Prisma {
   }
 
   /**
-   * CommunityVote.post
-   */
-  export type CommunityVote$postArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CommunityPost
-     */
-    select?: CommunityPostSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CommunityPostInclude<ExtArgs> | null
-    where?: CommunityPostWhereInput
-  }
-
-  /**
    * CommunityVote.comment
    */
   export type CommunityVote$commentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -28738,6 +27586,21 @@ export namespace Prisma {
      */
     include?: CommunityCommentInclude<ExtArgs> | null
     where?: CommunityCommentWhereInput
+  }
+
+  /**
+   * CommunityVote.post
+   */
+  export type CommunityVote$postArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommunityPost
+     */
+    select?: CommunityPostSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommunityPostInclude<ExtArgs> | null
+    where?: CommunityPostWhereInput
   }
 
   /**
@@ -28954,27 +27817,15 @@ export namespace Prisma {
     isPinned: 'isPinned',
     viewCount: 'viewCount',
     likeCount: 'likeCount',
-    dislikeCount: 'dislikeCount',
     bookmarkCount: 'bookmarkCount',
     metadata: 'metadata',
     publishedAt: 'publishedAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    dislikeCount: 'dislikeCount'
   };
 
   export type FeedPostScalarFieldEnum = (typeof FeedPostScalarFieldEnum)[keyof typeof FeedPostScalarFieldEnum]
-
-
-  export const FeedCommentScalarFieldEnum: {
-    id: 'id',
-    postId: 'postId',
-    authorId: 'authorId',
-    content: 'content',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type FeedCommentScalarFieldEnum = (typeof FeedCommentScalarFieldEnum)[keyof typeof FeedCommentScalarFieldEnum]
 
 
   export const FeedInteractionScalarFieldEnum: {
@@ -29173,14 +28024,13 @@ export namespace Prisma {
     tags: 'tags',
     isQuestion: 'isQuestion',
     isAnonymous: 'isAnonymous',
-    voteScore: 'voteScore',
-    likeCount: 'likeCount',
-    dislikeCount: 'dislikeCount',
     commentCount: 'commentCount',
     isPinned: 'isPinned',
     isDeleted: 'isDeleted',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    dislikeCount: 'dislikeCount',
+    likeCount: 'likeCount'
   };
 
   export type CommunityPostScalarFieldEnum = (typeof CommunityPostScalarFieldEnum)[keyof typeof CommunityPostScalarFieldEnum]
@@ -29194,12 +28044,11 @@ export namespace Prisma {
     text: 'text',
     isAnswer: 'isAnswer',
     isBest: 'isBest',
-    voteScore: 'voteScore',
-    likeCount: 'likeCount',
-    dislikeCount: 'dislikeCount',
     isDeleted: 'isDeleted',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    dislikeCount: 'dislikeCount',
+    likeCount: 'likeCount'
   };
 
   export type CommunityCommentScalarFieldEnum = (typeof CommunityCommentScalarFieldEnum)[keyof typeof CommunityCommentScalarFieldEnum]
@@ -29210,8 +28059,8 @@ export namespace Prisma {
     userId: 'userId',
     postId: 'postId',
     commentId: 'commentId',
-    value: 'value',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    value: 'value'
   };
 
   export type CommunityVoteScalarFieldEnum = (typeof CommunityVoteScalarFieldEnum)[keyof typeof CommunityVoteScalarFieldEnum]
@@ -29657,23 +28506,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
-    refreshTokens?: RefreshTokenListRelationFilter
-    emailOtps?: EmailOTPListRelationFilter
-    profile?: XOR<UserProfileNullableRelationFilter, UserProfileWhereInput> | null
-    testScores?: TestScoreListRelationFilter
-    educationHistory?: EducationHistoryListRelationFilter
-    documents?: UserDocumentListRelationFilter
-    feedPosts?: FeedPostListRelationFilter
-    feedInteractions?: FeedInteractionListRelationFilter
-    feedComments?: FeedCommentListRelationFilter
-    savedColleges?: SavedCollegeListRelationFilter
-    aiComparisons?: AIComparisonListRelationFilter
     actionPlans?: ActionPlanListRelationFilter
-    applications?: ApplicationListRelationFilter
+    aiComparisons?: AIComparisonListRelationFilter
     apiKeys?: ApiKeyListRelationFilter
-    communityPosts?: CommunityPostListRelationFilter
+    applications?: ApplicationListRelationFilter
     communityComments?: CommunityCommentListRelationFilter
+    communityPosts?: CommunityPostListRelationFilter
     communityVotes?: CommunityVoteListRelationFilter
+    educationHistory?: EducationHistoryListRelationFilter
+    emailOtps?: EmailOTPListRelationFilter
+    feedInteractions?: FeedInteractionListRelationFilter
+    feedPosts?: FeedPostListRelationFilter
+    refreshTokens?: RefreshTokenListRelationFilter
+    savedColleges?: SavedCollegeListRelationFilter
+    testScores?: TestScoreListRelationFilter
+    documents?: UserDocumentListRelationFilter
+    profile?: XOR<UserProfileNullableRelationFilter, UserProfileWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -29693,23 +28541,22 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
-    refreshTokens?: RefreshTokenOrderByRelationAggregateInput
-    emailOtps?: EmailOTPOrderByRelationAggregateInput
-    profile?: UserProfileOrderByWithRelationInput
-    testScores?: TestScoreOrderByRelationAggregateInput
-    educationHistory?: EducationHistoryOrderByRelationAggregateInput
-    documents?: UserDocumentOrderByRelationAggregateInput
-    feedPosts?: FeedPostOrderByRelationAggregateInput
-    feedInteractions?: FeedInteractionOrderByRelationAggregateInput
-    feedComments?: FeedCommentOrderByRelationAggregateInput
-    savedColleges?: SavedCollegeOrderByRelationAggregateInput
-    aiComparisons?: AIComparisonOrderByRelationAggregateInput
     actionPlans?: ActionPlanOrderByRelationAggregateInput
-    applications?: ApplicationOrderByRelationAggregateInput
+    aiComparisons?: AIComparisonOrderByRelationAggregateInput
     apiKeys?: ApiKeyOrderByRelationAggregateInput
-    communityPosts?: CommunityPostOrderByRelationAggregateInput
+    applications?: ApplicationOrderByRelationAggregateInput
     communityComments?: CommunityCommentOrderByRelationAggregateInput
+    communityPosts?: CommunityPostOrderByRelationAggregateInput
     communityVotes?: CommunityVoteOrderByRelationAggregateInput
+    educationHistory?: EducationHistoryOrderByRelationAggregateInput
+    emailOtps?: EmailOTPOrderByRelationAggregateInput
+    feedInteractions?: FeedInteractionOrderByRelationAggregateInput
+    feedPosts?: FeedPostOrderByRelationAggregateInput
+    refreshTokens?: RefreshTokenOrderByRelationAggregateInput
+    savedColleges?: SavedCollegeOrderByRelationAggregateInput
+    testScores?: TestScoreOrderByRelationAggregateInput
+    documents?: UserDocumentOrderByRelationAggregateInput
+    profile?: UserProfileOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -29732,23 +28579,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
-    refreshTokens?: RefreshTokenListRelationFilter
-    emailOtps?: EmailOTPListRelationFilter
-    profile?: XOR<UserProfileNullableRelationFilter, UserProfileWhereInput> | null
-    testScores?: TestScoreListRelationFilter
-    educationHistory?: EducationHistoryListRelationFilter
-    documents?: UserDocumentListRelationFilter
-    feedPosts?: FeedPostListRelationFilter
-    feedInteractions?: FeedInteractionListRelationFilter
-    feedComments?: FeedCommentListRelationFilter
-    savedColleges?: SavedCollegeListRelationFilter
-    aiComparisons?: AIComparisonListRelationFilter
     actionPlans?: ActionPlanListRelationFilter
-    applications?: ApplicationListRelationFilter
+    aiComparisons?: AIComparisonListRelationFilter
     apiKeys?: ApiKeyListRelationFilter
-    communityPosts?: CommunityPostListRelationFilter
+    applications?: ApplicationListRelationFilter
     communityComments?: CommunityCommentListRelationFilter
+    communityPosts?: CommunityPostListRelationFilter
     communityVotes?: CommunityVoteListRelationFilter
+    educationHistory?: EducationHistoryListRelationFilter
+    emailOtps?: EmailOTPListRelationFilter
+    feedInteractions?: FeedInteractionListRelationFilter
+    feedPosts?: FeedPostListRelationFilter
+    refreshTokens?: RefreshTokenListRelationFilter
+    savedColleges?: SavedCollegeListRelationFilter
+    testScores?: TestScoreListRelationFilter
+    documents?: UserDocumentListRelationFilter
+    profile?: XOR<UserProfileNullableRelationFilter, UserProfileWhereInput> | null
   }, "id" | "email" | "googleId" | "studentId">
 
   export type UserOrderByWithAggregationInput = {
@@ -30562,16 +29408,15 @@ export namespace Prisma {
     isPinned?: BoolFilter<"FeedPost"> | boolean
     viewCount?: IntFilter<"FeedPost"> | number
     likeCount?: IntFilter<"FeedPost"> | number
-    dislikeCount?: IntFilter<"FeedPost"> | number
     bookmarkCount?: IntFilter<"FeedPost"> | number
     metadata?: JsonNullableFilter<"FeedPost">
     publishedAt?: DateTimeNullableFilter<"FeedPost"> | Date | string | null
     createdAt?: DateTimeFilter<"FeedPost"> | Date | string
     updatedAt?: DateTimeFilter<"FeedPost"> | Date | string
+    dislikeCount?: IntFilter<"FeedPost"> | number
+    interactions?: FeedInteractionListRelationFilter
     author?: XOR<UserRelationFilter, UserWhereInput>
     university?: XOR<UniversityNullableRelationFilter, UniversityWhereInput> | null
-    interactions?: FeedInteractionListRelationFilter
-    comments?: FeedCommentListRelationFilter
   }
 
   export type FeedPostOrderByWithRelationInput = {
@@ -30589,16 +29434,15 @@ export namespace Prisma {
     isPinned?: SortOrder
     viewCount?: SortOrder
     likeCount?: SortOrder
-    dislikeCount?: SortOrder
     bookmarkCount?: SortOrder
     metadata?: SortOrderInput | SortOrder
     publishedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    interactions?: FeedInteractionOrderByRelationAggregateInput
     author?: UserOrderByWithRelationInput
     university?: UniversityOrderByWithRelationInput
-    interactions?: FeedInteractionOrderByRelationAggregateInput
-    comments?: FeedCommentOrderByRelationAggregateInput
   }
 
   export type FeedPostWhereUniqueInput = Prisma.AtLeast<{
@@ -30619,16 +29463,15 @@ export namespace Prisma {
     isPinned?: BoolFilter<"FeedPost"> | boolean
     viewCount?: IntFilter<"FeedPost"> | number
     likeCount?: IntFilter<"FeedPost"> | number
-    dislikeCount?: IntFilter<"FeedPost"> | number
     bookmarkCount?: IntFilter<"FeedPost"> | number
     metadata?: JsonNullableFilter<"FeedPost">
     publishedAt?: DateTimeNullableFilter<"FeedPost"> | Date | string | null
     createdAt?: DateTimeFilter<"FeedPost"> | Date | string
     updatedAt?: DateTimeFilter<"FeedPost"> | Date | string
+    dislikeCount?: IntFilter<"FeedPost"> | number
+    interactions?: FeedInteractionListRelationFilter
     author?: XOR<UserRelationFilter, UserWhereInput>
     university?: XOR<UniversityNullableRelationFilter, UniversityWhereInput> | null
-    interactions?: FeedInteractionListRelationFilter
-    comments?: FeedCommentListRelationFilter
   }, "id" | "slug">
 
   export type FeedPostOrderByWithAggregationInput = {
@@ -30646,12 +29489,12 @@ export namespace Prisma {
     isPinned?: SortOrder
     viewCount?: SortOrder
     likeCount?: SortOrder
-    dislikeCount?: SortOrder
     bookmarkCount?: SortOrder
     metadata?: SortOrderInput | SortOrder
     publishedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
     _count?: FeedPostCountOrderByAggregateInput
     _avg?: FeedPostAvgOrderByAggregateInput
     _max?: FeedPostMaxOrderByAggregateInput
@@ -30677,75 +29520,12 @@ export namespace Prisma {
     isPinned?: BoolWithAggregatesFilter<"FeedPost"> | boolean
     viewCount?: IntWithAggregatesFilter<"FeedPost"> | number
     likeCount?: IntWithAggregatesFilter<"FeedPost"> | number
-    dislikeCount?: IntWithAggregatesFilter<"FeedPost"> | number
     bookmarkCount?: IntWithAggregatesFilter<"FeedPost"> | number
     metadata?: JsonNullableWithAggregatesFilter<"FeedPost">
     publishedAt?: DateTimeNullableWithAggregatesFilter<"FeedPost"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FeedPost"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FeedPost"> | Date | string
-  }
-
-  export type FeedCommentWhereInput = {
-    AND?: FeedCommentWhereInput | FeedCommentWhereInput[]
-    OR?: FeedCommentWhereInput[]
-    NOT?: FeedCommentWhereInput | FeedCommentWhereInput[]
-    id?: UuidFilter<"FeedComment"> | string
-    postId?: UuidFilter<"FeedComment"> | string
-    authorId?: UuidFilter<"FeedComment"> | string
-    content?: StringFilter<"FeedComment"> | string
-    createdAt?: DateTimeFilter<"FeedComment"> | Date | string
-    updatedAt?: DateTimeFilter<"FeedComment"> | Date | string
-    post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
-    author?: XOR<UserRelationFilter, UserWhereInput>
-  }
-
-  export type FeedCommentOrderByWithRelationInput = {
-    id?: SortOrder
-    postId?: SortOrder
-    authorId?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    post?: FeedPostOrderByWithRelationInput
-    author?: UserOrderByWithRelationInput
-  }
-
-  export type FeedCommentWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: FeedCommentWhereInput | FeedCommentWhereInput[]
-    OR?: FeedCommentWhereInput[]
-    NOT?: FeedCommentWhereInput | FeedCommentWhereInput[]
-    postId?: UuidFilter<"FeedComment"> | string
-    authorId?: UuidFilter<"FeedComment"> | string
-    content?: StringFilter<"FeedComment"> | string
-    createdAt?: DateTimeFilter<"FeedComment"> | Date | string
-    updatedAt?: DateTimeFilter<"FeedComment"> | Date | string
-    post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
-    author?: XOR<UserRelationFilter, UserWhereInput>
-  }, "id">
-
-  export type FeedCommentOrderByWithAggregationInput = {
-    id?: SortOrder
-    postId?: SortOrder
-    authorId?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: FeedCommentCountOrderByAggregateInput
-    _max?: FeedCommentMaxOrderByAggregateInput
-    _min?: FeedCommentMinOrderByAggregateInput
-  }
-
-  export type FeedCommentScalarWhereWithAggregatesInput = {
-    AND?: FeedCommentScalarWhereWithAggregatesInput | FeedCommentScalarWhereWithAggregatesInput[]
-    OR?: FeedCommentScalarWhereWithAggregatesInput[]
-    NOT?: FeedCommentScalarWhereWithAggregatesInput | FeedCommentScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"FeedComment"> | string
-    postId?: UuidWithAggregatesFilter<"FeedComment"> | string
-    authorId?: UuidWithAggregatesFilter<"FeedComment"> | string
-    content?: StringWithAggregatesFilter<"FeedComment"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"FeedComment"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"FeedComment"> | Date | string
+    dislikeCount?: IntWithAggregatesFilter<"FeedPost"> | number
   }
 
   export type FeedInteractionWhereInput = {
@@ -30757,8 +29537,8 @@ export namespace Prisma {
     postId?: UuidFilter<"FeedInteraction"> | string
     type?: EnumInteractionTypeFilter<"FeedInteraction"> | $Enums.InteractionType
     createdAt?: DateTimeFilter<"FeedInteraction"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type FeedInteractionOrderByWithRelationInput = {
@@ -30767,8 +29547,8 @@ export namespace Prisma {
     postId?: SortOrder
     type?: SortOrder
     createdAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     post?: FeedPostOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type FeedInteractionWhereUniqueInput = Prisma.AtLeast<{
@@ -30781,8 +29561,8 @@ export namespace Prisma {
     postId?: UuidFilter<"FeedInteraction"> | string
     type?: EnumInteractionTypeFilter<"FeedInteraction"> | $Enums.InteractionType
     createdAt?: DateTimeFilter<"FeedInteraction"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id" | "userId_postId_type">
 
   export type FeedInteractionOrderByWithAggregationInput = {
@@ -30834,8 +29614,8 @@ export namespace Prisma {
     dataVerifiedAt?: DateTimeNullableFilter<"University"> | Date | string | null
     createdAt?: DateTimeFilter<"University"> | Date | string
     updatedAt?: DateTimeFilter<"University"> | Date | string
-    courses?: UniversityCourseListRelationFilter
     feedPosts?: FeedPostListRelationFilter
+    courses?: UniversityCourseListRelationFilter
   }
 
   export type UniversityOrderByWithRelationInput = {
@@ -30862,8 +29642,8 @@ export namespace Prisma {
     dataVerifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    courses?: UniversityCourseOrderByRelationAggregateInput
     feedPosts?: FeedPostOrderByRelationAggregateInput
+    courses?: UniversityCourseOrderByRelationAggregateInput
   }
 
   export type UniversityWhereUniqueInput = Prisma.AtLeast<{
@@ -30893,8 +29673,8 @@ export namespace Prisma {
     dataVerifiedAt?: DateTimeNullableFilter<"University"> | Date | string | null
     createdAt?: DateTimeFilter<"University"> | Date | string
     updatedAt?: DateTimeFilter<"University"> | Date | string
-    courses?: UniversityCourseListRelationFilter
     feedPosts?: FeedPostListRelationFilter
+    courses?: UniversityCourseListRelationFilter
   }, "id" | "slug">
 
   export type UniversityOrderByWithAggregationInput = {
@@ -30975,13 +29755,13 @@ export namespace Prisma {
     isActive?: BoolFilter<"UniversityCourse"> | boolean
     createdAt?: DateTimeFilter<"UniversityCourse"> | Date | string
     updatedAt?: DateTimeFilter<"UniversityCourse"> | Date | string
-    university?: XOR<UniversityRelationFilter, UniversityWhereInput>
-    requirements?: XOR<CourseRequirementNullableRelationFilter, CourseRequirementWhereInput> | null
-    fees?: XOR<CourseFeeNullableRelationFilter, CourseFeeWhereInput> | null
-    savedBy?: SavedCollegeListRelationFilter
-    comparisons?: AIComparisonListRelationFilter
     actionPlans?: ActionPlanListRelationFilter
+    comparisons?: AIComparisonListRelationFilter
     applications?: ApplicationListRelationFilter
+    fees?: XOR<CourseFeeNullableRelationFilter, CourseFeeWhereInput> | null
+    requirements?: XOR<CourseRequirementNullableRelationFilter, CourseRequirementWhereInput> | null
+    savedBy?: SavedCollegeListRelationFilter
+    university?: XOR<UniversityRelationFilter, UniversityWhereInput>
   }
 
   export type UniversityCourseOrderByWithRelationInput = {
@@ -30999,13 +29779,13 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    university?: UniversityOrderByWithRelationInput
-    requirements?: CourseRequirementOrderByWithRelationInput
-    fees?: CourseFeeOrderByWithRelationInput
-    savedBy?: SavedCollegeOrderByRelationAggregateInput
-    comparisons?: AIComparisonOrderByRelationAggregateInput
     actionPlans?: ActionPlanOrderByRelationAggregateInput
+    comparisons?: AIComparisonOrderByRelationAggregateInput
     applications?: ApplicationOrderByRelationAggregateInput
+    fees?: CourseFeeOrderByWithRelationInput
+    requirements?: CourseRequirementOrderByWithRelationInput
+    savedBy?: SavedCollegeOrderByRelationAggregateInput
+    university?: UniversityOrderByWithRelationInput
   }
 
   export type UniversityCourseWhereUniqueInput = Prisma.AtLeast<{
@@ -31026,13 +29806,13 @@ export namespace Prisma {
     isActive?: BoolFilter<"UniversityCourse"> | boolean
     createdAt?: DateTimeFilter<"UniversityCourse"> | Date | string
     updatedAt?: DateTimeFilter<"UniversityCourse"> | Date | string
-    university?: XOR<UniversityRelationFilter, UniversityWhereInput>
-    requirements?: XOR<CourseRequirementNullableRelationFilter, CourseRequirementWhereInput> | null
-    fees?: XOR<CourseFeeNullableRelationFilter, CourseFeeWhereInput> | null
-    savedBy?: SavedCollegeListRelationFilter
-    comparisons?: AIComparisonListRelationFilter
     actionPlans?: ActionPlanListRelationFilter
+    comparisons?: AIComparisonListRelationFilter
     applications?: ApplicationListRelationFilter
+    fees?: XOR<CourseFeeNullableRelationFilter, CourseFeeWhereInput> | null
+    requirements?: XOR<CourseRequirementNullableRelationFilter, CourseRequirementWhereInput> | null
+    savedBy?: SavedCollegeListRelationFilter
+    university?: XOR<UniversityRelationFilter, UniversityWhereInput>
   }, "id" | "slug">
 
   export type UniversityCourseOrderByWithAggregationInput = {
@@ -31351,8 +30131,8 @@ export namespace Prisma {
     priority?: EnumCollegePriorityNullableFilter<"SavedCollege"> | $Enums.CollegePriority | null
     notes?: StringNullableFilter<"SavedCollege"> | string | null
     savedAt?: DateTimeFilter<"SavedCollege"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type SavedCollegeOrderByWithRelationInput = {
@@ -31362,8 +30142,8 @@ export namespace Prisma {
     priority?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     savedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     course?: UniversityCourseOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type SavedCollegeWhereUniqueInput = Prisma.AtLeast<{
@@ -31377,8 +30157,8 @@ export namespace Prisma {
     priority?: EnumCollegePriorityNullableFilter<"SavedCollege"> | $Enums.CollegePriority | null
     notes?: StringNullableFilter<"SavedCollege"> | string | null
     savedAt?: DateTimeFilter<"SavedCollege"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id" | "userId_courseId">
 
   export type SavedCollegeOrderByWithAggregationInput = {
@@ -31425,9 +30205,9 @@ export namespace Prisma {
     cached?: BoolFilter<"AIComparison"> | boolean
     createdAt?: DateTimeFilter<"AIComparison"> | Date | string
     updatedAt?: DateTimeFilter<"AIComparison"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-    course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
     actionPlans?: ActionPlanListRelationFilter
+    course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type AIComparisonOrderByWithRelationInput = {
@@ -31447,9 +30227,9 @@ export namespace Prisma {
     cached?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-    course?: UniversityCourseOrderByWithRelationInput
     actionPlans?: ActionPlanOrderByRelationAggregateInput
+    course?: UniversityCourseOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type AIComparisonWhereUniqueInput = Prisma.AtLeast<{
@@ -31473,9 +30253,9 @@ export namespace Prisma {
     cached?: BoolFilter<"AIComparison"> | boolean
     createdAt?: DateTimeFilter<"AIComparison"> | Date | string
     updatedAt?: DateTimeFilter<"AIComparison"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-    course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
     actionPlans?: ActionPlanListRelationFilter
+    course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id" | "userId_courseId">
 
   export type AIComparisonOrderByWithAggregationInput = {
@@ -31539,9 +30319,9 @@ export namespace Prisma {
     completionPct?: IntFilter<"ActionPlan"> | number
     createdAt?: DateTimeFilter<"ActionPlan"> | Date | string
     updatedAt?: DateTimeFilter<"ActionPlan"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     comparison?: XOR<AIComparisonRelationFilter, AIComparisonWhereInput>
     course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type ActionPlanOrderByWithRelationInput = {
@@ -31556,9 +30336,9 @@ export namespace Prisma {
     completionPct?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     comparison?: AIComparisonOrderByWithRelationInput
     course?: UniversityCourseOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ActionPlanWhereUniqueInput = Prisma.AtLeast<{
@@ -31577,9 +30357,9 @@ export namespace Prisma {
     completionPct?: IntFilter<"ActionPlan"> | number
     createdAt?: DateTimeFilter<"ActionPlan"> | Date | string
     updatedAt?: DateTimeFilter<"ActionPlan"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     comparison?: XOR<AIComparisonRelationFilter, AIComparisonWhereInput>
     course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id" | "userId_courseId">
 
   export type ActionPlanOrderByWithAggregationInput = {
@@ -31639,8 +30419,8 @@ export namespace Prisma {
     decisionAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type ApplicationOrderByWithRelationInput = {
@@ -31661,8 +30441,8 @@ export namespace Prisma {
     decisionAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     course?: UniversityCourseOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
@@ -31687,8 +30467,8 @@ export namespace Prisma {
     decisionAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     course?: XOR<UniversityCourseRelationFilter, UniversityCourseWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id" | "userId_courseId">
 
   export type ApplicationOrderByWithAggregationInput = {
@@ -31752,16 +30532,15 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"CommunityPost">
     isQuestion?: BoolFilter<"CommunityPost"> | boolean
     isAnonymous?: BoolFilter<"CommunityPost"> | boolean
-    voteScore?: IntFilter<"CommunityPost"> | number
-    likeCount?: IntFilter<"CommunityPost"> | number
-    dislikeCount?: IntFilter<"CommunityPost"> | number
     commentCount?: IntFilter<"CommunityPost"> | number
     isPinned?: BoolFilter<"CommunityPost"> | boolean
     isDeleted?: BoolFilter<"CommunityPost"> | boolean
     createdAt?: DateTimeFilter<"CommunityPost"> | Date | string
     updatedAt?: DateTimeFilter<"CommunityPost"> | Date | string
-    author?: XOR<UserRelationFilter, UserWhereInput>
+    dislikeCount?: IntFilter<"CommunityPost"> | number
+    likeCount?: IntFilter<"CommunityPost"> | number
     comments?: CommunityCommentListRelationFilter
+    author?: XOR<UserRelationFilter, UserWhereInput>
     votes?: CommunityVoteListRelationFilter
   }
 
@@ -31775,16 +30554,15 @@ export namespace Prisma {
     tags?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    author?: UserOrderByWithRelationInput
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
     comments?: CommunityCommentOrderByRelationAggregateInput
+    author?: UserOrderByWithRelationInput
     votes?: CommunityVoteOrderByRelationAggregateInput
   }
 
@@ -31801,16 +30579,15 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"CommunityPost">
     isQuestion?: BoolFilter<"CommunityPost"> | boolean
     isAnonymous?: BoolFilter<"CommunityPost"> | boolean
-    voteScore?: IntFilter<"CommunityPost"> | number
-    likeCount?: IntFilter<"CommunityPost"> | number
-    dislikeCount?: IntFilter<"CommunityPost"> | number
     commentCount?: IntFilter<"CommunityPost"> | number
     isPinned?: BoolFilter<"CommunityPost"> | boolean
     isDeleted?: BoolFilter<"CommunityPost"> | boolean
     createdAt?: DateTimeFilter<"CommunityPost"> | Date | string
     updatedAt?: DateTimeFilter<"CommunityPost"> | Date | string
-    author?: XOR<UserRelationFilter, UserWhereInput>
+    dislikeCount?: IntFilter<"CommunityPost"> | number
+    likeCount?: IntFilter<"CommunityPost"> | number
     comments?: CommunityCommentListRelationFilter
+    author?: XOR<UserRelationFilter, UserWhereInput>
     votes?: CommunityVoteListRelationFilter
   }, "id">
 
@@ -31824,14 +30601,13 @@ export namespace Prisma {
     tags?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
     _count?: CommunityPostCountOrderByAggregateInput
     _avg?: CommunityPostAvgOrderByAggregateInput
     _max?: CommunityPostMaxOrderByAggregateInput
@@ -31852,14 +30628,13 @@ export namespace Prisma {
     tags?: StringNullableListFilter<"CommunityPost">
     isQuestion?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
     isAnonymous?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
-    voteScore?: IntWithAggregatesFilter<"CommunityPost"> | number
-    likeCount?: IntWithAggregatesFilter<"CommunityPost"> | number
-    dislikeCount?: IntWithAggregatesFilter<"CommunityPost"> | number
     commentCount?: IntWithAggregatesFilter<"CommunityPost"> | number
     isPinned?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
     isDeleted?: BoolWithAggregatesFilter<"CommunityPost"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"CommunityPost"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CommunityPost"> | Date | string
+    dislikeCount?: IntWithAggregatesFilter<"CommunityPost"> | number
+    likeCount?: IntWithAggregatesFilter<"CommunityPost"> | number
   }
 
   export type CommunityCommentWhereInput = {
@@ -31873,16 +30648,15 @@ export namespace Prisma {
     text?: StringFilter<"CommunityComment"> | string
     isAnswer?: BoolFilter<"CommunityComment"> | boolean
     isBest?: BoolFilter<"CommunityComment"> | boolean
-    voteScore?: IntFilter<"CommunityComment"> | number
-    likeCount?: IntFilter<"CommunityComment"> | number
-    dislikeCount?: IntFilter<"CommunityComment"> | number
     isDeleted?: BoolFilter<"CommunityComment"> | boolean
     createdAt?: DateTimeFilter<"CommunityComment"> | Date | string
     updatedAt?: DateTimeFilter<"CommunityComment"> | Date | string
-    post?: XOR<CommunityPostRelationFilter, CommunityPostWhereInput>
+    dislikeCount?: IntFilter<"CommunityComment"> | number
+    likeCount?: IntFilter<"CommunityComment"> | number
     author?: XOR<UserRelationFilter, UserWhereInput>
     parent?: XOR<CommunityCommentNullableRelationFilter, CommunityCommentWhereInput> | null
     replies?: CommunityCommentListRelationFilter
+    post?: XOR<CommunityPostRelationFilter, CommunityPostWhereInput>
     votes?: CommunityVoteListRelationFilter
   }
 
@@ -31894,16 +30668,15 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    post?: CommunityPostOrderByWithRelationInput
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
     author?: UserOrderByWithRelationInput
     parent?: CommunityCommentOrderByWithRelationInput
     replies?: CommunityCommentOrderByRelationAggregateInput
+    post?: CommunityPostOrderByWithRelationInput
     votes?: CommunityVoteOrderByRelationAggregateInput
   }
 
@@ -31918,16 +30691,15 @@ export namespace Prisma {
     text?: StringFilter<"CommunityComment"> | string
     isAnswer?: BoolFilter<"CommunityComment"> | boolean
     isBest?: BoolFilter<"CommunityComment"> | boolean
-    voteScore?: IntFilter<"CommunityComment"> | number
-    likeCount?: IntFilter<"CommunityComment"> | number
-    dislikeCount?: IntFilter<"CommunityComment"> | number
     isDeleted?: BoolFilter<"CommunityComment"> | boolean
     createdAt?: DateTimeFilter<"CommunityComment"> | Date | string
     updatedAt?: DateTimeFilter<"CommunityComment"> | Date | string
-    post?: XOR<CommunityPostRelationFilter, CommunityPostWhereInput>
+    dislikeCount?: IntFilter<"CommunityComment"> | number
+    likeCount?: IntFilter<"CommunityComment"> | number
     author?: XOR<UserRelationFilter, UserWhereInput>
     parent?: XOR<CommunityCommentNullableRelationFilter, CommunityCommentWhereInput> | null
     replies?: CommunityCommentListRelationFilter
+    post?: XOR<CommunityPostRelationFilter, CommunityPostWhereInput>
     votes?: CommunityVoteListRelationFilter
   }, "id">
 
@@ -31939,12 +30711,11 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
     _count?: CommunityCommentCountOrderByAggregateInput
     _avg?: CommunityCommentAvgOrderByAggregateInput
     _max?: CommunityCommentMaxOrderByAggregateInput
@@ -31963,12 +30734,11 @@ export namespace Prisma {
     text?: StringWithAggregatesFilter<"CommunityComment"> | string
     isAnswer?: BoolWithAggregatesFilter<"CommunityComment"> | boolean
     isBest?: BoolWithAggregatesFilter<"CommunityComment"> | boolean
-    voteScore?: IntWithAggregatesFilter<"CommunityComment"> | number
-    likeCount?: IntWithAggregatesFilter<"CommunityComment"> | number
-    dislikeCount?: IntWithAggregatesFilter<"CommunityComment"> | number
     isDeleted?: BoolWithAggregatesFilter<"CommunityComment"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"CommunityComment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CommunityComment"> | Date | string
+    dislikeCount?: IntWithAggregatesFilter<"CommunityComment"> | number
+    likeCount?: IntWithAggregatesFilter<"CommunityComment"> | number
   }
 
   export type CommunityVoteWhereInput = {
@@ -31979,11 +30749,11 @@ export namespace Prisma {
     userId?: UuidFilter<"CommunityVote"> | string
     postId?: UuidNullableFilter<"CommunityVote"> | string | null
     commentId?: UuidNullableFilter<"CommunityVote"> | string | null
-    value?: EnumVoteValueFilter<"CommunityVote"> | $Enums.VoteValue
     createdAt?: DateTimeFilter<"CommunityVote"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-    post?: XOR<CommunityPostNullableRelationFilter, CommunityPostWhereInput> | null
+    value?: EnumVoteValueFilter<"CommunityVote"> | $Enums.VoteValue
     comment?: XOR<CommunityCommentNullableRelationFilter, CommunityCommentWhereInput> | null
+    post?: XOR<CommunityPostNullableRelationFilter, CommunityPostWhereInput> | null
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
   export type CommunityVoteOrderByWithRelationInput = {
@@ -31991,11 +30761,11 @@ export namespace Prisma {
     userId?: SortOrder
     postId?: SortOrderInput | SortOrder
     commentId?: SortOrderInput | SortOrder
-    value?: SortOrder
     createdAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-    post?: CommunityPostOrderByWithRelationInput
+    value?: SortOrder
     comment?: CommunityCommentOrderByWithRelationInput
+    post?: CommunityPostOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type CommunityVoteWhereUniqueInput = Prisma.AtLeast<{
@@ -32008,11 +30778,11 @@ export namespace Prisma {
     userId?: UuidFilter<"CommunityVote"> | string
     postId?: UuidNullableFilter<"CommunityVote"> | string | null
     commentId?: UuidNullableFilter<"CommunityVote"> | string | null
-    value?: EnumVoteValueFilter<"CommunityVote"> | $Enums.VoteValue
     createdAt?: DateTimeFilter<"CommunityVote"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-    post?: XOR<CommunityPostNullableRelationFilter, CommunityPostWhereInput> | null
+    value?: EnumVoteValueFilter<"CommunityVote"> | $Enums.VoteValue
     comment?: XOR<CommunityCommentNullableRelationFilter, CommunityCommentWhereInput> | null
+    post?: XOR<CommunityPostNullableRelationFilter, CommunityPostWhereInput> | null
+    user?: XOR<UserRelationFilter, UserWhereInput>
   }, "id" | "userId_postId" | "userId_commentId">
 
   export type CommunityVoteOrderByWithAggregationInput = {
@@ -32020,8 +30790,8 @@ export namespace Prisma {
     userId?: SortOrder
     postId?: SortOrderInput | SortOrder
     commentId?: SortOrderInput | SortOrder
-    value?: SortOrder
     createdAt?: SortOrder
+    value?: SortOrder
     _count?: CommunityVoteCountOrderByAggregateInput
     _max?: CommunityVoteMaxOrderByAggregateInput
     _min?: CommunityVoteMinOrderByAggregateInput
@@ -32035,8 +30805,8 @@ export namespace Prisma {
     userId?: UuidWithAggregatesFilter<"CommunityVote"> | string
     postId?: UuidNullableWithAggregatesFilter<"CommunityVote"> | string | null
     commentId?: UuidNullableWithAggregatesFilter<"CommunityVote"> | string | null
-    value?: EnumVoteValueWithAggregatesFilter<"CommunityVote"> | $Enums.VoteValue
     createdAt?: DateTimeWithAggregatesFilter<"CommunityVote"> | Date | string
+    value?: EnumVoteValueWithAggregatesFilter<"CommunityVote"> | $Enums.VoteValue
   }
 
   export type UserCreateInput = {
@@ -32056,23 +30826,22 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -32092,23 +30861,22 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -32128,23 +30896,22 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -32164,23 +30931,22 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -33114,16 +31880,15 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: number
     likeCount?: number
-    dislikeCount?: number
     bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutFeedPostsInput
     university?: UniversityCreateNestedOneWithoutFeedPostsInput
-    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
-    comments?: FeedCommentCreateNestedManyWithoutPostInput
   }
 
   export type FeedPostUncheckedCreateInput = {
@@ -33141,14 +31906,13 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: number
     likeCount?: number
-    dislikeCount?: number
     bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
     interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
-    comments?: FeedCommentUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type FeedPostUpdateInput = {
@@ -33164,16 +31928,15 @@ export namespace Prisma {
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     viewCount?: IntFieldUpdateOperationsInput | number
     likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     bookmarkCount?: IntFieldUpdateOperationsInput | number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
     university?: UniversityUpdateOneWithoutFeedPostsNestedInput
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
-    comments?: FeedCommentUpdateManyWithoutPostNestedInput
   }
 
   export type FeedPostUncheckedUpdateInput = {
@@ -33191,14 +31954,13 @@ export namespace Prisma {
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     viewCount?: IntFieldUpdateOperationsInput | number
     likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     bookmarkCount?: IntFieldUpdateOperationsInput | number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
     interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
-    comments?: FeedCommentUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type FeedPostCreateManyInput = {
@@ -33216,12 +31978,12 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: number
     likeCount?: number
-    dislikeCount?: number
     bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
   }
 
   export type FeedPostUpdateManyMutationInput = {
@@ -33237,12 +31999,12 @@ export namespace Prisma {
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     viewCount?: IntFieldUpdateOperationsInput | number
     likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     bookmarkCount?: IntFieldUpdateOperationsInput | number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type FeedPostUncheckedUpdateManyInput = {
@@ -33260,81 +32022,20 @@ export namespace Prisma {
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     viewCount?: IntFieldUpdateOperationsInput | number
     likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     bookmarkCount?: IntFieldUpdateOperationsInput | number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedCommentCreateInput = {
-    id?: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    post: FeedPostCreateNestedOneWithoutCommentsInput
-    author: UserCreateNestedOneWithoutFeedCommentsInput
-  }
-
-  export type FeedCommentUncheckedCreateInput = {
-    id?: string
-    postId: string
-    authorId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FeedCommentUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: FeedPostUpdateOneRequiredWithoutCommentsNestedInput
-    author?: UserUpdateOneRequiredWithoutFeedCommentsNestedInput
-  }
-
-  export type FeedCommentUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedCommentCreateManyInput = {
-    id?: string
-    postId: string
-    authorId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FeedCommentUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedCommentUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type FeedInteractionCreateInput = {
     id?: string
     type: $Enums.InteractionType
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutFeedInteractionsInput
     post: FeedPostCreateNestedOneWithoutInteractionsInput
+    user: UserCreateNestedOneWithoutFeedInteractionsInput
   }
 
   export type FeedInteractionUncheckedCreateInput = {
@@ -33349,8 +32050,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutFeedInteractionsNestedInput
     post?: FeedPostUpdateOneRequiredWithoutInteractionsNestedInput
+    user?: UserUpdateOneRequiredWithoutFeedInteractionsNestedInput
   }
 
   export type FeedInteractionUncheckedUpdateInput = {
@@ -33407,8 +32108,8 @@ export namespace Prisma {
     dataVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    courses?: UniversityCourseCreateNestedManyWithoutUniversityInput
     feedPosts?: FeedPostCreateNestedManyWithoutUniversityInput
+    courses?: UniversityCourseCreateNestedManyWithoutUniversityInput
   }
 
   export type UniversityUncheckedCreateInput = {
@@ -33435,8 +32136,8 @@ export namespace Prisma {
     dataVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    courses?: UniversityCourseUncheckedCreateNestedManyWithoutUniversityInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutUniversityInput
+    courses?: UniversityCourseUncheckedCreateNestedManyWithoutUniversityInput
   }
 
   export type UniversityUpdateInput = {
@@ -33463,8 +32164,8 @@ export namespace Prisma {
     dataVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    courses?: UniversityCourseUpdateManyWithoutUniversityNestedInput
     feedPosts?: FeedPostUpdateManyWithoutUniversityNestedInput
+    courses?: UniversityCourseUpdateManyWithoutUniversityNestedInput
   }
 
   export type UniversityUncheckedUpdateInput = {
@@ -33491,8 +32192,8 @@ export namespace Prisma {
     dataVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    courses?: UniversityCourseUncheckedUpdateManyWithoutUniversityNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutUniversityNestedInput
+    courses?: UniversityCourseUncheckedUpdateManyWithoutUniversityNestedInput
   }
 
   export type UniversityCreateManyInput = {
@@ -33587,13 +32288,13 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    university: UniversityCreateNestedOneWithoutCoursesInput
-    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
     actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
     applications?: ApplicationCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
+    university: UniversityCreateNestedOneWithoutCoursesInput
   }
 
   export type UniversityCourseUncheckedCreateInput = {
@@ -33611,12 +32312,12 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
     applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type UniversityCourseUpdateInput = {
@@ -33633,13 +32334,13 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
-    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
     applications?: ApplicationUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
+    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
   }
 
   export type UniversityCourseUncheckedUpdateInput = {
@@ -33657,12 +32358,12 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
     applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UniversityCourseCreateManyInput = {
@@ -34040,8 +32741,8 @@ export namespace Prisma {
     priority?: $Enums.CollegePriority | null
     notes?: string | null
     savedAt?: Date | string
-    user: UserCreateNestedOneWithoutSavedCollegesInput
     course: UniversityCourseCreateNestedOneWithoutSavedByInput
+    user: UserCreateNestedOneWithoutSavedCollegesInput
   }
 
   export type SavedCollegeUncheckedCreateInput = {
@@ -34058,8 +32759,8 @@ export namespace Prisma {
     priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutSavedCollegesNestedInput
     course?: UniversityCourseUpdateOneRequiredWithoutSavedByNestedInput
+    user?: UserUpdateOneRequiredWithoutSavedCollegesNestedInput
   }
 
   export type SavedCollegeUncheckedUpdateInput = {
@@ -34111,9 +32812,9 @@ export namespace Prisma {
     cached?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutAiComparisonsInput
-    course: UniversityCourseCreateNestedOneWithoutComparisonsInput
     actionPlans?: ActionPlanCreateNestedManyWithoutComparisonInput
+    course: UniversityCourseCreateNestedOneWithoutComparisonsInput
+    user: UserCreateNestedOneWithoutAiComparisonsInput
   }
 
   export type AIComparisonUncheckedCreateInput = {
@@ -34151,9 +32852,9 @@ export namespace Prisma {
     cached?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutAiComparisonsNestedInput
-    course?: UniversityCourseUpdateOneRequiredWithoutComparisonsNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutComparisonNestedInput
+    course?: UniversityCourseUpdateOneRequiredWithoutComparisonsNestedInput
+    user?: UserUpdateOneRequiredWithoutAiComparisonsNestedInput
   }
 
   export type AIComparisonUncheckedUpdateInput = {
@@ -34240,9 +32941,9 @@ export namespace Prisma {
     completionPct?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutActionPlansInput
     comparison: AIComparisonCreateNestedOneWithoutActionPlansInput
     course: UniversityCourseCreateNestedOneWithoutActionPlansInput
+    user: UserCreateNestedOneWithoutActionPlansInput
   }
 
   export type ActionPlanUncheckedCreateInput = {
@@ -34268,9 +32969,9 @@ export namespace Prisma {
     completionPct?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutActionPlansNestedInput
     comparison?: AIComparisonUpdateOneRequiredWithoutActionPlansNestedInput
     course?: UniversityCourseUpdateOneRequiredWithoutActionPlansNestedInput
+    user?: UserUpdateOneRequiredWithoutActionPlansNestedInput
   }
 
   export type ActionPlanUncheckedUpdateInput = {
@@ -34342,8 +33043,8 @@ export namespace Prisma {
     decisionAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutApplicationsInput
     course: UniversityCourseCreateNestedOneWithoutApplicationsInput
+    user: UserCreateNestedOneWithoutApplicationsInput
   }
 
   export type ApplicationUncheckedCreateInput = {
@@ -34382,8 +33083,8 @@ export namespace Prisma {
     decisionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     course?: UniversityCourseUpdateOneRequiredWithoutApplicationsNestedInput
+    user?: UserUpdateOneRequiredWithoutApplicationsNestedInput
   }
 
   export type ApplicationUncheckedUpdateInput = {
@@ -34473,16 +33174,15 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    author: UserCreateNestedOneWithoutCommunityPostsInput
+    dislikeCount?: number
+    likeCount?: number
     comments?: CommunityCommentCreateNestedManyWithoutPostInput
+    author: UserCreateNestedOneWithoutCommunityPostsInput
     votes?: CommunityVoteCreateNestedManyWithoutPostInput
   }
 
@@ -34496,14 +33196,13 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
     comments?: CommunityCommentUncheckedCreateNestedManyWithoutPostInput
     votes?: CommunityVoteUncheckedCreateNestedManyWithoutPostInput
   }
@@ -34517,16 +33216,15 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: UserUpdateOneRequiredWithoutCommunityPostsNestedInput
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     comments?: CommunityCommentUpdateManyWithoutPostNestedInput
+    author?: UserUpdateOneRequiredWithoutCommunityPostsNestedInput
     votes?: CommunityVoteUpdateManyWithoutPostNestedInput
   }
 
@@ -34540,14 +33238,13 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     comments?: CommunityCommentUncheckedUpdateManyWithoutPostNestedInput
     votes?: CommunityVoteUncheckedUpdateManyWithoutPostNestedInput
   }
@@ -34562,14 +33259,13 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
   }
 
   export type CommunityPostUpdateManyMutationInput = {
@@ -34581,14 +33277,13 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CommunityPostUncheckedUpdateManyInput = {
@@ -34601,14 +33296,13 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CommunityCommentCreateInput = {
@@ -34616,16 +33310,15 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    post: CommunityPostCreateNestedOneWithoutCommentsInput
+    dislikeCount?: number
+    likeCount?: number
     author: UserCreateNestedOneWithoutCommunityCommentsInput
     parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
     replies?: CommunityCommentCreateNestedManyWithoutParentInput
+    post: CommunityPostCreateNestedOneWithoutCommentsInput
     votes?: CommunityVoteCreateNestedManyWithoutCommentInput
   }
 
@@ -34637,12 +33330,11 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
     replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
     votes?: CommunityVoteUncheckedCreateNestedManyWithoutCommentInput
   }
@@ -34652,16 +33344,15 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     author?: UserUpdateOneRequiredWithoutCommunityCommentsNestedInput
     parent?: CommunityCommentUpdateOneWithoutRepliesNestedInput
     replies?: CommunityCommentUpdateManyWithoutParentNestedInput
+    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
     votes?: CommunityVoteUpdateManyWithoutCommentNestedInput
   }
 
@@ -34673,12 +33364,11 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     replies?: CommunityCommentUncheckedUpdateManyWithoutParentNestedInput
     votes?: CommunityVoteUncheckedUpdateManyWithoutCommentNestedInput
   }
@@ -34691,12 +33381,11 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
   }
 
   export type CommunityCommentUpdateManyMutationInput = {
@@ -34704,12 +33393,11 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CommunityCommentUncheckedUpdateManyInput = {
@@ -34720,21 +33408,20 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CommunityVoteCreateInput = {
     id?: string
-    value: $Enums.VoteValue
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutCommunityVotesInput
-    post?: CommunityPostCreateNestedOneWithoutVotesInput
+    value: $Enums.VoteValue
     comment?: CommunityCommentCreateNestedOneWithoutVotesInput
+    post?: CommunityPostCreateNestedOneWithoutVotesInput
+    user: UserCreateNestedOneWithoutCommunityVotesInput
   }
 
   export type CommunityVoteUncheckedCreateInput = {
@@ -34742,17 +33429,17 @@ export namespace Prisma {
     userId: string
     postId?: string | null
     commentId?: string | null
-    value: $Enums.VoteValue
     createdAt?: Date | string
+    value: $Enums.VoteValue
   }
 
   export type CommunityVoteUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutCommunityVotesNestedInput
-    post?: CommunityPostUpdateOneWithoutVotesNestedInput
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     comment?: CommunityCommentUpdateOneWithoutVotesNestedInput
+    post?: CommunityPostUpdateOneWithoutVotesNestedInput
+    user?: UserUpdateOneRequiredWithoutCommunityVotesNestedInput
   }
 
   export type CommunityVoteUncheckedUpdateInput = {
@@ -34760,8 +33447,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     postId?: NullableStringFieldUpdateOperationsInput | string | null
     commentId?: NullableStringFieldUpdateOperationsInput | string | null
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
   export type CommunityVoteCreateManyInput = {
@@ -34769,14 +33456,14 @@ export namespace Prisma {
     userId: string
     postId?: string | null
     commentId?: string | null
-    value: $Enums.VoteValue
     createdAt?: Date | string
+    value: $Enums.VoteValue
   }
 
   export type CommunityVoteUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
   export type CommunityVoteUncheckedUpdateManyInput = {
@@ -34784,8 +33471,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     postId?: NullableStringFieldUpdateOperationsInput | string | null
     commentId?: NullableStringFieldUpdateOperationsInput | string | null
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
   export type UuidFilter<$PrismaModel = never> = {
@@ -34864,63 +33551,10 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type RefreshTokenListRelationFilter = {
-    every?: RefreshTokenWhereInput
-    some?: RefreshTokenWhereInput
-    none?: RefreshTokenWhereInput
-  }
-
-  export type EmailOTPListRelationFilter = {
-    every?: EmailOTPWhereInput
-    some?: EmailOTPWhereInput
-    none?: EmailOTPWhereInput
-  }
-
-  export type UserProfileNullableRelationFilter = {
-    is?: UserProfileWhereInput | null
-    isNot?: UserProfileWhereInput | null
-  }
-
-  export type TestScoreListRelationFilter = {
-    every?: TestScoreWhereInput
-    some?: TestScoreWhereInput
-    none?: TestScoreWhereInput
-  }
-
-  export type EducationHistoryListRelationFilter = {
-    every?: EducationHistoryWhereInput
-    some?: EducationHistoryWhereInput
-    none?: EducationHistoryWhereInput
-  }
-
-  export type UserDocumentListRelationFilter = {
-    every?: UserDocumentWhereInput
-    some?: UserDocumentWhereInput
-    none?: UserDocumentWhereInput
-  }
-
-  export type FeedPostListRelationFilter = {
-    every?: FeedPostWhereInput
-    some?: FeedPostWhereInput
-    none?: FeedPostWhereInput
-  }
-
-  export type FeedInteractionListRelationFilter = {
-    every?: FeedInteractionWhereInput
-    some?: FeedInteractionWhereInput
-    none?: FeedInteractionWhereInput
-  }
-
-  export type FeedCommentListRelationFilter = {
-    every?: FeedCommentWhereInput
-    some?: FeedCommentWhereInput
-    none?: FeedCommentWhereInput
-  }
-
-  export type SavedCollegeListRelationFilter = {
-    every?: SavedCollegeWhereInput
-    some?: SavedCollegeWhereInput
-    none?: SavedCollegeWhereInput
+  export type ActionPlanListRelationFilter = {
+    every?: ActionPlanWhereInput
+    some?: ActionPlanWhereInput
+    none?: ActionPlanWhereInput
   }
 
   export type AIComparisonListRelationFilter = {
@@ -34929,10 +33563,10 @@ export namespace Prisma {
     none?: AIComparisonWhereInput
   }
 
-  export type ActionPlanListRelationFilter = {
-    every?: ActionPlanWhereInput
-    some?: ActionPlanWhereInput
-    none?: ActionPlanWhereInput
+  export type ApiKeyListRelationFilter = {
+    every?: ApiKeyWhereInput
+    some?: ApiKeyWhereInput
+    none?: ApiKeyWhereInput
   }
 
   export type ApplicationListRelationFilter = {
@@ -34941,10 +33575,10 @@ export namespace Prisma {
     none?: ApplicationWhereInput
   }
 
-  export type ApiKeyListRelationFilter = {
-    every?: ApiKeyWhereInput
-    some?: ApiKeyWhereInput
-    none?: ApiKeyWhereInput
+  export type CommunityCommentListRelationFilter = {
+    every?: CommunityCommentWhereInput
+    some?: CommunityCommentWhereInput
+    none?: CommunityCommentWhereInput
   }
 
   export type CommunityPostListRelationFilter = {
@@ -34953,16 +33587,63 @@ export namespace Prisma {
     none?: CommunityPostWhereInput
   }
 
-  export type CommunityCommentListRelationFilter = {
-    every?: CommunityCommentWhereInput
-    some?: CommunityCommentWhereInput
-    none?: CommunityCommentWhereInput
-  }
-
   export type CommunityVoteListRelationFilter = {
     every?: CommunityVoteWhereInput
     some?: CommunityVoteWhereInput
     none?: CommunityVoteWhereInput
+  }
+
+  export type EducationHistoryListRelationFilter = {
+    every?: EducationHistoryWhereInput
+    some?: EducationHistoryWhereInput
+    none?: EducationHistoryWhereInput
+  }
+
+  export type EmailOTPListRelationFilter = {
+    every?: EmailOTPWhereInput
+    some?: EmailOTPWhereInput
+    none?: EmailOTPWhereInput
+  }
+
+  export type FeedInteractionListRelationFilter = {
+    every?: FeedInteractionWhereInput
+    some?: FeedInteractionWhereInput
+    none?: FeedInteractionWhereInput
+  }
+
+  export type FeedPostListRelationFilter = {
+    every?: FeedPostWhereInput
+    some?: FeedPostWhereInput
+    none?: FeedPostWhereInput
+  }
+
+  export type RefreshTokenListRelationFilter = {
+    every?: RefreshTokenWhereInput
+    some?: RefreshTokenWhereInput
+    none?: RefreshTokenWhereInput
+  }
+
+  export type SavedCollegeListRelationFilter = {
+    every?: SavedCollegeWhereInput
+    some?: SavedCollegeWhereInput
+    none?: SavedCollegeWhereInput
+  }
+
+  export type TestScoreListRelationFilter = {
+    every?: TestScoreWhereInput
+    some?: TestScoreWhereInput
+    none?: TestScoreWhereInput
+  }
+
+  export type UserDocumentListRelationFilter = {
+    every?: UserDocumentWhereInput
+    some?: UserDocumentWhereInput
+    none?: UserDocumentWhereInput
+  }
+
+  export type UserProfileNullableRelationFilter = {
+    is?: UserProfileWhereInput | null
+    isNot?: UserProfileWhereInput | null
   }
 
   export type SortOrderInput = {
@@ -34970,39 +33651,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type RefreshTokenOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type EmailOTPOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type TestScoreOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type EducationHistoryOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type UserDocumentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type FeedPostOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type FeedInteractionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type FeedCommentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type SavedCollegeOrderByRelationAggregateInput = {
+  export type ActionPlanOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -35010,7 +33659,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type ActionPlanOrderByRelationAggregateInput = {
+  export type ApiKeyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -35018,7 +33667,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type ApiKeyOrderByRelationAggregateInput = {
+  export type CommunityCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -35026,11 +33675,39 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type CommunityCommentOrderByRelationAggregateInput = {
+  export type CommunityVoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type CommunityVoteOrderByRelationAggregateInput = {
+  export type EducationHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type EmailOTPOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeedInteractionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeedPostOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RefreshTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SavedCollegeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TestScoreOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserDocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36015,19 +34692,19 @@ export namespace Prisma {
     isPinned?: SortOrder
     viewCount?: SortOrder
     likeCount?: SortOrder
-    dislikeCount?: SortOrder
     bookmarkCount?: SortOrder
     metadata?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
   }
 
   export type FeedPostAvgOrderByAggregateInput = {
     viewCount?: SortOrder
     likeCount?: SortOrder
-    dislikeCount?: SortOrder
     bookmarkCount?: SortOrder
+    dislikeCount?: SortOrder
   }
 
   export type FeedPostMaxOrderByAggregateInput = {
@@ -36044,11 +34721,11 @@ export namespace Prisma {
     isPinned?: SortOrder
     viewCount?: SortOrder
     likeCount?: SortOrder
-    dislikeCount?: SortOrder
     bookmarkCount?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
   }
 
   export type FeedPostMinOrderByAggregateInput = {
@@ -36065,18 +34742,18 @@ export namespace Prisma {
     isPinned?: SortOrder
     viewCount?: SortOrder
     likeCount?: SortOrder
-    dislikeCount?: SortOrder
     bookmarkCount?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
   }
 
   export type FeedPostSumOrderByAggregateInput = {
     viewCount?: SortOrder
     likeCount?: SortOrder
-    dislikeCount?: SortOrder
     bookmarkCount?: SortOrder
+    dislikeCount?: SortOrder
   }
 
   export type EnumFeedCategoryWithAggregatesFilter<$PrismaModel = never> = {
@@ -36099,43 +34776,16 @@ export namespace Prisma {
     _max?: NestedEnumPostStatusFilter<$PrismaModel>
   }
 
-  export type FeedPostRelationFilter = {
-    is?: FeedPostWhereInput
-    isNot?: FeedPostWhereInput
-  }
-
-  export type FeedCommentCountOrderByAggregateInput = {
-    id?: SortOrder
-    postId?: SortOrder
-    authorId?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type FeedCommentMaxOrderByAggregateInput = {
-    id?: SortOrder
-    postId?: SortOrder
-    authorId?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type FeedCommentMinOrderByAggregateInput = {
-    id?: SortOrder
-    postId?: SortOrder
-    authorId?: SortOrder
-    content?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
   export type EnumInteractionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.InteractionType | EnumInteractionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.InteractionType[] | ListEnumInteractionTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.InteractionType[] | ListEnumInteractionTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumInteractionTypeFilter<$PrismaModel> | $Enums.InteractionType
+  }
+
+  export type FeedPostRelationFilter = {
+    is?: FeedPostWhereInput
+    isNot?: FeedPostWhereInput
   }
 
   export type FeedInteractionUserIdPostIdTypeCompoundUniqueInput = {
@@ -36314,9 +34964,9 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type UniversityRelationFilter = {
-    is?: UniversityWhereInput
-    isNot?: UniversityWhereInput
+  export type CourseFeeNullableRelationFilter = {
+    is?: CourseFeeWhereInput | null
+    isNot?: CourseFeeWhereInput | null
   }
 
   export type CourseRequirementNullableRelationFilter = {
@@ -36324,9 +34974,9 @@ export namespace Prisma {
     isNot?: CourseRequirementWhereInput | null
   }
 
-  export type CourseFeeNullableRelationFilter = {
-    is?: CourseFeeWhereInput | null
-    isNot?: CourseFeeWhereInput | null
+  export type UniversityRelationFilter = {
+    is?: UniversityWhereInput
+    isNot?: UniversityWhereInput
   }
 
   export type UniversityCourseCountOrderByAggregateInput = {
@@ -36943,21 +35593,19 @@ export namespace Prisma {
     tags?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityPostAvgOrderByAggregateInput = {
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     commentCount?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityPostMaxOrderByAggregateInput = {
@@ -36969,14 +35617,13 @@ export namespace Prisma {
     category?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityPostMinOrderByAggregateInput = {
@@ -36988,21 +35635,19 @@ export namespace Prisma {
     category?: SortOrder
     isQuestion?: SortOrder
     isAnonymous?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     commentCount?: SortOrder
     isPinned?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityPostSumOrderByAggregateInput = {
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     commentCount?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type EnumCommunityCategoryWithAggregatesFilter<$PrismaModel = never> = {
@@ -37015,14 +35660,14 @@ export namespace Prisma {
     _max?: NestedEnumCommunityCategoryFilter<$PrismaModel>
   }
 
-  export type CommunityPostRelationFilter = {
-    is?: CommunityPostWhereInput
-    isNot?: CommunityPostWhereInput
-  }
-
   export type CommunityCommentNullableRelationFilter = {
     is?: CommunityCommentWhereInput | null
     isNot?: CommunityCommentWhereInput | null
+  }
+
+  export type CommunityPostRelationFilter = {
+    is?: CommunityPostWhereInput
+    isNot?: CommunityPostWhereInput
   }
 
   export type CommunityCommentCountOrderByAggregateInput = {
@@ -37033,18 +35678,16 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityCommentAvgOrderByAggregateInput = {
-    voteScore?: SortOrder
-    likeCount?: SortOrder
     dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityCommentMaxOrderByAggregateInput = {
@@ -37055,12 +35698,11 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityCommentMinOrderByAggregateInput = {
@@ -37071,18 +35713,16 @@ export namespace Prisma {
     text?: SortOrder
     isAnswer?: SortOrder
     isBest?: SortOrder
-    voteScore?: SortOrder
-    likeCount?: SortOrder
-    dislikeCount?: SortOrder
     isDeleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type CommunityCommentSumOrderByAggregateInput = {
-    voteScore?: SortOrder
-    likeCount?: SortOrder
     dislikeCount?: SortOrder
+    likeCount?: SortOrder
   }
 
   export type EnumVoteValueFilter<$PrismaModel = never> = {
@@ -37112,8 +35752,8 @@ export namespace Prisma {
     userId?: SortOrder
     postId?: SortOrder
     commentId?: SortOrder
-    value?: SortOrder
     createdAt?: SortOrder
+    value?: SortOrder
   }
 
   export type CommunityVoteMaxOrderByAggregateInput = {
@@ -37121,8 +35761,8 @@ export namespace Prisma {
     userId?: SortOrder
     postId?: SortOrder
     commentId?: SortOrder
-    value?: SortOrder
     createdAt?: SortOrder
+    value?: SortOrder
   }
 
   export type CommunityVoteMinOrderByAggregateInput = {
@@ -37130,8 +35770,8 @@ export namespace Prisma {
     userId?: SortOrder
     postId?: SortOrder
     commentId?: SortOrder
-    value?: SortOrder
     createdAt?: SortOrder
+    value?: SortOrder
   }
 
   export type EnumVoteValueWithAggregatesFilter<$PrismaModel = never> = {
@@ -37144,73 +35784,11 @@ export namespace Prisma {
     _max?: NestedEnumVoteValueFilter<$PrismaModel>
   }
 
-  export type RefreshTokenCreateNestedManyWithoutUserInput = {
-    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
-    createMany?: RefreshTokenCreateManyUserInputEnvelope
-    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-  }
-
-  export type EmailOTPCreateNestedManyWithoutUserInput = {
-    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
-    createMany?: EmailOTPCreateManyUserInputEnvelope
-    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-  }
-
-  export type UserProfileCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
-    connect?: UserProfileWhereUniqueInput
-  }
-
-  export type TestScoreCreateNestedManyWithoutUserInput = {
-    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
-    createMany?: TestScoreCreateManyUserInputEnvelope
-    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-  }
-
-  export type EducationHistoryCreateNestedManyWithoutUserInput = {
-    create?: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput> | EducationHistoryCreateWithoutUserInput[] | EducationHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EducationHistoryCreateOrConnectWithoutUserInput | EducationHistoryCreateOrConnectWithoutUserInput[]
-    createMany?: EducationHistoryCreateManyUserInputEnvelope
-    connect?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
-  }
-
-  export type UserDocumentCreateNestedManyWithoutUserInput = {
-    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
-    createMany?: UserDocumentCreateManyUserInputEnvelope
-    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-  }
-
-  export type FeedPostCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
-    createMany?: FeedPostCreateManyAuthorInputEnvelope
-    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-  }
-
-  export type FeedInteractionCreateNestedManyWithoutUserInput = {
-    create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
-    createMany?: FeedInteractionCreateManyUserInputEnvelope
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-  }
-
-  export type FeedCommentCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-  }
-
-  export type SavedCollegeCreateNestedManyWithoutUserInput = {
-    create?: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput> | SavedCollegeCreateWithoutUserInput[] | SavedCollegeUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SavedCollegeCreateOrConnectWithoutUserInput | SavedCollegeCreateOrConnectWithoutUserInput[]
-    createMany?: SavedCollegeCreateManyUserInputEnvelope
-    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+  export type ActionPlanCreateNestedManyWithoutUserInput = {
+    create?: XOR<ActionPlanCreateWithoutUserInput, ActionPlanUncheckedCreateWithoutUserInput> | ActionPlanCreateWithoutUserInput[] | ActionPlanUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActionPlanCreateOrConnectWithoutUserInput | ActionPlanCreateOrConnectWithoutUserInput[]
+    createMany?: ActionPlanCreateManyUserInputEnvelope
+    connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
   }
 
   export type AIComparisonCreateNestedManyWithoutUserInput = {
@@ -37220,11 +35798,11 @@ export namespace Prisma {
     connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
   }
 
-  export type ActionPlanCreateNestedManyWithoutUserInput = {
-    create?: XOR<ActionPlanCreateWithoutUserInput, ActionPlanUncheckedCreateWithoutUserInput> | ActionPlanCreateWithoutUserInput[] | ActionPlanUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ActionPlanCreateOrConnectWithoutUserInput | ActionPlanCreateOrConnectWithoutUserInput[]
-    createMany?: ActionPlanCreateManyUserInputEnvelope
-    connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
+  export type ApiKeyCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ApiKeyCreateWithoutOwnerInput, ApiKeyUncheckedCreateWithoutOwnerInput> | ApiKeyCreateWithoutOwnerInput[] | ApiKeyUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ApiKeyCreateOrConnectWithoutOwnerInput | ApiKeyCreateOrConnectWithoutOwnerInput[]
+    createMany?: ApiKeyCreateManyOwnerInputEnvelope
+    connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
   }
 
   export type ApplicationCreateNestedManyWithoutUserInput = {
@@ -37234,11 +35812,11 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
-  export type ApiKeyCreateNestedManyWithoutOwnerInput = {
-    create?: XOR<ApiKeyCreateWithoutOwnerInput, ApiKeyUncheckedCreateWithoutOwnerInput> | ApiKeyCreateWithoutOwnerInput[] | ApiKeyUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: ApiKeyCreateOrConnectWithoutOwnerInput | ApiKeyCreateOrConnectWithoutOwnerInput[]
-    createMany?: ApiKeyCreateManyOwnerInputEnvelope
-    connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
+  export type CommunityCommentCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<CommunityCommentCreateWithoutAuthorInput, CommunityCommentUncheckedCreateWithoutAuthorInput> | CommunityCommentCreateWithoutAuthorInput[] | CommunityCommentUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: CommunityCommentCreateOrConnectWithoutAuthorInput | CommunityCommentCreateOrConnectWithoutAuthorInput[]
+    createMany?: CommunityCommentCreateManyAuthorInputEnvelope
+    connect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
   }
 
   export type CommunityPostCreateNestedManyWithoutAuthorInput = {
@@ -37248,13 +35826,6 @@ export namespace Prisma {
     connect?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
   }
 
-  export type CommunityCommentCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<CommunityCommentCreateWithoutAuthorInput, CommunityCommentUncheckedCreateWithoutAuthorInput> | CommunityCommentCreateWithoutAuthorInput[] | CommunityCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: CommunityCommentCreateOrConnectWithoutAuthorInput | CommunityCommentCreateOrConnectWithoutAuthorInput[]
-    createMany?: CommunityCommentCreateManyAuthorInputEnvelope
-    connect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
-  }
-
   export type CommunityVoteCreateNestedManyWithoutUserInput = {
     create?: XOR<CommunityVoteCreateWithoutUserInput, CommunityVoteUncheckedCreateWithoutUserInput> | CommunityVoteCreateWithoutUserInput[] | CommunityVoteUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CommunityVoteCreateOrConnectWithoutUserInput | CommunityVoteCreateOrConnectWithoutUserInput[]
@@ -37262,80 +35833,66 @@ export namespace Prisma {
     connect?: CommunityVoteWhereUniqueInput | CommunityVoteWhereUniqueInput[]
   }
 
-  export type RefreshTokenUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
-    createMany?: RefreshTokenCreateManyUserInputEnvelope
-    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-  }
-
-  export type EmailOTPUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
-    createMany?: EmailOTPCreateManyUserInputEnvelope
-    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-  }
-
-  export type UserProfileUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
-    connect?: UserProfileWhereUniqueInput
-  }
-
-  export type TestScoreUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
-    createMany?: TestScoreCreateManyUserInputEnvelope
-    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-  }
-
-  export type EducationHistoryUncheckedCreateNestedManyWithoutUserInput = {
+  export type EducationHistoryCreateNestedManyWithoutUserInput = {
     create?: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput> | EducationHistoryCreateWithoutUserInput[] | EducationHistoryUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EducationHistoryCreateOrConnectWithoutUserInput | EducationHistoryCreateOrConnectWithoutUserInput[]
     createMany?: EducationHistoryCreateManyUserInputEnvelope
     connect?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
   }
 
-  export type UserDocumentUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
-    createMany?: UserDocumentCreateManyUserInputEnvelope
-    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+  export type EmailOTPCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
+    createMany?: EmailOTPCreateManyUserInputEnvelope
+    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
   }
 
-  export type FeedPostUncheckedCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
-    createMany?: FeedPostCreateManyAuthorInputEnvelope
-    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-  }
-
-  export type FeedInteractionUncheckedCreateNestedManyWithoutUserInput = {
+  export type FeedInteractionCreateNestedManyWithoutUserInput = {
     create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
     createMany?: FeedInteractionCreateManyUserInputEnvelope
     connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
   }
 
-  export type FeedCommentUncheckedCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+  export type FeedPostCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
+    createMany?: FeedPostCreateManyAuthorInputEnvelope
+    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
   }
 
-  export type SavedCollegeUncheckedCreateNestedManyWithoutUserInput = {
+  export type RefreshTokenCreateNestedManyWithoutUserInput = {
+    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
+    createMany?: RefreshTokenCreateManyUserInputEnvelope
+    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+  }
+
+  export type SavedCollegeCreateNestedManyWithoutUserInput = {
     create?: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput> | SavedCollegeCreateWithoutUserInput[] | SavedCollegeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SavedCollegeCreateOrConnectWithoutUserInput | SavedCollegeCreateOrConnectWithoutUserInput[]
     createMany?: SavedCollegeCreateManyUserInputEnvelope
     connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
   }
 
-  export type AIComparisonUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput> | AIComparisonCreateWithoutUserInput[] | AIComparisonUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AIComparisonCreateOrConnectWithoutUserInput | AIComparisonCreateOrConnectWithoutUserInput[]
-    createMany?: AIComparisonCreateManyUserInputEnvelope
-    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+  export type TestScoreCreateNestedManyWithoutUserInput = {
+    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
+    createMany?: TestScoreCreateManyUserInputEnvelope
+    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+  }
+
+  export type UserDocumentCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
+    createMany?: UserDocumentCreateManyUserInputEnvelope
+    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+  }
+
+  export type UserProfileCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    connect?: UserProfileWhereUniqueInput
   }
 
   export type ActionPlanUncheckedCreateNestedManyWithoutUserInput = {
@@ -37345,11 +35902,11 @@ export namespace Prisma {
     connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
   }
 
-  export type ApplicationUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput> | ApplicationCreateWithoutUserInput[] | ApplicationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutUserInput | ApplicationCreateOrConnectWithoutUserInput[]
-    createMany?: ApplicationCreateManyUserInputEnvelope
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  export type AIComparisonUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput> | AIComparisonCreateWithoutUserInput[] | AIComparisonUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AIComparisonCreateOrConnectWithoutUserInput | AIComparisonCreateOrConnectWithoutUserInput[]
+    createMany?: AIComparisonCreateManyUserInputEnvelope
+    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
   }
 
   export type ApiKeyUncheckedCreateNestedManyWithoutOwnerInput = {
@@ -37359,11 +35916,11 @@ export namespace Prisma {
     connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
   }
 
-  export type CommunityPostUncheckedCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput> | CommunityPostCreateWithoutAuthorInput[] | CommunityPostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: CommunityPostCreateOrConnectWithoutAuthorInput | CommunityPostCreateOrConnectWithoutAuthorInput[]
-    createMany?: CommunityPostCreateManyAuthorInputEnvelope
-    connect?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
+  export type ApplicationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput> | ApplicationCreateWithoutUserInput[] | ApplicationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutUserInput | ApplicationCreateOrConnectWithoutUserInput[]
+    createMany?: ApplicationCreateManyUserInputEnvelope
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
   export type CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput = {
@@ -37373,11 +35930,80 @@ export namespace Prisma {
     connect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
   }
 
+  export type CommunityPostUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput> | CommunityPostCreateWithoutAuthorInput[] | CommunityPostUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: CommunityPostCreateOrConnectWithoutAuthorInput | CommunityPostCreateOrConnectWithoutAuthorInput[]
+    createMany?: CommunityPostCreateManyAuthorInputEnvelope
+    connect?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
+  }
+
   export type CommunityVoteUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<CommunityVoteCreateWithoutUserInput, CommunityVoteUncheckedCreateWithoutUserInput> | CommunityVoteCreateWithoutUserInput[] | CommunityVoteUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CommunityVoteCreateOrConnectWithoutUserInput | CommunityVoteCreateOrConnectWithoutUserInput[]
     createMany?: CommunityVoteCreateManyUserInputEnvelope
     connect?: CommunityVoteWhereUniqueInput | CommunityVoteWhereUniqueInput[]
+  }
+
+  export type EducationHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput> | EducationHistoryCreateWithoutUserInput[] | EducationHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EducationHistoryCreateOrConnectWithoutUserInput | EducationHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: EducationHistoryCreateManyUserInputEnvelope
+    connect?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
+  }
+
+  export type EmailOTPUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
+    createMany?: EmailOTPCreateManyUserInputEnvelope
+    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+  }
+
+  export type FeedInteractionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
+    createMany?: FeedInteractionCreateManyUserInputEnvelope
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+  }
+
+  export type FeedPostUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
+    createMany?: FeedPostCreateManyAuthorInputEnvelope
+    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+  }
+
+  export type RefreshTokenUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
+    createMany?: RefreshTokenCreateManyUserInputEnvelope
+    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+  }
+
+  export type SavedCollegeUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput> | SavedCollegeCreateWithoutUserInput[] | SavedCollegeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedCollegeCreateOrConnectWithoutUserInput | SavedCollegeCreateOrConnectWithoutUserInput[]
+    createMany?: SavedCollegeCreateManyUserInputEnvelope
+    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+  }
+
+  export type TestScoreUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
+    createMany?: TestScoreCreateManyUserInputEnvelope
+    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+  }
+
+  export type UserDocumentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
+    createMany?: UserDocumentCreateManyUserInputEnvelope
+    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+  }
+
+  export type UserProfileUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    connect?: UserProfileWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -37404,140 +36030,18 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type RefreshTokenUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
-    upsert?: RefreshTokenUpsertWithWhereUniqueWithoutUserInput | RefreshTokenUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RefreshTokenCreateManyUserInputEnvelope
-    set?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    disconnect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    delete?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    update?: RefreshTokenUpdateWithWhereUniqueWithoutUserInput | RefreshTokenUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RefreshTokenUpdateManyWithWhereWithoutUserInput | RefreshTokenUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RefreshTokenScalarWhereInput | RefreshTokenScalarWhereInput[]
-  }
-
-  export type EmailOTPUpdateManyWithoutUserNestedInput = {
-    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
-    upsert?: EmailOTPUpsertWithWhereUniqueWithoutUserInput | EmailOTPUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: EmailOTPCreateManyUserInputEnvelope
-    set?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    disconnect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    delete?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    update?: EmailOTPUpdateWithWhereUniqueWithoutUserInput | EmailOTPUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: EmailOTPUpdateManyWithWhereWithoutUserInput | EmailOTPUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
-  }
-
-  export type UserProfileUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
-    upsert?: UserProfileUpsertWithoutUserInput
-    disconnect?: UserProfileWhereInput | boolean
-    delete?: UserProfileWhereInput | boolean
-    connect?: UserProfileWhereUniqueInput
-    update?: XOR<XOR<UserProfileUpdateToOneWithWhereWithoutUserInput, UserProfileUpdateWithoutUserInput>, UserProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type TestScoreUpdateManyWithoutUserNestedInput = {
-    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
-    upsert?: TestScoreUpsertWithWhereUniqueWithoutUserInput | TestScoreUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: TestScoreCreateManyUserInputEnvelope
-    set?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    disconnect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    delete?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    update?: TestScoreUpdateWithWhereUniqueWithoutUserInput | TestScoreUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: TestScoreUpdateManyWithWhereWithoutUserInput | TestScoreUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
-  }
-
-  export type EducationHistoryUpdateManyWithoutUserNestedInput = {
-    create?: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput> | EducationHistoryCreateWithoutUserInput[] | EducationHistoryUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EducationHistoryCreateOrConnectWithoutUserInput | EducationHistoryCreateOrConnectWithoutUserInput[]
-    upsert?: EducationHistoryUpsertWithWhereUniqueWithoutUserInput | EducationHistoryUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: EducationHistoryCreateManyUserInputEnvelope
-    set?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
-    disconnect?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
-    delete?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
-    connect?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
-    update?: EducationHistoryUpdateWithWhereUniqueWithoutUserInput | EducationHistoryUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: EducationHistoryUpdateManyWithWhereWithoutUserInput | EducationHistoryUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: EducationHistoryScalarWhereInput | EducationHistoryScalarWhereInput[]
-  }
-
-  export type UserDocumentUpdateManyWithoutUserNestedInput = {
-    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
-    upsert?: UserDocumentUpsertWithWhereUniqueWithoutUserInput | UserDocumentUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: UserDocumentCreateManyUserInputEnvelope
-    set?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    disconnect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    delete?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    update?: UserDocumentUpdateWithWhereUniqueWithoutUserInput | UserDocumentUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: UserDocumentUpdateManyWithWhereWithoutUserInput | UserDocumentUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
-  }
-
-  export type FeedPostUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
-    upsert?: FeedPostUpsertWithWhereUniqueWithoutAuthorInput | FeedPostUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: FeedPostCreateManyAuthorInputEnvelope
-    set?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    disconnect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    delete?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    update?: FeedPostUpdateWithWhereUniqueWithoutAuthorInput | FeedPostUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: FeedPostUpdateManyWithWhereWithoutAuthorInput | FeedPostUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
-  }
-
-  export type FeedInteractionUpdateManyWithoutUserNestedInput = {
-    create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
-    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutUserInput | FeedInteractionUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: FeedInteractionCreateManyUserInputEnvelope
-    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    update?: FeedInteractionUpdateWithWhereUniqueWithoutUserInput | FeedInteractionUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: FeedInteractionUpdateManyWithWhereWithoutUserInput | FeedInteractionUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
-  }
-
-  export type FeedCommentUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    upsert?: FeedCommentUpsertWithWhereUniqueWithoutAuthorInput | FeedCommentUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    update?: FeedCommentUpdateWithWhereUniqueWithoutAuthorInput | FeedCommentUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: FeedCommentUpdateManyWithWhereWithoutAuthorInput | FeedCommentUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
-  }
-
-  export type SavedCollegeUpdateManyWithoutUserNestedInput = {
-    create?: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput> | SavedCollegeCreateWithoutUserInput[] | SavedCollegeUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: SavedCollegeCreateOrConnectWithoutUserInput | SavedCollegeCreateOrConnectWithoutUserInput[]
-    upsert?: SavedCollegeUpsertWithWhereUniqueWithoutUserInput | SavedCollegeUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: SavedCollegeCreateManyUserInputEnvelope
-    set?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    disconnect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    delete?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    update?: SavedCollegeUpdateWithWhereUniqueWithoutUserInput | SavedCollegeUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: SavedCollegeUpdateManyWithWhereWithoutUserInput | SavedCollegeUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
+  export type ActionPlanUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ActionPlanCreateWithoutUserInput, ActionPlanUncheckedCreateWithoutUserInput> | ActionPlanCreateWithoutUserInput[] | ActionPlanUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActionPlanCreateOrConnectWithoutUserInput | ActionPlanCreateOrConnectWithoutUserInput[]
+    upsert?: ActionPlanUpsertWithWhereUniqueWithoutUserInput | ActionPlanUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ActionPlanCreateManyUserInputEnvelope
+    set?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
+    disconnect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
+    delete?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
+    connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
+    update?: ActionPlanUpdateWithWhereUniqueWithoutUserInput | ActionPlanUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ActionPlanUpdateManyWithWhereWithoutUserInput | ActionPlanUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
   }
 
   export type AIComparisonUpdateManyWithoutUserNestedInput = {
@@ -37554,18 +36058,18 @@ export namespace Prisma {
     deleteMany?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
   }
 
-  export type ActionPlanUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ActionPlanCreateWithoutUserInput, ActionPlanUncheckedCreateWithoutUserInput> | ActionPlanCreateWithoutUserInput[] | ActionPlanUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ActionPlanCreateOrConnectWithoutUserInput | ActionPlanCreateOrConnectWithoutUserInput[]
-    upsert?: ActionPlanUpsertWithWhereUniqueWithoutUserInput | ActionPlanUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ActionPlanCreateManyUserInputEnvelope
-    set?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
-    disconnect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
-    delete?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
-    connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
-    update?: ActionPlanUpdateWithWhereUniqueWithoutUserInput | ActionPlanUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ActionPlanUpdateManyWithWhereWithoutUserInput | ActionPlanUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
+  export type ApiKeyUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ApiKeyCreateWithoutOwnerInput, ApiKeyUncheckedCreateWithoutOwnerInput> | ApiKeyCreateWithoutOwnerInput[] | ApiKeyUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ApiKeyCreateOrConnectWithoutOwnerInput | ApiKeyCreateOrConnectWithoutOwnerInput[]
+    upsert?: ApiKeyUpsertWithWhereUniqueWithoutOwnerInput | ApiKeyUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ApiKeyCreateManyOwnerInputEnvelope
+    set?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
+    disconnect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
+    delete?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
+    connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
+    update?: ApiKeyUpdateWithWhereUniqueWithoutOwnerInput | ApiKeyUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ApiKeyUpdateManyWithWhereWithoutOwnerInput | ApiKeyUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
   }
 
   export type ApplicationUpdateManyWithoutUserNestedInput = {
@@ -37582,18 +36086,18 @@ export namespace Prisma {
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
-  export type ApiKeyUpdateManyWithoutOwnerNestedInput = {
-    create?: XOR<ApiKeyCreateWithoutOwnerInput, ApiKeyUncheckedCreateWithoutOwnerInput> | ApiKeyCreateWithoutOwnerInput[] | ApiKeyUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: ApiKeyCreateOrConnectWithoutOwnerInput | ApiKeyCreateOrConnectWithoutOwnerInput[]
-    upsert?: ApiKeyUpsertWithWhereUniqueWithoutOwnerInput | ApiKeyUpsertWithWhereUniqueWithoutOwnerInput[]
-    createMany?: ApiKeyCreateManyOwnerInputEnvelope
-    set?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
-    disconnect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
-    delete?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
-    connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
-    update?: ApiKeyUpdateWithWhereUniqueWithoutOwnerInput | ApiKeyUpdateWithWhereUniqueWithoutOwnerInput[]
-    updateMany?: ApiKeyUpdateManyWithWhereWithoutOwnerInput | ApiKeyUpdateManyWithWhereWithoutOwnerInput[]
-    deleteMany?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
+  export type CommunityCommentUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<CommunityCommentCreateWithoutAuthorInput, CommunityCommentUncheckedCreateWithoutAuthorInput> | CommunityCommentCreateWithoutAuthorInput[] | CommunityCommentUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: CommunityCommentCreateOrConnectWithoutAuthorInput | CommunityCommentCreateOrConnectWithoutAuthorInput[]
+    upsert?: CommunityCommentUpsertWithWhereUniqueWithoutAuthorInput | CommunityCommentUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: CommunityCommentCreateManyAuthorInputEnvelope
+    set?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
+    disconnect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
+    delete?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
+    connect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
+    update?: CommunityCommentUpdateWithWhereUniqueWithoutAuthorInput | CommunityCommentUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: CommunityCommentUpdateManyWithWhereWithoutAuthorInput | CommunityCommentUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
   }
 
   export type CommunityPostUpdateManyWithoutAuthorNestedInput = {
@@ -37610,20 +36114,6 @@ export namespace Prisma {
     deleteMany?: CommunityPostScalarWhereInput | CommunityPostScalarWhereInput[]
   }
 
-  export type CommunityCommentUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<CommunityCommentCreateWithoutAuthorInput, CommunityCommentUncheckedCreateWithoutAuthorInput> | CommunityCommentCreateWithoutAuthorInput[] | CommunityCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: CommunityCommentCreateOrConnectWithoutAuthorInput | CommunityCommentCreateOrConnectWithoutAuthorInput[]
-    upsert?: CommunityCommentUpsertWithWhereUniqueWithoutAuthorInput | CommunityCommentUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: CommunityCommentCreateManyAuthorInputEnvelope
-    set?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
-    disconnect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
-    delete?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
-    connect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
-    update?: CommunityCommentUpdateWithWhereUniqueWithoutAuthorInput | CommunityCommentUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: CommunityCommentUpdateManyWithWhereWithoutAuthorInput | CommunityCommentUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
-  }
-
   export type CommunityVoteUpdateManyWithoutUserNestedInput = {
     create?: XOR<CommunityVoteCreateWithoutUserInput, CommunityVoteUncheckedCreateWithoutUserInput> | CommunityVoteCreateWithoutUserInput[] | CommunityVoteUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CommunityVoteCreateOrConnectWithoutUserInput | CommunityVoteCreateOrConnectWithoutUserInput[]
@@ -37638,59 +36128,7 @@ export namespace Prisma {
     deleteMany?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
   }
 
-  export type RefreshTokenUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
-    upsert?: RefreshTokenUpsertWithWhereUniqueWithoutUserInput | RefreshTokenUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RefreshTokenCreateManyUserInputEnvelope
-    set?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    disconnect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    delete?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
-    update?: RefreshTokenUpdateWithWhereUniqueWithoutUserInput | RefreshTokenUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RefreshTokenUpdateManyWithWhereWithoutUserInput | RefreshTokenUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RefreshTokenScalarWhereInput | RefreshTokenScalarWhereInput[]
-  }
-
-  export type EmailOTPUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
-    upsert?: EmailOTPUpsertWithWhereUniqueWithoutUserInput | EmailOTPUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: EmailOTPCreateManyUserInputEnvelope
-    set?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    disconnect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    delete?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
-    update?: EmailOTPUpdateWithWhereUniqueWithoutUserInput | EmailOTPUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: EmailOTPUpdateManyWithWhereWithoutUserInput | EmailOTPUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
-  }
-
-  export type UserProfileUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
-    upsert?: UserProfileUpsertWithoutUserInput
-    disconnect?: UserProfileWhereInput | boolean
-    delete?: UserProfileWhereInput | boolean
-    connect?: UserProfileWhereUniqueInput
-    update?: XOR<XOR<UserProfileUpdateToOneWithWhereWithoutUserInput, UserProfileUpdateWithoutUserInput>, UserProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type TestScoreUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
-    upsert?: TestScoreUpsertWithWhereUniqueWithoutUserInput | TestScoreUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: TestScoreCreateManyUserInputEnvelope
-    set?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    disconnect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    delete?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
-    update?: TestScoreUpdateWithWhereUniqueWithoutUserInput | TestScoreUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: TestScoreUpdateManyWithWhereWithoutUserInput | TestScoreUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
-  }
-
-  export type EducationHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+  export type EducationHistoryUpdateManyWithoutUserNestedInput = {
     create?: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput> | EducationHistoryCreateWithoutUserInput[] | EducationHistoryUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EducationHistoryCreateOrConnectWithoutUserInput | EducationHistoryCreateOrConnectWithoutUserInput[]
     upsert?: EducationHistoryUpsertWithWhereUniqueWithoutUserInput | EducationHistoryUpsertWithWhereUniqueWithoutUserInput[]
@@ -37704,35 +36142,21 @@ export namespace Prisma {
     deleteMany?: EducationHistoryScalarWhereInput | EducationHistoryScalarWhereInput[]
   }
 
-  export type UserDocumentUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
-    upsert?: UserDocumentUpsertWithWhereUniqueWithoutUserInput | UserDocumentUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: UserDocumentCreateManyUserInputEnvelope
-    set?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    disconnect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    delete?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-    update?: UserDocumentUpdateWithWhereUniqueWithoutUserInput | UserDocumentUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: UserDocumentUpdateManyWithWhereWithoutUserInput | UserDocumentUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
+  export type EmailOTPUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
+    upsert?: EmailOTPUpsertWithWhereUniqueWithoutUserInput | EmailOTPUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmailOTPCreateManyUserInputEnvelope
+    set?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    disconnect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    delete?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    update?: EmailOTPUpdateWithWhereUniqueWithoutUserInput | EmailOTPUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmailOTPUpdateManyWithWhereWithoutUserInput | EmailOTPUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
   }
 
-  export type FeedPostUncheckedUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
-    upsert?: FeedPostUpsertWithWhereUniqueWithoutAuthorInput | FeedPostUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: FeedPostCreateManyAuthorInputEnvelope
-    set?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    disconnect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    delete?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
-    update?: FeedPostUpdateWithWhereUniqueWithoutAuthorInput | FeedPostUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: FeedPostUpdateManyWithWhereWithoutAuthorInput | FeedPostUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
-  }
-
-  export type FeedInteractionUncheckedUpdateManyWithoutUserNestedInput = {
+  export type FeedInteractionUpdateManyWithoutUserNestedInput = {
     create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
     upsert?: FeedInteractionUpsertWithWhereUniqueWithoutUserInput | FeedInteractionUpsertWithWhereUniqueWithoutUserInput[]
@@ -37746,21 +36170,35 @@ export namespace Prisma {
     deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
   }
 
-  export type FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    upsert?: FeedCommentUpsertWithWhereUniqueWithoutAuthorInput | FeedCommentUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    update?: FeedCommentUpdateWithWhereUniqueWithoutAuthorInput | FeedCommentUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: FeedCommentUpdateManyWithWhereWithoutAuthorInput | FeedCommentUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
+  export type FeedPostUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
+    upsert?: FeedPostUpsertWithWhereUniqueWithoutAuthorInput | FeedPostUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: FeedPostCreateManyAuthorInputEnvelope
+    set?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    disconnect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    delete?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    update?: FeedPostUpdateWithWhereUniqueWithoutAuthorInput | FeedPostUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: FeedPostUpdateManyWithWhereWithoutAuthorInput | FeedPostUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
   }
 
-  export type SavedCollegeUncheckedUpdateManyWithoutUserNestedInput = {
+  export type RefreshTokenUpdateManyWithoutUserNestedInput = {
+    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
+    upsert?: RefreshTokenUpsertWithWhereUniqueWithoutUserInput | RefreshTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: RefreshTokenCreateManyUserInputEnvelope
+    set?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    disconnect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    delete?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    update?: RefreshTokenUpdateWithWhereUniqueWithoutUserInput | RefreshTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: RefreshTokenUpdateManyWithWhereWithoutUserInput | RefreshTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: RefreshTokenScalarWhereInput | RefreshTokenScalarWhereInput[]
+  }
+
+  export type SavedCollegeUpdateManyWithoutUserNestedInput = {
     create?: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput> | SavedCollegeCreateWithoutUserInput[] | SavedCollegeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SavedCollegeCreateOrConnectWithoutUserInput | SavedCollegeCreateOrConnectWithoutUserInput[]
     upsert?: SavedCollegeUpsertWithWhereUniqueWithoutUserInput | SavedCollegeUpsertWithWhereUniqueWithoutUserInput[]
@@ -37774,18 +36212,42 @@ export namespace Prisma {
     deleteMany?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
   }
 
-  export type AIComparisonUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput> | AIComparisonCreateWithoutUserInput[] | AIComparisonUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AIComparisonCreateOrConnectWithoutUserInput | AIComparisonCreateOrConnectWithoutUserInput[]
-    upsert?: AIComparisonUpsertWithWhereUniqueWithoutUserInput | AIComparisonUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AIComparisonCreateManyUserInputEnvelope
-    set?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    disconnect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    delete?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    update?: AIComparisonUpdateWithWhereUniqueWithoutUserInput | AIComparisonUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AIComparisonUpdateManyWithWhereWithoutUserInput | AIComparisonUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
+  export type TestScoreUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
+    upsert?: TestScoreUpsertWithWhereUniqueWithoutUserInput | TestScoreUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TestScoreCreateManyUserInputEnvelope
+    set?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    disconnect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    delete?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    update?: TestScoreUpdateWithWhereUniqueWithoutUserInput | TestScoreUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TestScoreUpdateManyWithWhereWithoutUserInput | TestScoreUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
+  }
+
+  export type UserDocumentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
+    upsert?: UserDocumentUpsertWithWhereUniqueWithoutUserInput | UserDocumentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserDocumentCreateManyUserInputEnvelope
+    set?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    disconnect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    delete?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    update?: UserDocumentUpdateWithWhereUniqueWithoutUserInput | UserDocumentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserDocumentUpdateManyWithWhereWithoutUserInput | UserDocumentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
+  }
+
+  export type UserProfileUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    upsert?: UserProfileUpsertWithoutUserInput
+    disconnect?: UserProfileWhereInput | boolean
+    delete?: UserProfileWhereInput | boolean
+    connect?: UserProfileWhereUniqueInput
+    update?: XOR<XOR<UserProfileUpdateToOneWithWhereWithoutUserInput, UserProfileUpdateWithoutUserInput>, UserProfileUncheckedUpdateWithoutUserInput>
   }
 
   export type ActionPlanUncheckedUpdateManyWithoutUserNestedInput = {
@@ -37802,18 +36264,18 @@ export namespace Prisma {
     deleteMany?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
   }
 
-  export type ApplicationUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput> | ApplicationCreateWithoutUserInput[] | ApplicationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutUserInput | ApplicationCreateOrConnectWithoutUserInput[]
-    upsert?: ApplicationUpsertWithWhereUniqueWithoutUserInput | ApplicationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: ApplicationCreateManyUserInputEnvelope
-    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    update?: ApplicationUpdateWithWhereUniqueWithoutUserInput | ApplicationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: ApplicationUpdateManyWithWhereWithoutUserInput | ApplicationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  export type AIComparisonUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput> | AIComparisonCreateWithoutUserInput[] | AIComparisonUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AIComparisonCreateOrConnectWithoutUserInput | AIComparisonCreateOrConnectWithoutUserInput[]
+    upsert?: AIComparisonUpsertWithWhereUniqueWithoutUserInput | AIComparisonUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AIComparisonCreateManyUserInputEnvelope
+    set?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    disconnect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    delete?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    update?: AIComparisonUpdateWithWhereUniqueWithoutUserInput | AIComparisonUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AIComparisonUpdateManyWithWhereWithoutUserInput | AIComparisonUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
   }
 
   export type ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput = {
@@ -37830,18 +36292,18 @@ export namespace Prisma {
     deleteMany?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
   }
 
-  export type CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput> | CommunityPostCreateWithoutAuthorInput[] | CommunityPostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: CommunityPostCreateOrConnectWithoutAuthorInput | CommunityPostCreateOrConnectWithoutAuthorInput[]
-    upsert?: CommunityPostUpsertWithWhereUniqueWithoutAuthorInput | CommunityPostUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: CommunityPostCreateManyAuthorInputEnvelope
-    set?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
-    disconnect?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
-    delete?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
-    connect?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
-    update?: CommunityPostUpdateWithWhereUniqueWithoutAuthorInput | CommunityPostUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: CommunityPostUpdateManyWithWhereWithoutAuthorInput | CommunityPostUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: CommunityPostScalarWhereInput | CommunityPostScalarWhereInput[]
+  export type ApplicationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput> | ApplicationCreateWithoutUserInput[] | ApplicationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutUserInput | ApplicationCreateOrConnectWithoutUserInput[]
+    upsert?: ApplicationUpsertWithWhereUniqueWithoutUserInput | ApplicationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ApplicationCreateManyUserInputEnvelope
+    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    update?: ApplicationUpdateWithWhereUniqueWithoutUserInput | ApplicationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ApplicationUpdateManyWithWhereWithoutUserInput | ApplicationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
   export type CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput = {
@@ -37858,6 +36320,20 @@ export namespace Prisma {
     deleteMany?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
   }
 
+  export type CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput> | CommunityPostCreateWithoutAuthorInput[] | CommunityPostUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: CommunityPostCreateOrConnectWithoutAuthorInput | CommunityPostCreateOrConnectWithoutAuthorInput[]
+    upsert?: CommunityPostUpsertWithWhereUniqueWithoutAuthorInput | CommunityPostUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: CommunityPostCreateManyAuthorInputEnvelope
+    set?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
+    disconnect?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
+    delete?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
+    connect?: CommunityPostWhereUniqueInput | CommunityPostWhereUniqueInput[]
+    update?: CommunityPostUpdateWithWhereUniqueWithoutAuthorInput | CommunityPostUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: CommunityPostUpdateManyWithWhereWithoutAuthorInput | CommunityPostUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: CommunityPostScalarWhereInput | CommunityPostScalarWhereInput[]
+  }
+
   export type CommunityVoteUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<CommunityVoteCreateWithoutUserInput, CommunityVoteUncheckedCreateWithoutUserInput> | CommunityVoteCreateWithoutUserInput[] | CommunityVoteUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CommunityVoteCreateOrConnectWithoutUserInput | CommunityVoteCreateOrConnectWithoutUserInput[]
@@ -37870,6 +36346,128 @@ export namespace Prisma {
     update?: CommunityVoteUpdateWithWhereUniqueWithoutUserInput | CommunityVoteUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: CommunityVoteUpdateManyWithWhereWithoutUserInput | CommunityVoteUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
+  }
+
+  export type EducationHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput> | EducationHistoryCreateWithoutUserInput[] | EducationHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EducationHistoryCreateOrConnectWithoutUserInput | EducationHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: EducationHistoryUpsertWithWhereUniqueWithoutUserInput | EducationHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EducationHistoryCreateManyUserInputEnvelope
+    set?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
+    disconnect?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
+    delete?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
+    connect?: EducationHistoryWhereUniqueInput | EducationHistoryWhereUniqueInput[]
+    update?: EducationHistoryUpdateWithWhereUniqueWithoutUserInput | EducationHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EducationHistoryUpdateManyWithWhereWithoutUserInput | EducationHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EducationHistoryScalarWhereInput | EducationHistoryScalarWhereInput[]
+  }
+
+  export type EmailOTPUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput> | EmailOTPCreateWithoutUserInput[] | EmailOTPUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailOTPCreateOrConnectWithoutUserInput | EmailOTPCreateOrConnectWithoutUserInput[]
+    upsert?: EmailOTPUpsertWithWhereUniqueWithoutUserInput | EmailOTPUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmailOTPCreateManyUserInputEnvelope
+    set?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    disconnect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    delete?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
+    update?: EmailOTPUpdateWithWhereUniqueWithoutUserInput | EmailOTPUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmailOTPUpdateManyWithWhereWithoutUserInput | EmailOTPUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
+  }
+
+  export type FeedInteractionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
+    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutUserInput | FeedInteractionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FeedInteractionCreateManyUserInputEnvelope
+    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    update?: FeedInteractionUpdateWithWhereUniqueWithoutUserInput | FeedInteractionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FeedInteractionUpdateManyWithWhereWithoutUserInput | FeedInteractionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
+  }
+
+  export type FeedPostUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput> | FeedPostCreateWithoutAuthorInput[] | FeedPostUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedPostCreateOrConnectWithoutAuthorInput | FeedPostCreateOrConnectWithoutAuthorInput[]
+    upsert?: FeedPostUpsertWithWhereUniqueWithoutAuthorInput | FeedPostUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: FeedPostCreateManyAuthorInputEnvelope
+    set?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    disconnect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    delete?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+    update?: FeedPostUpdateWithWhereUniqueWithoutAuthorInput | FeedPostUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: FeedPostUpdateManyWithWhereWithoutAuthorInput | FeedPostUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
+  }
+
+  export type RefreshTokenUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
+    upsert?: RefreshTokenUpsertWithWhereUniqueWithoutUserInput | RefreshTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: RefreshTokenCreateManyUserInputEnvelope
+    set?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    disconnect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    delete?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    connect?: RefreshTokenWhereUniqueInput | RefreshTokenWhereUniqueInput[]
+    update?: RefreshTokenUpdateWithWhereUniqueWithoutUserInput | RefreshTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: RefreshTokenUpdateManyWithWhereWithoutUserInput | RefreshTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: RefreshTokenScalarWhereInput | RefreshTokenScalarWhereInput[]
+  }
+
+  export type SavedCollegeUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput> | SavedCollegeCreateWithoutUserInput[] | SavedCollegeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedCollegeCreateOrConnectWithoutUserInput | SavedCollegeCreateOrConnectWithoutUserInput[]
+    upsert?: SavedCollegeUpsertWithWhereUniqueWithoutUserInput | SavedCollegeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SavedCollegeCreateManyUserInputEnvelope
+    set?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    disconnect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    delete?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    update?: SavedCollegeUpdateWithWhereUniqueWithoutUserInput | SavedCollegeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SavedCollegeUpdateManyWithWhereWithoutUserInput | SavedCollegeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
+  }
+
+  export type TestScoreUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput> | TestScoreCreateWithoutUserInput[] | TestScoreUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TestScoreCreateOrConnectWithoutUserInput | TestScoreCreateOrConnectWithoutUserInput[]
+    upsert?: TestScoreUpsertWithWhereUniqueWithoutUserInput | TestScoreUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TestScoreCreateManyUserInputEnvelope
+    set?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    disconnect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    delete?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    connect?: TestScoreWhereUniqueInput | TestScoreWhereUniqueInput[]
+    update?: TestScoreUpdateWithWhereUniqueWithoutUserInput | TestScoreUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TestScoreUpdateManyWithWhereWithoutUserInput | TestScoreUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
+  }
+
+  export type UserDocumentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput> | UserDocumentCreateWithoutUserInput[] | UserDocumentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
+    upsert?: UserDocumentUpsertWithWhereUniqueWithoutUserInput | UserDocumentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserDocumentCreateManyUserInputEnvelope
+    set?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    disconnect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    delete?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
+    update?: UserDocumentUpdateWithWhereUniqueWithoutUserInput | UserDocumentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserDocumentUpdateManyWithWhereWithoutUserInput | UserDocumentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
+  }
+
+  export type UserProfileUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserProfileCreateOrConnectWithoutUserInput
+    upsert?: UserProfileUpsertWithoutUserInput
+    disconnect?: UserProfileWhereInput | boolean
+    delete?: UserProfileWhereInput | boolean
+    connect?: UserProfileWhereUniqueInput
+    update?: XOR<XOR<UserProfileUpdateToOneWithWhereWithoutUserInput, UserProfileUpdateWithoutUserInput>, UserProfileUncheckedUpdateWithoutUserInput>
   }
 
   export type UserCreateNestedOneWithoutApiKeysInput = {
@@ -38063,6 +36661,13 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type FeedInteractionCreateNestedManyWithoutPostInput = {
+    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
+    createMany?: FeedInteractionCreateManyPostInputEnvelope
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+  }
+
   export type UserCreateNestedOneWithoutFeedPostsInput = {
     create?: XOR<UserCreateWithoutFeedPostsInput, UserUncheckedCreateWithoutFeedPostsInput>
     connectOrCreate?: UserCreateOrConnectWithoutFeedPostsInput
@@ -38075,32 +36680,11 @@ export namespace Prisma {
     connect?: UniversityWhereUniqueInput
   }
 
-  export type FeedInteractionCreateNestedManyWithoutPostInput = {
-    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
-    createMany?: FeedInteractionCreateManyPostInputEnvelope
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-  }
-
-  export type FeedCommentCreateNestedManyWithoutPostInput = {
-    create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
-    createMany?: FeedCommentCreateManyPostInputEnvelope
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-  }
-
   export type FeedInteractionUncheckedCreateNestedManyWithoutPostInput = {
     create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
     createMany?: FeedInteractionCreateManyPostInputEnvelope
     connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-  }
-
-  export type FeedCommentUncheckedCreateNestedManyWithoutPostInput = {
-    create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
-    createMany?: FeedCommentCreateManyPostInputEnvelope
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
   }
 
   export type EnumFeedCategoryFieldUpdateOperationsInput = {
@@ -38114,6 +36698,20 @@ export namespace Prisma {
 
   export type EnumPostStatusFieldUpdateOperationsInput = {
     set?: $Enums.PostStatus
+  }
+
+  export type FeedInteractionUpdateManyWithoutPostNestedInput = {
+    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
+    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutPostInput | FeedInteractionUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: FeedInteractionCreateManyPostInputEnvelope
+    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    update?: FeedInteractionUpdateWithWhereUniqueWithoutPostInput | FeedInteractionUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: FeedInteractionUpdateManyWithWhereWithoutPostInput | FeedInteractionUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
   }
 
   export type UserUpdateOneRequiredWithoutFeedPostsNestedInput = {
@@ -38134,34 +36732,6 @@ export namespace Prisma {
     update?: XOR<XOR<UniversityUpdateToOneWithWhereWithoutFeedPostsInput, UniversityUpdateWithoutFeedPostsInput>, UniversityUncheckedUpdateWithoutFeedPostsInput>
   }
 
-  export type FeedInteractionUpdateManyWithoutPostNestedInput = {
-    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
-    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutPostInput | FeedInteractionUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: FeedInteractionCreateManyPostInputEnvelope
-    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    update?: FeedInteractionUpdateWithWhereUniqueWithoutPostInput | FeedInteractionUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: FeedInteractionUpdateManyWithWhereWithoutPostInput | FeedInteractionUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
-  }
-
-  export type FeedCommentUpdateManyWithoutPostNestedInput = {
-    create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
-    upsert?: FeedCommentUpsertWithWhereUniqueWithoutPostInput | FeedCommentUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: FeedCommentCreateManyPostInputEnvelope
-    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    update?: FeedCommentUpdateWithWhereUniqueWithoutPostInput | FeedCommentUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: FeedCommentUpdateManyWithWhereWithoutPostInput | FeedCommentUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
-  }
-
   export type FeedInteractionUncheckedUpdateManyWithoutPostNestedInput = {
     create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
@@ -38176,46 +36746,10 @@ export namespace Prisma {
     deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
   }
 
-  export type FeedCommentUncheckedUpdateManyWithoutPostNestedInput = {
-    create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
-    upsert?: FeedCommentUpsertWithWhereUniqueWithoutPostInput | FeedCommentUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: FeedCommentCreateManyPostInputEnvelope
-    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    update?: FeedCommentUpdateWithWhereUniqueWithoutPostInput | FeedCommentUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: FeedCommentUpdateManyWithWhereWithoutPostInput | FeedCommentUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
-  }
-
-  export type FeedPostCreateNestedOneWithoutCommentsInput = {
-    create?: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
-    connectOrCreate?: FeedPostCreateOrConnectWithoutCommentsInput
+  export type FeedPostCreateNestedOneWithoutInteractionsInput = {
+    create?: XOR<FeedPostCreateWithoutInteractionsInput, FeedPostUncheckedCreateWithoutInteractionsInput>
+    connectOrCreate?: FeedPostCreateOrConnectWithoutInteractionsInput
     connect?: FeedPostWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutFeedCommentsInput = {
-    create?: XOR<UserCreateWithoutFeedCommentsInput, UserUncheckedCreateWithoutFeedCommentsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutFeedCommentsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type FeedPostUpdateOneRequiredWithoutCommentsNestedInput = {
-    create?: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
-    connectOrCreate?: FeedPostCreateOrConnectWithoutCommentsInput
-    upsert?: FeedPostUpsertWithoutCommentsInput
-    connect?: FeedPostWhereUniqueInput
-    update?: XOR<XOR<FeedPostUpdateToOneWithWhereWithoutCommentsInput, FeedPostUpdateWithoutCommentsInput>, FeedPostUncheckedUpdateWithoutCommentsInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutFeedCommentsNestedInput = {
-    create?: XOR<UserCreateWithoutFeedCommentsInput, UserUncheckedCreateWithoutFeedCommentsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutFeedCommentsInput
-    upsert?: UserUpsertWithoutFeedCommentsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedCommentsInput, UserUpdateWithoutFeedCommentsInput>, UserUncheckedUpdateWithoutFeedCommentsInput>
   }
 
   export type UserCreateNestedOneWithoutFeedInteractionsInput = {
@@ -38224,22 +36758,8 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type FeedPostCreateNestedOneWithoutInteractionsInput = {
-    create?: XOR<FeedPostCreateWithoutInteractionsInput, FeedPostUncheckedCreateWithoutInteractionsInput>
-    connectOrCreate?: FeedPostCreateOrConnectWithoutInteractionsInput
-    connect?: FeedPostWhereUniqueInput
-  }
-
   export type EnumInteractionTypeFieldUpdateOperationsInput = {
     set?: $Enums.InteractionType
-  }
-
-  export type UserUpdateOneRequiredWithoutFeedInteractionsNestedInput = {
-    create?: XOR<UserCreateWithoutFeedInteractionsInput, UserUncheckedCreateWithoutFeedInteractionsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutFeedInteractionsInput
-    upsert?: UserUpsertWithoutFeedInteractionsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedInteractionsInput, UserUpdateWithoutFeedInteractionsInput>, UserUncheckedUpdateWithoutFeedInteractionsInput>
   }
 
   export type FeedPostUpdateOneRequiredWithoutInteractionsNestedInput = {
@@ -38250,19 +36770,20 @@ export namespace Prisma {
     update?: XOR<XOR<FeedPostUpdateToOneWithWhereWithoutInteractionsInput, FeedPostUpdateWithoutInteractionsInput>, FeedPostUncheckedUpdateWithoutInteractionsInput>
   }
 
+  export type UserUpdateOneRequiredWithoutFeedInteractionsNestedInput = {
+    create?: XOR<UserCreateWithoutFeedInteractionsInput, UserUncheckedCreateWithoutFeedInteractionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeedInteractionsInput
+    upsert?: UserUpsertWithoutFeedInteractionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedInteractionsInput, UserUpdateWithoutFeedInteractionsInput>, UserUncheckedUpdateWithoutFeedInteractionsInput>
+  }
+
   export type UniversityCreatenotableAlumniInput = {
     set: string[]
   }
 
   export type UniversityCreatetagsInput = {
     set: string[]
-  }
-
-  export type UniversityCourseCreateNestedManyWithoutUniversityInput = {
-    create?: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput> | UniversityCourseCreateWithoutUniversityInput[] | UniversityCourseUncheckedCreateWithoutUniversityInput[]
-    connectOrCreate?: UniversityCourseCreateOrConnectWithoutUniversityInput | UniversityCourseCreateOrConnectWithoutUniversityInput[]
-    createMany?: UniversityCourseCreateManyUniversityInputEnvelope
-    connect?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
   }
 
   export type FeedPostCreateNestedManyWithoutUniversityInput = {
@@ -38272,7 +36793,7 @@ export namespace Prisma {
     connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
   }
 
-  export type UniversityCourseUncheckedCreateNestedManyWithoutUniversityInput = {
+  export type UniversityCourseCreateNestedManyWithoutUniversityInput = {
     create?: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput> | UniversityCourseCreateWithoutUniversityInput[] | UniversityCourseUncheckedCreateWithoutUniversityInput[]
     connectOrCreate?: UniversityCourseCreateOrConnectWithoutUniversityInput | UniversityCourseCreateOrConnectWithoutUniversityInput[]
     createMany?: UniversityCourseCreateManyUniversityInputEnvelope
@@ -38284,6 +36805,13 @@ export namespace Prisma {
     connectOrCreate?: FeedPostCreateOrConnectWithoutUniversityInput | FeedPostCreateOrConnectWithoutUniversityInput[]
     createMany?: FeedPostCreateManyUniversityInputEnvelope
     connect?: FeedPostWhereUniqueInput | FeedPostWhereUniqueInput[]
+  }
+
+  export type UniversityCourseUncheckedCreateNestedManyWithoutUniversityInput = {
+    create?: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput> | UniversityCourseCreateWithoutUniversityInput[] | UniversityCourseUncheckedCreateWithoutUniversityInput[]
+    connectOrCreate?: UniversityCourseCreateOrConnectWithoutUniversityInput | UniversityCourseCreateOrConnectWithoutUniversityInput[]
+    createMany?: UniversityCourseCreateManyUniversityInputEnvelope
+    connect?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
   }
 
   export type NullableEnumUniversityTypeFieldUpdateOperationsInput = {
@@ -38300,20 +36828,6 @@ export namespace Prisma {
     push?: string | string[]
   }
 
-  export type UniversityCourseUpdateManyWithoutUniversityNestedInput = {
-    create?: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput> | UniversityCourseCreateWithoutUniversityInput[] | UniversityCourseUncheckedCreateWithoutUniversityInput[]
-    connectOrCreate?: UniversityCourseCreateOrConnectWithoutUniversityInput | UniversityCourseCreateOrConnectWithoutUniversityInput[]
-    upsert?: UniversityCourseUpsertWithWhereUniqueWithoutUniversityInput | UniversityCourseUpsertWithWhereUniqueWithoutUniversityInput[]
-    createMany?: UniversityCourseCreateManyUniversityInputEnvelope
-    set?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
-    disconnect?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
-    delete?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
-    connect?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
-    update?: UniversityCourseUpdateWithWhereUniqueWithoutUniversityInput | UniversityCourseUpdateWithWhereUniqueWithoutUniversityInput[]
-    updateMany?: UniversityCourseUpdateManyWithWhereWithoutUniversityInput | UniversityCourseUpdateManyWithWhereWithoutUniversityInput[]
-    deleteMany?: UniversityCourseScalarWhereInput | UniversityCourseScalarWhereInput[]
-  }
-
   export type FeedPostUpdateManyWithoutUniversityNestedInput = {
     create?: XOR<FeedPostCreateWithoutUniversityInput, FeedPostUncheckedCreateWithoutUniversityInput> | FeedPostCreateWithoutUniversityInput[] | FeedPostUncheckedCreateWithoutUniversityInput[]
     connectOrCreate?: FeedPostCreateOrConnectWithoutUniversityInput | FeedPostCreateOrConnectWithoutUniversityInput[]
@@ -38328,7 +36842,7 @@ export namespace Prisma {
     deleteMany?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
   }
 
-  export type UniversityCourseUncheckedUpdateManyWithoutUniversityNestedInput = {
+  export type UniversityCourseUpdateManyWithoutUniversityNestedInput = {
     create?: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput> | UniversityCourseCreateWithoutUniversityInput[] | UniversityCourseUncheckedCreateWithoutUniversityInput[]
     connectOrCreate?: UniversityCourseCreateOrConnectWithoutUniversityInput | UniversityCourseCreateOrConnectWithoutUniversityInput[]
     upsert?: UniversityCourseUpsertWithWhereUniqueWithoutUniversityInput | UniversityCourseUpsertWithWhereUniqueWithoutUniversityInput[]
@@ -38356,40 +36870,22 @@ export namespace Prisma {
     deleteMany?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
   }
 
+  export type UniversityCourseUncheckedUpdateManyWithoutUniversityNestedInput = {
+    create?: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput> | UniversityCourseCreateWithoutUniversityInput[] | UniversityCourseUncheckedCreateWithoutUniversityInput[]
+    connectOrCreate?: UniversityCourseCreateOrConnectWithoutUniversityInput | UniversityCourseCreateOrConnectWithoutUniversityInput[]
+    upsert?: UniversityCourseUpsertWithWhereUniqueWithoutUniversityInput | UniversityCourseUpsertWithWhereUniqueWithoutUniversityInput[]
+    createMany?: UniversityCourseCreateManyUniversityInputEnvelope
+    set?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
+    disconnect?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
+    delete?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
+    connect?: UniversityCourseWhereUniqueInput | UniversityCourseWhereUniqueInput[]
+    update?: UniversityCourseUpdateWithWhereUniqueWithoutUniversityInput | UniversityCourseUpdateWithWhereUniqueWithoutUniversityInput[]
+    updateMany?: UniversityCourseUpdateManyWithWhereWithoutUniversityInput | UniversityCourseUpdateManyWithWhereWithoutUniversityInput[]
+    deleteMany?: UniversityCourseScalarWhereInput | UniversityCourseScalarWhereInput[]
+  }
+
   export type UniversityCourseCreateintakeMonthsInput = {
     set: number[]
-  }
-
-  export type UniversityCreateNestedOneWithoutCoursesInput = {
-    create?: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
-    connectOrCreate?: UniversityCreateOrConnectWithoutCoursesInput
-    connect?: UniversityWhereUniqueInput
-  }
-
-  export type CourseRequirementCreateNestedOneWithoutCourseInput = {
-    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
-    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
-    connect?: CourseRequirementWhereUniqueInput
-  }
-
-  export type CourseFeeCreateNestedOneWithoutCourseInput = {
-    create?: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
-    connectOrCreate?: CourseFeeCreateOrConnectWithoutCourseInput
-    connect?: CourseFeeWhereUniqueInput
-  }
-
-  export type SavedCollegeCreateNestedManyWithoutCourseInput = {
-    create?: XOR<SavedCollegeCreateWithoutCourseInput, SavedCollegeUncheckedCreateWithoutCourseInput> | SavedCollegeCreateWithoutCourseInput[] | SavedCollegeUncheckedCreateWithoutCourseInput[]
-    connectOrCreate?: SavedCollegeCreateOrConnectWithoutCourseInput | SavedCollegeCreateOrConnectWithoutCourseInput[]
-    createMany?: SavedCollegeCreateManyCourseInputEnvelope
-    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-  }
-
-  export type AIComparisonCreateNestedManyWithoutCourseInput = {
-    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
-    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
-    createMany?: AIComparisonCreateManyCourseInputEnvelope
-    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
   }
 
   export type ActionPlanCreateNestedManyWithoutCourseInput = {
@@ -38399,6 +36895,13 @@ export namespace Prisma {
     connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
   }
 
+  export type AIComparisonCreateNestedManyWithoutCourseInput = {
+    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
+    createMany?: AIComparisonCreateManyCourseInputEnvelope
+    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+  }
+
   export type ApplicationCreateNestedManyWithoutCourseInput = {
     create?: XOR<ApplicationCreateWithoutCourseInput, ApplicationUncheckedCreateWithoutCourseInput> | ApplicationCreateWithoutCourseInput[] | ApplicationUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutCourseInput | ApplicationCreateOrConnectWithoutCourseInput[]
@@ -38406,30 +36909,29 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
-  export type CourseRequirementUncheckedCreateNestedOneWithoutCourseInput = {
-    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
-    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
-    connect?: CourseRequirementWhereUniqueInput
-  }
-
-  export type CourseFeeUncheckedCreateNestedOneWithoutCourseInput = {
+  export type CourseFeeCreateNestedOneWithoutCourseInput = {
     create?: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
     connectOrCreate?: CourseFeeCreateOrConnectWithoutCourseInput
     connect?: CourseFeeWhereUniqueInput
   }
 
-  export type SavedCollegeUncheckedCreateNestedManyWithoutCourseInput = {
+  export type CourseRequirementCreateNestedOneWithoutCourseInput = {
+    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
+    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
+    connect?: CourseRequirementWhereUniqueInput
+  }
+
+  export type SavedCollegeCreateNestedManyWithoutCourseInput = {
     create?: XOR<SavedCollegeCreateWithoutCourseInput, SavedCollegeUncheckedCreateWithoutCourseInput> | SavedCollegeCreateWithoutCourseInput[] | SavedCollegeUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: SavedCollegeCreateOrConnectWithoutCourseInput | SavedCollegeCreateOrConnectWithoutCourseInput[]
     createMany?: SavedCollegeCreateManyCourseInputEnvelope
     connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
   }
 
-  export type AIComparisonUncheckedCreateNestedManyWithoutCourseInput = {
-    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
-    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
-    createMany?: AIComparisonCreateManyCourseInputEnvelope
-    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+  export type UniversityCreateNestedOneWithoutCoursesInput = {
+    create?: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
+    connectOrCreate?: UniversityCreateOrConnectWithoutCoursesInput
+    connect?: UniversityWhereUniqueInput
   }
 
   export type ActionPlanUncheckedCreateNestedManyWithoutCourseInput = {
@@ -38439,11 +36941,37 @@ export namespace Prisma {
     connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
   }
 
+  export type AIComparisonUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
+    createMany?: AIComparisonCreateManyCourseInputEnvelope
+    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+  }
+
   export type ApplicationUncheckedCreateNestedManyWithoutCourseInput = {
     create?: XOR<ApplicationCreateWithoutCourseInput, ApplicationUncheckedCreateWithoutCourseInput> | ApplicationCreateWithoutCourseInput[] | ApplicationUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutCourseInput | ApplicationCreateOrConnectWithoutCourseInput[]
     createMany?: ApplicationCreateManyCourseInputEnvelope
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  }
+
+  export type CourseFeeUncheckedCreateNestedOneWithoutCourseInput = {
+    create?: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
+    connectOrCreate?: CourseFeeCreateOrConnectWithoutCourseInput
+    connect?: CourseFeeWhereUniqueInput
+  }
+
+  export type CourseRequirementUncheckedCreateNestedOneWithoutCourseInput = {
+    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
+    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
+    connect?: CourseRequirementWhereUniqueInput
+  }
+
+  export type SavedCollegeUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<SavedCollegeCreateWithoutCourseInput, SavedCollegeUncheckedCreateWithoutCourseInput> | SavedCollegeCreateWithoutCourseInput[] | SavedCollegeUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: SavedCollegeCreateOrConnectWithoutCourseInput | SavedCollegeCreateOrConnectWithoutCourseInput[]
+    createMany?: SavedCollegeCreateManyCourseInputEnvelope
+    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
   }
 
   export type EnumDegreeTypeFieldUpdateOperationsInput = {
@@ -38453,62 +36981,6 @@ export namespace Prisma {
   export type UniversityCourseUpdateintakeMonthsInput = {
     set?: number[]
     push?: number | number[]
-  }
-
-  export type UniversityUpdateOneRequiredWithoutCoursesNestedInput = {
-    create?: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
-    connectOrCreate?: UniversityCreateOrConnectWithoutCoursesInput
-    upsert?: UniversityUpsertWithoutCoursesInput
-    connect?: UniversityWhereUniqueInput
-    update?: XOR<XOR<UniversityUpdateToOneWithWhereWithoutCoursesInput, UniversityUpdateWithoutCoursesInput>, UniversityUncheckedUpdateWithoutCoursesInput>
-  }
-
-  export type CourseRequirementUpdateOneWithoutCourseNestedInput = {
-    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
-    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
-    upsert?: CourseRequirementUpsertWithoutCourseInput
-    disconnect?: CourseRequirementWhereInput | boolean
-    delete?: CourseRequirementWhereInput | boolean
-    connect?: CourseRequirementWhereUniqueInput
-    update?: XOR<XOR<CourseRequirementUpdateToOneWithWhereWithoutCourseInput, CourseRequirementUpdateWithoutCourseInput>, CourseRequirementUncheckedUpdateWithoutCourseInput>
-  }
-
-  export type CourseFeeUpdateOneWithoutCourseNestedInput = {
-    create?: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
-    connectOrCreate?: CourseFeeCreateOrConnectWithoutCourseInput
-    upsert?: CourseFeeUpsertWithoutCourseInput
-    disconnect?: CourseFeeWhereInput | boolean
-    delete?: CourseFeeWhereInput | boolean
-    connect?: CourseFeeWhereUniqueInput
-    update?: XOR<XOR<CourseFeeUpdateToOneWithWhereWithoutCourseInput, CourseFeeUpdateWithoutCourseInput>, CourseFeeUncheckedUpdateWithoutCourseInput>
-  }
-
-  export type SavedCollegeUpdateManyWithoutCourseNestedInput = {
-    create?: XOR<SavedCollegeCreateWithoutCourseInput, SavedCollegeUncheckedCreateWithoutCourseInput> | SavedCollegeCreateWithoutCourseInput[] | SavedCollegeUncheckedCreateWithoutCourseInput[]
-    connectOrCreate?: SavedCollegeCreateOrConnectWithoutCourseInput | SavedCollegeCreateOrConnectWithoutCourseInput[]
-    upsert?: SavedCollegeUpsertWithWhereUniqueWithoutCourseInput | SavedCollegeUpsertWithWhereUniqueWithoutCourseInput[]
-    createMany?: SavedCollegeCreateManyCourseInputEnvelope
-    set?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    disconnect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    delete?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
-    update?: SavedCollegeUpdateWithWhereUniqueWithoutCourseInput | SavedCollegeUpdateWithWhereUniqueWithoutCourseInput[]
-    updateMany?: SavedCollegeUpdateManyWithWhereWithoutCourseInput | SavedCollegeUpdateManyWithWhereWithoutCourseInput[]
-    deleteMany?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
-  }
-
-  export type AIComparisonUpdateManyWithoutCourseNestedInput = {
-    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
-    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
-    upsert?: AIComparisonUpsertWithWhereUniqueWithoutCourseInput | AIComparisonUpsertWithWhereUniqueWithoutCourseInput[]
-    createMany?: AIComparisonCreateManyCourseInputEnvelope
-    set?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    disconnect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    delete?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    update?: AIComparisonUpdateWithWhereUniqueWithoutCourseInput | AIComparisonUpdateWithWhereUniqueWithoutCourseInput[]
-    updateMany?: AIComparisonUpdateManyWithWhereWithoutCourseInput | AIComparisonUpdateManyWithWhereWithoutCourseInput[]
-    deleteMany?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
   }
 
   export type ActionPlanUpdateManyWithoutCourseNestedInput = {
@@ -38525,6 +36997,20 @@ export namespace Prisma {
     deleteMany?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
   }
 
+  export type AIComparisonUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
+    upsert?: AIComparisonUpsertWithWhereUniqueWithoutCourseInput | AIComparisonUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: AIComparisonCreateManyCourseInputEnvelope
+    set?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    disconnect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    delete?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    update?: AIComparisonUpdateWithWhereUniqueWithoutCourseInput | AIComparisonUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: AIComparisonUpdateManyWithWhereWithoutCourseInput | AIComparisonUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
+  }
+
   export type ApplicationUpdateManyWithoutCourseNestedInput = {
     create?: XOR<ApplicationCreateWithoutCourseInput, ApplicationUncheckedCreateWithoutCourseInput> | ApplicationCreateWithoutCourseInput[] | ApplicationUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutCourseInput | ApplicationCreateOrConnectWithoutCourseInput[]
@@ -38539,17 +37025,7 @@ export namespace Prisma {
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
-  export type CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput = {
-    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
-    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
-    upsert?: CourseRequirementUpsertWithoutCourseInput
-    disconnect?: CourseRequirementWhereInput | boolean
-    delete?: CourseRequirementWhereInput | boolean
-    connect?: CourseRequirementWhereUniqueInput
-    update?: XOR<XOR<CourseRequirementUpdateToOneWithWhereWithoutCourseInput, CourseRequirementUpdateWithoutCourseInput>, CourseRequirementUncheckedUpdateWithoutCourseInput>
-  }
-
-  export type CourseFeeUncheckedUpdateOneWithoutCourseNestedInput = {
+  export type CourseFeeUpdateOneWithoutCourseNestedInput = {
     create?: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
     connectOrCreate?: CourseFeeCreateOrConnectWithoutCourseInput
     upsert?: CourseFeeUpsertWithoutCourseInput
@@ -38559,7 +37035,17 @@ export namespace Prisma {
     update?: XOR<XOR<CourseFeeUpdateToOneWithWhereWithoutCourseInput, CourseFeeUpdateWithoutCourseInput>, CourseFeeUncheckedUpdateWithoutCourseInput>
   }
 
-  export type SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput = {
+  export type CourseRequirementUpdateOneWithoutCourseNestedInput = {
+    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
+    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
+    upsert?: CourseRequirementUpsertWithoutCourseInput
+    disconnect?: CourseRequirementWhereInput | boolean
+    delete?: CourseRequirementWhereInput | boolean
+    connect?: CourseRequirementWhereUniqueInput
+    update?: XOR<XOR<CourseRequirementUpdateToOneWithWhereWithoutCourseInput, CourseRequirementUpdateWithoutCourseInput>, CourseRequirementUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type SavedCollegeUpdateManyWithoutCourseNestedInput = {
     create?: XOR<SavedCollegeCreateWithoutCourseInput, SavedCollegeUncheckedCreateWithoutCourseInput> | SavedCollegeCreateWithoutCourseInput[] | SavedCollegeUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: SavedCollegeCreateOrConnectWithoutCourseInput | SavedCollegeCreateOrConnectWithoutCourseInput[]
     upsert?: SavedCollegeUpsertWithWhereUniqueWithoutCourseInput | SavedCollegeUpsertWithWhereUniqueWithoutCourseInput[]
@@ -38573,18 +37059,12 @@ export namespace Prisma {
     deleteMany?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
   }
 
-  export type AIComparisonUncheckedUpdateManyWithoutCourseNestedInput = {
-    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
-    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
-    upsert?: AIComparisonUpsertWithWhereUniqueWithoutCourseInput | AIComparisonUpsertWithWhereUniqueWithoutCourseInput[]
-    createMany?: AIComparisonCreateManyCourseInputEnvelope
-    set?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    disconnect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    delete?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
-    update?: AIComparisonUpdateWithWhereUniqueWithoutCourseInput | AIComparisonUpdateWithWhereUniqueWithoutCourseInput[]
-    updateMany?: AIComparisonUpdateManyWithWhereWithoutCourseInput | AIComparisonUpdateManyWithWhereWithoutCourseInput[]
-    deleteMany?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
+  export type UniversityUpdateOneRequiredWithoutCoursesNestedInput = {
+    create?: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
+    connectOrCreate?: UniversityCreateOrConnectWithoutCoursesInput
+    upsert?: UniversityUpsertWithoutCoursesInput
+    connect?: UniversityWhereUniqueInput
+    update?: XOR<XOR<UniversityUpdateToOneWithWhereWithoutCoursesInput, UniversityUpdateWithoutCoursesInput>, UniversityUncheckedUpdateWithoutCoursesInput>
   }
 
   export type ActionPlanUncheckedUpdateManyWithoutCourseNestedInput = {
@@ -38601,6 +37081,20 @@ export namespace Prisma {
     deleteMany?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
   }
 
+  export type AIComparisonUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput> | AIComparisonCreateWithoutCourseInput[] | AIComparisonUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AIComparisonCreateOrConnectWithoutCourseInput | AIComparisonCreateOrConnectWithoutCourseInput[]
+    upsert?: AIComparisonUpsertWithWhereUniqueWithoutCourseInput | AIComparisonUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: AIComparisonCreateManyCourseInputEnvelope
+    set?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    disconnect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    delete?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    connect?: AIComparisonWhereUniqueInput | AIComparisonWhereUniqueInput[]
+    update?: AIComparisonUpdateWithWhereUniqueWithoutCourseInput | AIComparisonUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: AIComparisonUpdateManyWithWhereWithoutCourseInput | AIComparisonUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
+  }
+
   export type ApplicationUncheckedUpdateManyWithoutCourseNestedInput = {
     create?: XOR<ApplicationCreateWithoutCourseInput, ApplicationUncheckedCreateWithoutCourseInput> | ApplicationCreateWithoutCourseInput[] | ApplicationUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutCourseInput | ApplicationCreateOrConnectWithoutCourseInput[]
@@ -38613,6 +37107,40 @@ export namespace Prisma {
     update?: ApplicationUpdateWithWhereUniqueWithoutCourseInput | ApplicationUpdateWithWhereUniqueWithoutCourseInput[]
     updateMany?: ApplicationUpdateManyWithWhereWithoutCourseInput | ApplicationUpdateManyWithWhereWithoutCourseInput[]
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  }
+
+  export type CourseFeeUncheckedUpdateOneWithoutCourseNestedInput = {
+    create?: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
+    connectOrCreate?: CourseFeeCreateOrConnectWithoutCourseInput
+    upsert?: CourseFeeUpsertWithoutCourseInput
+    disconnect?: CourseFeeWhereInput | boolean
+    delete?: CourseFeeWhereInput | boolean
+    connect?: CourseFeeWhereUniqueInput
+    update?: XOR<XOR<CourseFeeUpdateToOneWithWhereWithoutCourseInput, CourseFeeUpdateWithoutCourseInput>, CourseFeeUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput = {
+    create?: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
+    connectOrCreate?: CourseRequirementCreateOrConnectWithoutCourseInput
+    upsert?: CourseRequirementUpsertWithoutCourseInput
+    disconnect?: CourseRequirementWhereInput | boolean
+    delete?: CourseRequirementWhereInput | boolean
+    connect?: CourseRequirementWhereUniqueInput
+    update?: XOR<XOR<CourseRequirementUpdateToOneWithWhereWithoutCourseInput, CourseRequirementUpdateWithoutCourseInput>, CourseRequirementUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<SavedCollegeCreateWithoutCourseInput, SavedCollegeUncheckedCreateWithoutCourseInput> | SavedCollegeCreateWithoutCourseInput[] | SavedCollegeUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: SavedCollegeCreateOrConnectWithoutCourseInput | SavedCollegeCreateOrConnectWithoutCourseInput[]
+    upsert?: SavedCollegeUpsertWithWhereUniqueWithoutCourseInput | SavedCollegeUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: SavedCollegeCreateManyCourseInputEnvelope
+    set?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    disconnect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    delete?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    connect?: SavedCollegeWhereUniqueInput | SavedCollegeWhereUniqueInput[]
+    update?: SavedCollegeUpdateWithWhereUniqueWithoutCourseInput | SavedCollegeUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: SavedCollegeUpdateManyWithWhereWithoutCourseInput | SavedCollegeUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
   }
 
   export type UniversityCourseCreateNestedOneWithoutRequirementsInput = {
@@ -38643,28 +37171,20 @@ export namespace Prisma {
     update?: XOR<XOR<UniversityCourseUpdateToOneWithWhereWithoutFeesInput, UniversityCourseUpdateWithoutFeesInput>, UniversityCourseUncheckedUpdateWithoutFeesInput>
   }
 
-  export type UserCreateNestedOneWithoutSavedCollegesInput = {
-    create?: XOR<UserCreateWithoutSavedCollegesInput, UserUncheckedCreateWithoutSavedCollegesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutSavedCollegesInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type UniversityCourseCreateNestedOneWithoutSavedByInput = {
     create?: XOR<UniversityCourseCreateWithoutSavedByInput, UniversityCourseUncheckedCreateWithoutSavedByInput>
     connectOrCreate?: UniversityCourseCreateOrConnectWithoutSavedByInput
     connect?: UniversityCourseWhereUniqueInput
   }
 
-  export type NullableEnumCollegePriorityFieldUpdateOperationsInput = {
-    set?: $Enums.CollegePriority | null
-  }
-
-  export type UserUpdateOneRequiredWithoutSavedCollegesNestedInput = {
+  export type UserCreateNestedOneWithoutSavedCollegesInput = {
     create?: XOR<UserCreateWithoutSavedCollegesInput, UserUncheckedCreateWithoutSavedCollegesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSavedCollegesInput
-    upsert?: UserUpsertWithoutSavedCollegesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSavedCollegesInput, UserUpdateWithoutSavedCollegesInput>, UserUncheckedUpdateWithoutSavedCollegesInput>
+  }
+
+  export type NullableEnumCollegePriorityFieldUpdateOperationsInput = {
+    set?: $Enums.CollegePriority | null
   }
 
   export type UniversityCourseUpdateOneRequiredWithoutSavedByNestedInput = {
@@ -38673,6 +37193,14 @@ export namespace Prisma {
     upsert?: UniversityCourseUpsertWithoutSavedByInput
     connect?: UniversityCourseWhereUniqueInput
     update?: XOR<XOR<UniversityCourseUpdateToOneWithWhereWithoutSavedByInput, UniversityCourseUpdateWithoutSavedByInput>, UniversityCourseUncheckedUpdateWithoutSavedByInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSavedCollegesNestedInput = {
+    create?: XOR<UserCreateWithoutSavedCollegesInput, UserUncheckedCreateWithoutSavedCollegesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSavedCollegesInput
+    upsert?: UserUpsertWithoutSavedCollegesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSavedCollegesInput, UserUpdateWithoutSavedCollegesInput>, UserUncheckedUpdateWithoutSavedCollegesInput>
   }
 
   export type AIComparisonCreatestrengthsInput = {
@@ -38687,10 +37215,11 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type UserCreateNestedOneWithoutAiComparisonsInput = {
-    create?: XOR<UserCreateWithoutAiComparisonsInput, UserUncheckedCreateWithoutAiComparisonsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAiComparisonsInput
-    connect?: UserWhereUniqueInput
+  export type ActionPlanCreateNestedManyWithoutComparisonInput = {
+    create?: XOR<ActionPlanCreateWithoutComparisonInput, ActionPlanUncheckedCreateWithoutComparisonInput> | ActionPlanCreateWithoutComparisonInput[] | ActionPlanUncheckedCreateWithoutComparisonInput[]
+    connectOrCreate?: ActionPlanCreateOrConnectWithoutComparisonInput | ActionPlanCreateOrConnectWithoutComparisonInput[]
+    createMany?: ActionPlanCreateManyComparisonInputEnvelope
+    connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
   }
 
   export type UniversityCourseCreateNestedOneWithoutComparisonsInput = {
@@ -38699,11 +37228,10 @@ export namespace Prisma {
     connect?: UniversityCourseWhereUniqueInput
   }
 
-  export type ActionPlanCreateNestedManyWithoutComparisonInput = {
-    create?: XOR<ActionPlanCreateWithoutComparisonInput, ActionPlanUncheckedCreateWithoutComparisonInput> | ActionPlanCreateWithoutComparisonInput[] | ActionPlanUncheckedCreateWithoutComparisonInput[]
-    connectOrCreate?: ActionPlanCreateOrConnectWithoutComparisonInput | ActionPlanCreateOrConnectWithoutComparisonInput[]
-    createMany?: ActionPlanCreateManyComparisonInputEnvelope
-    connect?: ActionPlanWhereUniqueInput | ActionPlanWhereUniqueInput[]
+  export type UserCreateNestedOneWithoutAiComparisonsInput = {
+    create?: XOR<UserCreateWithoutAiComparisonsInput, UserUncheckedCreateWithoutAiComparisonsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAiComparisonsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type ActionPlanUncheckedCreateNestedManyWithoutComparisonInput = {
@@ -38732,22 +37260,6 @@ export namespace Prisma {
     push?: string | string[]
   }
 
-  export type UserUpdateOneRequiredWithoutAiComparisonsNestedInput = {
-    create?: XOR<UserCreateWithoutAiComparisonsInput, UserUncheckedCreateWithoutAiComparisonsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAiComparisonsInput
-    upsert?: UserUpsertWithoutAiComparisonsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAiComparisonsInput, UserUpdateWithoutAiComparisonsInput>, UserUncheckedUpdateWithoutAiComparisonsInput>
-  }
-
-  export type UniversityCourseUpdateOneRequiredWithoutComparisonsNestedInput = {
-    create?: XOR<UniversityCourseCreateWithoutComparisonsInput, UniversityCourseUncheckedCreateWithoutComparisonsInput>
-    connectOrCreate?: UniversityCourseCreateOrConnectWithoutComparisonsInput
-    upsert?: UniversityCourseUpsertWithoutComparisonsInput
-    connect?: UniversityCourseWhereUniqueInput
-    update?: XOR<XOR<UniversityCourseUpdateToOneWithWhereWithoutComparisonsInput, UniversityCourseUpdateWithoutComparisonsInput>, UniversityCourseUncheckedUpdateWithoutComparisonsInput>
-  }
-
   export type ActionPlanUpdateManyWithoutComparisonNestedInput = {
     create?: XOR<ActionPlanCreateWithoutComparisonInput, ActionPlanUncheckedCreateWithoutComparisonInput> | ActionPlanCreateWithoutComparisonInput[] | ActionPlanUncheckedCreateWithoutComparisonInput[]
     connectOrCreate?: ActionPlanCreateOrConnectWithoutComparisonInput | ActionPlanCreateOrConnectWithoutComparisonInput[]
@@ -38760,6 +37272,22 @@ export namespace Prisma {
     update?: ActionPlanUpdateWithWhereUniqueWithoutComparisonInput | ActionPlanUpdateWithWhereUniqueWithoutComparisonInput[]
     updateMany?: ActionPlanUpdateManyWithWhereWithoutComparisonInput | ActionPlanUpdateManyWithWhereWithoutComparisonInput[]
     deleteMany?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
+  }
+
+  export type UniversityCourseUpdateOneRequiredWithoutComparisonsNestedInput = {
+    create?: XOR<UniversityCourseCreateWithoutComparisonsInput, UniversityCourseUncheckedCreateWithoutComparisonsInput>
+    connectOrCreate?: UniversityCourseCreateOrConnectWithoutComparisonsInput
+    upsert?: UniversityCourseUpsertWithoutComparisonsInput
+    connect?: UniversityCourseWhereUniqueInput
+    update?: XOR<XOR<UniversityCourseUpdateToOneWithWhereWithoutComparisonsInput, UniversityCourseUpdateWithoutComparisonsInput>, UniversityCourseUncheckedUpdateWithoutComparisonsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutAiComparisonsNestedInput = {
+    create?: XOR<UserCreateWithoutAiComparisonsInput, UserUncheckedCreateWithoutAiComparisonsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAiComparisonsInput
+    upsert?: UserUpsertWithoutAiComparisonsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAiComparisonsInput, UserUpdateWithoutAiComparisonsInput>, UserUncheckedUpdateWithoutAiComparisonsInput>
   }
 
   export type ActionPlanUncheckedUpdateManyWithoutComparisonNestedInput = {
@@ -38776,12 +37304,6 @@ export namespace Prisma {
     deleteMany?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutActionPlansInput = {
-    create?: XOR<UserCreateWithoutActionPlansInput, UserUncheckedCreateWithoutActionPlansInput>
-    connectOrCreate?: UserCreateOrConnectWithoutActionPlansInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type AIComparisonCreateNestedOneWithoutActionPlansInput = {
     create?: XOR<AIComparisonCreateWithoutActionPlansInput, AIComparisonUncheckedCreateWithoutActionPlansInput>
     connectOrCreate?: AIComparisonCreateOrConnectWithoutActionPlansInput
@@ -38794,16 +37316,14 @@ export namespace Prisma {
     connect?: UniversityCourseWhereUniqueInput
   }
 
-  export type EnumPlanStatusFieldUpdateOperationsInput = {
-    set?: $Enums.PlanStatus
-  }
-
-  export type UserUpdateOneRequiredWithoutActionPlansNestedInput = {
+  export type UserCreateNestedOneWithoutActionPlansInput = {
     create?: XOR<UserCreateWithoutActionPlansInput, UserUncheckedCreateWithoutActionPlansInput>
     connectOrCreate?: UserCreateOrConnectWithoutActionPlansInput
-    upsert?: UserUpsertWithoutActionPlansInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActionPlansInput, UserUpdateWithoutActionPlansInput>, UserUncheckedUpdateWithoutActionPlansInput>
+  }
+
+  export type EnumPlanStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PlanStatus
   }
 
   export type AIComparisonUpdateOneRequiredWithoutActionPlansNestedInput = {
@@ -38822,16 +37342,24 @@ export namespace Prisma {
     update?: XOR<XOR<UniversityCourseUpdateToOneWithWhereWithoutActionPlansInput, UniversityCourseUpdateWithoutActionPlansInput>, UniversityCourseUncheckedUpdateWithoutActionPlansInput>
   }
 
-  export type UserCreateNestedOneWithoutApplicationsInput = {
-    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
+  export type UserUpdateOneRequiredWithoutActionPlansNestedInput = {
+    create?: XOR<UserCreateWithoutActionPlansInput, UserUncheckedCreateWithoutActionPlansInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActionPlansInput
+    upsert?: UserUpsertWithoutActionPlansInput
     connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActionPlansInput, UserUpdateWithoutActionPlansInput>, UserUncheckedUpdateWithoutActionPlansInput>
   }
 
   export type UniversityCourseCreateNestedOneWithoutApplicationsInput = {
     create?: XOR<UniversityCourseCreateWithoutApplicationsInput, UniversityCourseUncheckedCreateWithoutApplicationsInput>
     connectOrCreate?: UniversityCourseCreateOrConnectWithoutApplicationsInput
     connect?: UniversityCourseWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutApplicationsInput = {
+    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type EnumApplicationStatusFieldUpdateOperationsInput = {
@@ -38846,14 +37374,6 @@ export namespace Prisma {
     set?: $Enums.FeeStatus
   }
 
-  export type UserUpdateOneRequiredWithoutApplicationsNestedInput = {
-    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
-    upsert?: UserUpsertWithoutApplicationsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApplicationsInput, UserUpdateWithoutApplicationsInput>, UserUncheckedUpdateWithoutApplicationsInput>
-  }
-
   export type UniversityCourseUpdateOneRequiredWithoutApplicationsNestedInput = {
     create?: XOR<UniversityCourseCreateWithoutApplicationsInput, UniversityCourseUncheckedCreateWithoutApplicationsInput>
     connectOrCreate?: UniversityCourseCreateOrConnectWithoutApplicationsInput
@@ -38862,14 +37382,16 @@ export namespace Prisma {
     update?: XOR<XOR<UniversityCourseUpdateToOneWithWhereWithoutApplicationsInput, UniversityCourseUpdateWithoutApplicationsInput>, UniversityCourseUncheckedUpdateWithoutApplicationsInput>
   }
 
-  export type CommunityPostCreatetagsInput = {
-    set: string[]
+  export type UserUpdateOneRequiredWithoutApplicationsNestedInput = {
+    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
+    upsert?: UserUpsertWithoutApplicationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApplicationsInput, UserUpdateWithoutApplicationsInput>, UserUncheckedUpdateWithoutApplicationsInput>
   }
 
-  export type UserCreateNestedOneWithoutCommunityPostsInput = {
-    create?: XOR<UserCreateWithoutCommunityPostsInput, UserUncheckedCreateWithoutCommunityPostsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCommunityPostsInput
-    connect?: UserWhereUniqueInput
+  export type CommunityPostCreatetagsInput = {
+    set: string[]
   }
 
   export type CommunityCommentCreateNestedManyWithoutPostInput = {
@@ -38877,6 +37399,12 @@ export namespace Prisma {
     connectOrCreate?: CommunityCommentCreateOrConnectWithoutPostInput | CommunityCommentCreateOrConnectWithoutPostInput[]
     createMany?: CommunityCommentCreateManyPostInputEnvelope
     connect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutCommunityPostsInput = {
+    create?: XOR<UserCreateWithoutCommunityPostsInput, UserUncheckedCreateWithoutCommunityPostsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommunityPostsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type CommunityVoteCreateNestedManyWithoutPostInput = {
@@ -38909,14 +37437,6 @@ export namespace Prisma {
     push?: string | string[]
   }
 
-  export type UserUpdateOneRequiredWithoutCommunityPostsNestedInput = {
-    create?: XOR<UserCreateWithoutCommunityPostsInput, UserUncheckedCreateWithoutCommunityPostsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCommunityPostsInput
-    upsert?: UserUpsertWithoutCommunityPostsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommunityPostsInput, UserUpdateWithoutCommunityPostsInput>, UserUncheckedUpdateWithoutCommunityPostsInput>
-  }
-
   export type CommunityCommentUpdateManyWithoutPostNestedInput = {
     create?: XOR<CommunityCommentCreateWithoutPostInput, CommunityCommentUncheckedCreateWithoutPostInput> | CommunityCommentCreateWithoutPostInput[] | CommunityCommentUncheckedCreateWithoutPostInput[]
     connectOrCreate?: CommunityCommentCreateOrConnectWithoutPostInput | CommunityCommentCreateOrConnectWithoutPostInput[]
@@ -38929,6 +37449,14 @@ export namespace Prisma {
     update?: CommunityCommentUpdateWithWhereUniqueWithoutPostInput | CommunityCommentUpdateWithWhereUniqueWithoutPostInput[]
     updateMany?: CommunityCommentUpdateManyWithWhereWithoutPostInput | CommunityCommentUpdateManyWithWhereWithoutPostInput[]
     deleteMany?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutCommunityPostsNestedInput = {
+    create?: XOR<UserCreateWithoutCommunityPostsInput, UserUncheckedCreateWithoutCommunityPostsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommunityPostsInput
+    upsert?: UserUpsertWithoutCommunityPostsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommunityPostsInput, UserUpdateWithoutCommunityPostsInput>, UserUncheckedUpdateWithoutCommunityPostsInput>
   }
 
   export type CommunityVoteUpdateManyWithoutPostNestedInput = {
@@ -38973,12 +37501,6 @@ export namespace Prisma {
     deleteMany?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
   }
 
-  export type CommunityPostCreateNestedOneWithoutCommentsInput = {
-    create?: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
-    connectOrCreate?: CommunityPostCreateOrConnectWithoutCommentsInput
-    connect?: CommunityPostWhereUniqueInput
-  }
-
   export type UserCreateNestedOneWithoutCommunityCommentsInput = {
     create?: XOR<UserCreateWithoutCommunityCommentsInput, UserUncheckedCreateWithoutCommunityCommentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutCommunityCommentsInput
@@ -38996,6 +37518,12 @@ export namespace Prisma {
     connectOrCreate?: CommunityCommentCreateOrConnectWithoutParentInput | CommunityCommentCreateOrConnectWithoutParentInput[]
     createMany?: CommunityCommentCreateManyParentInputEnvelope
     connect?: CommunityCommentWhereUniqueInput | CommunityCommentWhereUniqueInput[]
+  }
+
+  export type CommunityPostCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: CommunityPostCreateOrConnectWithoutCommentsInput
+    connect?: CommunityPostWhereUniqueInput
   }
 
   export type CommunityVoteCreateNestedManyWithoutCommentInput = {
@@ -39017,14 +37545,6 @@ export namespace Prisma {
     connectOrCreate?: CommunityVoteCreateOrConnectWithoutCommentInput | CommunityVoteCreateOrConnectWithoutCommentInput[]
     createMany?: CommunityVoteCreateManyCommentInputEnvelope
     connect?: CommunityVoteWhereUniqueInput | CommunityVoteWhereUniqueInput[]
-  }
-
-  export type CommunityPostUpdateOneRequiredWithoutCommentsNestedInput = {
-    create?: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
-    connectOrCreate?: CommunityPostCreateOrConnectWithoutCommentsInput
-    upsert?: CommunityPostUpsertWithoutCommentsInput
-    connect?: CommunityPostWhereUniqueInput
-    update?: XOR<XOR<CommunityPostUpdateToOneWithWhereWithoutCommentsInput, CommunityPostUpdateWithoutCommentsInput>, CommunityPostUncheckedUpdateWithoutCommentsInput>
   }
 
   export type UserUpdateOneRequiredWithoutCommunityCommentsNestedInput = {
@@ -39057,6 +37577,14 @@ export namespace Prisma {
     update?: CommunityCommentUpdateWithWhereUniqueWithoutParentInput | CommunityCommentUpdateWithWhereUniqueWithoutParentInput[]
     updateMany?: CommunityCommentUpdateManyWithWhereWithoutParentInput | CommunityCommentUpdateManyWithWhereWithoutParentInput[]
     deleteMany?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
+  }
+
+  export type CommunityPostUpdateOneRequiredWithoutCommentsNestedInput = {
+    create?: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: CommunityPostCreateOrConnectWithoutCommentsInput
+    upsert?: CommunityPostUpsertWithoutCommentsInput
+    connect?: CommunityPostWhereUniqueInput
+    update?: XOR<XOR<CommunityPostUpdateToOneWithWhereWithoutCommentsInput, CommunityPostUpdateWithoutCommentsInput>, CommunityPostUncheckedUpdateWithoutCommentsInput>
   }
 
   export type CommunityVoteUpdateManyWithoutCommentNestedInput = {
@@ -39101,10 +37629,10 @@ export namespace Prisma {
     deleteMany?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutCommunityVotesInput = {
-    create?: XOR<UserCreateWithoutCommunityVotesInput, UserUncheckedCreateWithoutCommunityVotesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCommunityVotesInput
-    connect?: UserWhereUniqueInput
+  export type CommunityCommentCreateNestedOneWithoutVotesInput = {
+    create?: XOR<CommunityCommentCreateWithoutVotesInput, CommunityCommentUncheckedCreateWithoutVotesInput>
+    connectOrCreate?: CommunityCommentCreateOrConnectWithoutVotesInput
+    connect?: CommunityCommentWhereUniqueInput
   }
 
   export type CommunityPostCreateNestedOneWithoutVotesInput = {
@@ -39113,22 +37641,24 @@ export namespace Prisma {
     connect?: CommunityPostWhereUniqueInput
   }
 
-  export type CommunityCommentCreateNestedOneWithoutVotesInput = {
-    create?: XOR<CommunityCommentCreateWithoutVotesInput, CommunityCommentUncheckedCreateWithoutVotesInput>
-    connectOrCreate?: CommunityCommentCreateOrConnectWithoutVotesInput
-    connect?: CommunityCommentWhereUniqueInput
+  export type UserCreateNestedOneWithoutCommunityVotesInput = {
+    create?: XOR<UserCreateWithoutCommunityVotesInput, UserUncheckedCreateWithoutCommunityVotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommunityVotesInput
+    connect?: UserWhereUniqueInput
   }
 
   export type EnumVoteValueFieldUpdateOperationsInput = {
     set?: $Enums.VoteValue
   }
 
-  export type UserUpdateOneRequiredWithoutCommunityVotesNestedInput = {
-    create?: XOR<UserCreateWithoutCommunityVotesInput, UserUncheckedCreateWithoutCommunityVotesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCommunityVotesInput
-    upsert?: UserUpsertWithoutCommunityVotesInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommunityVotesInput, UserUpdateWithoutCommunityVotesInput>, UserUncheckedUpdateWithoutCommunityVotesInput>
+  export type CommunityCommentUpdateOneWithoutVotesNestedInput = {
+    create?: XOR<CommunityCommentCreateWithoutVotesInput, CommunityCommentUncheckedCreateWithoutVotesInput>
+    connectOrCreate?: CommunityCommentCreateOrConnectWithoutVotesInput
+    upsert?: CommunityCommentUpsertWithoutVotesInput
+    disconnect?: CommunityCommentWhereInput | boolean
+    delete?: CommunityCommentWhereInput | boolean
+    connect?: CommunityCommentWhereUniqueInput
+    update?: XOR<XOR<CommunityCommentUpdateToOneWithWhereWithoutVotesInput, CommunityCommentUpdateWithoutVotesInput>, CommunityCommentUncheckedUpdateWithoutVotesInput>
   }
 
   export type CommunityPostUpdateOneWithoutVotesNestedInput = {
@@ -39141,14 +37671,12 @@ export namespace Prisma {
     update?: XOR<XOR<CommunityPostUpdateToOneWithWhereWithoutVotesInput, CommunityPostUpdateWithoutVotesInput>, CommunityPostUncheckedUpdateWithoutVotesInput>
   }
 
-  export type CommunityCommentUpdateOneWithoutVotesNestedInput = {
-    create?: XOR<CommunityCommentCreateWithoutVotesInput, CommunityCommentUncheckedCreateWithoutVotesInput>
-    connectOrCreate?: CommunityCommentCreateOrConnectWithoutVotesInput
-    upsert?: CommunityCommentUpsertWithoutVotesInput
-    disconnect?: CommunityCommentWhereInput | boolean
-    delete?: CommunityCommentWhereInput | boolean
-    connect?: CommunityCommentWhereUniqueInput
-    update?: XOR<XOR<CommunityCommentUpdateToOneWithWhereWithoutVotesInput, CommunityCommentUpdateWithoutVotesInput>, CommunityCommentUncheckedUpdateWithoutVotesInput>
+  export type UserUpdateOneRequiredWithoutCommunityVotesNestedInput = {
+    create?: XOR<UserCreateWithoutCommunityVotesInput, UserUncheckedCreateWithoutCommunityVotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommunityVotesInput
+    upsert?: UserUpsertWithoutCommunityVotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommunityVotesInput, UserUpdateWithoutCommunityVotesInput>, UserUncheckedUpdateWithoutCommunityVotesInput>
   }
 
   export type NestedUuidFilter<$PrismaModel = never> = {
@@ -39850,6 +38378,438 @@ export namespace Prisma {
     _max?: NestedEnumVoteValueFilter<$PrismaModel>
   }
 
+  export type ActionPlanCreateWithoutUserInput = {
+    id?: string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: string | null
+    targetDate?: Date | string | null
+    status?: $Enums.PlanStatus
+    completionPct?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    comparison: AIComparisonCreateNestedOneWithoutActionPlansInput
+    course: UniversityCourseCreateNestedOneWithoutActionPlansInput
+  }
+
+  export type ActionPlanUncheckedCreateWithoutUserInput = {
+    id?: string
+    comparisonId: string
+    courseId: string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: string | null
+    targetDate?: Date | string | null
+    status?: $Enums.PlanStatus
+    completionPct?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ActionPlanCreateOrConnectWithoutUserInput = {
+    where: ActionPlanWhereUniqueInput
+    create: XOR<ActionPlanCreateWithoutUserInput, ActionPlanUncheckedCreateWithoutUserInput>
+  }
+
+  export type ActionPlanCreateManyUserInputEnvelope = {
+    data: ActionPlanCreateManyUserInput | ActionPlanCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AIComparisonCreateWithoutUserInput = {
+    id?: string
+    matchScore: Decimal | DecimalJsLike | number | string
+    category: $Enums.AICategory
+    scoreBreakdown?: JsonNullValueInput | InputJsonValue
+    strengths?: AIComparisonCreatestrengthsInput | string[]
+    weaknesses?: AIComparisonCreateweaknessesInput | string[]
+    suggestions?: JsonNullValueInput | InputJsonValue
+    alternatives?: AIComparisonCreatealternativesInput | string[]
+    aiExplanation?: string | null
+    modelVersion?: string
+    processingMs?: number | null
+    cached?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanCreateNestedManyWithoutComparisonInput
+    course: UniversityCourseCreateNestedOneWithoutComparisonsInput
+  }
+
+  export type AIComparisonUncheckedCreateWithoutUserInput = {
+    id?: string
+    courseId: string
+    matchScore: Decimal | DecimalJsLike | number | string
+    category: $Enums.AICategory
+    scoreBreakdown?: JsonNullValueInput | InputJsonValue
+    strengths?: AIComparisonCreatestrengthsInput | string[]
+    weaknesses?: AIComparisonCreateweaknessesInput | string[]
+    suggestions?: JsonNullValueInput | InputJsonValue
+    alternatives?: AIComparisonCreatealternativesInput | string[]
+    aiExplanation?: string | null
+    modelVersion?: string
+    processingMs?: number | null
+    cached?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutComparisonInput
+  }
+
+  export type AIComparisonCreateOrConnectWithoutUserInput = {
+    where: AIComparisonWhereUniqueInput
+    create: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput>
+  }
+
+  export type AIComparisonCreateManyUserInputEnvelope = {
+    data: AIComparisonCreateManyUserInput | AIComparisonCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApiKeyCreateWithoutOwnerInput = {
+    id?: string
+    name: string
+    keyHash: string
+    role?: $Enums.Role
+    isActive?: boolean
+    lastUsedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiKeyUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    name: string
+    keyHash: string
+    role?: $Enums.Role
+    isActive?: boolean
+    lastUsedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiKeyCreateOrConnectWithoutOwnerInput = {
+    where: ApiKeyWhereUniqueInput
+    create: XOR<ApiKeyCreateWithoutOwnerInput, ApiKeyUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ApiKeyCreateManyOwnerInputEnvelope = {
+    data: ApiKeyCreateManyOwnerInput | ApiKeyCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApplicationCreateWithoutUserInput = {
+    id?: string
+    universityId: string
+    comparisonId?: string | null
+    status?: $Enums.ApplicationStatus
+    priority?: $Enums.ApplicationPriority
+    applicationFee?: Decimal | DecimalJsLike | number | string | null
+    feeStatus?: $Enums.FeeStatus
+    feePaidAt?: Date | string | null
+    personalStatement?: string | null
+    counsellorId?: string | null
+    internalNotes?: string | null
+    appliedAt?: Date | string | null
+    decisionAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: UniversityCourseCreateNestedOneWithoutApplicationsInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutUserInput = {
+    id?: string
+    universityId: string
+    courseId: string
+    comparisonId?: string | null
+    status?: $Enums.ApplicationStatus
+    priority?: $Enums.ApplicationPriority
+    applicationFee?: Decimal | DecimalJsLike | number | string | null
+    feeStatus?: $Enums.FeeStatus
+    feePaidAt?: Date | string | null
+    personalStatement?: string | null
+    counsellorId?: string | null
+    internalNotes?: string | null
+    appliedAt?: Date | string | null
+    decisionAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationCreateOrConnectWithoutUserInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput>
+  }
+
+  export type ApplicationCreateManyUserInputEnvelope = {
+    data: ApplicationCreateManyUserInput | ApplicationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommunityCommentCreateWithoutAuthorInput = {
+    id?: string
+    text: string
+    isAnswer?: boolean
+    isBest?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
+    replies?: CommunityCommentCreateNestedManyWithoutParentInput
+    post: CommunityPostCreateNestedOneWithoutCommentsInput
+    votes?: CommunityVoteCreateNestedManyWithoutCommentInput
+  }
+
+  export type CommunityCommentUncheckedCreateWithoutAuthorInput = {
+    id?: string
+    postId: string
+    parentId?: string | null
+    text: string
+    isAnswer?: boolean
+    isBest?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
+    votes?: CommunityVoteUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type CommunityCommentCreateOrConnectWithoutAuthorInput = {
+    where: CommunityCommentWhereUniqueInput
+    create: XOR<CommunityCommentCreateWithoutAuthorInput, CommunityCommentUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type CommunityCommentCreateManyAuthorInputEnvelope = {
+    data: CommunityCommentCreateManyAuthorInput | CommunityCommentCreateManyAuthorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommunityPostCreateWithoutAuthorInput = {
+    id?: string
+    title: string
+    content?: string | null
+    imageUrl?: string | null
+    category?: $Enums.CommunityCategory
+    tags?: CommunityPostCreatetagsInput | string[]
+    isQuestion?: boolean
+    isAnonymous?: boolean
+    commentCount?: number
+    isPinned?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    comments?: CommunityCommentCreateNestedManyWithoutPostInput
+    votes?: CommunityVoteCreateNestedManyWithoutPostInput
+  }
+
+  export type CommunityPostUncheckedCreateWithoutAuthorInput = {
+    id?: string
+    title: string
+    content?: string | null
+    imageUrl?: string | null
+    category?: $Enums.CommunityCategory
+    tags?: CommunityPostCreatetagsInput | string[]
+    isQuestion?: boolean
+    isAnonymous?: boolean
+    commentCount?: number
+    isPinned?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    comments?: CommunityCommentUncheckedCreateNestedManyWithoutPostInput
+    votes?: CommunityVoteUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type CommunityPostCreateOrConnectWithoutAuthorInput = {
+    where: CommunityPostWhereUniqueInput
+    create: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type CommunityPostCreateManyAuthorInputEnvelope = {
+    data: CommunityPostCreateManyAuthorInput | CommunityPostCreateManyAuthorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommunityVoteCreateWithoutUserInput = {
+    id?: string
+    createdAt?: Date | string
+    value: $Enums.VoteValue
+    comment?: CommunityCommentCreateNestedOneWithoutVotesInput
+    post?: CommunityPostCreateNestedOneWithoutVotesInput
+  }
+
+  export type CommunityVoteUncheckedCreateWithoutUserInput = {
+    id?: string
+    postId?: string | null
+    commentId?: string | null
+    createdAt?: Date | string
+    value: $Enums.VoteValue
+  }
+
+  export type CommunityVoteCreateOrConnectWithoutUserInput = {
+    where: CommunityVoteWhereUniqueInput
+    create: XOR<CommunityVoteCreateWithoutUserInput, CommunityVoteUncheckedCreateWithoutUserInput>
+  }
+
+  export type CommunityVoteCreateManyUserInputEnvelope = {
+    data: CommunityVoteCreateManyUserInput | CommunityVoteCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EducationHistoryCreateWithoutUserInput = {
+    id?: string
+    institutionName: string
+    degree?: string | null
+    field?: string | null
+    gpa?: Decimal | DecimalJsLike | number | string | null
+    gpaScale?: Decimal | DecimalJsLike | number | string | null
+    percentage?: Decimal | DecimalJsLike | number | string | null
+    country?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    isCurrent?: boolean
+    createdAt?: Date | string
+  }
+
+  export type EducationHistoryUncheckedCreateWithoutUserInput = {
+    id?: string
+    institutionName: string
+    degree?: string | null
+    field?: string | null
+    gpa?: Decimal | DecimalJsLike | number | string | null
+    gpaScale?: Decimal | DecimalJsLike | number | string | null
+    percentage?: Decimal | DecimalJsLike | number | string | null
+    country?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    isCurrent?: boolean
+    createdAt?: Date | string
+  }
+
+  export type EducationHistoryCreateOrConnectWithoutUserInput = {
+    where: EducationHistoryWhereUniqueInput
+    create: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type EducationHistoryCreateManyUserInputEnvelope = {
+    data: EducationHistoryCreateManyUserInput | EducationHistoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EmailOTPCreateWithoutUserInput = {
+    id?: string
+    purpose: string
+    otpHash: string
+    attempts?: number
+    expiresAt?: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailOTPUncheckedCreateWithoutUserInput = {
+    id?: string
+    purpose: string
+    otpHash: string
+    attempts?: number
+    expiresAt?: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailOTPCreateOrConnectWithoutUserInput = {
+    where: EmailOTPWhereUniqueInput
+    create: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmailOTPCreateManyUserInputEnvelope = {
+    data: EmailOTPCreateManyUserInput | EmailOTPCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedInteractionCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
+    post: FeedPostCreateNestedOneWithoutInteractionsInput
+  }
+
+  export type FeedInteractionUncheckedCreateWithoutUserInput = {
+    id?: string
+    postId: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
+  }
+
+  export type FeedInteractionCreateOrConnectWithoutUserInput = {
+    where: FeedInteractionWhereUniqueInput
+    create: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput>
+  }
+
+  export type FeedInteractionCreateManyUserInputEnvelope = {
+    data: FeedInteractionCreateManyUserInput | FeedInteractionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedPostCreateWithoutAuthorInput = {
+    id?: string
+    title: string
+    slug: string
+    content: string
+    excerpt?: string | null
+    coverImageUrl?: string | null
+    category: $Enums.FeedCategory
+    tags?: FeedPostCreatetagsInput | string[]
+    status?: $Enums.PostStatus
+    isPinned?: boolean
+    viewCount?: number
+    likeCount?: number
+    bookmarkCount?: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
+    university?: UniversityCreateNestedOneWithoutFeedPostsInput
+  }
+
+  export type FeedPostUncheckedCreateWithoutAuthorInput = {
+    id?: string
+    title: string
+    slug: string
+    content: string
+    excerpt?: string | null
+    coverImageUrl?: string | null
+    category: $Enums.FeedCategory
+    tags?: FeedPostCreatetagsInput | string[]
+    status?: $Enums.PostStatus
+    universityId?: string | null
+    isPinned?: boolean
+    viewCount?: number
+    likeCount?: number
+    bookmarkCount?: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type FeedPostCreateOrConnectWithoutAuthorInput = {
+    where: FeedPostWhereUniqueInput
+    create: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type FeedPostCreateManyAuthorInputEnvelope = {
+    data: FeedPostCreateManyAuthorInput | FeedPostCreateManyAuthorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RefreshTokenCreateWithoutUserInput = {
     id?: string
     tokenHash: string
@@ -39882,33 +38842,107 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type EmailOTPCreateWithoutUserInput = {
+  export type SavedCollegeCreateWithoutUserInput = {
     id?: string
-    purpose: string
-    otpHash: string
-    attempts?: number
-    expiresAt?: Date | string
-    usedAt?: Date | string | null
+    priority?: $Enums.CollegePriority | null
+    notes?: string | null
+    savedAt?: Date | string
+    course: UniversityCourseCreateNestedOneWithoutSavedByInput
+  }
+
+  export type SavedCollegeUncheckedCreateWithoutUserInput = {
+    id?: string
+    courseId: string
+    priority?: $Enums.CollegePriority | null
+    notes?: string | null
+    savedAt?: Date | string
+  }
+
+  export type SavedCollegeCreateOrConnectWithoutUserInput = {
+    where: SavedCollegeWhereUniqueInput
+    create: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput>
+  }
+
+  export type SavedCollegeCreateManyUserInputEnvelope = {
+    data: SavedCollegeCreateManyUserInput | SavedCollegeCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TestScoreCreateWithoutUserInput = {
+    id?: string
+    examName: string
+    score: Decimal | DecimalJsLike | number | string
+    maxScore: Decimal | DecimalJsLike | number | string
+    percentile?: Decimal | DecimalJsLike | number | string | null
+    subScores?: NullableJsonNullValueInput | InputJsonValue
+    examDate?: Date | string | null
+    validUntil?: Date | string | null
+    isLatest?: boolean
+    isVerified?: boolean
+    documentUrl?: string | null
     createdAt?: Date | string
   }
 
-  export type EmailOTPUncheckedCreateWithoutUserInput = {
+  export type TestScoreUncheckedCreateWithoutUserInput = {
     id?: string
-    purpose: string
-    otpHash: string
-    attempts?: number
-    expiresAt?: Date | string
-    usedAt?: Date | string | null
+    examName: string
+    score: Decimal | DecimalJsLike | number | string
+    maxScore: Decimal | DecimalJsLike | number | string
+    percentile?: Decimal | DecimalJsLike | number | string | null
+    subScores?: NullableJsonNullValueInput | InputJsonValue
+    examDate?: Date | string | null
+    validUntil?: Date | string | null
+    isLatest?: boolean
+    isVerified?: boolean
+    documentUrl?: string | null
     createdAt?: Date | string
   }
 
-  export type EmailOTPCreateOrConnectWithoutUserInput = {
-    where: EmailOTPWhereUniqueInput
-    create: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput>
+  export type TestScoreCreateOrConnectWithoutUserInput = {
+    where: TestScoreWhereUniqueInput
+    create: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput>
   }
 
-  export type EmailOTPCreateManyUserInputEnvelope = {
-    data: EmailOTPCreateManyUserInput | EmailOTPCreateManyUserInput[]
+  export type TestScoreCreateManyUserInputEnvelope = {
+    data: TestScoreCreateManyUserInput | TestScoreCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserDocumentCreateWithoutUserInput = {
+    id?: string
+    docType: $Enums.DocType
+    fileName: string
+    fileUrl: string
+    fileSizeBytes?: bigint | number | null
+    mimeType?: string | null
+    verificationStatus?: $Enums.VerificationStatus
+    verifiedById?: string | null
+    verifiedAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type UserDocumentUncheckedCreateWithoutUserInput = {
+    id?: string
+    docType: $Enums.DocType
+    fileName: string
+    fileUrl: string
+    fileSizeBytes?: bigint | number | null
+    mimeType?: string | null
+    verificationStatus?: $Enums.VerificationStatus
+    verifiedById?: string | null
+    verifiedAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type UserDocumentCreateOrConnectWithoutUserInput = {
+    where: UserDocumentWhereUniqueInput
+    create: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserDocumentCreateManyUserInputEnvelope = {
+    data: UserDocumentCreateManyUserInput | UserDocumentCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -39977,542 +39011,379 @@ export namespace Prisma {
     create: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
   }
 
-  export type TestScoreCreateWithoutUserInput = {
-    id?: string
-    examName: string
-    score: Decimal | DecimalJsLike | number | string
-    maxScore: Decimal | DecimalJsLike | number | string
-    percentile?: Decimal | DecimalJsLike | number | string | null
-    subScores?: NullableJsonNullValueInput | InputJsonValue
-    examDate?: Date | string | null
-    validUntil?: Date | string | null
-    isLatest?: boolean
-    isVerified?: boolean
-    documentUrl?: string | null
-    createdAt?: Date | string
-  }
-
-  export type TestScoreUncheckedCreateWithoutUserInput = {
-    id?: string
-    examName: string
-    score: Decimal | DecimalJsLike | number | string
-    maxScore: Decimal | DecimalJsLike | number | string
-    percentile?: Decimal | DecimalJsLike | number | string | null
-    subScores?: NullableJsonNullValueInput | InputJsonValue
-    examDate?: Date | string | null
-    validUntil?: Date | string | null
-    isLatest?: boolean
-    isVerified?: boolean
-    documentUrl?: string | null
-    createdAt?: Date | string
-  }
-
-  export type TestScoreCreateOrConnectWithoutUserInput = {
-    where: TestScoreWhereUniqueInput
-    create: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput>
-  }
-
-  export type TestScoreCreateManyUserInputEnvelope = {
-    data: TestScoreCreateManyUserInput | TestScoreCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type EducationHistoryCreateWithoutUserInput = {
-    id?: string
-    institutionName: string
-    degree?: string | null
-    field?: string | null
-    gpa?: Decimal | DecimalJsLike | number | string | null
-    gpaScale?: Decimal | DecimalJsLike | number | string | null
-    percentage?: Decimal | DecimalJsLike | number | string | null
-    country?: string | null
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    isCurrent?: boolean
-    createdAt?: Date | string
-  }
-
-  export type EducationHistoryUncheckedCreateWithoutUserInput = {
-    id?: string
-    institutionName: string
-    degree?: string | null
-    field?: string | null
-    gpa?: Decimal | DecimalJsLike | number | string | null
-    gpaScale?: Decimal | DecimalJsLike | number | string | null
-    percentage?: Decimal | DecimalJsLike | number | string | null
-    country?: string | null
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    isCurrent?: boolean
-    createdAt?: Date | string
-  }
-
-  export type EducationHistoryCreateOrConnectWithoutUserInput = {
-    where: EducationHistoryWhereUniqueInput
-    create: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput>
-  }
-
-  export type EducationHistoryCreateManyUserInputEnvelope = {
-    data: EducationHistoryCreateManyUserInput | EducationHistoryCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserDocumentCreateWithoutUserInput = {
-    id?: string
-    docType: $Enums.DocType
-    fileName: string
-    fileUrl: string
-    fileSizeBytes?: bigint | number | null
-    mimeType?: string | null
-    verificationStatus?: $Enums.VerificationStatus
-    verifiedById?: string | null
-    verifiedAt?: Date | string | null
-    notes?: string | null
-    createdAt?: Date | string
-  }
-
-  export type UserDocumentUncheckedCreateWithoutUserInput = {
-    id?: string
-    docType: $Enums.DocType
-    fileName: string
-    fileUrl: string
-    fileSizeBytes?: bigint | number | null
-    mimeType?: string | null
-    verificationStatus?: $Enums.VerificationStatus
-    verifiedById?: string | null
-    verifiedAt?: Date | string | null
-    notes?: string | null
-    createdAt?: Date | string
-  }
-
-  export type UserDocumentCreateOrConnectWithoutUserInput = {
-    where: UserDocumentWhereUniqueInput
-    create: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput>
-  }
-
-  export type UserDocumentCreateManyUserInputEnvelope = {
-    data: UserDocumentCreateManyUserInput | UserDocumentCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FeedPostCreateWithoutAuthorInput = {
-    id?: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    dislikeCount?: number
-    bookmarkCount?: number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    university?: UniversityCreateNestedOneWithoutFeedPostsInput
-    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
-    comments?: FeedCommentCreateNestedManyWithoutPostInput
-  }
-
-  export type FeedPostUncheckedCreateWithoutAuthorInput = {
-    id?: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    universityId?: string | null
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    dislikeCount?: number
-    bookmarkCount?: number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
-    comments?: FeedCommentUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type FeedPostCreateOrConnectWithoutAuthorInput = {
-    where: FeedPostWhereUniqueInput
-    create: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type FeedPostCreateManyAuthorInputEnvelope = {
-    data: FeedPostCreateManyAuthorInput | FeedPostCreateManyAuthorInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FeedInteractionCreateWithoutUserInput = {
-    id?: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-    post: FeedPostCreateNestedOneWithoutInteractionsInput
-  }
-
-  export type FeedInteractionUncheckedCreateWithoutUserInput = {
-    id?: string
-    postId: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-  }
-
-  export type FeedInteractionCreateOrConnectWithoutUserInput = {
-    where: FeedInteractionWhereUniqueInput
-    create: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput>
-  }
-
-  export type FeedInteractionCreateManyUserInputEnvelope = {
-    data: FeedInteractionCreateManyUserInput | FeedInteractionCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FeedCommentCreateWithoutAuthorInput = {
-    id?: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    post: FeedPostCreateNestedOneWithoutCommentsInput
-  }
-
-  export type FeedCommentUncheckedCreateWithoutAuthorInput = {
-    id?: string
-    postId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FeedCommentCreateOrConnectWithoutAuthorInput = {
-    where: FeedCommentWhereUniqueInput
-    create: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type FeedCommentCreateManyAuthorInputEnvelope = {
-    data: FeedCommentCreateManyAuthorInput | FeedCommentCreateManyAuthorInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type SavedCollegeCreateWithoutUserInput = {
-    id?: string
-    priority?: $Enums.CollegePriority | null
-    notes?: string | null
-    savedAt?: Date | string
-    course: UniversityCourseCreateNestedOneWithoutSavedByInput
-  }
-
-  export type SavedCollegeUncheckedCreateWithoutUserInput = {
-    id?: string
-    courseId: string
-    priority?: $Enums.CollegePriority | null
-    notes?: string | null
-    savedAt?: Date | string
-  }
-
-  export type SavedCollegeCreateOrConnectWithoutUserInput = {
-    where: SavedCollegeWhereUniqueInput
-    create: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput>
-  }
-
-  export type SavedCollegeCreateManyUserInputEnvelope = {
-    data: SavedCollegeCreateManyUserInput | SavedCollegeCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type AIComparisonCreateWithoutUserInput = {
-    id?: string
-    matchScore: Decimal | DecimalJsLike | number | string
-    category: $Enums.AICategory
-    scoreBreakdown?: JsonNullValueInput | InputJsonValue
-    strengths?: AIComparisonCreatestrengthsInput | string[]
-    weaknesses?: AIComparisonCreateweaknessesInput | string[]
-    suggestions?: JsonNullValueInput | InputJsonValue
-    alternatives?: AIComparisonCreatealternativesInput | string[]
-    aiExplanation?: string | null
-    modelVersion?: string
-    processingMs?: number | null
-    cached?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    course: UniversityCourseCreateNestedOneWithoutComparisonsInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutComparisonInput
-  }
-
-  export type AIComparisonUncheckedCreateWithoutUserInput = {
-    id?: string
-    courseId: string
-    matchScore: Decimal | DecimalJsLike | number | string
-    category: $Enums.AICategory
-    scoreBreakdown?: JsonNullValueInput | InputJsonValue
-    strengths?: AIComparisonCreatestrengthsInput | string[]
-    weaknesses?: AIComparisonCreateweaknessesInput | string[]
-    suggestions?: JsonNullValueInput | InputJsonValue
-    alternatives?: AIComparisonCreatealternativesInput | string[]
-    aiExplanation?: string | null
-    modelVersion?: string
-    processingMs?: number | null
-    cached?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutComparisonInput
-  }
-
-  export type AIComparisonCreateOrConnectWithoutUserInput = {
-    where: AIComparisonWhereUniqueInput
-    create: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput>
-  }
-
-  export type AIComparisonCreateManyUserInputEnvelope = {
-    data: AIComparisonCreateManyUserInput | AIComparisonCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ActionPlanCreateWithoutUserInput = {
-    id?: string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: string | null
-    targetDate?: Date | string | null
-    status?: $Enums.PlanStatus
-    completionPct?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    comparison: AIComparisonCreateNestedOneWithoutActionPlansInput
-    course: UniversityCourseCreateNestedOneWithoutActionPlansInput
-  }
-
-  export type ActionPlanUncheckedCreateWithoutUserInput = {
-    id?: string
-    comparisonId: string
-    courseId: string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: string | null
-    targetDate?: Date | string | null
-    status?: $Enums.PlanStatus
-    completionPct?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ActionPlanCreateOrConnectWithoutUserInput = {
+  export type ActionPlanUpsertWithWhereUniqueWithoutUserInput = {
     where: ActionPlanWhereUniqueInput
+    update: XOR<ActionPlanUpdateWithoutUserInput, ActionPlanUncheckedUpdateWithoutUserInput>
     create: XOR<ActionPlanCreateWithoutUserInput, ActionPlanUncheckedCreateWithoutUserInput>
   }
 
-  export type ActionPlanCreateManyUserInputEnvelope = {
-    data: ActionPlanCreateManyUserInput | ActionPlanCreateManyUserInput[]
-    skipDuplicates?: boolean
+  export type ActionPlanUpdateWithWhereUniqueWithoutUserInput = {
+    where: ActionPlanWhereUniqueInput
+    data: XOR<ActionPlanUpdateWithoutUserInput, ActionPlanUncheckedUpdateWithoutUserInput>
   }
 
-  export type ApplicationCreateWithoutUserInput = {
-    id?: string
-    universityId: string
-    comparisonId?: string | null
-    status?: $Enums.ApplicationStatus
-    priority?: $Enums.ApplicationPriority
-    applicationFee?: Decimal | DecimalJsLike | number | string | null
-    feeStatus?: $Enums.FeeStatus
-    feePaidAt?: Date | string | null
-    personalStatement?: string | null
-    counsellorId?: string | null
-    internalNotes?: string | null
-    appliedAt?: Date | string | null
-    decisionAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    course: UniversityCourseCreateNestedOneWithoutApplicationsInput
+  export type ActionPlanUpdateManyWithWhereWithoutUserInput = {
+    where: ActionPlanScalarWhereInput
+    data: XOR<ActionPlanUpdateManyMutationInput, ActionPlanUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type ApplicationUncheckedCreateWithoutUserInput = {
-    id?: string
-    universityId: string
-    courseId: string
-    comparisonId?: string | null
-    status?: $Enums.ApplicationStatus
-    priority?: $Enums.ApplicationPriority
-    applicationFee?: Decimal | DecimalJsLike | number | string | null
-    feeStatus?: $Enums.FeeStatus
-    feePaidAt?: Date | string | null
-    personalStatement?: string | null
-    counsellorId?: string | null
-    internalNotes?: string | null
-    appliedAt?: Date | string | null
-    decisionAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+  export type ActionPlanScalarWhereInput = {
+    AND?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
+    OR?: ActionPlanScalarWhereInput[]
+    NOT?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
+    id?: UuidFilter<"ActionPlan"> | string
+    userId?: UuidFilter<"ActionPlan"> | string
+    comparisonId?: UuidFilter<"ActionPlan"> | string
+    courseId?: UuidFilter<"ActionPlan"> | string
+    milestones?: JsonFilter<"ActionPlan">
+    targetIntake?: StringNullableFilter<"ActionPlan"> | string | null
+    targetDate?: DateTimeNullableFilter<"ActionPlan"> | Date | string | null
+    status?: EnumPlanStatusFilter<"ActionPlan"> | $Enums.PlanStatus
+    completionPct?: IntFilter<"ActionPlan"> | number
+    createdAt?: DateTimeFilter<"ActionPlan"> | Date | string
+    updatedAt?: DateTimeFilter<"ActionPlan"> | Date | string
   }
 
-  export type ApplicationCreateOrConnectWithoutUserInput = {
-    where: ApplicationWhereUniqueInput
-    create: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput>
+  export type AIComparisonUpsertWithWhereUniqueWithoutUserInput = {
+    where: AIComparisonWhereUniqueInput
+    update: XOR<AIComparisonUpdateWithoutUserInput, AIComparisonUncheckedUpdateWithoutUserInput>
+    create: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput>
   }
 
-  export type ApplicationCreateManyUserInputEnvelope = {
-    data: ApplicationCreateManyUserInput | ApplicationCreateManyUserInput[]
-    skipDuplicates?: boolean
+  export type AIComparisonUpdateWithWhereUniqueWithoutUserInput = {
+    where: AIComparisonWhereUniqueInput
+    data: XOR<AIComparisonUpdateWithoutUserInput, AIComparisonUncheckedUpdateWithoutUserInput>
   }
 
-  export type ApiKeyCreateWithoutOwnerInput = {
-    id?: string
-    name: string
-    keyHash: string
-    role?: $Enums.Role
-    isActive?: boolean
-    lastUsedAt?: Date | string | null
-    expiresAt?: Date | string | null
-    createdAt?: Date | string
+  export type AIComparisonUpdateManyWithWhereWithoutUserInput = {
+    where: AIComparisonScalarWhereInput
+    data: XOR<AIComparisonUpdateManyMutationInput, AIComparisonUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type ApiKeyUncheckedCreateWithoutOwnerInput = {
-    id?: string
-    name: string
-    keyHash: string
-    role?: $Enums.Role
-    isActive?: boolean
-    lastUsedAt?: Date | string | null
-    expiresAt?: Date | string | null
-    createdAt?: Date | string
+  export type AIComparisonScalarWhereInput = {
+    AND?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
+    OR?: AIComparisonScalarWhereInput[]
+    NOT?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
+    id?: UuidFilter<"AIComparison"> | string
+    userId?: UuidFilter<"AIComparison"> | string
+    courseId?: UuidFilter<"AIComparison"> | string
+    matchScore?: DecimalFilter<"AIComparison"> | Decimal | DecimalJsLike | number | string
+    category?: EnumAICategoryFilter<"AIComparison"> | $Enums.AICategory
+    scoreBreakdown?: JsonFilter<"AIComparison">
+    strengths?: StringNullableListFilter<"AIComparison">
+    weaknesses?: StringNullableListFilter<"AIComparison">
+    suggestions?: JsonFilter<"AIComparison">
+    alternatives?: StringNullableListFilter<"AIComparison">
+    aiExplanation?: StringNullableFilter<"AIComparison"> | string | null
+    modelVersion?: StringFilter<"AIComparison"> | string
+    processingMs?: IntNullableFilter<"AIComparison"> | number | null
+    cached?: BoolFilter<"AIComparison"> | boolean
+    createdAt?: DateTimeFilter<"AIComparison"> | Date | string
+    updatedAt?: DateTimeFilter<"AIComparison"> | Date | string
   }
 
-  export type ApiKeyCreateOrConnectWithoutOwnerInput = {
+  export type ApiKeyUpsertWithWhereUniqueWithoutOwnerInput = {
     where: ApiKeyWhereUniqueInput
+    update: XOR<ApiKeyUpdateWithoutOwnerInput, ApiKeyUncheckedUpdateWithoutOwnerInput>
     create: XOR<ApiKeyCreateWithoutOwnerInput, ApiKeyUncheckedCreateWithoutOwnerInput>
   }
 
-  export type ApiKeyCreateManyOwnerInputEnvelope = {
-    data: ApiKeyCreateManyOwnerInput | ApiKeyCreateManyOwnerInput[]
-    skipDuplicates?: boolean
+  export type ApiKeyUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: ApiKeyWhereUniqueInput
+    data: XOR<ApiKeyUpdateWithoutOwnerInput, ApiKeyUncheckedUpdateWithoutOwnerInput>
   }
 
-  export type CommunityPostCreateWithoutAuthorInput = {
-    id?: string
-    title: string
-    content?: string | null
-    imageUrl?: string | null
-    category?: $Enums.CommunityCategory
-    tags?: CommunityPostCreatetagsInput | string[]
-    isQuestion?: boolean
-    isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    commentCount?: number
-    isPinned?: boolean
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    comments?: CommunityCommentCreateNestedManyWithoutPostInput
-    votes?: CommunityVoteCreateNestedManyWithoutPostInput
+  export type ApiKeyUpdateManyWithWhereWithoutOwnerInput = {
+    where: ApiKeyScalarWhereInput
+    data: XOR<ApiKeyUpdateManyMutationInput, ApiKeyUncheckedUpdateManyWithoutOwnerInput>
   }
 
-  export type CommunityPostUncheckedCreateWithoutAuthorInput = {
-    id?: string
-    title: string
-    content?: string | null
-    imageUrl?: string | null
-    category?: $Enums.CommunityCategory
-    tags?: CommunityPostCreatetagsInput | string[]
-    isQuestion?: boolean
-    isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    commentCount?: number
-    isPinned?: boolean
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    comments?: CommunityCommentUncheckedCreateNestedManyWithoutPostInput
-    votes?: CommunityVoteUncheckedCreateNestedManyWithoutPostInput
+  export type ApiKeyScalarWhereInput = {
+    AND?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
+    OR?: ApiKeyScalarWhereInput[]
+    NOT?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
+    id?: UuidFilter<"ApiKey"> | string
+    name?: StringFilter<"ApiKey"> | string
+    keyHash?: StringFilter<"ApiKey"> | string
+    role?: EnumRoleFilter<"ApiKey"> | $Enums.Role
+    isActive?: BoolFilter<"ApiKey"> | boolean
+    lastUsedAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
+    ownerId?: UuidNullableFilter<"ApiKey"> | string | null
+    createdAt?: DateTimeFilter<"ApiKey"> | Date | string
   }
 
-  export type CommunityPostCreateOrConnectWithoutAuthorInput = {
-    where: CommunityPostWhereUniqueInput
-    create: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput>
+  export type ApplicationUpsertWithWhereUniqueWithoutUserInput = {
+    where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutUserInput, ApplicationUncheckedUpdateWithoutUserInput>
+    create: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput>
   }
 
-  export type CommunityPostCreateManyAuthorInputEnvelope = {
-    data: CommunityPostCreateManyAuthorInput | CommunityPostCreateManyAuthorInput[]
-    skipDuplicates?: boolean
+  export type ApplicationUpdateWithWhereUniqueWithoutUserInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutUserInput, ApplicationUncheckedUpdateWithoutUserInput>
   }
 
-  export type CommunityCommentCreateWithoutAuthorInput = {
-    id?: string
-    text: string
-    isAnswer?: boolean
-    isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    post: CommunityPostCreateNestedOneWithoutCommentsInput
-    parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
-    replies?: CommunityCommentCreateNestedManyWithoutParentInput
-    votes?: CommunityVoteCreateNestedManyWithoutCommentInput
+  export type ApplicationUpdateManyWithWhereWithoutUserInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type CommunityCommentUncheckedCreateWithoutAuthorInput = {
-    id?: string
-    postId: string
-    parentId?: string | null
-    text: string
-    isAnswer?: boolean
-    isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
-    votes?: CommunityVoteUncheckedCreateNestedManyWithoutCommentInput
+  export type ApplicationScalarWhereInput = {
+    AND?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+    OR?: ApplicationScalarWhereInput[]
+    NOT?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+    id?: UuidFilter<"Application"> | string
+    userId?: UuidFilter<"Application"> | string
+    universityId?: UuidFilter<"Application"> | string
+    courseId?: UuidFilter<"Application"> | string
+    comparisonId?: UuidNullableFilter<"Application"> | string | null
+    status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
+    priority?: EnumApplicationPriorityFilter<"Application"> | $Enums.ApplicationPriority
+    applicationFee?: DecimalNullableFilter<"Application"> | Decimal | DecimalJsLike | number | string | null
+    feeStatus?: EnumFeeStatusFilter<"Application"> | $Enums.FeeStatus
+    feePaidAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    personalStatement?: StringNullableFilter<"Application"> | string | null
+    counsellorId?: UuidNullableFilter<"Application"> | string | null
+    internalNotes?: StringNullableFilter<"Application"> | string | null
+    appliedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    decisionAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    createdAt?: DateTimeFilter<"Application"> | Date | string
+    updatedAt?: DateTimeFilter<"Application"> | Date | string
   }
 
-  export type CommunityCommentCreateOrConnectWithoutAuthorInput = {
+  export type CommunityCommentUpsertWithWhereUniqueWithoutAuthorInput = {
     where: CommunityCommentWhereUniqueInput
+    update: XOR<CommunityCommentUpdateWithoutAuthorInput, CommunityCommentUncheckedUpdateWithoutAuthorInput>
     create: XOR<CommunityCommentCreateWithoutAuthorInput, CommunityCommentUncheckedCreateWithoutAuthorInput>
   }
 
-  export type CommunityCommentCreateManyAuthorInputEnvelope = {
-    data: CommunityCommentCreateManyAuthorInput | CommunityCommentCreateManyAuthorInput[]
-    skipDuplicates?: boolean
+  export type CommunityCommentUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: CommunityCommentWhereUniqueInput
+    data: XOR<CommunityCommentUpdateWithoutAuthorInput, CommunityCommentUncheckedUpdateWithoutAuthorInput>
   }
 
-  export type CommunityVoteCreateWithoutUserInput = {
-    id?: string
-    value: $Enums.VoteValue
-    createdAt?: Date | string
-    post?: CommunityPostCreateNestedOneWithoutVotesInput
-    comment?: CommunityCommentCreateNestedOneWithoutVotesInput
+  export type CommunityCommentUpdateManyWithWhereWithoutAuthorInput = {
+    where: CommunityCommentScalarWhereInput
+    data: XOR<CommunityCommentUpdateManyMutationInput, CommunityCommentUncheckedUpdateManyWithoutAuthorInput>
   }
 
-  export type CommunityVoteUncheckedCreateWithoutUserInput = {
-    id?: string
-    postId?: string | null
-    commentId?: string | null
-    value: $Enums.VoteValue
-    createdAt?: Date | string
+  export type CommunityCommentScalarWhereInput = {
+    AND?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
+    OR?: CommunityCommentScalarWhereInput[]
+    NOT?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
+    id?: UuidFilter<"CommunityComment"> | string
+    postId?: UuidFilter<"CommunityComment"> | string
+    authorId?: UuidFilter<"CommunityComment"> | string
+    parentId?: UuidNullableFilter<"CommunityComment"> | string | null
+    text?: StringFilter<"CommunityComment"> | string
+    isAnswer?: BoolFilter<"CommunityComment"> | boolean
+    isBest?: BoolFilter<"CommunityComment"> | boolean
+    isDeleted?: BoolFilter<"CommunityComment"> | boolean
+    createdAt?: DateTimeFilter<"CommunityComment"> | Date | string
+    updatedAt?: DateTimeFilter<"CommunityComment"> | Date | string
+    dislikeCount?: IntFilter<"CommunityComment"> | number
+    likeCount?: IntFilter<"CommunityComment"> | number
   }
 
-  export type CommunityVoteCreateOrConnectWithoutUserInput = {
+  export type CommunityPostUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: CommunityPostWhereUniqueInput
+    update: XOR<CommunityPostUpdateWithoutAuthorInput, CommunityPostUncheckedUpdateWithoutAuthorInput>
+    create: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type CommunityPostUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: CommunityPostWhereUniqueInput
+    data: XOR<CommunityPostUpdateWithoutAuthorInput, CommunityPostUncheckedUpdateWithoutAuthorInput>
+  }
+
+  export type CommunityPostUpdateManyWithWhereWithoutAuthorInput = {
+    where: CommunityPostScalarWhereInput
+    data: XOR<CommunityPostUpdateManyMutationInput, CommunityPostUncheckedUpdateManyWithoutAuthorInput>
+  }
+
+  export type CommunityPostScalarWhereInput = {
+    AND?: CommunityPostScalarWhereInput | CommunityPostScalarWhereInput[]
+    OR?: CommunityPostScalarWhereInput[]
+    NOT?: CommunityPostScalarWhereInput | CommunityPostScalarWhereInput[]
+    id?: UuidFilter<"CommunityPost"> | string
+    authorId?: UuidFilter<"CommunityPost"> | string
+    title?: StringFilter<"CommunityPost"> | string
+    content?: StringNullableFilter<"CommunityPost"> | string | null
+    imageUrl?: StringNullableFilter<"CommunityPost"> | string | null
+    category?: EnumCommunityCategoryFilter<"CommunityPost"> | $Enums.CommunityCategory
+    tags?: StringNullableListFilter<"CommunityPost">
+    isQuestion?: BoolFilter<"CommunityPost"> | boolean
+    isAnonymous?: BoolFilter<"CommunityPost"> | boolean
+    commentCount?: IntFilter<"CommunityPost"> | number
+    isPinned?: BoolFilter<"CommunityPost"> | boolean
+    isDeleted?: BoolFilter<"CommunityPost"> | boolean
+    createdAt?: DateTimeFilter<"CommunityPost"> | Date | string
+    updatedAt?: DateTimeFilter<"CommunityPost"> | Date | string
+    dislikeCount?: IntFilter<"CommunityPost"> | number
+    likeCount?: IntFilter<"CommunityPost"> | number
+  }
+
+  export type CommunityVoteUpsertWithWhereUniqueWithoutUserInput = {
     where: CommunityVoteWhereUniqueInput
+    update: XOR<CommunityVoteUpdateWithoutUserInput, CommunityVoteUncheckedUpdateWithoutUserInput>
     create: XOR<CommunityVoteCreateWithoutUserInput, CommunityVoteUncheckedCreateWithoutUserInput>
   }
 
-  export type CommunityVoteCreateManyUserInputEnvelope = {
-    data: CommunityVoteCreateManyUserInput | CommunityVoteCreateManyUserInput[]
-    skipDuplicates?: boolean
+  export type CommunityVoteUpdateWithWhereUniqueWithoutUserInput = {
+    where: CommunityVoteWhereUniqueInput
+    data: XOR<CommunityVoteUpdateWithoutUserInput, CommunityVoteUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CommunityVoteUpdateManyWithWhereWithoutUserInput = {
+    where: CommunityVoteScalarWhereInput
+    data: XOR<CommunityVoteUpdateManyMutationInput, CommunityVoteUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CommunityVoteScalarWhereInput = {
+    AND?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
+    OR?: CommunityVoteScalarWhereInput[]
+    NOT?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
+    id?: UuidFilter<"CommunityVote"> | string
+    userId?: UuidFilter<"CommunityVote"> | string
+    postId?: UuidNullableFilter<"CommunityVote"> | string | null
+    commentId?: UuidNullableFilter<"CommunityVote"> | string | null
+    createdAt?: DateTimeFilter<"CommunityVote"> | Date | string
+    value?: EnumVoteValueFilter<"CommunityVote"> | $Enums.VoteValue
+  }
+
+  export type EducationHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: EducationHistoryWhereUniqueInput
+    update: XOR<EducationHistoryUpdateWithoutUserInput, EducationHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type EducationHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: EducationHistoryWhereUniqueInput
+    data: XOR<EducationHistoryUpdateWithoutUserInput, EducationHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EducationHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: EducationHistoryScalarWhereInput
+    data: XOR<EducationHistoryUpdateManyMutationInput, EducationHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type EducationHistoryScalarWhereInput = {
+    AND?: EducationHistoryScalarWhereInput | EducationHistoryScalarWhereInput[]
+    OR?: EducationHistoryScalarWhereInput[]
+    NOT?: EducationHistoryScalarWhereInput | EducationHistoryScalarWhereInput[]
+    id?: UuidFilter<"EducationHistory"> | string
+    userId?: UuidFilter<"EducationHistory"> | string
+    institutionName?: StringFilter<"EducationHistory"> | string
+    degree?: StringNullableFilter<"EducationHistory"> | string | null
+    field?: StringNullableFilter<"EducationHistory"> | string | null
+    gpa?: DecimalNullableFilter<"EducationHistory"> | Decimal | DecimalJsLike | number | string | null
+    gpaScale?: DecimalNullableFilter<"EducationHistory"> | Decimal | DecimalJsLike | number | string | null
+    percentage?: DecimalNullableFilter<"EducationHistory"> | Decimal | DecimalJsLike | number | string | null
+    country?: StringNullableFilter<"EducationHistory"> | string | null
+    startDate?: DateTimeNullableFilter<"EducationHistory"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"EducationHistory"> | Date | string | null
+    isCurrent?: BoolFilter<"EducationHistory"> | boolean
+    createdAt?: DateTimeFilter<"EducationHistory"> | Date | string
+  }
+
+  export type EmailOTPUpsertWithWhereUniqueWithoutUserInput = {
+    where: EmailOTPWhereUniqueInput
+    update: XOR<EmailOTPUpdateWithoutUserInput, EmailOTPUncheckedUpdateWithoutUserInput>
+    create: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmailOTPUpdateWithWhereUniqueWithoutUserInput = {
+    where: EmailOTPWhereUniqueInput
+    data: XOR<EmailOTPUpdateWithoutUserInput, EmailOTPUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EmailOTPUpdateManyWithWhereWithoutUserInput = {
+    where: EmailOTPScalarWhereInput
+    data: XOR<EmailOTPUpdateManyMutationInput, EmailOTPUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type EmailOTPScalarWhereInput = {
+    AND?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
+    OR?: EmailOTPScalarWhereInput[]
+    NOT?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
+    id?: UuidFilter<"EmailOTP"> | string
+    userId?: UuidFilter<"EmailOTP"> | string
+    purpose?: StringFilter<"EmailOTP"> | string
+    otpHash?: StringFilter<"EmailOTP"> | string
+    attempts?: IntFilter<"EmailOTP"> | number
+    expiresAt?: DateTimeFilter<"EmailOTP"> | Date | string
+    usedAt?: DateTimeNullableFilter<"EmailOTP"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmailOTP"> | Date | string
+  }
+
+  export type FeedInteractionUpsertWithWhereUniqueWithoutUserInput = {
+    where: FeedInteractionWhereUniqueInput
+    update: XOR<FeedInteractionUpdateWithoutUserInput, FeedInteractionUncheckedUpdateWithoutUserInput>
+    create: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput>
+  }
+
+  export type FeedInteractionUpdateWithWhereUniqueWithoutUserInput = {
+    where: FeedInteractionWhereUniqueInput
+    data: XOR<FeedInteractionUpdateWithoutUserInput, FeedInteractionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FeedInteractionUpdateManyWithWhereWithoutUserInput = {
+    where: FeedInteractionScalarWhereInput
+    data: XOR<FeedInteractionUpdateManyMutationInput, FeedInteractionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type FeedInteractionScalarWhereInput = {
+    AND?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
+    OR?: FeedInteractionScalarWhereInput[]
+    NOT?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
+    id?: UuidFilter<"FeedInteraction"> | string
+    userId?: UuidFilter<"FeedInteraction"> | string
+    postId?: UuidFilter<"FeedInteraction"> | string
+    type?: EnumInteractionTypeFilter<"FeedInteraction"> | $Enums.InteractionType
+    createdAt?: DateTimeFilter<"FeedInteraction"> | Date | string
+  }
+
+  export type FeedPostUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: FeedPostWhereUniqueInput
+    update: XOR<FeedPostUpdateWithoutAuthorInput, FeedPostUncheckedUpdateWithoutAuthorInput>
+    create: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type FeedPostUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: FeedPostWhereUniqueInput
+    data: XOR<FeedPostUpdateWithoutAuthorInput, FeedPostUncheckedUpdateWithoutAuthorInput>
+  }
+
+  export type FeedPostUpdateManyWithWhereWithoutAuthorInput = {
+    where: FeedPostScalarWhereInput
+    data: XOR<FeedPostUpdateManyMutationInput, FeedPostUncheckedUpdateManyWithoutAuthorInput>
+  }
+
+  export type FeedPostScalarWhereInput = {
+    AND?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
+    OR?: FeedPostScalarWhereInput[]
+    NOT?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
+    id?: UuidFilter<"FeedPost"> | string
+    authorId?: UuidFilter<"FeedPost"> | string
+    title?: StringFilter<"FeedPost"> | string
+    slug?: StringFilter<"FeedPost"> | string
+    content?: StringFilter<"FeedPost"> | string
+    excerpt?: StringNullableFilter<"FeedPost"> | string | null
+    coverImageUrl?: StringNullableFilter<"FeedPost"> | string | null
+    category?: EnumFeedCategoryFilter<"FeedPost"> | $Enums.FeedCategory
+    tags?: StringNullableListFilter<"FeedPost">
+    status?: EnumPostStatusFilter<"FeedPost"> | $Enums.PostStatus
+    universityId?: UuidNullableFilter<"FeedPost"> | string | null
+    isPinned?: BoolFilter<"FeedPost"> | boolean
+    viewCount?: IntFilter<"FeedPost"> | number
+    likeCount?: IntFilter<"FeedPost"> | number
+    bookmarkCount?: IntFilter<"FeedPost"> | number
+    metadata?: JsonNullableFilter<"FeedPost">
+    publishedAt?: DateTimeNullableFilter<"FeedPost"> | Date | string | null
+    createdAt?: DateTimeFilter<"FeedPost"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedPost"> | Date | string
+    dislikeCount?: IntFilter<"FeedPost"> | number
   }
 
   export type RefreshTokenUpsertWithWhereUniqueWithoutUserInput = {
@@ -40546,34 +39417,101 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"RefreshToken"> | Date | string
   }
 
-  export type EmailOTPUpsertWithWhereUniqueWithoutUserInput = {
-    where: EmailOTPWhereUniqueInput
-    update: XOR<EmailOTPUpdateWithoutUserInput, EmailOTPUncheckedUpdateWithoutUserInput>
-    create: XOR<EmailOTPCreateWithoutUserInput, EmailOTPUncheckedCreateWithoutUserInput>
+  export type SavedCollegeUpsertWithWhereUniqueWithoutUserInput = {
+    where: SavedCollegeWhereUniqueInput
+    update: XOR<SavedCollegeUpdateWithoutUserInput, SavedCollegeUncheckedUpdateWithoutUserInput>
+    create: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput>
   }
 
-  export type EmailOTPUpdateWithWhereUniqueWithoutUserInput = {
-    where: EmailOTPWhereUniqueInput
-    data: XOR<EmailOTPUpdateWithoutUserInput, EmailOTPUncheckedUpdateWithoutUserInput>
+  export type SavedCollegeUpdateWithWhereUniqueWithoutUserInput = {
+    where: SavedCollegeWhereUniqueInput
+    data: XOR<SavedCollegeUpdateWithoutUserInput, SavedCollegeUncheckedUpdateWithoutUserInput>
   }
 
-  export type EmailOTPUpdateManyWithWhereWithoutUserInput = {
-    where: EmailOTPScalarWhereInput
-    data: XOR<EmailOTPUpdateManyMutationInput, EmailOTPUncheckedUpdateManyWithoutUserInput>
+  export type SavedCollegeUpdateManyWithWhereWithoutUserInput = {
+    where: SavedCollegeScalarWhereInput
+    data: XOR<SavedCollegeUpdateManyMutationInput, SavedCollegeUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type EmailOTPScalarWhereInput = {
-    AND?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
-    OR?: EmailOTPScalarWhereInput[]
-    NOT?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
-    id?: UuidFilter<"EmailOTP"> | string
-    userId?: UuidFilter<"EmailOTP"> | string
-    purpose?: StringFilter<"EmailOTP"> | string
-    otpHash?: StringFilter<"EmailOTP"> | string
-    attempts?: IntFilter<"EmailOTP"> | number
-    expiresAt?: DateTimeFilter<"EmailOTP"> | Date | string
-    usedAt?: DateTimeNullableFilter<"EmailOTP"> | Date | string | null
-    createdAt?: DateTimeFilter<"EmailOTP"> | Date | string
+  export type SavedCollegeScalarWhereInput = {
+    AND?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
+    OR?: SavedCollegeScalarWhereInput[]
+    NOT?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
+    id?: UuidFilter<"SavedCollege"> | string
+    userId?: UuidFilter<"SavedCollege"> | string
+    courseId?: UuidFilter<"SavedCollege"> | string
+    priority?: EnumCollegePriorityNullableFilter<"SavedCollege"> | $Enums.CollegePriority | null
+    notes?: StringNullableFilter<"SavedCollege"> | string | null
+    savedAt?: DateTimeFilter<"SavedCollege"> | Date | string
+  }
+
+  export type TestScoreUpsertWithWhereUniqueWithoutUserInput = {
+    where: TestScoreWhereUniqueInput
+    update: XOR<TestScoreUpdateWithoutUserInput, TestScoreUncheckedUpdateWithoutUserInput>
+    create: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput>
+  }
+
+  export type TestScoreUpdateWithWhereUniqueWithoutUserInput = {
+    where: TestScoreWhereUniqueInput
+    data: XOR<TestScoreUpdateWithoutUserInput, TestScoreUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TestScoreUpdateManyWithWhereWithoutUserInput = {
+    where: TestScoreScalarWhereInput
+    data: XOR<TestScoreUpdateManyMutationInput, TestScoreUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TestScoreScalarWhereInput = {
+    AND?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
+    OR?: TestScoreScalarWhereInput[]
+    NOT?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
+    id?: UuidFilter<"TestScore"> | string
+    userId?: UuidFilter<"TestScore"> | string
+    examName?: StringFilter<"TestScore"> | string
+    score?: DecimalFilter<"TestScore"> | Decimal | DecimalJsLike | number | string
+    maxScore?: DecimalFilter<"TestScore"> | Decimal | DecimalJsLike | number | string
+    percentile?: DecimalNullableFilter<"TestScore"> | Decimal | DecimalJsLike | number | string | null
+    subScores?: JsonNullableFilter<"TestScore">
+    examDate?: DateTimeNullableFilter<"TestScore"> | Date | string | null
+    validUntil?: DateTimeNullableFilter<"TestScore"> | Date | string | null
+    isLatest?: BoolFilter<"TestScore"> | boolean
+    isVerified?: BoolFilter<"TestScore"> | boolean
+    documentUrl?: StringNullableFilter<"TestScore"> | string | null
+    createdAt?: DateTimeFilter<"TestScore"> | Date | string
+  }
+
+  export type UserDocumentUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserDocumentWhereUniqueInput
+    update: XOR<UserDocumentUpdateWithoutUserInput, UserDocumentUncheckedUpdateWithoutUserInput>
+    create: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserDocumentUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserDocumentWhereUniqueInput
+    data: XOR<UserDocumentUpdateWithoutUserInput, UserDocumentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserDocumentUpdateManyWithWhereWithoutUserInput = {
+    where: UserDocumentScalarWhereInput
+    data: XOR<UserDocumentUpdateManyMutationInput, UserDocumentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserDocumentScalarWhereInput = {
+    AND?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
+    OR?: UserDocumentScalarWhereInput[]
+    NOT?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
+    id?: UuidFilter<"UserDocument"> | string
+    userId?: UuidFilter<"UserDocument"> | string
+    docType?: EnumDocTypeFilter<"UserDocument"> | $Enums.DocType
+    fileName?: StringFilter<"UserDocument"> | string
+    fileUrl?: StringFilter<"UserDocument"> | string
+    fileSizeBytes?: BigIntNullableFilter<"UserDocument"> | bigint | number | null
+    mimeType?: StringNullableFilter<"UserDocument"> | string | null
+    verificationStatus?: EnumVerificationStatusFilter<"UserDocument"> | $Enums.VerificationStatus
+    verifiedById?: UuidNullableFilter<"UserDocument"> | string | null
+    verifiedAt?: DateTimeNullableFilter<"UserDocument"> | Date | string | null
+    notes?: StringNullableFilter<"UserDocument"> | string | null
+    createdAt?: DateTimeFilter<"UserDocument"> | Date | string
   }
 
   export type UserProfileUpsertWithoutUserInput = {
@@ -40647,478 +39585,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TestScoreUpsertWithWhereUniqueWithoutUserInput = {
-    where: TestScoreWhereUniqueInput
-    update: XOR<TestScoreUpdateWithoutUserInput, TestScoreUncheckedUpdateWithoutUserInput>
-    create: XOR<TestScoreCreateWithoutUserInput, TestScoreUncheckedCreateWithoutUserInput>
-  }
-
-  export type TestScoreUpdateWithWhereUniqueWithoutUserInput = {
-    where: TestScoreWhereUniqueInput
-    data: XOR<TestScoreUpdateWithoutUserInput, TestScoreUncheckedUpdateWithoutUserInput>
-  }
-
-  export type TestScoreUpdateManyWithWhereWithoutUserInput = {
-    where: TestScoreScalarWhereInput
-    data: XOR<TestScoreUpdateManyMutationInput, TestScoreUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type TestScoreScalarWhereInput = {
-    AND?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
-    OR?: TestScoreScalarWhereInput[]
-    NOT?: TestScoreScalarWhereInput | TestScoreScalarWhereInput[]
-    id?: UuidFilter<"TestScore"> | string
-    userId?: UuidFilter<"TestScore"> | string
-    examName?: StringFilter<"TestScore"> | string
-    score?: DecimalFilter<"TestScore"> | Decimal | DecimalJsLike | number | string
-    maxScore?: DecimalFilter<"TestScore"> | Decimal | DecimalJsLike | number | string
-    percentile?: DecimalNullableFilter<"TestScore"> | Decimal | DecimalJsLike | number | string | null
-    subScores?: JsonNullableFilter<"TestScore">
-    examDate?: DateTimeNullableFilter<"TestScore"> | Date | string | null
-    validUntil?: DateTimeNullableFilter<"TestScore"> | Date | string | null
-    isLatest?: BoolFilter<"TestScore"> | boolean
-    isVerified?: BoolFilter<"TestScore"> | boolean
-    documentUrl?: StringNullableFilter<"TestScore"> | string | null
-    createdAt?: DateTimeFilter<"TestScore"> | Date | string
-  }
-
-  export type EducationHistoryUpsertWithWhereUniqueWithoutUserInput = {
-    where: EducationHistoryWhereUniqueInput
-    update: XOR<EducationHistoryUpdateWithoutUserInput, EducationHistoryUncheckedUpdateWithoutUserInput>
-    create: XOR<EducationHistoryCreateWithoutUserInput, EducationHistoryUncheckedCreateWithoutUserInput>
-  }
-
-  export type EducationHistoryUpdateWithWhereUniqueWithoutUserInput = {
-    where: EducationHistoryWhereUniqueInput
-    data: XOR<EducationHistoryUpdateWithoutUserInput, EducationHistoryUncheckedUpdateWithoutUserInput>
-  }
-
-  export type EducationHistoryUpdateManyWithWhereWithoutUserInput = {
-    where: EducationHistoryScalarWhereInput
-    data: XOR<EducationHistoryUpdateManyMutationInput, EducationHistoryUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type EducationHistoryScalarWhereInput = {
-    AND?: EducationHistoryScalarWhereInput | EducationHistoryScalarWhereInput[]
-    OR?: EducationHistoryScalarWhereInput[]
-    NOT?: EducationHistoryScalarWhereInput | EducationHistoryScalarWhereInput[]
-    id?: UuidFilter<"EducationHistory"> | string
-    userId?: UuidFilter<"EducationHistory"> | string
-    institutionName?: StringFilter<"EducationHistory"> | string
-    degree?: StringNullableFilter<"EducationHistory"> | string | null
-    field?: StringNullableFilter<"EducationHistory"> | string | null
-    gpa?: DecimalNullableFilter<"EducationHistory"> | Decimal | DecimalJsLike | number | string | null
-    gpaScale?: DecimalNullableFilter<"EducationHistory"> | Decimal | DecimalJsLike | number | string | null
-    percentage?: DecimalNullableFilter<"EducationHistory"> | Decimal | DecimalJsLike | number | string | null
-    country?: StringNullableFilter<"EducationHistory"> | string | null
-    startDate?: DateTimeNullableFilter<"EducationHistory"> | Date | string | null
-    endDate?: DateTimeNullableFilter<"EducationHistory"> | Date | string | null
-    isCurrent?: BoolFilter<"EducationHistory"> | boolean
-    createdAt?: DateTimeFilter<"EducationHistory"> | Date | string
-  }
-
-  export type UserDocumentUpsertWithWhereUniqueWithoutUserInput = {
-    where: UserDocumentWhereUniqueInput
-    update: XOR<UserDocumentUpdateWithoutUserInput, UserDocumentUncheckedUpdateWithoutUserInput>
-    create: XOR<UserDocumentCreateWithoutUserInput, UserDocumentUncheckedCreateWithoutUserInput>
-  }
-
-  export type UserDocumentUpdateWithWhereUniqueWithoutUserInput = {
-    where: UserDocumentWhereUniqueInput
-    data: XOR<UserDocumentUpdateWithoutUserInput, UserDocumentUncheckedUpdateWithoutUserInput>
-  }
-
-  export type UserDocumentUpdateManyWithWhereWithoutUserInput = {
-    where: UserDocumentScalarWhereInput
-    data: XOR<UserDocumentUpdateManyMutationInput, UserDocumentUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type UserDocumentScalarWhereInput = {
-    AND?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
-    OR?: UserDocumentScalarWhereInput[]
-    NOT?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
-    id?: UuidFilter<"UserDocument"> | string
-    userId?: UuidFilter<"UserDocument"> | string
-    docType?: EnumDocTypeFilter<"UserDocument"> | $Enums.DocType
-    fileName?: StringFilter<"UserDocument"> | string
-    fileUrl?: StringFilter<"UserDocument"> | string
-    fileSizeBytes?: BigIntNullableFilter<"UserDocument"> | bigint | number | null
-    mimeType?: StringNullableFilter<"UserDocument"> | string | null
-    verificationStatus?: EnumVerificationStatusFilter<"UserDocument"> | $Enums.VerificationStatus
-    verifiedById?: UuidNullableFilter<"UserDocument"> | string | null
-    verifiedAt?: DateTimeNullableFilter<"UserDocument"> | Date | string | null
-    notes?: StringNullableFilter<"UserDocument"> | string | null
-    createdAt?: DateTimeFilter<"UserDocument"> | Date | string
-  }
-
-  export type FeedPostUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: FeedPostWhereUniqueInput
-    update: XOR<FeedPostUpdateWithoutAuthorInput, FeedPostUncheckedUpdateWithoutAuthorInput>
-    create: XOR<FeedPostCreateWithoutAuthorInput, FeedPostUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type FeedPostUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: FeedPostWhereUniqueInput
-    data: XOR<FeedPostUpdateWithoutAuthorInput, FeedPostUncheckedUpdateWithoutAuthorInput>
-  }
-
-  export type FeedPostUpdateManyWithWhereWithoutAuthorInput = {
-    where: FeedPostScalarWhereInput
-    data: XOR<FeedPostUpdateManyMutationInput, FeedPostUncheckedUpdateManyWithoutAuthorInput>
-  }
-
-  export type FeedPostScalarWhereInput = {
-    AND?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
-    OR?: FeedPostScalarWhereInput[]
-    NOT?: FeedPostScalarWhereInput | FeedPostScalarWhereInput[]
-    id?: UuidFilter<"FeedPost"> | string
-    authorId?: UuidFilter<"FeedPost"> | string
-    title?: StringFilter<"FeedPost"> | string
-    slug?: StringFilter<"FeedPost"> | string
-    content?: StringFilter<"FeedPost"> | string
-    excerpt?: StringNullableFilter<"FeedPost"> | string | null
-    coverImageUrl?: StringNullableFilter<"FeedPost"> | string | null
-    category?: EnumFeedCategoryFilter<"FeedPost"> | $Enums.FeedCategory
-    tags?: StringNullableListFilter<"FeedPost">
-    status?: EnumPostStatusFilter<"FeedPost"> | $Enums.PostStatus
-    universityId?: UuidNullableFilter<"FeedPost"> | string | null
-    isPinned?: BoolFilter<"FeedPost"> | boolean
-    viewCount?: IntFilter<"FeedPost"> | number
-    likeCount?: IntFilter<"FeedPost"> | number
-    dislikeCount?: IntFilter<"FeedPost"> | number
-    bookmarkCount?: IntFilter<"FeedPost"> | number
-    metadata?: JsonNullableFilter<"FeedPost">
-    publishedAt?: DateTimeNullableFilter<"FeedPost"> | Date | string | null
-    createdAt?: DateTimeFilter<"FeedPost"> | Date | string
-    updatedAt?: DateTimeFilter<"FeedPost"> | Date | string
-  }
-
-  export type FeedInteractionUpsertWithWhereUniqueWithoutUserInput = {
-    where: FeedInteractionWhereUniqueInput
-    update: XOR<FeedInteractionUpdateWithoutUserInput, FeedInteractionUncheckedUpdateWithoutUserInput>
-    create: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput>
-  }
-
-  export type FeedInteractionUpdateWithWhereUniqueWithoutUserInput = {
-    where: FeedInteractionWhereUniqueInput
-    data: XOR<FeedInteractionUpdateWithoutUserInput, FeedInteractionUncheckedUpdateWithoutUserInput>
-  }
-
-  export type FeedInteractionUpdateManyWithWhereWithoutUserInput = {
-    where: FeedInteractionScalarWhereInput
-    data: XOR<FeedInteractionUpdateManyMutationInput, FeedInteractionUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type FeedInteractionScalarWhereInput = {
-    AND?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
-    OR?: FeedInteractionScalarWhereInput[]
-    NOT?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
-    id?: UuidFilter<"FeedInteraction"> | string
-    userId?: UuidFilter<"FeedInteraction"> | string
-    postId?: UuidFilter<"FeedInteraction"> | string
-    type?: EnumInteractionTypeFilter<"FeedInteraction"> | $Enums.InteractionType
-    createdAt?: DateTimeFilter<"FeedInteraction"> | Date | string
-  }
-
-  export type FeedCommentUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: FeedCommentWhereUniqueInput
-    update: XOR<FeedCommentUpdateWithoutAuthorInput, FeedCommentUncheckedUpdateWithoutAuthorInput>
-    create: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type FeedCommentUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: FeedCommentWhereUniqueInput
-    data: XOR<FeedCommentUpdateWithoutAuthorInput, FeedCommentUncheckedUpdateWithoutAuthorInput>
-  }
-
-  export type FeedCommentUpdateManyWithWhereWithoutAuthorInput = {
-    where: FeedCommentScalarWhereInput
-    data: XOR<FeedCommentUpdateManyMutationInput, FeedCommentUncheckedUpdateManyWithoutAuthorInput>
-  }
-
-  export type FeedCommentScalarWhereInput = {
-    AND?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
-    OR?: FeedCommentScalarWhereInput[]
-    NOT?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
-    id?: UuidFilter<"FeedComment"> | string
-    postId?: UuidFilter<"FeedComment"> | string
-    authorId?: UuidFilter<"FeedComment"> | string
-    content?: StringFilter<"FeedComment"> | string
-    createdAt?: DateTimeFilter<"FeedComment"> | Date | string
-    updatedAt?: DateTimeFilter<"FeedComment"> | Date | string
-  }
-
-  export type SavedCollegeUpsertWithWhereUniqueWithoutUserInput = {
-    where: SavedCollegeWhereUniqueInput
-    update: XOR<SavedCollegeUpdateWithoutUserInput, SavedCollegeUncheckedUpdateWithoutUserInput>
-    create: XOR<SavedCollegeCreateWithoutUserInput, SavedCollegeUncheckedCreateWithoutUserInput>
-  }
-
-  export type SavedCollegeUpdateWithWhereUniqueWithoutUserInput = {
-    where: SavedCollegeWhereUniqueInput
-    data: XOR<SavedCollegeUpdateWithoutUserInput, SavedCollegeUncheckedUpdateWithoutUserInput>
-  }
-
-  export type SavedCollegeUpdateManyWithWhereWithoutUserInput = {
-    where: SavedCollegeScalarWhereInput
-    data: XOR<SavedCollegeUpdateManyMutationInput, SavedCollegeUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type SavedCollegeScalarWhereInput = {
-    AND?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
-    OR?: SavedCollegeScalarWhereInput[]
-    NOT?: SavedCollegeScalarWhereInput | SavedCollegeScalarWhereInput[]
-    id?: UuidFilter<"SavedCollege"> | string
-    userId?: UuidFilter<"SavedCollege"> | string
-    courseId?: UuidFilter<"SavedCollege"> | string
-    priority?: EnumCollegePriorityNullableFilter<"SavedCollege"> | $Enums.CollegePriority | null
-    notes?: StringNullableFilter<"SavedCollege"> | string | null
-    savedAt?: DateTimeFilter<"SavedCollege"> | Date | string
-  }
-
-  export type AIComparisonUpsertWithWhereUniqueWithoutUserInput = {
-    where: AIComparisonWhereUniqueInput
-    update: XOR<AIComparisonUpdateWithoutUserInput, AIComparisonUncheckedUpdateWithoutUserInput>
-    create: XOR<AIComparisonCreateWithoutUserInput, AIComparisonUncheckedCreateWithoutUserInput>
-  }
-
-  export type AIComparisonUpdateWithWhereUniqueWithoutUserInput = {
-    where: AIComparisonWhereUniqueInput
-    data: XOR<AIComparisonUpdateWithoutUserInput, AIComparisonUncheckedUpdateWithoutUserInput>
-  }
-
-  export type AIComparisonUpdateManyWithWhereWithoutUserInput = {
-    where: AIComparisonScalarWhereInput
-    data: XOR<AIComparisonUpdateManyMutationInput, AIComparisonUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type AIComparisonScalarWhereInput = {
-    AND?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
-    OR?: AIComparisonScalarWhereInput[]
-    NOT?: AIComparisonScalarWhereInput | AIComparisonScalarWhereInput[]
-    id?: UuidFilter<"AIComparison"> | string
-    userId?: UuidFilter<"AIComparison"> | string
-    courseId?: UuidFilter<"AIComparison"> | string
-    matchScore?: DecimalFilter<"AIComparison"> | Decimal | DecimalJsLike | number | string
-    category?: EnumAICategoryFilter<"AIComparison"> | $Enums.AICategory
-    scoreBreakdown?: JsonFilter<"AIComparison">
-    strengths?: StringNullableListFilter<"AIComparison">
-    weaknesses?: StringNullableListFilter<"AIComparison">
-    suggestions?: JsonFilter<"AIComparison">
-    alternatives?: StringNullableListFilter<"AIComparison">
-    aiExplanation?: StringNullableFilter<"AIComparison"> | string | null
-    modelVersion?: StringFilter<"AIComparison"> | string
-    processingMs?: IntNullableFilter<"AIComparison"> | number | null
-    cached?: BoolFilter<"AIComparison"> | boolean
-    createdAt?: DateTimeFilter<"AIComparison"> | Date | string
-    updatedAt?: DateTimeFilter<"AIComparison"> | Date | string
-  }
-
-  export type ActionPlanUpsertWithWhereUniqueWithoutUserInput = {
-    where: ActionPlanWhereUniqueInput
-    update: XOR<ActionPlanUpdateWithoutUserInput, ActionPlanUncheckedUpdateWithoutUserInput>
-    create: XOR<ActionPlanCreateWithoutUserInput, ActionPlanUncheckedCreateWithoutUserInput>
-  }
-
-  export type ActionPlanUpdateWithWhereUniqueWithoutUserInput = {
-    where: ActionPlanWhereUniqueInput
-    data: XOR<ActionPlanUpdateWithoutUserInput, ActionPlanUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ActionPlanUpdateManyWithWhereWithoutUserInput = {
-    where: ActionPlanScalarWhereInput
-    data: XOR<ActionPlanUpdateManyMutationInput, ActionPlanUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type ActionPlanScalarWhereInput = {
-    AND?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
-    OR?: ActionPlanScalarWhereInput[]
-    NOT?: ActionPlanScalarWhereInput | ActionPlanScalarWhereInput[]
-    id?: UuidFilter<"ActionPlan"> | string
-    userId?: UuidFilter<"ActionPlan"> | string
-    comparisonId?: UuidFilter<"ActionPlan"> | string
-    courseId?: UuidFilter<"ActionPlan"> | string
-    milestones?: JsonFilter<"ActionPlan">
-    targetIntake?: StringNullableFilter<"ActionPlan"> | string | null
-    targetDate?: DateTimeNullableFilter<"ActionPlan"> | Date | string | null
-    status?: EnumPlanStatusFilter<"ActionPlan"> | $Enums.PlanStatus
-    completionPct?: IntFilter<"ActionPlan"> | number
-    createdAt?: DateTimeFilter<"ActionPlan"> | Date | string
-    updatedAt?: DateTimeFilter<"ActionPlan"> | Date | string
-  }
-
-  export type ApplicationUpsertWithWhereUniqueWithoutUserInput = {
-    where: ApplicationWhereUniqueInput
-    update: XOR<ApplicationUpdateWithoutUserInput, ApplicationUncheckedUpdateWithoutUserInput>
-    create: XOR<ApplicationCreateWithoutUserInput, ApplicationUncheckedCreateWithoutUserInput>
-  }
-
-  export type ApplicationUpdateWithWhereUniqueWithoutUserInput = {
-    where: ApplicationWhereUniqueInput
-    data: XOR<ApplicationUpdateWithoutUserInput, ApplicationUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ApplicationUpdateManyWithWhereWithoutUserInput = {
-    where: ApplicationScalarWhereInput
-    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type ApplicationScalarWhereInput = {
-    AND?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
-    OR?: ApplicationScalarWhereInput[]
-    NOT?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
-    id?: UuidFilter<"Application"> | string
-    userId?: UuidFilter<"Application"> | string
-    universityId?: UuidFilter<"Application"> | string
-    courseId?: UuidFilter<"Application"> | string
-    comparisonId?: UuidNullableFilter<"Application"> | string | null
-    status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
-    priority?: EnumApplicationPriorityFilter<"Application"> | $Enums.ApplicationPriority
-    applicationFee?: DecimalNullableFilter<"Application"> | Decimal | DecimalJsLike | number | string | null
-    feeStatus?: EnumFeeStatusFilter<"Application"> | $Enums.FeeStatus
-    feePaidAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    personalStatement?: StringNullableFilter<"Application"> | string | null
-    counsellorId?: UuidNullableFilter<"Application"> | string | null
-    internalNotes?: StringNullableFilter<"Application"> | string | null
-    appliedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    decisionAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    createdAt?: DateTimeFilter<"Application"> | Date | string
-    updatedAt?: DateTimeFilter<"Application"> | Date | string
-  }
-
-  export type ApiKeyUpsertWithWhereUniqueWithoutOwnerInput = {
-    where: ApiKeyWhereUniqueInput
-    update: XOR<ApiKeyUpdateWithoutOwnerInput, ApiKeyUncheckedUpdateWithoutOwnerInput>
-    create: XOR<ApiKeyCreateWithoutOwnerInput, ApiKeyUncheckedCreateWithoutOwnerInput>
-  }
-
-  export type ApiKeyUpdateWithWhereUniqueWithoutOwnerInput = {
-    where: ApiKeyWhereUniqueInput
-    data: XOR<ApiKeyUpdateWithoutOwnerInput, ApiKeyUncheckedUpdateWithoutOwnerInput>
-  }
-
-  export type ApiKeyUpdateManyWithWhereWithoutOwnerInput = {
-    where: ApiKeyScalarWhereInput
-    data: XOR<ApiKeyUpdateManyMutationInput, ApiKeyUncheckedUpdateManyWithoutOwnerInput>
-  }
-
-  export type ApiKeyScalarWhereInput = {
-    AND?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
-    OR?: ApiKeyScalarWhereInput[]
-    NOT?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
-    id?: UuidFilter<"ApiKey"> | string
-    name?: StringFilter<"ApiKey"> | string
-    keyHash?: StringFilter<"ApiKey"> | string
-    role?: EnumRoleFilter<"ApiKey"> | $Enums.Role
-    isActive?: BoolFilter<"ApiKey"> | boolean
-    lastUsedAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
-    expiresAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
-    ownerId?: UuidNullableFilter<"ApiKey"> | string | null
-    createdAt?: DateTimeFilter<"ApiKey"> | Date | string
-  }
-
-  export type CommunityPostUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: CommunityPostWhereUniqueInput
-    update: XOR<CommunityPostUpdateWithoutAuthorInput, CommunityPostUncheckedUpdateWithoutAuthorInput>
-    create: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type CommunityPostUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: CommunityPostWhereUniqueInput
-    data: XOR<CommunityPostUpdateWithoutAuthorInput, CommunityPostUncheckedUpdateWithoutAuthorInput>
-  }
-
-  export type CommunityPostUpdateManyWithWhereWithoutAuthorInput = {
-    where: CommunityPostScalarWhereInput
-    data: XOR<CommunityPostUpdateManyMutationInput, CommunityPostUncheckedUpdateManyWithoutAuthorInput>
-  }
-
-  export type CommunityPostScalarWhereInput = {
-    AND?: CommunityPostScalarWhereInput | CommunityPostScalarWhereInput[]
-    OR?: CommunityPostScalarWhereInput[]
-    NOT?: CommunityPostScalarWhereInput | CommunityPostScalarWhereInput[]
-    id?: UuidFilter<"CommunityPost"> | string
-    authorId?: UuidFilter<"CommunityPost"> | string
-    title?: StringFilter<"CommunityPost"> | string
-    content?: StringNullableFilter<"CommunityPost"> | string | null
-    imageUrl?: StringNullableFilter<"CommunityPost"> | string | null
-    category?: EnumCommunityCategoryFilter<"CommunityPost"> | $Enums.CommunityCategory
-    tags?: StringNullableListFilter<"CommunityPost">
-    isQuestion?: BoolFilter<"CommunityPost"> | boolean
-    isAnonymous?: BoolFilter<"CommunityPost"> | boolean
-    voteScore?: IntFilter<"CommunityPost"> | number
-    likeCount?: IntFilter<"CommunityPost"> | number
-    dislikeCount?: IntFilter<"CommunityPost"> | number
-    commentCount?: IntFilter<"CommunityPost"> | number
-    isPinned?: BoolFilter<"CommunityPost"> | boolean
-    isDeleted?: BoolFilter<"CommunityPost"> | boolean
-    createdAt?: DateTimeFilter<"CommunityPost"> | Date | string
-    updatedAt?: DateTimeFilter<"CommunityPost"> | Date | string
-  }
-
-  export type CommunityCommentUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: CommunityCommentWhereUniqueInput
-    update: XOR<CommunityCommentUpdateWithoutAuthorInput, CommunityCommentUncheckedUpdateWithoutAuthorInput>
-    create: XOR<CommunityCommentCreateWithoutAuthorInput, CommunityCommentUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type CommunityCommentUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: CommunityCommentWhereUniqueInput
-    data: XOR<CommunityCommentUpdateWithoutAuthorInput, CommunityCommentUncheckedUpdateWithoutAuthorInput>
-  }
-
-  export type CommunityCommentUpdateManyWithWhereWithoutAuthorInput = {
-    where: CommunityCommentScalarWhereInput
-    data: XOR<CommunityCommentUpdateManyMutationInput, CommunityCommentUncheckedUpdateManyWithoutAuthorInput>
-  }
-
-  export type CommunityCommentScalarWhereInput = {
-    AND?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
-    OR?: CommunityCommentScalarWhereInput[]
-    NOT?: CommunityCommentScalarWhereInput | CommunityCommentScalarWhereInput[]
-    id?: UuidFilter<"CommunityComment"> | string
-    postId?: UuidFilter<"CommunityComment"> | string
-    authorId?: UuidFilter<"CommunityComment"> | string
-    parentId?: UuidNullableFilter<"CommunityComment"> | string | null
-    text?: StringFilter<"CommunityComment"> | string
-    isAnswer?: BoolFilter<"CommunityComment"> | boolean
-    isBest?: BoolFilter<"CommunityComment"> | boolean
-    voteScore?: IntFilter<"CommunityComment"> | number
-    likeCount?: IntFilter<"CommunityComment"> | number
-    dislikeCount?: IntFilter<"CommunityComment"> | number
-    isDeleted?: BoolFilter<"CommunityComment"> | boolean
-    createdAt?: DateTimeFilter<"CommunityComment"> | Date | string
-    updatedAt?: DateTimeFilter<"CommunityComment"> | Date | string
-  }
-
-  export type CommunityVoteUpsertWithWhereUniqueWithoutUserInput = {
-    where: CommunityVoteWhereUniqueInput
-    update: XOR<CommunityVoteUpdateWithoutUserInput, CommunityVoteUncheckedUpdateWithoutUserInput>
-    create: XOR<CommunityVoteCreateWithoutUserInput, CommunityVoteUncheckedCreateWithoutUserInput>
-  }
-
-  export type CommunityVoteUpdateWithWhereUniqueWithoutUserInput = {
-    where: CommunityVoteWhereUniqueInput
-    data: XOR<CommunityVoteUpdateWithoutUserInput, CommunityVoteUncheckedUpdateWithoutUserInput>
-  }
-
-  export type CommunityVoteUpdateManyWithWhereWithoutUserInput = {
-    where: CommunityVoteScalarWhereInput
-    data: XOR<CommunityVoteUpdateManyMutationInput, CommunityVoteUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type CommunityVoteScalarWhereInput = {
-    AND?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
-    OR?: CommunityVoteScalarWhereInput[]
-    NOT?: CommunityVoteScalarWhereInput | CommunityVoteScalarWhereInput[]
-    id?: UuidFilter<"CommunityVote"> | string
-    userId?: UuidFilter<"CommunityVote"> | string
-    postId?: UuidNullableFilter<"CommunityVote"> | string | null
-    commentId?: UuidNullableFilter<"CommunityVote"> | string | null
-    value?: EnumVoteValueFilter<"CommunityVote"> | $Enums.VoteValue
-    createdAt?: DateTimeFilter<"CommunityVote"> | Date | string
-  }
-
   export type UserCreateWithoutApiKeysInput = {
     id?: string
     email: string
@@ -41136,22 +39602,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     applications?: ApplicationCreateNestedManyWithoutUserInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApiKeysInput = {
@@ -41171,22 +39636,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApiKeysInput = {
@@ -41222,22 +39686,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     applications?: ApplicationUpdateManyWithoutUserNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApiKeysInput = {
@@ -41257,22 +39720,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutRefreshTokensInput = {
@@ -41292,22 +39754,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -41327,22 +39788,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -41378,22 +39838,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -41413,22 +39872,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEmailOtpsInput = {
@@ -41448,22 +39906,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailOtpsInput = {
@@ -41483,22 +39940,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailOtpsInput = {
@@ -41534,22 +39990,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailOtpsInput = {
@@ -41569,22 +40024,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutProfileInput = {
@@ -41604,22 +40058,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProfileInput = {
@@ -41639,22 +40092,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProfileInput = {
@@ -41690,22 +40142,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProfileInput = {
@@ -41725,22 +40176,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTestScoresInput = {
@@ -41760,22 +40210,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTestScoresInput = {
@@ -41795,22 +40244,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTestScoresInput = {
@@ -41846,22 +40294,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTestScoresInput = {
@@ -41881,22 +40328,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEducationHistoryInput = {
@@ -41916,22 +40362,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
+    apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
+    communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEducationHistoryInput = {
@@ -41951,22 +40396,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
+    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEducationHistoryInput = {
@@ -42002,22 +40446,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
+    apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
-    apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
-    communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
-    communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEducationHistoryInput = {
@@ -42037,22 +40480,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
+    apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
-    apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
-    communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutDocumentsInput = {
@@ -42072,22 +40514,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDocumentsInput = {
@@ -42107,22 +40548,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDocumentsInput = {
@@ -42158,22 +40598,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentsInput = {
@@ -42193,22 +40632,45 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type FeedInteractionCreateWithoutPostInput = {
+    id?: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutFeedInteractionsInput
+  }
+
+  export type FeedInteractionUncheckedCreateWithoutPostInput = {
+    id?: string
+    userId: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
+  }
+
+  export type FeedInteractionCreateOrConnectWithoutPostInput = {
+    where: FeedInteractionWhereUniqueInput
+    create: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput>
+  }
+
+  export type FeedInteractionCreateManyPostInputEnvelope = {
+    data: FeedInteractionCreateManyPostInput | FeedInteractionCreateManyPostInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserCreateWithoutFeedPostsInput = {
@@ -42228,22 +40690,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeedPostsInput = {
@@ -42263,22 +40724,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeedPostsInput = {
@@ -42345,54 +40805,20 @@ export namespace Prisma {
     create: XOR<UniversityCreateWithoutFeedPostsInput, UniversityUncheckedCreateWithoutFeedPostsInput>
   }
 
-  export type FeedInteractionCreateWithoutPostInput = {
-    id?: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutFeedInteractionsInput
-  }
-
-  export type FeedInteractionUncheckedCreateWithoutPostInput = {
-    id?: string
-    userId: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-  }
-
-  export type FeedInteractionCreateOrConnectWithoutPostInput = {
+  export type FeedInteractionUpsertWithWhereUniqueWithoutPostInput = {
     where: FeedInteractionWhereUniqueInput
+    update: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
     create: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput>
   }
 
-  export type FeedInteractionCreateManyPostInputEnvelope = {
-    data: FeedInteractionCreateManyPostInput | FeedInteractionCreateManyPostInput[]
-    skipDuplicates?: boolean
+  export type FeedInteractionUpdateWithWhereUniqueWithoutPostInput = {
+    where: FeedInteractionWhereUniqueInput
+    data: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
   }
 
-  export type FeedCommentCreateWithoutPostInput = {
-    id?: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    author: UserCreateNestedOneWithoutFeedCommentsInput
-  }
-
-  export type FeedCommentUncheckedCreateWithoutPostInput = {
-    id?: string
-    authorId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FeedCommentCreateOrConnectWithoutPostInput = {
-    where: FeedCommentWhereUniqueInput
-    create: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput>
-  }
-
-  export type FeedCommentCreateManyPostInputEnvelope = {
-    data: FeedCommentCreateManyPostInput | FeedCommentCreateManyPostInput[]
-    skipDuplicates?: boolean
+  export type FeedInteractionUpdateManyWithWhereWithoutPostInput = {
+    where: FeedInteractionScalarWhereInput
+    data: XOR<FeedInteractionUpdateManyMutationInput, FeedInteractionUncheckedUpdateManyWithoutPostInput>
   }
 
   export type UserUpsertWithoutFeedPostsInput = {
@@ -42423,22 +40849,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeedPostsInput = {
@@ -42458,22 +40883,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UniversityUpsertWithoutFeedPostsInput = {
@@ -42541,39 +40965,7 @@ export namespace Prisma {
     courses?: UniversityCourseUncheckedUpdateManyWithoutUniversityNestedInput
   }
 
-  export type FeedInteractionUpsertWithWhereUniqueWithoutPostInput = {
-    where: FeedInteractionWhereUniqueInput
-    update: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
-    create: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput>
-  }
-
-  export type FeedInteractionUpdateWithWhereUniqueWithoutPostInput = {
-    where: FeedInteractionWhereUniqueInput
-    data: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
-  }
-
-  export type FeedInteractionUpdateManyWithWhereWithoutPostInput = {
-    where: FeedInteractionScalarWhereInput
-    data: XOR<FeedInteractionUpdateManyMutationInput, FeedInteractionUncheckedUpdateManyWithoutPostInput>
-  }
-
-  export type FeedCommentUpsertWithWhereUniqueWithoutPostInput = {
-    where: FeedCommentWhereUniqueInput
-    update: XOR<FeedCommentUpdateWithoutPostInput, FeedCommentUncheckedUpdateWithoutPostInput>
-    create: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput>
-  }
-
-  export type FeedCommentUpdateWithWhereUniqueWithoutPostInput = {
-    where: FeedCommentWhereUniqueInput
-    data: XOR<FeedCommentUpdateWithoutPostInput, FeedCommentUncheckedUpdateWithoutPostInput>
-  }
-
-  export type FeedCommentUpdateManyWithWhereWithoutPostInput = {
-    where: FeedCommentScalarWhereInput
-    data: XOR<FeedCommentUpdateManyMutationInput, FeedCommentUncheckedUpdateManyWithoutPostInput>
-  }
-
-  export type FeedPostCreateWithoutCommentsInput = {
+  export type FeedPostCreateWithoutInteractionsInput = {
     id?: string
     title: string
     slug: string
@@ -42586,18 +40978,17 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: number
     likeCount?: number
-    dislikeCount?: number
     bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
     author: UserCreateNestedOneWithoutFeedPostsInput
     university?: UniversityCreateNestedOneWithoutFeedPostsInput
-    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
   }
 
-  export type FeedPostUncheckedCreateWithoutCommentsInput = {
+  export type FeedPostUncheckedCreateWithoutInteractionsInput = {
     id?: string
     authorId: string
     title: string
@@ -42612,233 +41003,17 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: number
     likeCount?: number
-    dislikeCount?: number
     bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
+    dislikeCount?: number
   }
 
-  export type FeedPostCreateOrConnectWithoutCommentsInput = {
+  export type FeedPostCreateOrConnectWithoutInteractionsInput = {
     where: FeedPostWhereUniqueInput
-    create: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
-  }
-
-  export type UserCreateWithoutFeedCommentsInput = {
-    id?: string
-    email: string
-    passwordHash?: string | null
-    fullName: string
-    phone?: string | null
-    avatarUrl?: string | null
-    role?: $Enums.Role
-    emailVerified?: boolean
-    googleId?: string | null
-    studentId?: string | null
-    authProvider?: string
-    isActive?: boolean
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutFeedCommentsInput = {
-    id?: string
-    email: string
-    passwordHash?: string | null
-    fullName: string
-    phone?: string | null
-    avatarUrl?: string | null
-    role?: $Enums.Role
-    emailVerified?: boolean
-    googleId?: string | null
-    studentId?: string | null
-    authProvider?: string
-    isActive?: boolean
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutFeedCommentsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutFeedCommentsInput, UserUncheckedCreateWithoutFeedCommentsInput>
-  }
-
-  export type FeedPostUpsertWithoutCommentsInput = {
-    update: XOR<FeedPostUpdateWithoutCommentsInput, FeedPostUncheckedUpdateWithoutCommentsInput>
-    create: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
-    where?: FeedPostWhereInput
-  }
-
-  export type FeedPostUpdateToOneWithWhereWithoutCommentsInput = {
-    where?: FeedPostWhereInput
-    data: XOR<FeedPostUpdateWithoutCommentsInput, FeedPostUncheckedUpdateWithoutCommentsInput>
-  }
-
-  export type FeedPostUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
-    university?: UniversityUpdateOneWithoutFeedPostsNestedInput
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
-  }
-
-  export type FeedPostUncheckedUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    universityId?: NullableStringFieldUpdateOperationsInput | string | null
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type UserUpsertWithoutFeedCommentsInput = {
-    update: XOR<UserUpdateWithoutFeedCommentsInput, UserUncheckedUpdateWithoutFeedCommentsInput>
-    create: XOR<UserCreateWithoutFeedCommentsInput, UserUncheckedCreateWithoutFeedCommentsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutFeedCommentsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutFeedCommentsInput, UserUncheckedUpdateWithoutFeedCommentsInput>
-  }
-
-  export type UserUpdateWithoutFeedCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    fullName?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    studentId?: NullableStringFieldUpdateOperationsInput | string | null
-    authProvider?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
-    apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
-    communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
-    communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutFeedCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    fullName?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    studentId?: NullableStringFieldUpdateOperationsInput | string | null
-    authProvider?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
-    apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
-    communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    create: XOR<FeedPostCreateWithoutInteractionsInput, FeedPostUncheckedCreateWithoutInteractionsInput>
   }
 
   export type UserCreateWithoutFeedInteractionsInput = {
@@ -42858,22 +41033,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeedInteractionsInput = {
@@ -42893,22 +41067,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeedInteractionsInput = {
@@ -42916,57 +41089,61 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutFeedInteractionsInput, UserUncheckedCreateWithoutFeedInteractionsInput>
   }
 
-  export type FeedPostCreateWithoutInteractionsInput = {
-    id?: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    dislikeCount?: number
-    bookmarkCount?: number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    author: UserCreateNestedOneWithoutFeedPostsInput
-    university?: UniversityCreateNestedOneWithoutFeedPostsInput
-    comments?: FeedCommentCreateNestedManyWithoutPostInput
-  }
-
-  export type FeedPostUncheckedCreateWithoutInteractionsInput = {
-    id?: string
-    authorId: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    universityId?: string | null
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    dislikeCount?: number
-    bookmarkCount?: number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    comments?: FeedCommentUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type FeedPostCreateOrConnectWithoutInteractionsInput = {
-    where: FeedPostWhereUniqueInput
+  export type FeedPostUpsertWithoutInteractionsInput = {
+    update: XOR<FeedPostUpdateWithoutInteractionsInput, FeedPostUncheckedUpdateWithoutInteractionsInput>
     create: XOR<FeedPostCreateWithoutInteractionsInput, FeedPostUncheckedCreateWithoutInteractionsInput>
+    where?: FeedPostWhereInput
+  }
+
+  export type FeedPostUpdateToOneWithWhereWithoutInteractionsInput = {
+    where?: FeedPostWhereInput
+    data: XOR<FeedPostUpdateWithoutInteractionsInput, FeedPostUncheckedUpdateWithoutInteractionsInput>
+  }
+
+  export type FeedPostUpdateWithoutInteractionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
+    university?: UniversityUpdateOneWithoutFeedPostsNestedInput
+  }
+
+  export type FeedPostUncheckedUpdateWithoutInteractionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    universityId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserUpsertWithoutFeedInteractionsInput = {
@@ -42997,22 +41174,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeedInteractionsInput = {
@@ -43032,135 +41208,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type FeedPostUpsertWithoutInteractionsInput = {
-    update: XOR<FeedPostUpdateWithoutInteractionsInput, FeedPostUncheckedUpdateWithoutInteractionsInput>
-    create: XOR<FeedPostCreateWithoutInteractionsInput, FeedPostUncheckedCreateWithoutInteractionsInput>
-    where?: FeedPostWhereInput
-  }
-
-  export type FeedPostUpdateToOneWithWhereWithoutInteractionsInput = {
-    where?: FeedPostWhereInput
-    data: XOR<FeedPostUpdateWithoutInteractionsInput, FeedPostUncheckedUpdateWithoutInteractionsInput>
-  }
-
-  export type FeedPostUpdateWithoutInteractionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
-    university?: UniversityUpdateOneWithoutFeedPostsNestedInput
-    comments?: FeedCommentUpdateManyWithoutPostNestedInput
-  }
-
-  export type FeedPostUncheckedUpdateWithoutInteractionsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    universityId?: NullableStringFieldUpdateOperationsInput | string | null
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comments?: FeedCommentUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type UniversityCourseCreateWithoutUniversityInput = {
-    id?: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
-    applications?: ApplicationCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseUncheckedCreateWithoutUniversityInput = {
-    id?: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseCreateOrConnectWithoutUniversityInput = {
-    where: UniversityCourseWhereUniqueInput
-    create: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput>
-  }
-
-  export type UniversityCourseCreateManyUniversityInputEnvelope = {
-    data: UniversityCourseCreateManyUniversityInput | UniversityCourseCreateManyUniversityInput[]
-    skipDuplicates?: boolean
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type FeedPostCreateWithoutUniversityInput = {
@@ -43176,15 +41238,14 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: number
     likeCount?: number
-    dislikeCount?: number
     bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    author: UserCreateNestedOneWithoutFeedPostsInput
+    dislikeCount?: number
     interactions?: FeedInteractionCreateNestedManyWithoutPostInput
-    comments?: FeedCommentCreateNestedManyWithoutPostInput
+    author: UserCreateNestedOneWithoutFeedPostsInput
   }
 
   export type FeedPostUncheckedCreateWithoutUniversityInput = {
@@ -43201,14 +41262,13 @@ export namespace Prisma {
     isPinned?: boolean
     viewCount?: number
     likeCount?: number
-    dislikeCount?: number
     bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
     publishedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
     interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
-    comments?: FeedCommentUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type FeedPostCreateOrConnectWithoutUniversityInput = {
@@ -43219,6 +41279,76 @@ export namespace Prisma {
   export type FeedPostCreateManyUniversityInputEnvelope = {
     data: FeedPostCreateManyUniversityInput | FeedPostCreateManyUniversityInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UniversityCourseCreateWithoutUniversityInput = {
+    id?: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
+    applications?: ApplicationCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
+  }
+
+  export type UniversityCourseUncheckedCreateWithoutUniversityInput = {
+    id?: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type UniversityCourseCreateOrConnectWithoutUniversityInput = {
+    where: UniversityCourseWhereUniqueInput
+    create: XOR<UniversityCourseCreateWithoutUniversityInput, UniversityCourseUncheckedCreateWithoutUniversityInput>
+  }
+
+  export type UniversityCourseCreateManyUniversityInputEnvelope = {
+    data: UniversityCourseCreateManyUniversityInput | UniversityCourseCreateManyUniversityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedPostUpsertWithWhereUniqueWithoutUniversityInput = {
+    where: FeedPostWhereUniqueInput
+    update: XOR<FeedPostUpdateWithoutUniversityInput, FeedPostUncheckedUpdateWithoutUniversityInput>
+    create: XOR<FeedPostCreateWithoutUniversityInput, FeedPostUncheckedCreateWithoutUniversityInput>
+  }
+
+  export type FeedPostUpdateWithWhereUniqueWithoutUniversityInput = {
+    where: FeedPostWhereUniqueInput
+    data: XOR<FeedPostUpdateWithoutUniversityInput, FeedPostUncheckedUpdateWithoutUniversityInput>
+  }
+
+  export type FeedPostUpdateManyWithWhereWithoutUniversityInput = {
+    where: FeedPostScalarWhereInput
+    data: XOR<FeedPostUpdateManyMutationInput, FeedPostUncheckedUpdateManyWithoutUniversityInput>
   }
 
   export type UniversityCourseUpsertWithWhereUniqueWithoutUniversityInput = {
@@ -43257,79 +41387,173 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UniversityCourse"> | Date | string
   }
 
-  export type FeedPostUpsertWithWhereUniqueWithoutUniversityInput = {
-    where: FeedPostWhereUniqueInput
-    update: XOR<FeedPostUpdateWithoutUniversityInput, FeedPostUncheckedUpdateWithoutUniversityInput>
-    create: XOR<FeedPostCreateWithoutUniversityInput, FeedPostUncheckedCreateWithoutUniversityInput>
-  }
-
-  export type FeedPostUpdateWithWhereUniqueWithoutUniversityInput = {
-    where: FeedPostWhereUniqueInput
-    data: XOR<FeedPostUpdateWithoutUniversityInput, FeedPostUncheckedUpdateWithoutUniversityInput>
-  }
-
-  export type FeedPostUpdateManyWithWhereWithoutUniversityInput = {
-    where: FeedPostScalarWhereInput
-    data: XOR<FeedPostUpdateManyMutationInput, FeedPostUncheckedUpdateManyWithoutUniversityInput>
-  }
-
-  export type UniversityCreateWithoutCoursesInput = {
+  export type ActionPlanCreateWithoutCourseInput = {
     id?: string
-    name: string
-    slug: string
-    country: string
-    city?: string | null
-    type?: $Enums.UniversityType | null
-    qsRanking?: number | null
-    theRanking?: number | null
-    websiteUrl?: string | null
-    logoUrl?: string | null
-    bannerUrl?: string | null
-    description?: string | null
-    acceptanceRate?: Decimal | DecimalJsLike | number | string | null
-    totalStudents?: number | null
-    intlStudentsPct?: Decimal | DecimalJsLike | number | string | null
-    establishedYear?: number | null
-    campusSizeAcres?: number | null
-    notableAlumni?: UniversityCreatenotableAlumniInput | string[]
-    tags?: UniversityCreatetagsInput | string[]
-    isActive?: boolean
-    dataVerifiedAt?: Date | string | null
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: string | null
+    targetDate?: Date | string | null
+    status?: $Enums.PlanStatus
+    completionPct?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    feedPosts?: FeedPostCreateNestedManyWithoutUniversityInput
+    comparison: AIComparisonCreateNestedOneWithoutActionPlansInput
+    user: UserCreateNestedOneWithoutActionPlansInput
   }
 
-  export type UniversityUncheckedCreateWithoutCoursesInput = {
+  export type ActionPlanUncheckedCreateWithoutCourseInput = {
     id?: string
-    name: string
-    slug: string
-    country: string
-    city?: string | null
-    type?: $Enums.UniversityType | null
-    qsRanking?: number | null
-    theRanking?: number | null
-    websiteUrl?: string | null
-    logoUrl?: string | null
-    bannerUrl?: string | null
-    description?: string | null
-    acceptanceRate?: Decimal | DecimalJsLike | number | string | null
-    totalStudents?: number | null
-    intlStudentsPct?: Decimal | DecimalJsLike | number | string | null
-    establishedYear?: number | null
-    campusSizeAcres?: number | null
-    notableAlumni?: UniversityCreatenotableAlumniInput | string[]
-    tags?: UniversityCreatetagsInput | string[]
-    isActive?: boolean
-    dataVerifiedAt?: Date | string | null
+    userId: string
+    comparisonId: string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: string | null
+    targetDate?: Date | string | null
+    status?: $Enums.PlanStatus
+    completionPct?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutUniversityInput
   }
 
-  export type UniversityCreateOrConnectWithoutCoursesInput = {
-    where: UniversityWhereUniqueInput
-    create: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
+  export type ActionPlanCreateOrConnectWithoutCourseInput = {
+    where: ActionPlanWhereUniqueInput
+    create: XOR<ActionPlanCreateWithoutCourseInput, ActionPlanUncheckedCreateWithoutCourseInput>
+  }
+
+  export type ActionPlanCreateManyCourseInputEnvelope = {
+    data: ActionPlanCreateManyCourseInput | ActionPlanCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AIComparisonCreateWithoutCourseInput = {
+    id?: string
+    matchScore: Decimal | DecimalJsLike | number | string
+    category: $Enums.AICategory
+    scoreBreakdown?: JsonNullValueInput | InputJsonValue
+    strengths?: AIComparisonCreatestrengthsInput | string[]
+    weaknesses?: AIComparisonCreateweaknessesInput | string[]
+    suggestions?: JsonNullValueInput | InputJsonValue
+    alternatives?: AIComparisonCreatealternativesInput | string[]
+    aiExplanation?: string | null
+    modelVersion?: string
+    processingMs?: number | null
+    cached?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanCreateNestedManyWithoutComparisonInput
+    user: UserCreateNestedOneWithoutAiComparisonsInput
+  }
+
+  export type AIComparisonUncheckedCreateWithoutCourseInput = {
+    id?: string
+    userId: string
+    matchScore: Decimal | DecimalJsLike | number | string
+    category: $Enums.AICategory
+    scoreBreakdown?: JsonNullValueInput | InputJsonValue
+    strengths?: AIComparisonCreatestrengthsInput | string[]
+    weaknesses?: AIComparisonCreateweaknessesInput | string[]
+    suggestions?: JsonNullValueInput | InputJsonValue
+    alternatives?: AIComparisonCreatealternativesInput | string[]
+    aiExplanation?: string | null
+    modelVersion?: string
+    processingMs?: number | null
+    cached?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutComparisonInput
+  }
+
+  export type AIComparisonCreateOrConnectWithoutCourseInput = {
+    where: AIComparisonWhereUniqueInput
+    create: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput>
+  }
+
+  export type AIComparisonCreateManyCourseInputEnvelope = {
+    data: AIComparisonCreateManyCourseInput | AIComparisonCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApplicationCreateWithoutCourseInput = {
+    id?: string
+    universityId: string
+    comparisonId?: string | null
+    status?: $Enums.ApplicationStatus
+    priority?: $Enums.ApplicationPriority
+    applicationFee?: Decimal | DecimalJsLike | number | string | null
+    feeStatus?: $Enums.FeeStatus
+    feePaidAt?: Date | string | null
+    personalStatement?: string | null
+    counsellorId?: string | null
+    internalNotes?: string | null
+    appliedAt?: Date | string | null
+    decisionAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutApplicationsInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutCourseInput = {
+    id?: string
+    userId: string
+    universityId: string
+    comparisonId?: string | null
+    status?: $Enums.ApplicationStatus
+    priority?: $Enums.ApplicationPriority
+    applicationFee?: Decimal | DecimalJsLike | number | string | null
+    feeStatus?: $Enums.FeeStatus
+    feePaidAt?: Date | string | null
+    personalStatement?: string | null
+    counsellorId?: string | null
+    internalNotes?: string | null
+    appliedAt?: Date | string | null
+    decisionAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationCreateOrConnectWithoutCourseInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutCourseInput, ApplicationUncheckedCreateWithoutCourseInput>
+  }
+
+  export type ApplicationCreateManyCourseInputEnvelope = {
+    data: ApplicationCreateManyCourseInput | ApplicationCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CourseFeeCreateWithoutCourseInput = {
+    id?: string
+    tuitionPerYearUsd?: number | null
+    avgLivingPerYearUsd?: number | null
+    applicationFeeUsd?: number
+    totalCostEstimateUsd?: number | null
+    currencyLocal?: string | null
+    tuitionLocal?: number | null
+    scholarshipAvailable?: boolean
+    scholarshipAmountUsd?: number | null
+    scholarshipDetails?: string | null
+    feeWaiverAvailable?: boolean
+    feeNotes?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type CourseFeeUncheckedCreateWithoutCourseInput = {
+    id?: string
+    tuitionPerYearUsd?: number | null
+    avgLivingPerYearUsd?: number | null
+    applicationFeeUsd?: number
+    totalCostEstimateUsd?: number | null
+    currencyLocal?: string | null
+    tuitionLocal?: number | null
+    scholarshipAvailable?: boolean
+    scholarshipAmountUsd?: number | null
+    scholarshipDetails?: string | null
+    feeWaiverAvailable?: boolean
+    feeNotes?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type CourseFeeCreateOrConnectWithoutCourseInput = {
+    where: CourseFeeWhereUniqueInput
+    create: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
   }
 
   export type CourseRequirementCreateWithoutCourseInput = {
@@ -43393,43 +41617,6 @@ export namespace Prisma {
     create: XOR<CourseRequirementCreateWithoutCourseInput, CourseRequirementUncheckedCreateWithoutCourseInput>
   }
 
-  export type CourseFeeCreateWithoutCourseInput = {
-    id?: string
-    tuitionPerYearUsd?: number | null
-    avgLivingPerYearUsd?: number | null
-    applicationFeeUsd?: number
-    totalCostEstimateUsd?: number | null
-    currencyLocal?: string | null
-    tuitionLocal?: number | null
-    scholarshipAvailable?: boolean
-    scholarshipAmountUsd?: number | null
-    scholarshipDetails?: string | null
-    feeWaiverAvailable?: boolean
-    feeNotes?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type CourseFeeUncheckedCreateWithoutCourseInput = {
-    id?: string
-    tuitionPerYearUsd?: number | null
-    avgLivingPerYearUsd?: number | null
-    applicationFeeUsd?: number
-    totalCostEstimateUsd?: number | null
-    currencyLocal?: string | null
-    tuitionLocal?: number | null
-    scholarshipAvailable?: boolean
-    scholarshipAmountUsd?: number | null
-    scholarshipDetails?: string | null
-    feeWaiverAvailable?: boolean
-    feeNotes?: string | null
-    updatedAt?: Date | string
-  }
-
-  export type CourseFeeCreateOrConnectWithoutCourseInput = {
-    where: CourseFeeWhereUniqueInput
-    create: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
-  }
-
   export type SavedCollegeCreateWithoutCourseInput = {
     id?: string
     priority?: $Enums.CollegePriority | null
@@ -43456,201 +41643,154 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type AIComparisonCreateWithoutCourseInput = {
+  export type UniversityCreateWithoutCoursesInput = {
     id?: string
-    matchScore: Decimal | DecimalJsLike | number | string
-    category: $Enums.AICategory
-    scoreBreakdown?: JsonNullValueInput | InputJsonValue
-    strengths?: AIComparisonCreatestrengthsInput | string[]
-    weaknesses?: AIComparisonCreateweaknessesInput | string[]
-    suggestions?: JsonNullValueInput | InputJsonValue
-    alternatives?: AIComparisonCreatealternativesInput | string[]
-    aiExplanation?: string | null
-    modelVersion?: string
-    processingMs?: number | null
-    cached?: boolean
+    name: string
+    slug: string
+    country: string
+    city?: string | null
+    type?: $Enums.UniversityType | null
+    qsRanking?: number | null
+    theRanking?: number | null
+    websiteUrl?: string | null
+    logoUrl?: string | null
+    bannerUrl?: string | null
+    description?: string | null
+    acceptanceRate?: Decimal | DecimalJsLike | number | string | null
+    totalStudents?: number | null
+    intlStudentsPct?: Decimal | DecimalJsLike | number | string | null
+    establishedYear?: number | null
+    campusSizeAcres?: number | null
+    notableAlumni?: UniversityCreatenotableAlumniInput | string[]
+    tags?: UniversityCreatetagsInput | string[]
+    isActive?: boolean
+    dataVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutAiComparisonsInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutComparisonInput
+    feedPosts?: FeedPostCreateNestedManyWithoutUniversityInput
   }
 
-  export type AIComparisonUncheckedCreateWithoutCourseInput = {
+  export type UniversityUncheckedCreateWithoutCoursesInput = {
     id?: string
-    userId: string
-    matchScore: Decimal | DecimalJsLike | number | string
-    category: $Enums.AICategory
-    scoreBreakdown?: JsonNullValueInput | InputJsonValue
-    strengths?: AIComparisonCreatestrengthsInput | string[]
-    weaknesses?: AIComparisonCreateweaknessesInput | string[]
-    suggestions?: JsonNullValueInput | InputJsonValue
-    alternatives?: AIComparisonCreatealternativesInput | string[]
-    aiExplanation?: string | null
-    modelVersion?: string
-    processingMs?: number | null
-    cached?: boolean
+    name: string
+    slug: string
+    country: string
+    city?: string | null
+    type?: $Enums.UniversityType | null
+    qsRanking?: number | null
+    theRanking?: number | null
+    websiteUrl?: string | null
+    logoUrl?: string | null
+    bannerUrl?: string | null
+    description?: string | null
+    acceptanceRate?: Decimal | DecimalJsLike | number | string | null
+    totalStudents?: number | null
+    intlStudentsPct?: Decimal | DecimalJsLike | number | string | null
+    establishedYear?: number | null
+    campusSizeAcres?: number | null
+    notableAlumni?: UniversityCreatenotableAlumniInput | string[]
+    tags?: UniversityCreatetagsInput | string[]
+    isActive?: boolean
+    dataVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutComparisonInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutUniversityInput
   }
 
-  export type AIComparisonCreateOrConnectWithoutCourseInput = {
-    where: AIComparisonWhereUniqueInput
-    create: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput>
+  export type UniversityCreateOrConnectWithoutCoursesInput = {
+    where: UniversityWhereUniqueInput
+    create: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
   }
 
-  export type AIComparisonCreateManyCourseInputEnvelope = {
-    data: AIComparisonCreateManyCourseInput | AIComparisonCreateManyCourseInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ActionPlanCreateWithoutCourseInput = {
-    id?: string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: string | null
-    targetDate?: Date | string | null
-    status?: $Enums.PlanStatus
-    completionPct?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutActionPlansInput
-    comparison: AIComparisonCreateNestedOneWithoutActionPlansInput
-  }
-
-  export type ActionPlanUncheckedCreateWithoutCourseInput = {
-    id?: string
-    userId: string
-    comparisonId: string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: string | null
-    targetDate?: Date | string | null
-    status?: $Enums.PlanStatus
-    completionPct?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ActionPlanCreateOrConnectWithoutCourseInput = {
+  export type ActionPlanUpsertWithWhereUniqueWithoutCourseInput = {
     where: ActionPlanWhereUniqueInput
+    update: XOR<ActionPlanUpdateWithoutCourseInput, ActionPlanUncheckedUpdateWithoutCourseInput>
     create: XOR<ActionPlanCreateWithoutCourseInput, ActionPlanUncheckedCreateWithoutCourseInput>
   }
 
-  export type ActionPlanCreateManyCourseInputEnvelope = {
-    data: ActionPlanCreateManyCourseInput | ActionPlanCreateManyCourseInput[]
-    skipDuplicates?: boolean
+  export type ActionPlanUpdateWithWhereUniqueWithoutCourseInput = {
+    where: ActionPlanWhereUniqueInput
+    data: XOR<ActionPlanUpdateWithoutCourseInput, ActionPlanUncheckedUpdateWithoutCourseInput>
   }
 
-  export type ApplicationCreateWithoutCourseInput = {
-    id?: string
-    universityId: string
-    comparisonId?: string | null
-    status?: $Enums.ApplicationStatus
-    priority?: $Enums.ApplicationPriority
-    applicationFee?: Decimal | DecimalJsLike | number | string | null
-    feeStatus?: $Enums.FeeStatus
-    feePaidAt?: Date | string | null
-    personalStatement?: string | null
-    counsellorId?: string | null
-    internalNotes?: string | null
-    appliedAt?: Date | string | null
-    decisionAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutApplicationsInput
+  export type ActionPlanUpdateManyWithWhereWithoutCourseInput = {
+    where: ActionPlanScalarWhereInput
+    data: XOR<ActionPlanUpdateManyMutationInput, ActionPlanUncheckedUpdateManyWithoutCourseInput>
   }
 
-  export type ApplicationUncheckedCreateWithoutCourseInput = {
-    id?: string
-    userId: string
-    universityId: string
-    comparisonId?: string | null
-    status?: $Enums.ApplicationStatus
-    priority?: $Enums.ApplicationPriority
-    applicationFee?: Decimal | DecimalJsLike | number | string | null
-    feeStatus?: $Enums.FeeStatus
-    feePaidAt?: Date | string | null
-    personalStatement?: string | null
-    counsellorId?: string | null
-    internalNotes?: string | null
-    appliedAt?: Date | string | null
-    decisionAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+  export type AIComparisonUpsertWithWhereUniqueWithoutCourseInput = {
+    where: AIComparisonWhereUniqueInput
+    update: XOR<AIComparisonUpdateWithoutCourseInput, AIComparisonUncheckedUpdateWithoutCourseInput>
+    create: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput>
   }
 
-  export type ApplicationCreateOrConnectWithoutCourseInput = {
+  export type AIComparisonUpdateWithWhereUniqueWithoutCourseInput = {
+    where: AIComparisonWhereUniqueInput
+    data: XOR<AIComparisonUpdateWithoutCourseInput, AIComparisonUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type AIComparisonUpdateManyWithWhereWithoutCourseInput = {
+    where: AIComparisonScalarWhereInput
+    data: XOR<AIComparisonUpdateManyMutationInput, AIComparisonUncheckedUpdateManyWithoutCourseInput>
+  }
+
+  export type ApplicationUpsertWithWhereUniqueWithoutCourseInput = {
     where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutCourseInput, ApplicationUncheckedUpdateWithoutCourseInput>
     create: XOR<ApplicationCreateWithoutCourseInput, ApplicationUncheckedCreateWithoutCourseInput>
   }
 
-  export type ApplicationCreateManyCourseInputEnvelope = {
-    data: ApplicationCreateManyCourseInput | ApplicationCreateManyCourseInput[]
-    skipDuplicates?: boolean
+  export type ApplicationUpdateWithWhereUniqueWithoutCourseInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutCourseInput, ApplicationUncheckedUpdateWithoutCourseInput>
   }
 
-  export type UniversityUpsertWithoutCoursesInput = {
-    update: XOR<UniversityUpdateWithoutCoursesInput, UniversityUncheckedUpdateWithoutCoursesInput>
-    create: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
-    where?: UniversityWhereInput
+  export type ApplicationUpdateManyWithWhereWithoutCourseInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutCourseInput>
   }
 
-  export type UniversityUpdateToOneWithWhereWithoutCoursesInput = {
-    where?: UniversityWhereInput
-    data: XOR<UniversityUpdateWithoutCoursesInput, UniversityUncheckedUpdateWithoutCoursesInput>
+  export type CourseFeeUpsertWithoutCourseInput = {
+    update: XOR<CourseFeeUpdateWithoutCourseInput, CourseFeeUncheckedUpdateWithoutCourseInput>
+    create: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
+    where?: CourseFeeWhereInput
   }
 
-  export type UniversityUpdateWithoutCoursesInput = {
+  export type CourseFeeUpdateToOneWithWhereWithoutCourseInput = {
+    where?: CourseFeeWhereInput
+    data: XOR<CourseFeeUpdateWithoutCourseInput, CourseFeeUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type CourseFeeUpdateWithoutCourseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: NullableEnumUniversityTypeFieldUpdateOperationsInput | $Enums.UniversityType | null
-    qsRanking?: NullableIntFieldUpdateOperationsInput | number | null
-    theRanking?: NullableIntFieldUpdateOperationsInput | number | null
-    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    bannerUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    acceptanceRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalStudents?: NullableIntFieldUpdateOperationsInput | number | null
-    intlStudentsPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    establishedYear?: NullableIntFieldUpdateOperationsInput | number | null
-    campusSizeAcres?: NullableIntFieldUpdateOperationsInput | number | null
-    notableAlumni?: UniversityUpdatenotableAlumniInput | string[]
-    tags?: UniversityUpdatetagsInput | string[]
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    dataVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tuitionPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    avgLivingPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    applicationFeeUsd?: IntFieldUpdateOperationsInput | number
+    totalCostEstimateUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    currencyLocal?: NullableStringFieldUpdateOperationsInput | string | null
+    tuitionLocal?: NullableIntFieldUpdateOperationsInput | number | null
+    scholarshipAvailable?: BoolFieldUpdateOperationsInput | boolean
+    scholarshipAmountUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    scholarshipDetails?: NullableStringFieldUpdateOperationsInput | string | null
+    feeWaiverAvailable?: BoolFieldUpdateOperationsInput | boolean
+    feeNotes?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedPosts?: FeedPostUpdateManyWithoutUniversityNestedInput
   }
 
-  export type UniversityUncheckedUpdateWithoutCoursesInput = {
+  export type CourseFeeUncheckedUpdateWithoutCourseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    country?: StringFieldUpdateOperationsInput | string
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: NullableEnumUniversityTypeFieldUpdateOperationsInput | $Enums.UniversityType | null
-    qsRanking?: NullableIntFieldUpdateOperationsInput | number | null
-    theRanking?: NullableIntFieldUpdateOperationsInput | number | null
-    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    bannerUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    acceptanceRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    totalStudents?: NullableIntFieldUpdateOperationsInput | number | null
-    intlStudentsPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    establishedYear?: NullableIntFieldUpdateOperationsInput | number | null
-    campusSizeAcres?: NullableIntFieldUpdateOperationsInput | number | null
-    notableAlumni?: UniversityUpdatenotableAlumniInput | string[]
-    tags?: UniversityUpdatetagsInput | string[]
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    dataVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tuitionPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    avgLivingPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    applicationFeeUsd?: IntFieldUpdateOperationsInput | number
+    totalCostEstimateUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    currencyLocal?: NullableStringFieldUpdateOperationsInput | string | null
+    tuitionLocal?: NullableIntFieldUpdateOperationsInput | number | null
+    scholarshipAvailable?: BoolFieldUpdateOperationsInput | boolean
+    scholarshipAmountUsd?: NullableIntFieldUpdateOperationsInput | number | null
+    scholarshipDetails?: NullableStringFieldUpdateOperationsInput | string | null
+    feeWaiverAvailable?: BoolFieldUpdateOperationsInput | boolean
+    feeNotes?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutUniversityNestedInput
   }
 
   export type CourseRequirementUpsertWithoutCourseInput = {
@@ -43720,49 +41860,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CourseFeeUpsertWithoutCourseInput = {
-    update: XOR<CourseFeeUpdateWithoutCourseInput, CourseFeeUncheckedUpdateWithoutCourseInput>
-    create: XOR<CourseFeeCreateWithoutCourseInput, CourseFeeUncheckedCreateWithoutCourseInput>
-    where?: CourseFeeWhereInput
-  }
-
-  export type CourseFeeUpdateToOneWithWhereWithoutCourseInput = {
-    where?: CourseFeeWhereInput
-    data: XOR<CourseFeeUpdateWithoutCourseInput, CourseFeeUncheckedUpdateWithoutCourseInput>
-  }
-
-  export type CourseFeeUpdateWithoutCourseInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    tuitionPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    avgLivingPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    applicationFeeUsd?: IntFieldUpdateOperationsInput | number
-    totalCostEstimateUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    currencyLocal?: NullableStringFieldUpdateOperationsInput | string | null
-    tuitionLocal?: NullableIntFieldUpdateOperationsInput | number | null
-    scholarshipAvailable?: BoolFieldUpdateOperationsInput | boolean
-    scholarshipAmountUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    scholarshipDetails?: NullableStringFieldUpdateOperationsInput | string | null
-    feeWaiverAvailable?: BoolFieldUpdateOperationsInput | boolean
-    feeNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CourseFeeUncheckedUpdateWithoutCourseInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    tuitionPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    avgLivingPerYearUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    applicationFeeUsd?: IntFieldUpdateOperationsInput | number
-    totalCostEstimateUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    currencyLocal?: NullableStringFieldUpdateOperationsInput | string | null
-    tuitionLocal?: NullableIntFieldUpdateOperationsInput | number | null
-    scholarshipAvailable?: BoolFieldUpdateOperationsInput | boolean
-    scholarshipAmountUsd?: NullableIntFieldUpdateOperationsInput | number | null
-    scholarshipDetails?: NullableStringFieldUpdateOperationsInput | string | null
-    feeWaiverAvailable?: BoolFieldUpdateOperationsInput | boolean
-    feeNotes?: NullableStringFieldUpdateOperationsInput | string | null
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type SavedCollegeUpsertWithWhereUniqueWithoutCourseInput = {
     where: SavedCollegeWhereUniqueInput
     update: XOR<SavedCollegeUpdateWithoutCourseInput, SavedCollegeUncheckedUpdateWithoutCourseInput>
@@ -43779,52 +41876,69 @@ export namespace Prisma {
     data: XOR<SavedCollegeUpdateManyMutationInput, SavedCollegeUncheckedUpdateManyWithoutCourseInput>
   }
 
-  export type AIComparisonUpsertWithWhereUniqueWithoutCourseInput = {
-    where: AIComparisonWhereUniqueInput
-    update: XOR<AIComparisonUpdateWithoutCourseInput, AIComparisonUncheckedUpdateWithoutCourseInput>
-    create: XOR<AIComparisonCreateWithoutCourseInput, AIComparisonUncheckedCreateWithoutCourseInput>
+  export type UniversityUpsertWithoutCoursesInput = {
+    update: XOR<UniversityUpdateWithoutCoursesInput, UniversityUncheckedUpdateWithoutCoursesInput>
+    create: XOR<UniversityCreateWithoutCoursesInput, UniversityUncheckedCreateWithoutCoursesInput>
+    where?: UniversityWhereInput
   }
 
-  export type AIComparisonUpdateWithWhereUniqueWithoutCourseInput = {
-    where: AIComparisonWhereUniqueInput
-    data: XOR<AIComparisonUpdateWithoutCourseInput, AIComparisonUncheckedUpdateWithoutCourseInput>
+  export type UniversityUpdateToOneWithWhereWithoutCoursesInput = {
+    where?: UniversityWhereInput
+    data: XOR<UniversityUpdateWithoutCoursesInput, UniversityUncheckedUpdateWithoutCoursesInput>
   }
 
-  export type AIComparisonUpdateManyWithWhereWithoutCourseInput = {
-    where: AIComparisonScalarWhereInput
-    data: XOR<AIComparisonUpdateManyMutationInput, AIComparisonUncheckedUpdateManyWithoutCourseInput>
+  export type UniversityUpdateWithoutCoursesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableEnumUniversityTypeFieldUpdateOperationsInput | $Enums.UniversityType | null
+    qsRanking?: NullableIntFieldUpdateOperationsInput | number | null
+    theRanking?: NullableIntFieldUpdateOperationsInput | number | null
+    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptanceRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalStudents?: NullableIntFieldUpdateOperationsInput | number | null
+    intlStudentsPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    establishedYear?: NullableIntFieldUpdateOperationsInput | number | null
+    campusSizeAcres?: NullableIntFieldUpdateOperationsInput | number | null
+    notableAlumni?: UniversityUpdatenotableAlumniInput | string[]
+    tags?: UniversityUpdatetagsInput | string[]
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    dataVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feedPosts?: FeedPostUpdateManyWithoutUniversityNestedInput
   }
 
-  export type ActionPlanUpsertWithWhereUniqueWithoutCourseInput = {
-    where: ActionPlanWhereUniqueInput
-    update: XOR<ActionPlanUpdateWithoutCourseInput, ActionPlanUncheckedUpdateWithoutCourseInput>
-    create: XOR<ActionPlanCreateWithoutCourseInput, ActionPlanUncheckedCreateWithoutCourseInput>
-  }
-
-  export type ActionPlanUpdateWithWhereUniqueWithoutCourseInput = {
-    where: ActionPlanWhereUniqueInput
-    data: XOR<ActionPlanUpdateWithoutCourseInput, ActionPlanUncheckedUpdateWithoutCourseInput>
-  }
-
-  export type ActionPlanUpdateManyWithWhereWithoutCourseInput = {
-    where: ActionPlanScalarWhereInput
-    data: XOR<ActionPlanUpdateManyMutationInput, ActionPlanUncheckedUpdateManyWithoutCourseInput>
-  }
-
-  export type ApplicationUpsertWithWhereUniqueWithoutCourseInput = {
-    where: ApplicationWhereUniqueInput
-    update: XOR<ApplicationUpdateWithoutCourseInput, ApplicationUncheckedUpdateWithoutCourseInput>
-    create: XOR<ApplicationCreateWithoutCourseInput, ApplicationUncheckedCreateWithoutCourseInput>
-  }
-
-  export type ApplicationUpdateWithWhereUniqueWithoutCourseInput = {
-    where: ApplicationWhereUniqueInput
-    data: XOR<ApplicationUpdateWithoutCourseInput, ApplicationUncheckedUpdateWithoutCourseInput>
-  }
-
-  export type ApplicationUpdateManyWithWhereWithoutCourseInput = {
-    where: ApplicationScalarWhereInput
-    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutCourseInput>
+  export type UniversityUncheckedUpdateWithoutCoursesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableEnumUniversityTypeFieldUpdateOperationsInput | $Enums.UniversityType | null
+    qsRanking?: NullableIntFieldUpdateOperationsInput | number | null
+    theRanking?: NullableIntFieldUpdateOperationsInput | number | null
+    websiteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    acceptanceRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    totalStudents?: NullableIntFieldUpdateOperationsInput | number | null
+    intlStudentsPct?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    establishedYear?: NullableIntFieldUpdateOperationsInput | number | null
+    campusSizeAcres?: NullableIntFieldUpdateOperationsInput | number | null
+    notableAlumni?: UniversityUpdatenotableAlumniInput | string[]
+    tags?: UniversityUpdatetagsInput | string[]
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    dataVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutUniversityNestedInput
   }
 
   export type UniversityCourseCreateWithoutRequirementsInput = {
@@ -43841,12 +41955,12 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    university: UniversityCreateNestedOneWithoutCoursesInput
+    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
+    applications?: ApplicationCreateNestedManyWithoutCourseInput
     fees?: CourseFeeCreateNestedOneWithoutCourseInput
     savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
-    applications?: ApplicationCreateNestedManyWithoutCourseInput
+    university: UniversityCreateNestedOneWithoutCoursesInput
   }
 
   export type UniversityCourseUncheckedCreateWithoutRequirementsInput = {
@@ -43864,11 +41978,11 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
     fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
     savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type UniversityCourseCreateOrConnectWithoutRequirementsInput = {
@@ -43901,12 +42015,12 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
+    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUpdateManyWithoutCourseNestedInput
     fees?: CourseFeeUpdateOneWithoutCourseNestedInput
     savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUpdateManyWithoutCourseNestedInput
+    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
   }
 
   export type UniversityCourseUncheckedUpdateWithoutRequirementsInput = {
@@ -43924,11 +42038,11 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
     fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
     savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UniversityCourseCreateWithoutFeesInput = {
@@ -43945,12 +42059,12 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    university: UniversityCreateNestedOneWithoutCoursesInput
+    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
+    applications?: ApplicationCreateNestedManyWithoutCourseInput
     requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
     savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
-    applications?: ApplicationCreateNestedManyWithoutCourseInput
+    university: UniversityCreateNestedOneWithoutCoursesInput
   }
 
   export type UniversityCourseUncheckedCreateWithoutFeesInput = {
@@ -43968,11 +42082,11 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
     requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
     savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type UniversityCourseCreateOrConnectWithoutFeesInput = {
@@ -44005,12 +42119,12 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
+    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUpdateManyWithoutCourseNestedInput
     requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
     savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUpdateManyWithoutCourseNestedInput
+    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
   }
 
   export type UniversityCourseUncheckedUpdateWithoutFeesInput = {
@@ -44028,11 +42142,60 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
     requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
     savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type UniversityCourseCreateWithoutSavedByInput = {
+    id?: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
+    applications?: ApplicationCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
+    university: UniversityCreateNestedOneWithoutCoursesInput
+  }
+
+  export type UniversityCourseUncheckedCreateWithoutSavedByInput = {
+    id?: string
+    universityId: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
+  }
+
+  export type UniversityCourseCreateOrConnectWithoutSavedByInput = {
+    where: UniversityCourseWhereUniqueInput
+    create: XOR<UniversityCourseCreateWithoutSavedByInput, UniversityCourseUncheckedCreateWithoutSavedByInput>
   }
 
   export type UserCreateWithoutSavedCollegesInput = {
@@ -44052,22 +42215,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSavedCollegesInput = {
@@ -44087,22 +42249,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedCollegesInput = {
@@ -44110,53 +42271,59 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutSavedCollegesInput, UserUncheckedCreateWithoutSavedCollegesInput>
   }
 
-  export type UniversityCourseCreateWithoutSavedByInput = {
-    id?: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    university: UniversityCreateNestedOneWithoutCoursesInput
-    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeCreateNestedOneWithoutCourseInput
-    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
-    applications?: ApplicationCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseUncheckedCreateWithoutSavedByInput = {
-    id?: string
-    universityId: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
-    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseCreateOrConnectWithoutSavedByInput = {
-    where: UniversityCourseWhereUniqueInput
+  export type UniversityCourseUpsertWithoutSavedByInput = {
+    update: XOR<UniversityCourseUpdateWithoutSavedByInput, UniversityCourseUncheckedUpdateWithoutSavedByInput>
     create: XOR<UniversityCourseCreateWithoutSavedByInput, UniversityCourseUncheckedCreateWithoutSavedByInput>
+    where?: UniversityCourseWhereInput
+  }
+
+  export type UniversityCourseUpdateToOneWithWhereWithoutSavedByInput = {
+    where?: UniversityCourseWhereInput
+    data: XOR<UniversityCourseUpdateWithoutSavedByInput, UniversityCourseUncheckedUpdateWithoutSavedByInput>
+  }
+
+  export type UniversityCourseUpdateWithoutSavedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
+    field?: StringFieldUpdateOperationsInput | string
+    subField?: NullableStringFieldUpdateOperationsInput | string | null
+    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
+    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
+  }
+
+  export type UniversityCourseUncheckedUpdateWithoutSavedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    universityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
+    field?: StringFieldUpdateOperationsInput | string
+    subField?: NullableStringFieldUpdateOperationsInput | string | null
+    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutSavedCollegesInput = {
@@ -44187,22 +42354,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSavedCollegesInput = {
@@ -44222,201 +42388,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UniversityCourseUpsertWithoutSavedByInput = {
-    update: XOR<UniversityCourseUpdateWithoutSavedByInput, UniversityCourseUncheckedUpdateWithoutSavedByInput>
-    create: XOR<UniversityCourseCreateWithoutSavedByInput, UniversityCourseUncheckedCreateWithoutSavedByInput>
-    where?: UniversityCourseWhereInput
-  }
-
-  export type UniversityCourseUpdateToOneWithWhereWithoutSavedByInput = {
-    where?: UniversityCourseWhereInput
-    data: XOR<UniversityCourseUpdateWithoutSavedByInput, UniversityCourseUncheckedUpdateWithoutSavedByInput>
-  }
-
-  export type UniversityCourseUpdateWithoutSavedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
-    field?: StringFieldUpdateOperationsInput | string
-    subField?: NullableStringFieldUpdateOperationsInput | string | null
-    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    language?: StringFieldUpdateOperationsInput | string
-    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
-    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
-    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
-    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUpdateManyWithoutCourseNestedInput
-  }
-
-  export type UniversityCourseUncheckedUpdateWithoutSavedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    universityId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
-    field?: StringFieldUpdateOperationsInput | string
-    subField?: NullableStringFieldUpdateOperationsInput | string | null
-    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    language?: StringFieldUpdateOperationsInput | string
-    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
-    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
-    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
-  }
-
-  export type UserCreateWithoutAiComparisonsInput = {
-    id?: string
-    email: string
-    passwordHash?: string | null
-    fullName: string
-    phone?: string | null
-    avatarUrl?: string | null
-    role?: $Enums.Role
-    emailVerified?: boolean
-    googleId?: string | null
-    studentId?: string | null
-    authProvider?: string
-    isActive?: boolean
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutAiComparisonsInput = {
-    id?: string
-    email: string
-    passwordHash?: string | null
-    fullName: string
-    phone?: string | null
-    avatarUrl?: string | null
-    role?: $Enums.Role
-    emailVerified?: boolean
-    googleId?: string | null
-    studentId?: string | null
-    authProvider?: string
-    isActive?: boolean
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutAiComparisonsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAiComparisonsInput, UserUncheckedCreateWithoutAiComparisonsInput>
-  }
-
-  export type UniversityCourseCreateWithoutComparisonsInput = {
-    id?: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    university: UniversityCreateNestedOneWithoutCoursesInput
-    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
-    applications?: ApplicationCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseUncheckedCreateWithoutComparisonsInput = {
-    id?: string
-    universityId: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseCreateOrConnectWithoutComparisonsInput = {
-    where: UniversityCourseWhereUniqueInput
-    create: XOR<UniversityCourseCreateWithoutComparisonsInput, UniversityCourseUncheckedCreateWithoutComparisonsInput>
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ActionPlanCreateWithoutComparisonInput = {
@@ -44428,8 +42414,8 @@ export namespace Prisma {
     completionPct?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutActionPlansInput
     course: UniversityCourseCreateNestedOneWithoutActionPlansInput
+    user: UserCreateNestedOneWithoutActionPlansInput
   }
 
   export type ActionPlanUncheckedCreateWithoutComparisonInput = {
@@ -44453,6 +42439,199 @@ export namespace Prisma {
   export type ActionPlanCreateManyComparisonInputEnvelope = {
     data: ActionPlanCreateManyComparisonInput | ActionPlanCreateManyComparisonInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UniversityCourseCreateWithoutComparisonsInput = {
+    id?: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
+    applications?: ApplicationCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
+    university: UniversityCreateNestedOneWithoutCoursesInput
+  }
+
+  export type UniversityCourseUncheckedCreateWithoutComparisonsInput = {
+    id?: string
+    universityId: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type UniversityCourseCreateOrConnectWithoutComparisonsInput = {
+    where: UniversityCourseWhereUniqueInput
+    create: XOR<UniversityCourseCreateWithoutComparisonsInput, UniversityCourseUncheckedCreateWithoutComparisonsInput>
+  }
+
+  export type UserCreateWithoutAiComparisonsInput = {
+    id?: string
+    email: string
+    passwordHash?: string | null
+    fullName: string
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: $Enums.Role
+    emailVerified?: boolean
+    googleId?: string | null
+    studentId?: string | null
+    authProvider?: string
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastLoginAt?: Date | string | null
+    actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
+    apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
+    communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAiComparisonsInput = {
+    id?: string
+    email: string
+    passwordHash?: string | null
+    fullName: string
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: $Enums.Role
+    emailVerified?: boolean
+    googleId?: string | null
+    studentId?: string | null
+    authProvider?: string
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastLoginAt?: Date | string | null
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
+    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAiComparisonsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAiComparisonsInput, UserUncheckedCreateWithoutAiComparisonsInput>
+  }
+
+  export type ActionPlanUpsertWithWhereUniqueWithoutComparisonInput = {
+    where: ActionPlanWhereUniqueInput
+    update: XOR<ActionPlanUpdateWithoutComparisonInput, ActionPlanUncheckedUpdateWithoutComparisonInput>
+    create: XOR<ActionPlanCreateWithoutComparisonInput, ActionPlanUncheckedCreateWithoutComparisonInput>
+  }
+
+  export type ActionPlanUpdateWithWhereUniqueWithoutComparisonInput = {
+    where: ActionPlanWhereUniqueInput
+    data: XOR<ActionPlanUpdateWithoutComparisonInput, ActionPlanUncheckedUpdateWithoutComparisonInput>
+  }
+
+  export type ActionPlanUpdateManyWithWhereWithoutComparisonInput = {
+    where: ActionPlanScalarWhereInput
+    data: XOR<ActionPlanUpdateManyMutationInput, ActionPlanUncheckedUpdateManyWithoutComparisonInput>
+  }
+
+  export type UniversityCourseUpsertWithoutComparisonsInput = {
+    update: XOR<UniversityCourseUpdateWithoutComparisonsInput, UniversityCourseUncheckedUpdateWithoutComparisonsInput>
+    create: XOR<UniversityCourseCreateWithoutComparisonsInput, UniversityCourseUncheckedCreateWithoutComparisonsInput>
+    where?: UniversityCourseWhereInput
+  }
+
+  export type UniversityCourseUpdateToOneWithWhereWithoutComparisonsInput = {
+    where?: UniversityCourseWhereInput
+    data: XOR<UniversityCourseUpdateWithoutComparisonsInput, UniversityCourseUncheckedUpdateWithoutComparisonsInput>
+  }
+
+  export type UniversityCourseUpdateWithoutComparisonsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
+    field?: StringFieldUpdateOperationsInput | string
+    subField?: NullableStringFieldUpdateOperationsInput | string | null
+    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
+    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
+  }
+
+  export type UniversityCourseUncheckedUpdateWithoutComparisonsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    universityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
+    field?: StringFieldUpdateOperationsInput | string
+    subField?: NullableStringFieldUpdateOperationsInput | string | null
+    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutAiComparisonsInput = {
@@ -44483,22 +42662,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAiComparisonsInput = {
@@ -44518,168 +42696,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UniversityCourseUpsertWithoutComparisonsInput = {
-    update: XOR<UniversityCourseUpdateWithoutComparisonsInput, UniversityCourseUncheckedUpdateWithoutComparisonsInput>
-    create: XOR<UniversityCourseCreateWithoutComparisonsInput, UniversityCourseUncheckedCreateWithoutComparisonsInput>
-    where?: UniversityCourseWhereInput
-  }
-
-  export type UniversityCourseUpdateToOneWithWhereWithoutComparisonsInput = {
-    where?: UniversityCourseWhereInput
-    data: XOR<UniversityCourseUpdateWithoutComparisonsInput, UniversityCourseUncheckedUpdateWithoutComparisonsInput>
-  }
-
-  export type UniversityCourseUpdateWithoutComparisonsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
-    field?: StringFieldUpdateOperationsInput | string
-    subField?: NullableStringFieldUpdateOperationsInput | string | null
-    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    language?: StringFieldUpdateOperationsInput | string
-    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
-    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
-    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUpdateManyWithoutCourseNestedInput
-  }
-
-  export type UniversityCourseUncheckedUpdateWithoutComparisonsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    universityId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
-    field?: StringFieldUpdateOperationsInput | string
-    subField?: NullableStringFieldUpdateOperationsInput | string | null
-    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    language?: StringFieldUpdateOperationsInput | string
-    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
-    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
-  }
-
-  export type ActionPlanUpsertWithWhereUniqueWithoutComparisonInput = {
-    where: ActionPlanWhereUniqueInput
-    update: XOR<ActionPlanUpdateWithoutComparisonInput, ActionPlanUncheckedUpdateWithoutComparisonInput>
-    create: XOR<ActionPlanCreateWithoutComparisonInput, ActionPlanUncheckedCreateWithoutComparisonInput>
-  }
-
-  export type ActionPlanUpdateWithWhereUniqueWithoutComparisonInput = {
-    where: ActionPlanWhereUniqueInput
-    data: XOR<ActionPlanUpdateWithoutComparisonInput, ActionPlanUncheckedUpdateWithoutComparisonInput>
-  }
-
-  export type ActionPlanUpdateManyWithWhereWithoutComparisonInput = {
-    where: ActionPlanScalarWhereInput
-    data: XOR<ActionPlanUpdateManyMutationInput, ActionPlanUncheckedUpdateManyWithoutComparisonInput>
-  }
-
-  export type UserCreateWithoutActionPlansInput = {
-    id?: string
-    email: string
-    passwordHash?: string | null
-    fullName: string
-    phone?: string | null
-    avatarUrl?: string | null
-    role?: $Enums.Role
-    emailVerified?: boolean
-    googleId?: string | null
-    studentId?: string | null
-    authProvider?: string
-    isActive?: boolean
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutActionPlansInput = {
-    id?: string
-    email: string
-    passwordHash?: string | null
-    fullName: string
-    phone?: string | null
-    avatarUrl?: string | null
-    role?: $Enums.Role
-    emailVerified?: boolean
-    googleId?: string | null
-    studentId?: string | null
-    authProvider?: string
-    isActive?: boolean
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
-    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
-    communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
-    communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutActionPlansInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutActionPlansInput, UserUncheckedCreateWithoutActionPlansInput>
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type AIComparisonCreateWithoutActionPlansInput = {
@@ -44697,8 +42728,8 @@ export namespace Prisma {
     cached?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutAiComparisonsInput
     course: UniversityCourseCreateNestedOneWithoutComparisonsInput
+    user: UserCreateNestedOneWithoutAiComparisonsInput
   }
 
   export type AIComparisonUncheckedCreateWithoutActionPlansInput = {
@@ -44739,12 +42770,12 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    university: UniversityCreateNestedOneWithoutCoursesInput
-    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
     comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
     applications?: ApplicationCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
+    university: UniversityCreateNestedOneWithoutCoursesInput
   }
 
   export type UniversityCourseUncheckedCreateWithoutActionPlansInput = {
@@ -44762,11 +42793,11 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
     comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
     applications?: ApplicationUncheckedCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type UniversityCourseCreateOrConnectWithoutActionPlansInput = {
@@ -44774,85 +42805,77 @@ export namespace Prisma {
     create: XOR<UniversityCourseCreateWithoutActionPlansInput, UniversityCourseUncheckedCreateWithoutActionPlansInput>
   }
 
-  export type UserUpsertWithoutActionPlansInput = {
-    update: XOR<UserUpdateWithoutActionPlansInput, UserUncheckedUpdateWithoutActionPlansInput>
+  export type UserCreateWithoutActionPlansInput = {
+    id?: string
+    email: string
+    passwordHash?: string | null
+    fullName: string
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: $Enums.Role
+    emailVerified?: boolean
+    googleId?: string | null
+    studentId?: string | null
+    authProvider?: string
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastLoginAt?: Date | string | null
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
+    apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
+    communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutActionPlansInput = {
+    id?: string
+    email: string
+    passwordHash?: string | null
+    fullName: string
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: $Enums.Role
+    emailVerified?: boolean
+    googleId?: string | null
+    studentId?: string | null
+    authProvider?: string
+    isActive?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lastLoginAt?: Date | string | null
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
+    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutActionPlansInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutActionPlansInput, UserUncheckedCreateWithoutActionPlansInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutActionPlansInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutActionPlansInput, UserUncheckedUpdateWithoutActionPlansInput>
-  }
-
-  export type UserUpdateWithoutActionPlansInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    fullName?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    studentId?: NullableStringFieldUpdateOperationsInput | string | null
-    authProvider?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
-    apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
-    communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
-    communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutActionPlansInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    fullName?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    emailVerified?: BoolFieldUpdateOperationsInput | boolean
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    studentId?: NullableStringFieldUpdateOperationsInput | string | null
-    authProvider?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
-    apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
-    communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AIComparisonUpsertWithoutActionPlansInput = {
@@ -44881,8 +42904,8 @@ export namespace Prisma {
     cached?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutAiComparisonsNestedInput
     course?: UniversityCourseUpdateOneRequiredWithoutComparisonsNestedInput
+    user?: UserUpdateOneRequiredWithoutAiComparisonsNestedInput
   }
 
   export type AIComparisonUncheckedUpdateWithoutActionPlansInput = {
@@ -44929,12 +42952,12 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
-    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
     comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
     applications?: ApplicationUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
+    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
   }
 
   export type UniversityCourseUncheckedUpdateWithoutActionPlansInput = {
@@ -44952,11 +42975,139 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
     comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
     applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type UserUpsertWithoutActionPlansInput = {
+    update: XOR<UserUpdateWithoutActionPlansInput, UserUncheckedUpdateWithoutActionPlansInput>
+    create: XOR<UserCreateWithoutActionPlansInput, UserUncheckedCreateWithoutActionPlansInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutActionPlansInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutActionPlansInput, UserUncheckedUpdateWithoutActionPlansInput>
+  }
+
+  export type UserUpdateWithoutActionPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    authProvider?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
+    apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutActionPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    fullName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    authProvider?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
+    apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UniversityCourseCreateWithoutApplicationsInput = {
+    id?: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
+    university: UniversityCreateNestedOneWithoutCoursesInput
+  }
+
+  export type UniversityCourseUncheckedCreateWithoutApplicationsInput = {
+    id?: string
+    universityId: string
+    name: string
+    slug: string
+    degreeType: $Enums.DegreeType
+    field: string
+    subField?: string | null
+    durationYears?: Decimal | DecimalJsLike | number | string | null
+    language?: string
+    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
+    applicationDeadline?: Date | string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
+    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
+    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
+    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
+    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type UniversityCourseCreateOrConnectWithoutApplicationsInput = {
+    where: UniversityCourseWhereUniqueInput
+    create: XOR<UniversityCourseCreateWithoutApplicationsInput, UniversityCourseUncheckedCreateWithoutApplicationsInput>
   }
 
   export type UserCreateWithoutApplicationsInput = {
@@ -44976,22 +43127,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApplicationsInput = {
@@ -45011,22 +43161,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -45034,53 +43183,59 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
   }
 
-  export type UniversityCourseCreateWithoutApplicationsInput = {
-    id?: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    university: UniversityCreateNestedOneWithoutCoursesInput
-    requirements?: CourseRequirementCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseUncheckedCreateWithoutApplicationsInput = {
-    id?: string
-    universityId: string
-    name: string
-    slug: string
-    degreeType: $Enums.DegreeType
-    field: string
-    subField?: string | null
-    durationYears?: Decimal | DecimalJsLike | number | string | null
-    language?: string
-    intakeMonths?: UniversityCourseCreateintakeMonthsInput | number[]
-    applicationDeadline?: Date | string | null
-    isActive?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    requirements?: CourseRequirementUncheckedCreateNestedOneWithoutCourseInput
-    fees?: CourseFeeUncheckedCreateNestedOneWithoutCourseInput
-    savedBy?: SavedCollegeUncheckedCreateNestedManyWithoutCourseInput
-    comparisons?: AIComparisonUncheckedCreateNestedManyWithoutCourseInput
-    actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutCourseInput
-  }
-
-  export type UniversityCourseCreateOrConnectWithoutApplicationsInput = {
-    where: UniversityCourseWhereUniqueInput
+  export type UniversityCourseUpsertWithoutApplicationsInput = {
+    update: XOR<UniversityCourseUpdateWithoutApplicationsInput, UniversityCourseUncheckedUpdateWithoutApplicationsInput>
     create: XOR<UniversityCourseCreateWithoutApplicationsInput, UniversityCourseUncheckedCreateWithoutApplicationsInput>
+    where?: UniversityCourseWhereInput
+  }
+
+  export type UniversityCourseUpdateToOneWithWhereWithoutApplicationsInput = {
+    where?: UniversityCourseWhereInput
+    data: XOR<UniversityCourseUpdateWithoutApplicationsInput, UniversityCourseUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type UniversityCourseUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
+    field?: StringFieldUpdateOperationsInput | string
+    subField?: NullableStringFieldUpdateOperationsInput | string | null
+    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
+    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
+  }
+
+  export type UniversityCourseUncheckedUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    universityId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
+    field?: StringFieldUpdateOperationsInput | string
+    subField?: NullableStringFieldUpdateOperationsInput | string | null
+    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    language?: StringFieldUpdateOperationsInput | string
+    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutApplicationsInput = {
@@ -45111,22 +43266,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApplicationsInput = {
@@ -45146,77 +43300,63 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type UniversityCourseUpsertWithoutApplicationsInput = {
-    update: XOR<UniversityCourseUpdateWithoutApplicationsInput, UniversityCourseUncheckedUpdateWithoutApplicationsInput>
-    create: XOR<UniversityCourseCreateWithoutApplicationsInput, UniversityCourseUncheckedCreateWithoutApplicationsInput>
-    where?: UniversityCourseWhereInput
+  export type CommunityCommentCreateWithoutPostInput = {
+    id?: string
+    text: string
+    isAnswer?: boolean
+    isBest?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    author: UserCreateNestedOneWithoutCommunityCommentsInput
+    parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
+    replies?: CommunityCommentCreateNestedManyWithoutParentInput
+    votes?: CommunityVoteCreateNestedManyWithoutCommentInput
   }
 
-  export type UniversityCourseUpdateToOneWithWhereWithoutApplicationsInput = {
-    where?: UniversityCourseWhereInput
-    data: XOR<UniversityCourseUpdateWithoutApplicationsInput, UniversityCourseUncheckedUpdateWithoutApplicationsInput>
+  export type CommunityCommentUncheckedCreateWithoutPostInput = {
+    id?: string
+    authorId: string
+    parentId?: string | null
+    text: string
+    isAnswer?: boolean
+    isBest?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
+    votes?: CommunityVoteUncheckedCreateNestedManyWithoutCommentInput
   }
 
-  export type UniversityCourseUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
-    field?: StringFieldUpdateOperationsInput | string
-    subField?: NullableStringFieldUpdateOperationsInput | string | null
-    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    language?: StringFieldUpdateOperationsInput | string
-    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
-    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneRequiredWithoutCoursesNestedInput
-    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+  export type CommunityCommentCreateOrConnectWithoutPostInput = {
+    where: CommunityCommentWhereUniqueInput
+    create: XOR<CommunityCommentCreateWithoutPostInput, CommunityCommentUncheckedCreateWithoutPostInput>
   }
 
-  export type UniversityCourseUncheckedUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    universityId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    degreeType?: EnumDegreeTypeFieldUpdateOperationsInput | $Enums.DegreeType
-    field?: StringFieldUpdateOperationsInput | string
-    subField?: NullableStringFieldUpdateOperationsInput | string | null
-    durationYears?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    language?: StringFieldUpdateOperationsInput | string
-    intakeMonths?: UniversityCourseUpdateintakeMonthsInput | number[]
-    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+  export type CommunityCommentCreateManyPostInputEnvelope = {
+    data: CommunityCommentCreateManyPostInput | CommunityCommentCreateManyPostInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserCreateWithoutCommunityPostsInput = {
@@ -45236,22 +43376,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCommunityPostsInput = {
@@ -45271,22 +43410,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommunityPostsInput = {
@@ -45294,64 +43432,20 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutCommunityPostsInput, UserUncheckedCreateWithoutCommunityPostsInput>
   }
 
-  export type CommunityCommentCreateWithoutPostInput = {
-    id?: string
-    text: string
-    isAnswer?: boolean
-    isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    author: UserCreateNestedOneWithoutCommunityCommentsInput
-    parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
-    replies?: CommunityCommentCreateNestedManyWithoutParentInput
-    votes?: CommunityVoteCreateNestedManyWithoutCommentInput
-  }
-
-  export type CommunityCommentUncheckedCreateWithoutPostInput = {
-    id?: string
-    authorId: string
-    parentId?: string | null
-    text: string
-    isAnswer?: boolean
-    isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
-    votes?: CommunityVoteUncheckedCreateNestedManyWithoutCommentInput
-  }
-
-  export type CommunityCommentCreateOrConnectWithoutPostInput = {
-    where: CommunityCommentWhereUniqueInput
-    create: XOR<CommunityCommentCreateWithoutPostInput, CommunityCommentUncheckedCreateWithoutPostInput>
-  }
-
-  export type CommunityCommentCreateManyPostInputEnvelope = {
-    data: CommunityCommentCreateManyPostInput | CommunityCommentCreateManyPostInput[]
-    skipDuplicates?: boolean
-  }
-
   export type CommunityVoteCreateWithoutPostInput = {
     id?: string
-    value: $Enums.VoteValue
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutCommunityVotesInput
+    value: $Enums.VoteValue
     comment?: CommunityCommentCreateNestedOneWithoutVotesInput
+    user: UserCreateNestedOneWithoutCommunityVotesInput
   }
 
   export type CommunityVoteUncheckedCreateWithoutPostInput = {
     id?: string
     userId: string
     commentId?: string | null
-    value: $Enums.VoteValue
     createdAt?: Date | string
+    value: $Enums.VoteValue
   }
 
   export type CommunityVoteCreateOrConnectWithoutPostInput = {
@@ -45362,6 +43456,22 @@ export namespace Prisma {
   export type CommunityVoteCreateManyPostInputEnvelope = {
     data: CommunityVoteCreateManyPostInput | CommunityVoteCreateManyPostInput[]
     skipDuplicates?: boolean
+  }
+
+  export type CommunityCommentUpsertWithWhereUniqueWithoutPostInput = {
+    where: CommunityCommentWhereUniqueInput
+    update: XOR<CommunityCommentUpdateWithoutPostInput, CommunityCommentUncheckedUpdateWithoutPostInput>
+    create: XOR<CommunityCommentCreateWithoutPostInput, CommunityCommentUncheckedCreateWithoutPostInput>
+  }
+
+  export type CommunityCommentUpdateWithWhereUniqueWithoutPostInput = {
+    where: CommunityCommentWhereUniqueInput
+    data: XOR<CommunityCommentUpdateWithoutPostInput, CommunityCommentUncheckedUpdateWithoutPostInput>
+  }
+
+  export type CommunityCommentUpdateManyWithWhereWithoutPostInput = {
+    where: CommunityCommentScalarWhereInput
+    data: XOR<CommunityCommentUpdateManyMutationInput, CommunityCommentUncheckedUpdateManyWithoutPostInput>
   }
 
   export type UserUpsertWithoutCommunityPostsInput = {
@@ -45392,22 +43502,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommunityPostsInput = {
@@ -45427,38 +43536,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type CommunityCommentUpsertWithWhereUniqueWithoutPostInput = {
-    where: CommunityCommentWhereUniqueInput
-    update: XOR<CommunityCommentUpdateWithoutPostInput, CommunityCommentUncheckedUpdateWithoutPostInput>
-    create: XOR<CommunityCommentCreateWithoutPostInput, CommunityCommentUncheckedCreateWithoutPostInput>
-  }
-
-  export type CommunityCommentUpdateWithWhereUniqueWithoutPostInput = {
-    where: CommunityCommentWhereUniqueInput
-    data: XOR<CommunityCommentUpdateWithoutPostInput, CommunityCommentUncheckedUpdateWithoutPostInput>
-  }
-
-  export type CommunityCommentUpdateManyWithWhereWithoutPostInput = {
-    where: CommunityCommentScalarWhereInput
-    data: XOR<CommunityCommentUpdateManyMutationInput, CommunityCommentUncheckedUpdateManyWithoutPostInput>
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type CommunityVoteUpsertWithWhereUniqueWithoutPostInput = {
@@ -45475,53 +43567,6 @@ export namespace Prisma {
   export type CommunityVoteUpdateManyWithWhereWithoutPostInput = {
     where: CommunityVoteScalarWhereInput
     data: XOR<CommunityVoteUpdateManyMutationInput, CommunityVoteUncheckedUpdateManyWithoutPostInput>
-  }
-
-  export type CommunityPostCreateWithoutCommentsInput = {
-    id?: string
-    title: string
-    content?: string | null
-    imageUrl?: string | null
-    category?: $Enums.CommunityCategory
-    tags?: CommunityPostCreatetagsInput | string[]
-    isQuestion?: boolean
-    isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    commentCount?: number
-    isPinned?: boolean
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    author: UserCreateNestedOneWithoutCommunityPostsInput
-    votes?: CommunityVoteCreateNestedManyWithoutPostInput
-  }
-
-  export type CommunityPostUncheckedCreateWithoutCommentsInput = {
-    id?: string
-    authorId: string
-    title: string
-    content?: string | null
-    imageUrl?: string | null
-    category?: $Enums.CommunityCategory
-    tags?: CommunityPostCreatetagsInput | string[]
-    isQuestion?: boolean
-    isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    commentCount?: number
-    isPinned?: boolean
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    votes?: CommunityVoteUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type CommunityPostCreateOrConnectWithoutCommentsInput = {
-    where: CommunityPostWhereUniqueInput
-    create: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
   }
 
   export type UserCreateWithoutCommunityCommentsInput = {
@@ -45541,22 +43586,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCommunityCommentsInput = {
@@ -45576,22 +43620,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommunityCommentsInput = {
@@ -45604,15 +43647,14 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    post: CommunityPostCreateNestedOneWithoutCommentsInput
+    dislikeCount?: number
+    likeCount?: number
     author: UserCreateNestedOneWithoutCommunityCommentsInput
     parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
+    post: CommunityPostCreateNestedOneWithoutCommentsInput
     votes?: CommunityVoteCreateNestedManyWithoutCommentInput
   }
 
@@ -45624,12 +43666,11 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
     votes?: CommunityVoteUncheckedCreateNestedManyWithoutCommentInput
   }
 
@@ -45643,15 +43684,14 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    post: CommunityPostCreateNestedOneWithoutCommentsInput
+    dislikeCount?: number
+    likeCount?: number
     author: UserCreateNestedOneWithoutCommunityCommentsInput
     replies?: CommunityCommentCreateNestedManyWithoutParentInput
+    post: CommunityPostCreateNestedOneWithoutCommentsInput
     votes?: CommunityVoteCreateNestedManyWithoutCommentInput
   }
 
@@ -45662,12 +43702,11 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
     replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
     votes?: CommunityVoteUncheckedCreateNestedManyWithoutCommentInput
   }
@@ -45682,20 +43721,65 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CommunityPostCreateWithoutCommentsInput = {
+    id?: string
+    title: string
+    content?: string | null
+    imageUrl?: string | null
+    category?: $Enums.CommunityCategory
+    tags?: CommunityPostCreatetagsInput | string[]
+    isQuestion?: boolean
+    isAnonymous?: boolean
+    commentCount?: number
+    isPinned?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    author: UserCreateNestedOneWithoutCommunityPostsInput
+    votes?: CommunityVoteCreateNestedManyWithoutPostInput
+  }
+
+  export type CommunityPostUncheckedCreateWithoutCommentsInput = {
+    id?: string
+    authorId: string
+    title: string
+    content?: string | null
+    imageUrl?: string | null
+    category?: $Enums.CommunityCategory
+    tags?: CommunityPostCreatetagsInput | string[]
+    isQuestion?: boolean
+    isAnonymous?: boolean
+    commentCount?: number
+    isPinned?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    votes?: CommunityVoteUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type CommunityPostCreateOrConnectWithoutCommentsInput = {
+    where: CommunityPostWhereUniqueInput
+    create: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
+  }
+
   export type CommunityVoteCreateWithoutCommentInput = {
     id?: string
-    value: $Enums.VoteValue
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutCommunityVotesInput
+    value: $Enums.VoteValue
     post?: CommunityPostCreateNestedOneWithoutVotesInput
+    user: UserCreateNestedOneWithoutCommunityVotesInput
   }
 
   export type CommunityVoteUncheckedCreateWithoutCommentInput = {
     id?: string
     userId: string
     postId?: string | null
-    value: $Enums.VoteValue
     createdAt?: Date | string
+    value: $Enums.VoteValue
   }
 
   export type CommunityVoteCreateOrConnectWithoutCommentInput = {
@@ -45706,59 +43790,6 @@ export namespace Prisma {
   export type CommunityVoteCreateManyCommentInputEnvelope = {
     data: CommunityVoteCreateManyCommentInput | CommunityVoteCreateManyCommentInput[]
     skipDuplicates?: boolean
-  }
-
-  export type CommunityPostUpsertWithoutCommentsInput = {
-    update: XOR<CommunityPostUpdateWithoutCommentsInput, CommunityPostUncheckedUpdateWithoutCommentsInput>
-    create: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
-    where?: CommunityPostWhereInput
-  }
-
-  export type CommunityPostUpdateToOneWithWhereWithoutCommentsInput = {
-    where?: CommunityPostWhereInput
-    data: XOR<CommunityPostUpdateWithoutCommentsInput, CommunityPostUncheckedUpdateWithoutCommentsInput>
-  }
-
-  export type CommunityPostUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
-    tags?: CommunityPostUpdatetagsInput | string[]
-    isQuestion?: BoolFieldUpdateOperationsInput | boolean
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    commentCount?: IntFieldUpdateOperationsInput | number
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: UserUpdateOneRequiredWithoutCommunityPostsNestedInput
-    votes?: CommunityVoteUpdateManyWithoutPostNestedInput
-  }
-
-  export type CommunityPostUncheckedUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
-    tags?: CommunityPostUpdatetagsInput | string[]
-    isQuestion?: BoolFieldUpdateOperationsInput | boolean
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    commentCount?: IntFieldUpdateOperationsInput | number
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    votes?: CommunityVoteUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type UserUpsertWithoutCommunityCommentsInput = {
@@ -45789,22 +43820,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommunityCommentsInput = {
@@ -45824,22 +43854,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type CommunityCommentUpsertWithoutRepliesInput = {
@@ -45858,15 +43887,14 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     author?: UserUpdateOneRequiredWithoutCommunityCommentsNestedInput
     parent?: CommunityCommentUpdateOneWithoutRepliesNestedInput
+    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
     votes?: CommunityVoteUpdateManyWithoutCommentNestedInput
   }
 
@@ -45878,12 +43906,11 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     votes?: CommunityVoteUncheckedUpdateManyWithoutCommentNestedInput
   }
 
@@ -45903,6 +43930,57 @@ export namespace Prisma {
     data: XOR<CommunityCommentUpdateManyMutationInput, CommunityCommentUncheckedUpdateManyWithoutParentInput>
   }
 
+  export type CommunityPostUpsertWithoutCommentsInput = {
+    update: XOR<CommunityPostUpdateWithoutCommentsInput, CommunityPostUncheckedUpdateWithoutCommentsInput>
+    create: XOR<CommunityPostCreateWithoutCommentsInput, CommunityPostUncheckedCreateWithoutCommentsInput>
+    where?: CommunityPostWhereInput
+  }
+
+  export type CommunityPostUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: CommunityPostWhereInput
+    data: XOR<CommunityPostUpdateWithoutCommentsInput, CommunityPostUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type CommunityPostUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
+    tags?: CommunityPostUpdatetagsInput | string[]
+    isQuestion?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    commentCount?: IntFieldUpdateOperationsInput | number
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    author?: UserUpdateOneRequiredWithoutCommunityPostsNestedInput
+    votes?: CommunityVoteUpdateManyWithoutPostNestedInput
+  }
+
+  export type CommunityPostUncheckedUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
+    tags?: CommunityPostUpdatetagsInput | string[]
+    isQuestion?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    commentCount?: IntFieldUpdateOperationsInput | number
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    votes?: CommunityVoteUncheckedUpdateManyWithoutPostNestedInput
+  }
+
   export type CommunityVoteUpsertWithWhereUniqueWithoutCommentInput = {
     where: CommunityVoteWhereUniqueInput
     update: XOR<CommunityVoteUpdateWithoutCommentInput, CommunityVoteUncheckedUpdateWithoutCommentInput>
@@ -45917,6 +43995,88 @@ export namespace Prisma {
   export type CommunityVoteUpdateManyWithWhereWithoutCommentInput = {
     where: CommunityVoteScalarWhereInput
     data: XOR<CommunityVoteUpdateManyMutationInput, CommunityVoteUncheckedUpdateManyWithoutCommentInput>
+  }
+
+  export type CommunityCommentCreateWithoutVotesInput = {
+    id?: string
+    text: string
+    isAnswer?: boolean
+    isBest?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    author: UserCreateNestedOneWithoutCommunityCommentsInput
+    parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
+    replies?: CommunityCommentCreateNestedManyWithoutParentInput
+    post: CommunityPostCreateNestedOneWithoutCommentsInput
+  }
+
+  export type CommunityCommentUncheckedCreateWithoutVotesInput = {
+    id?: string
+    postId: string
+    authorId: string
+    parentId?: string | null
+    text: string
+    isAnswer?: boolean
+    isBest?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type CommunityCommentCreateOrConnectWithoutVotesInput = {
+    where: CommunityCommentWhereUniqueInput
+    create: XOR<CommunityCommentCreateWithoutVotesInput, CommunityCommentUncheckedCreateWithoutVotesInput>
+  }
+
+  export type CommunityPostCreateWithoutVotesInput = {
+    id?: string
+    title: string
+    content?: string | null
+    imageUrl?: string | null
+    category?: $Enums.CommunityCategory
+    tags?: CommunityPostCreatetagsInput | string[]
+    isQuestion?: boolean
+    isAnonymous?: boolean
+    commentCount?: number
+    isPinned?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    comments?: CommunityCommentCreateNestedManyWithoutPostInput
+    author: UserCreateNestedOneWithoutCommunityPostsInput
+  }
+
+  export type CommunityPostUncheckedCreateWithoutVotesInput = {
+    id?: string
+    authorId: string
+    title: string
+    content?: string | null
+    imageUrl?: string | null
+    category?: $Enums.CommunityCategory
+    tags?: CommunityPostCreatetagsInput | string[]
+    isQuestion?: boolean
+    isAnonymous?: boolean
+    commentCount?: number
+    isPinned?: boolean
+    isDeleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
+    comments?: CommunityCommentUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type CommunityPostCreateOrConnectWithoutVotesInput = {
+    where: CommunityPostWhereUniqueInput
+    create: XOR<CommunityPostCreateWithoutVotesInput, CommunityPostUncheckedCreateWithoutVotesInput>
   }
 
   export type UserCreateWithoutCommunityVotesInput = {
@@ -45936,22 +44096,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
-    profile?: UserProfileCreateNestedOneWithoutUserInput
-    testScores?: TestScoreCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
-    documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanCreateNestedManyWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
+    educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
+    testScores?: TestScoreCreateNestedManyWithoutUserInput
+    documents?: UserDocumentCreateNestedManyWithoutUserInput
+    profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCommunityVotesInput = {
@@ -45971,22 +44130,21 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lastLoginAt?: Date | string | null
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
-    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
-    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
-    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
-    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
-    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
-    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     actionPlans?: ActionPlanUncheckedCreateNestedManyWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
+    aiComparisons?: AIComparisonUncheckedCreateNestedManyWithoutUserInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOwnerInput
-    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    applications?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     communityComments?: CommunityCommentUncheckedCreateNestedManyWithoutAuthorInput
+    communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
+    educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
+    feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
+    testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
+    documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommunityVotesInput = {
@@ -45994,90 +44152,98 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutCommunityVotesInput, UserUncheckedCreateWithoutCommunityVotesInput>
   }
 
-  export type CommunityPostCreateWithoutVotesInput = {
-    id?: string
-    title: string
-    content?: string | null
-    imageUrl?: string | null
-    category?: $Enums.CommunityCategory
-    tags?: CommunityPostCreatetagsInput | string[]
-    isQuestion?: boolean
-    isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    commentCount?: number
-    isPinned?: boolean
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    author: UserCreateNestedOneWithoutCommunityPostsInput
-    comments?: CommunityCommentCreateNestedManyWithoutPostInput
-  }
-
-  export type CommunityPostUncheckedCreateWithoutVotesInput = {
-    id?: string
-    authorId: string
-    title: string
-    content?: string | null
-    imageUrl?: string | null
-    category?: $Enums.CommunityCategory
-    tags?: CommunityPostCreatetagsInput | string[]
-    isQuestion?: boolean
-    isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    commentCount?: number
-    isPinned?: boolean
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    comments?: CommunityCommentUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type CommunityPostCreateOrConnectWithoutVotesInput = {
-    where: CommunityPostWhereUniqueInput
-    create: XOR<CommunityPostCreateWithoutVotesInput, CommunityPostUncheckedCreateWithoutVotesInput>
-  }
-
-  export type CommunityCommentCreateWithoutVotesInput = {
-    id?: string
-    text: string
-    isAnswer?: boolean
-    isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    post: CommunityPostCreateNestedOneWithoutCommentsInput
-    author: UserCreateNestedOneWithoutCommunityCommentsInput
-    parent?: CommunityCommentCreateNestedOneWithoutRepliesInput
-    replies?: CommunityCommentCreateNestedManyWithoutParentInput
-  }
-
-  export type CommunityCommentUncheckedCreateWithoutVotesInput = {
-    id?: string
-    postId: string
-    authorId: string
-    parentId?: string | null
-    text: string
-    isAnswer?: boolean
-    isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    replies?: CommunityCommentUncheckedCreateNestedManyWithoutParentInput
-  }
-
-  export type CommunityCommentCreateOrConnectWithoutVotesInput = {
-    where: CommunityCommentWhereUniqueInput
+  export type CommunityCommentUpsertWithoutVotesInput = {
+    update: XOR<CommunityCommentUpdateWithoutVotesInput, CommunityCommentUncheckedUpdateWithoutVotesInput>
     create: XOR<CommunityCommentCreateWithoutVotesInput, CommunityCommentUncheckedCreateWithoutVotesInput>
+    where?: CommunityCommentWhereInput
+  }
+
+  export type CommunityCommentUpdateToOneWithWhereWithoutVotesInput = {
+    where?: CommunityCommentWhereInput
+    data: XOR<CommunityCommentUpdateWithoutVotesInput, CommunityCommentUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type CommunityCommentUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    isAnswer?: BoolFieldUpdateOperationsInput | boolean
+    isBest?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    author?: UserUpdateOneRequiredWithoutCommunityCommentsNestedInput
+    parent?: CommunityCommentUpdateOneWithoutRepliesNestedInput
+    replies?: CommunityCommentUpdateManyWithoutParentNestedInput
+    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
+  }
+
+  export type CommunityCommentUncheckedUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: StringFieldUpdateOperationsInput | string
+    isAnswer?: BoolFieldUpdateOperationsInput | boolean
+    isBest?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    replies?: CommunityCommentUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type CommunityPostUpsertWithoutVotesInput = {
+    update: XOR<CommunityPostUpdateWithoutVotesInput, CommunityPostUncheckedUpdateWithoutVotesInput>
+    create: XOR<CommunityPostCreateWithoutVotesInput, CommunityPostUncheckedCreateWithoutVotesInput>
+    where?: CommunityPostWhereInput
+  }
+
+  export type CommunityPostUpdateToOneWithWhereWithoutVotesInput = {
+    where?: CommunityPostWhereInput
+    data: XOR<CommunityPostUpdateWithoutVotesInput, CommunityPostUncheckedUpdateWithoutVotesInput>
+  }
+
+  export type CommunityPostUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
+    tags?: CommunityPostUpdatetagsInput | string[]
+    isQuestion?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    commentCount?: IntFieldUpdateOperationsInput | number
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    comments?: CommunityCommentUpdateManyWithoutPostNestedInput
+    author?: UserUpdateOneRequiredWithoutCommunityPostsNestedInput
+  }
+
+  export type CommunityPostUncheckedUpdateWithoutVotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
+    tags?: CommunityPostUpdatetagsInput | string[]
+    isQuestion?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    commentCount?: IntFieldUpdateOperationsInput | number
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    comments?: CommunityCommentUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type UserUpsertWithoutCommunityVotesInput = {
@@ -46108,22 +44274,21 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
+    educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommunityVotesInput = {
@@ -46143,230 +44308,34 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
-    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
-    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
-    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
-    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
-    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
+    aiComparisons?: AIComparisonUncheckedUpdateManyWithoutUserNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOwnerNestedInput
-    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    applications?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     communityComments?: CommunityCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
+    educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
+    feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
+    testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
+    documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type CommunityPostUpsertWithoutVotesInput = {
-    update: XOR<CommunityPostUpdateWithoutVotesInput, CommunityPostUncheckedUpdateWithoutVotesInput>
-    create: XOR<CommunityPostCreateWithoutVotesInput, CommunityPostUncheckedCreateWithoutVotesInput>
-    where?: CommunityPostWhereInput
-  }
-
-  export type CommunityPostUpdateToOneWithWhereWithoutVotesInput = {
-    where?: CommunityPostWhereInput
-    data: XOR<CommunityPostUpdateWithoutVotesInput, CommunityPostUncheckedUpdateWithoutVotesInput>
-  }
-
-  export type CommunityPostUpdateWithoutVotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
-    tags?: CommunityPostUpdatetagsInput | string[]
-    isQuestion?: BoolFieldUpdateOperationsInput | boolean
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    commentCount?: IntFieldUpdateOperationsInput | number
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: UserUpdateOneRequiredWithoutCommunityPostsNestedInput
-    comments?: CommunityCommentUpdateManyWithoutPostNestedInput
-  }
-
-  export type CommunityPostUncheckedUpdateWithoutVotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumCommunityCategoryFieldUpdateOperationsInput | $Enums.CommunityCategory
-    tags?: CommunityPostUpdatetagsInput | string[]
-    isQuestion?: BoolFieldUpdateOperationsInput | boolean
-    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    commentCount?: IntFieldUpdateOperationsInput | number
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    comments?: CommunityCommentUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type CommunityCommentUpsertWithoutVotesInput = {
-    update: XOR<CommunityCommentUpdateWithoutVotesInput, CommunityCommentUncheckedUpdateWithoutVotesInput>
-    create: XOR<CommunityCommentCreateWithoutVotesInput, CommunityCommentUncheckedCreateWithoutVotesInput>
-    where?: CommunityCommentWhereInput
-  }
-
-  export type CommunityCommentUpdateToOneWithWhereWithoutVotesInput = {
-    where?: CommunityCommentWhereInput
-    data: XOR<CommunityCommentUpdateWithoutVotesInput, CommunityCommentUncheckedUpdateWithoutVotesInput>
-  }
-
-  export type CommunityCommentUpdateWithoutVotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    isAnswer?: BoolFieldUpdateOperationsInput | boolean
-    isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
-    author?: UserUpdateOneRequiredWithoutCommunityCommentsNestedInput
-    parent?: CommunityCommentUpdateOneWithoutRepliesNestedInput
-    replies?: CommunityCommentUpdateManyWithoutParentNestedInput
-  }
-
-  export type CommunityCommentUncheckedUpdateWithoutVotesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
-    text?: StringFieldUpdateOperationsInput | string
-    isAnswer?: BoolFieldUpdateOperationsInput | boolean
-    isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    replies?: CommunityCommentUncheckedUpdateManyWithoutParentNestedInput
-  }
-
-  export type RefreshTokenCreateManyUserInput = {
+  export type ActionPlanCreateManyUserInput = {
     id?: string
-    tokenHash: string
-    familyId?: string
-    deviceInfo?: string | null
-    ipAddress?: string | null
-    expiresAt: Date | string
-    revokedAt?: Date | string | null
-    createdAt?: Date | string
-  }
-
-  export type EmailOTPCreateManyUserInput = {
-    id?: string
-    purpose: string
-    otpHash: string
-    attempts?: number
-    expiresAt?: Date | string
-    usedAt?: Date | string | null
-    createdAt?: Date | string
-  }
-
-  export type TestScoreCreateManyUserInput = {
-    id?: string
-    examName: string
-    score: Decimal | DecimalJsLike | number | string
-    maxScore: Decimal | DecimalJsLike | number | string
-    percentile?: Decimal | DecimalJsLike | number | string | null
-    subScores?: NullableJsonNullValueInput | InputJsonValue
-    examDate?: Date | string | null
-    validUntil?: Date | string | null
-    isLatest?: boolean
-    isVerified?: boolean
-    documentUrl?: string | null
-    createdAt?: Date | string
-  }
-
-  export type EducationHistoryCreateManyUserInput = {
-    id?: string
-    institutionName: string
-    degree?: string | null
-    field?: string | null
-    gpa?: Decimal | DecimalJsLike | number | string | null
-    gpaScale?: Decimal | DecimalJsLike | number | string | null
-    percentage?: Decimal | DecimalJsLike | number | string | null
-    country?: string | null
-    startDate?: Date | string | null
-    endDate?: Date | string | null
-    isCurrent?: boolean
-    createdAt?: Date | string
-  }
-
-  export type UserDocumentCreateManyUserInput = {
-    id?: string
-    docType: $Enums.DocType
-    fileName: string
-    fileUrl: string
-    fileSizeBytes?: bigint | number | null
-    mimeType?: string | null
-    verificationStatus?: $Enums.VerificationStatus
-    verifiedById?: string | null
-    verifiedAt?: Date | string | null
-    notes?: string | null
-    createdAt?: Date | string
-  }
-
-  export type FeedPostCreateManyAuthorInput = {
-    id?: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    universityId?: string | null
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    dislikeCount?: number
-    bookmarkCount?: number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FeedInteractionCreateManyUserInput = {
-    id?: string
-    postId: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-  }
-
-  export type FeedCommentCreateManyAuthorInput = {
-    id?: string
-    postId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type SavedCollegeCreateManyUserInput = {
-    id?: string
+    comparisonId: string
     courseId: string
-    priority?: $Enums.CollegePriority | null
-    notes?: string | null
-    savedAt?: Date | string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: string | null
+    targetDate?: Date | string | null
+    status?: $Enums.PlanStatus
+    completionPct?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AIComparisonCreateManyUserInput = {
@@ -46387,17 +44356,15 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type ActionPlanCreateManyUserInput = {
+  export type ApiKeyCreateManyOwnerInput = {
     id?: string
-    comparisonId: string
-    courseId: string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: string | null
-    targetDate?: Date | string | null
-    status?: $Enums.PlanStatus
-    completionPct?: number
+    name: string
+    keyHash: string
+    role?: $Enums.Role
+    isActive?: boolean
+    lastUsedAt?: Date | string | null
+    expiresAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type ApplicationCreateManyUserInput = {
@@ -46419,15 +44386,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type ApiKeyCreateManyOwnerInput = {
+  export type CommunityCommentCreateManyAuthorInput = {
     id?: string
-    name: string
-    keyHash: string
-    role?: $Enums.Role
-    isActive?: boolean
-    lastUsedAt?: Date | string | null
-    expiresAt?: Date | string | null
+    postId: string
+    parentId?: string | null
+    text: string
+    isAnswer?: boolean
+    isBest?: boolean
+    isDeleted?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
   }
 
   export type CommunityPostCreateManyAuthorInput = {
@@ -46439,427 +44409,123 @@ export namespace Prisma {
     tags?: CommunityPostCreatetagsInput | string[]
     isQuestion?: boolean
     isAnonymous?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     commentCount?: number
     isPinned?: boolean
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type CommunityCommentCreateManyAuthorInput = {
-    id?: string
-    postId: string
-    parentId?: string | null
-    text: string
-    isAnswer?: boolean
-    isBest?: boolean
-    voteScore?: number
-    likeCount?: number
     dislikeCount?: number
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    likeCount?: number
   }
 
   export type CommunityVoteCreateManyUserInput = {
     id?: string
     postId?: string | null
     commentId?: string | null
+    createdAt?: Date | string
     value: $Enums.VoteValue
+  }
+
+  export type EducationHistoryCreateManyUserInput = {
+    id?: string
+    institutionName: string
+    degree?: string | null
+    field?: string | null
+    gpa?: Decimal | DecimalJsLike | number | string | null
+    gpaScale?: Decimal | DecimalJsLike | number | string | null
+    percentage?: Decimal | DecimalJsLike | number | string | null
+    country?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    isCurrent?: boolean
     createdAt?: Date | string
   }
 
-  export type RefreshTokenUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    tokenHash?: StringFieldUpdateOperationsInput | string
-    familyId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type EmailOTPCreateManyUserInput = {
+    id?: string
+    purpose: string
+    otpHash: string
+    attempts?: number
+    expiresAt?: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
-  export type RefreshTokenUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    tokenHash?: StringFieldUpdateOperationsInput | string
-    familyId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type FeedInteractionCreateManyUserInput = {
+    id?: string
+    postId: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
   }
 
-  export type RefreshTokenUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    tokenHash?: StringFieldUpdateOperationsInput | string
-    familyId?: StringFieldUpdateOperationsInput | string
-    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EmailOTPUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    otpHash?: StringFieldUpdateOperationsInput | string
-    attempts?: IntFieldUpdateOperationsInput | number
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EmailOTPUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    otpHash?: StringFieldUpdateOperationsInput | string
-    attempts?: IntFieldUpdateOperationsInput | number
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EmailOTPUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    purpose?: StringFieldUpdateOperationsInput | string
-    otpHash?: StringFieldUpdateOperationsInput | string
-    attempts?: IntFieldUpdateOperationsInput | number
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TestScoreUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    examName?: StringFieldUpdateOperationsInput | string
-    score?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    percentile?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    subScores?: NullableJsonNullValueInput | InputJsonValue
-    examDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isLatest?: BoolFieldUpdateOperationsInput | boolean
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    documentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TestScoreUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    examName?: StringFieldUpdateOperationsInput | string
-    score?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    percentile?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    subScores?: NullableJsonNullValueInput | InputJsonValue
-    examDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isLatest?: BoolFieldUpdateOperationsInput | boolean
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    documentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TestScoreUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    examName?: StringFieldUpdateOperationsInput | string
-    score?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    maxScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    percentile?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    subScores?: NullableJsonNullValueInput | InputJsonValue
-    examDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isLatest?: BoolFieldUpdateOperationsInput | boolean
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    documentUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EducationHistoryUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    institutionName?: StringFieldUpdateOperationsInput | string
-    degree?: NullableStringFieldUpdateOperationsInput | string | null
-    field?: NullableStringFieldUpdateOperationsInput | string | null
-    gpa?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    gpaScale?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCurrent?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EducationHistoryUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    institutionName?: StringFieldUpdateOperationsInput | string
-    degree?: NullableStringFieldUpdateOperationsInput | string | null
-    field?: NullableStringFieldUpdateOperationsInput | string | null
-    gpa?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    gpaScale?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCurrent?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type EducationHistoryUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    institutionName?: StringFieldUpdateOperationsInput | string
-    degree?: NullableStringFieldUpdateOperationsInput | string | null
-    field?: NullableStringFieldUpdateOperationsInput | string | null
-    gpa?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    gpaScale?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCurrent?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserDocumentUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    docType?: EnumDocTypeFieldUpdateOperationsInput | $Enums.DocType
-    fileName?: StringFieldUpdateOperationsInput | string
-    fileUrl?: StringFieldUpdateOperationsInput | string
-    fileSizeBytes?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    verificationStatus?: EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
-    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserDocumentUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    docType?: EnumDocTypeFieldUpdateOperationsInput | $Enums.DocType
-    fileName?: StringFieldUpdateOperationsInput | string
-    fileUrl?: StringFieldUpdateOperationsInput | string
-    fileSizeBytes?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    verificationStatus?: EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
-    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserDocumentUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    docType?: EnumDocTypeFieldUpdateOperationsInput | $Enums.DocType
-    fileName?: StringFieldUpdateOperationsInput | string
-    fileUrl?: StringFieldUpdateOperationsInput | string
-    fileSizeBytes?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
-    verificationStatus?: EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
-    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedPostUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
+  export type FeedPostCreateManyAuthorInput = {
+    id?: string
+    title: string
+    slug: string
+    content: string
+    excerpt?: string | null
+    coverImageUrl?: string | null
+    category: $Enums.FeedCategory
+    tags?: FeedPostCreatetagsInput | string[]
+    status?: $Enums.PostStatus
+    universityId?: string | null
+    isPinned?: boolean
+    viewCount?: number
+    likeCount?: number
+    bookmarkCount?: number
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    university?: UniversityUpdateOneWithoutFeedPostsNestedInput
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
-    comments?: FeedCommentUpdateManyWithoutPostNestedInput
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
   }
 
-  export type FeedPostUncheckedUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    universityId?: NullableStringFieldUpdateOperationsInput | string | null
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
-    comments?: FeedCommentUncheckedUpdateManyWithoutPostNestedInput
+  export type RefreshTokenCreateManyUserInput = {
+    id?: string
+    tokenHash: string
+    familyId?: string
+    deviceInfo?: string | null
+    ipAddress?: string | null
+    expiresAt: Date | string
+    revokedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
-  export type FeedPostUncheckedUpdateManyWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    universityId?: NullableStringFieldUpdateOperationsInput | string | null
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type SavedCollegeCreateManyUserInput = {
+    id?: string
+    courseId: string
+    priority?: $Enums.CollegePriority | null
+    notes?: string | null
+    savedAt?: Date | string
   }
 
-  export type FeedInteractionUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: FeedPostUpdateOneRequiredWithoutInteractionsNestedInput
+  export type TestScoreCreateManyUserInput = {
+    id?: string
+    examName: string
+    score: Decimal | DecimalJsLike | number | string
+    maxScore: Decimal | DecimalJsLike | number | string
+    percentile?: Decimal | DecimalJsLike | number | string | null
+    subScores?: NullableJsonNullValueInput | InputJsonValue
+    examDate?: Date | string | null
+    validUntil?: Date | string | null
+    isLatest?: boolean
+    isVerified?: boolean
+    documentUrl?: string | null
+    createdAt?: Date | string
   }
 
-  export type FeedInteractionUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedInteractionUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedCommentUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: FeedPostUpdateOneRequiredWithoutCommentsNestedInput
-  }
-
-  export type FeedCommentUncheckedUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedCommentUncheckedUpdateManyWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SavedCollegeUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    course?: UniversityCourseUpdateOneRequiredWithoutSavedByNestedInput
-  }
-
-  export type SavedCollegeUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    courseId?: StringFieldUpdateOperationsInput | string
-    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SavedCollegeUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    courseId?: StringFieldUpdateOperationsInput | string
-    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AIComparisonUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    matchScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    category?: EnumAICategoryFieldUpdateOperationsInput | $Enums.AICategory
-    scoreBreakdown?: JsonNullValueInput | InputJsonValue
-    strengths?: AIComparisonUpdatestrengthsInput | string[]
-    weaknesses?: AIComparisonUpdateweaknessesInput | string[]
-    suggestions?: JsonNullValueInput | InputJsonValue
-    alternatives?: AIComparisonUpdatealternativesInput | string[]
-    aiExplanation?: NullableStringFieldUpdateOperationsInput | string | null
-    modelVersion?: StringFieldUpdateOperationsInput | string
-    processingMs?: NullableIntFieldUpdateOperationsInput | number | null
-    cached?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    course?: UniversityCourseUpdateOneRequiredWithoutComparisonsNestedInput
-    actionPlans?: ActionPlanUpdateManyWithoutComparisonNestedInput
-  }
-
-  export type AIComparisonUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    courseId?: StringFieldUpdateOperationsInput | string
-    matchScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    category?: EnumAICategoryFieldUpdateOperationsInput | $Enums.AICategory
-    scoreBreakdown?: JsonNullValueInput | InputJsonValue
-    strengths?: AIComparisonUpdatestrengthsInput | string[]
-    weaknesses?: AIComparisonUpdateweaknessesInput | string[]
-    suggestions?: JsonNullValueInput | InputJsonValue
-    alternatives?: AIComparisonUpdatealternativesInput | string[]
-    aiExplanation?: NullableStringFieldUpdateOperationsInput | string | null
-    modelVersion?: StringFieldUpdateOperationsInput | string
-    processingMs?: NullableIntFieldUpdateOperationsInput | number | null
-    cached?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    actionPlans?: ActionPlanUncheckedUpdateManyWithoutComparisonNestedInput
-  }
-
-  export type AIComparisonUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    courseId?: StringFieldUpdateOperationsInput | string
-    matchScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    category?: EnumAICategoryFieldUpdateOperationsInput | $Enums.AICategory
-    scoreBreakdown?: JsonNullValueInput | InputJsonValue
-    strengths?: AIComparisonUpdatestrengthsInput | string[]
-    weaknesses?: AIComparisonUpdateweaknessesInput | string[]
-    suggestions?: JsonNullValueInput | InputJsonValue
-    alternatives?: AIComparisonUpdatealternativesInput | string[]
-    aiExplanation?: NullableStringFieldUpdateOperationsInput | string | null
-    modelVersion?: StringFieldUpdateOperationsInput | string
-    processingMs?: NullableIntFieldUpdateOperationsInput | number | null
-    cached?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type UserDocumentCreateManyUserInput = {
+    id?: string
+    docType: $Enums.DocType
+    fileName: string
+    fileUrl: string
+    fileSizeBytes?: bigint | number | null
+    mimeType?: string | null
+    verificationStatus?: $Enums.VerificationStatus
+    verifiedById?: string | null
+    verifiedAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
   }
 
   export type ActionPlanUpdateWithoutUserInput = {
@@ -46899,6 +44565,95 @@ export namespace Prisma {
     completionPct?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AIComparisonUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    matchScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: EnumAICategoryFieldUpdateOperationsInput | $Enums.AICategory
+    scoreBreakdown?: JsonNullValueInput | InputJsonValue
+    strengths?: AIComparisonUpdatestrengthsInput | string[]
+    weaknesses?: AIComparisonUpdateweaknessesInput | string[]
+    suggestions?: JsonNullValueInput | InputJsonValue
+    alternatives?: AIComparisonUpdatealternativesInput | string[]
+    aiExplanation?: NullableStringFieldUpdateOperationsInput | string | null
+    modelVersion?: StringFieldUpdateOperationsInput | string
+    processingMs?: NullableIntFieldUpdateOperationsInput | number | null
+    cached?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUpdateManyWithoutComparisonNestedInput
+    course?: UniversityCourseUpdateOneRequiredWithoutComparisonsNestedInput
+  }
+
+  export type AIComparisonUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    matchScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: EnumAICategoryFieldUpdateOperationsInput | $Enums.AICategory
+    scoreBreakdown?: JsonNullValueInput | InputJsonValue
+    strengths?: AIComparisonUpdatestrengthsInput | string[]
+    weaknesses?: AIComparisonUpdateweaknessesInput | string[]
+    suggestions?: JsonNullValueInput | InputJsonValue
+    alternatives?: AIComparisonUpdatealternativesInput | string[]
+    aiExplanation?: NullableStringFieldUpdateOperationsInput | string | null
+    modelVersion?: StringFieldUpdateOperationsInput | string
+    processingMs?: NullableIntFieldUpdateOperationsInput | number | null
+    cached?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actionPlans?: ActionPlanUncheckedUpdateManyWithoutComparisonNestedInput
+  }
+
+  export type AIComparisonUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    matchScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: EnumAICategoryFieldUpdateOperationsInput | $Enums.AICategory
+    scoreBreakdown?: JsonNullValueInput | InputJsonValue
+    strengths?: AIComparisonUpdatestrengthsInput | string[]
+    weaknesses?: AIComparisonUpdateweaknessesInput | string[]
+    suggestions?: JsonNullValueInput | InputJsonValue
+    alternatives?: AIComparisonUpdatealternativesInput | string[]
+    aiExplanation?: NullableStringFieldUpdateOperationsInput | string | null
+    modelVersion?: StringFieldUpdateOperationsInput | string
+    processingMs?: NullableIntFieldUpdateOperationsInput | number | null
+    cached?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiKeyUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiKeyUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiKeyUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ApplicationUpdateWithoutUserInput = {
@@ -46958,37 +44713,50 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ApiKeyUpdateWithoutOwnerInput = {
+  export type CommunityCommentUpdateWithoutAuthorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    keyHash?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    text?: StringFieldUpdateOperationsInput | string
+    isAnswer?: BoolFieldUpdateOperationsInput | boolean
+    isBest?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    parent?: CommunityCommentUpdateOneWithoutRepliesNestedInput
+    replies?: CommunityCommentUpdateManyWithoutParentNestedInput
+    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
+    votes?: CommunityVoteUpdateManyWithoutCommentNestedInput
   }
 
-  export type ApiKeyUncheckedUpdateWithoutOwnerInput = {
+  export type CommunityCommentUncheckedUpdateWithoutAuthorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    keyHash?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: StringFieldUpdateOperationsInput | string
+    isAnswer?: BoolFieldUpdateOperationsInput | boolean
+    isBest?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    replies?: CommunityCommentUncheckedUpdateManyWithoutParentNestedInput
+    votes?: CommunityVoteUncheckedUpdateManyWithoutCommentNestedInput
   }
 
-  export type ApiKeyUncheckedUpdateManyWithoutOwnerInput = {
+  export type CommunityCommentUncheckedUpdateManyWithoutAuthorInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    keyHash?: StringFieldUpdateOperationsInput | string
-    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: StringFieldUpdateOperationsInput | string
+    isAnswer?: BoolFieldUpdateOperationsInput | boolean
+    isBest?: BoolFieldUpdateOperationsInput | boolean
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CommunityPostUpdateWithoutAuthorInput = {
@@ -47000,14 +44768,13 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     comments?: CommunityCommentUpdateManyWithoutPostNestedInput
     votes?: CommunityVoteUpdateManyWithoutPostNestedInput
   }
@@ -47021,14 +44788,13 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     comments?: CommunityCommentUncheckedUpdateManyWithoutPostNestedInput
     votes?: CommunityVoteUncheckedUpdateManyWithoutPostNestedInput
   }
@@ -47042,86 +44808,344 @@ export namespace Prisma {
     tags?: CommunityPostUpdatetagsInput | string[]
     isQuestion?: BoolFieldUpdateOperationsInput | boolean
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     commentCount?: IntFieldUpdateOperationsInput | number
     isPinned?: BoolFieldUpdateOperationsInput | boolean
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CommunityCommentUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    text?: StringFieldUpdateOperationsInput | string
-    isAnswer?: BoolFieldUpdateOperationsInput | boolean
-    isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
     dislikeCount?: IntFieldUpdateOperationsInput | number
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
-    parent?: CommunityCommentUpdateOneWithoutRepliesNestedInput
-    replies?: CommunityCommentUpdateManyWithoutParentNestedInput
-    votes?: CommunityVoteUpdateManyWithoutCommentNestedInput
-  }
-
-  export type CommunityCommentUncheckedUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
-    text?: StringFieldUpdateOperationsInput | string
-    isAnswer?: BoolFieldUpdateOperationsInput | boolean
-    isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
     likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    replies?: CommunityCommentUncheckedUpdateManyWithoutParentNestedInput
-    votes?: CommunityVoteUncheckedUpdateManyWithoutCommentNestedInput
-  }
-
-  export type CommunityCommentUncheckedUpdateManyWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableStringFieldUpdateOperationsInput | string | null
-    text?: StringFieldUpdateOperationsInput | string
-    isAnswer?: BoolFieldUpdateOperationsInput | boolean
-    isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CommunityVoteUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: CommunityPostUpdateOneWithoutVotesNestedInput
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     comment?: CommunityCommentUpdateOneWithoutVotesNestedInput
+    post?: CommunityPostUpdateOneWithoutVotesNestedInput
   }
 
   export type CommunityVoteUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     postId?: NullableStringFieldUpdateOperationsInput | string | null
     commentId?: NullableStringFieldUpdateOperationsInput | string | null
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
   export type CommunityVoteUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     postId?: NullableStringFieldUpdateOperationsInput | string | null
     commentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
+  }
+
+  export type EducationHistoryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionName?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
+    field?: NullableStringFieldUpdateOperationsInput | string | null
+    gpa?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gpaScale?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationHistoryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionName?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
+    field?: NullableStringFieldUpdateOperationsInput | string | null
+    gpa?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gpaScale?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationHistoryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionName?: StringFieldUpdateOperationsInput | string
+    degree?: NullableStringFieldUpdateOperationsInput | string | null
+    field?: NullableStringFieldUpdateOperationsInput | string | null
+    gpa?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gpaScale?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCurrent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailOTPUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailOTPUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailOTPUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    otpHash?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedInteractionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    post?: FeedPostUpdateOneRequiredWithoutInteractionsNestedInput
+  }
+
+  export type FeedInteractionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedInteractionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedPostUpdateWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
+    university?: UniversityUpdateOneWithoutFeedPostsNestedInput
+  }
+
+  export type FeedPostUncheckedUpdateWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    universityId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
+  }
+
+  export type FeedPostUncheckedUpdateManyWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    universityId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type RefreshTokenUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    familyId?: StringFieldUpdateOperationsInput | string
+    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RefreshTokenUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    familyId?: StringFieldUpdateOperationsInput | string
+    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RefreshTokenUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    familyId?: StringFieldUpdateOperationsInput | string
+    deviceInfo?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedCollegeUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: UniversityCourseUpdateOneRequiredWithoutSavedByNestedInput
+  }
+
+  export type SavedCollegeUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedCollegeUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestScoreUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examName?: StringFieldUpdateOperationsInput | string
+    score?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    percentile?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    subScores?: NullableJsonNullValueInput | InputJsonValue
+    examDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isLatest?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    documentUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestScoreUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examName?: StringFieldUpdateOperationsInput | string
+    score?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    percentile?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    subScores?: NullableJsonNullValueInput | InputJsonValue
+    examDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isLatest?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    documentUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestScoreUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examName?: StringFieldUpdateOperationsInput | string
+    score?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    maxScore?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    percentile?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    subScores?: NullableJsonNullValueInput | InputJsonValue
+    examDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isLatest?: BoolFieldUpdateOperationsInput | boolean
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    documentUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserDocumentUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docType?: EnumDocTypeFieldUpdateOperationsInput | $Enums.DocType
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileSizeBytes?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationStatus?: EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserDocumentUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docType?: EnumDocTypeFieldUpdateOperationsInput | $Enums.DocType
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileSizeBytes?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationStatus?: EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserDocumentUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    docType?: EnumDocTypeFieldUpdateOperationsInput | $Enums.DocType
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileSizeBytes?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    verificationStatus?: EnumVerificationStatusFieldUpdateOperationsInput | $Enums.VerificationStatus
+    verifiedById?: NullableStringFieldUpdateOperationsInput | string | null
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -47130,14 +45154,6 @@ export namespace Prisma {
     userId: string
     type: $Enums.InteractionType
     createdAt?: Date | string
-  }
-
-  export type FeedCommentCreateManyPostInput = {
-    id?: string
-    authorId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type FeedInteractionUpdateWithoutPostInput = {
@@ -47161,28 +45177,26 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FeedCommentUpdateWithoutPostInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: UserUpdateOneRequiredWithoutFeedCommentsNestedInput
-  }
-
-  export type FeedCommentUncheckedUpdateWithoutPostInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedCommentUncheckedUpdateManyWithoutPostInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type FeedPostCreateManyUniversityInput = {
+    id?: string
+    authorId: string
+    title: string
+    slug: string
+    content: string
+    excerpt?: string | null
+    coverImageUrl?: string | null
+    category: $Enums.FeedCategory
+    tags?: FeedPostCreatetagsInput | string[]
+    status?: $Enums.PostStatus
+    isPinned?: boolean
+    viewCount?: number
+    likeCount?: number
+    bookmarkCount?: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
   }
 
   export type UniversityCourseCreateManyUniversityInput = {
@@ -47201,26 +45215,72 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type FeedPostCreateManyUniversityInput = {
-    id?: string
-    authorId: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    dislikeCount?: number
-    bookmarkCount?: number
+  export type FeedPostUpdateWithoutUniversityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
+    author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
+  }
+
+  export type FeedPostUncheckedUpdateWithoutUniversityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
+  }
+
+  export type FeedPostUncheckedUpdateManyWithoutUniversityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type UniversityCourseUpdateWithoutUniversityInput = {
@@ -47237,12 +45297,12 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUpdateManyWithoutCourseNestedInput
     applications?: ApplicationUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUpdateManyWithoutCourseNestedInput
   }
 
   export type UniversityCourseUncheckedUpdateWithoutUniversityInput = {
@@ -47259,12 +45319,12 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
-    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
-    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
-    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
     actionPlans?: ActionPlanUncheckedUpdateManyWithoutCourseNestedInput
+    comparisons?: AIComparisonUncheckedUpdateManyWithoutCourseNestedInput
     applications?: ApplicationUncheckedUpdateManyWithoutCourseNestedInput
+    fees?: CourseFeeUncheckedUpdateOneWithoutCourseNestedInput
+    requirements?: CourseRequirementUncheckedUpdateOneWithoutCourseNestedInput
+    savedBy?: SavedCollegeUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UniversityCourseUncheckedUpdateManyWithoutUniversityInput = {
@@ -47283,82 +45343,17 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FeedPostUpdateWithoutUniversityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
-    comments?: FeedCommentUpdateManyWithoutPostNestedInput
-  }
-
-  export type FeedPostUncheckedUpdateWithoutUniversityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
-    comments?: FeedCommentUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type FeedPostUncheckedUpdateManyWithoutUniversityInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SavedCollegeCreateManyCourseInput = {
+  export type ActionPlanCreateManyCourseInput = {
     id?: string
     userId: string
-    priority?: $Enums.CollegePriority | null
-    notes?: string | null
-    savedAt?: Date | string
+    comparisonId: string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: string | null
+    targetDate?: Date | string | null
+    status?: $Enums.PlanStatus
+    completionPct?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AIComparisonCreateManyCourseInput = {
@@ -47375,19 +45370,6 @@ export namespace Prisma {
     modelVersion?: string
     processingMs?: number | null
     cached?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ActionPlanCreateManyCourseInput = {
-    id?: string
-    userId: string
-    comparisonId: string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: string | null
-    targetDate?: Date | string | null
-    status?: $Enums.PlanStatus
-    completionPct?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -47411,28 +45393,51 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type SavedCollegeUpdateWithoutCourseInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutSavedCollegesNestedInput
+  export type SavedCollegeCreateManyCourseInput = {
+    id?: string
+    userId: string
+    priority?: $Enums.CollegePriority | null
+    notes?: string | null
+    savedAt?: Date | string
   }
 
-  export type SavedCollegeUncheckedUpdateWithoutCourseInput = {
+  export type ActionPlanUpdateWithoutCourseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+    completionPct?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comparison?: AIComparisonUpdateOneRequiredWithoutActionPlansNestedInput
+    user?: UserUpdateOneRequiredWithoutActionPlansNestedInput
   }
 
-  export type SavedCollegeUncheckedUpdateManyWithoutCourseInput = {
+  export type ActionPlanUncheckedUpdateWithoutCourseInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comparisonId?: StringFieldUpdateOperationsInput | string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+    completionPct?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActionPlanUncheckedUpdateManyWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    comparisonId?: StringFieldUpdateOperationsInput | string
+    milestones?: JsonNullValueInput | InputJsonValue
+    targetIntake?: NullableStringFieldUpdateOperationsInput | string | null
+    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+    completionPct?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AIComparisonUpdateWithoutCourseInput = {
@@ -47450,8 +45455,8 @@ export namespace Prisma {
     cached?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutAiComparisonsNestedInput
     actionPlans?: ActionPlanUpdateManyWithoutComparisonNestedInput
+    user?: UserUpdateOneRequiredWithoutAiComparisonsNestedInput
   }
 
   export type AIComparisonUncheckedUpdateWithoutCourseInput = {
@@ -47487,45 +45492,6 @@ export namespace Prisma {
     modelVersion?: StringFieldUpdateOperationsInput | string
     processingMs?: NullableIntFieldUpdateOperationsInput | number | null
     cached?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ActionPlanUpdateWithoutCourseInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: NullableStringFieldUpdateOperationsInput | string | null
-    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
-    completionPct?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutActionPlansNestedInput
-    comparison?: AIComparisonUpdateOneRequiredWithoutActionPlansNestedInput
-  }
-
-  export type ActionPlanUncheckedUpdateWithoutCourseInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    comparisonId?: StringFieldUpdateOperationsInput | string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: NullableStringFieldUpdateOperationsInput | string | null
-    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
-    completionPct?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ActionPlanUncheckedUpdateManyWithoutCourseInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    comparisonId?: StringFieldUpdateOperationsInput | string
-    milestones?: JsonNullValueInput | InputJsonValue
-    targetIntake?: NullableStringFieldUpdateOperationsInput | string | null
-    targetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
-    completionPct?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47587,6 +45553,30 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SavedCollegeUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSavedCollegesNestedInput
+  }
+
+  export type SavedCollegeUncheckedUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedCollegeUncheckedUpdateManyWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    priority?: NullableEnumCollegePriorityFieldUpdateOperationsInput | $Enums.CollegePriority | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ActionPlanCreateManyComparisonInput = {
     id?: string
     userId: string
@@ -47609,8 +45599,8 @@ export namespace Prisma {
     completionPct?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutActionPlansNestedInput
     course?: UniversityCourseUpdateOneRequiredWithoutActionPlansNestedInput
+    user?: UserUpdateOneRequiredWithoutActionPlansNestedInput
   }
 
   export type ActionPlanUncheckedUpdateWithoutComparisonInput = {
@@ -47646,20 +45636,19 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
   }
 
   export type CommunityVoteCreateManyPostInput = {
     id?: string
     userId: string
     commentId?: string | null
-    value: $Enums.VoteValue
     createdAt?: Date | string
+    value: $Enums.VoteValue
   }
 
   export type CommunityCommentUpdateWithoutPostInput = {
@@ -47667,12 +45656,11 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     author?: UserUpdateOneRequiredWithoutCommunityCommentsNestedInput
     parent?: CommunityCommentUpdateOneWithoutRepliesNestedInput
     replies?: CommunityCommentUpdateManyWithoutParentNestedInput
@@ -47686,12 +45674,11 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     replies?: CommunityCommentUncheckedUpdateManyWithoutParentNestedInput
     votes?: CommunityVoteUncheckedUpdateManyWithoutCommentNestedInput
   }
@@ -47703,36 +45690,35 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CommunityVoteUpdateWithoutPostInput = {
     id?: StringFieldUpdateOperationsInput | string
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutCommunityVotesNestedInput
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     comment?: CommunityCommentUpdateOneWithoutVotesNestedInput
+    user?: UserUpdateOneRequiredWithoutCommunityVotesNestedInput
   }
 
   export type CommunityVoteUncheckedUpdateWithoutPostInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     commentId?: NullableStringFieldUpdateOperationsInput | string | null
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
   export type CommunityVoteUncheckedUpdateManyWithoutPostInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     commentId?: NullableStringFieldUpdateOperationsInput | string | null
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
   export type CommunityCommentCreateManyParentInput = {
@@ -47742,20 +45728,19 @@ export namespace Prisma {
     text: string
     isAnswer?: boolean
     isBest?: boolean
-    voteScore?: number
-    likeCount?: number
-    dislikeCount?: number
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    dislikeCount?: number
+    likeCount?: number
   }
 
   export type CommunityVoteCreateManyCommentInput = {
     id?: string
     userId: string
     postId?: string | null
-    value: $Enums.VoteValue
     createdAt?: Date | string
+    value: $Enums.VoteValue
   }
 
   export type CommunityCommentUpdateWithoutParentInput = {
@@ -47763,15 +45748,14 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     author?: UserUpdateOneRequiredWithoutCommunityCommentsNestedInput
     replies?: CommunityCommentUpdateManyWithoutParentNestedInput
+    post?: CommunityPostUpdateOneRequiredWithoutCommentsNestedInput
     votes?: CommunityVoteUpdateManyWithoutCommentNestedInput
   }
 
@@ -47782,12 +45766,11 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
     replies?: CommunityCommentUncheckedUpdateManyWithoutParentNestedInput
     votes?: CommunityVoteUncheckedUpdateManyWithoutCommentNestedInput
   }
@@ -47799,36 +45782,35 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     isAnswer?: BoolFieldUpdateOperationsInput | boolean
     isBest?: BoolFieldUpdateOperationsInput | boolean
-    voteScore?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    dislikeCount?: IntFieldUpdateOperationsInput | number
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type CommunityVoteUpdateWithoutCommentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutCommunityVotesNestedInput
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     post?: CommunityPostUpdateOneWithoutVotesNestedInput
+    user?: UserUpdateOneRequiredWithoutCommunityVotesNestedInput
   }
 
   export type CommunityVoteUncheckedUpdateWithoutCommentInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     postId?: NullableStringFieldUpdateOperationsInput | string | null
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
   export type CommunityVoteUncheckedUpdateManyWithoutCommentInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     postId?: NullableStringFieldUpdateOperationsInput | string | null
-    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    value?: EnumVoteValueFieldUpdateOperationsInput | $Enums.VoteValue
   }
 
 
@@ -47904,10 +45886,6 @@ export namespace Prisma {
      * @deprecated Use FeedPostDefaultArgs instead
      */
     export type FeedPostArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = FeedPostDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use FeedCommentDefaultArgs instead
-     */
-    export type FeedCommentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = FeedCommentDefaultArgs<ExtArgs>
     /**
      * @deprecated Use FeedInteractionDefaultArgs instead
      */

@@ -91,6 +91,17 @@ pnpm --filter docs dev
 
 ---
 
+## 🔑 Demo Credentials
+
+Use the following credentials to access the platform with different roles:
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Super Admin** | `admin@eaoverseas.com` | `Admin@123` |
+| **Student** | `alex.j@example.com` | `5678` |
+
+---
+
 ## ✨ Features
 - ✅ **Advanced User Management**: Dedicated dashboard for Super Admins to provision and manage platform users.
 - ✅ **Seamless Auth**: OTP-based verification for students and direct credential management for admins.

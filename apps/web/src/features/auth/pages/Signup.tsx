@@ -3,6 +3,53 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth';
 import { useGoogleLogin } from '@react-oauth/google';
 
+const GoogleSignupSection = ({ setError, loginWithGoogle, navigate, location, isLoading }: any) => {
+    const handleGoogleSignup = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setError('');
+            try {
+                const result = await loginWithGoogle(tokenResponse.access_token);
+                // If it's a new user, data will be returned to pre-fill the form (handled in parent)
+                if (result.isNewUser) {
+                    // Result is returned to parent via a callback or handled there
+                    return result;
+                } else {
+                    navigate('/feed');
+                }
+            } catch (err: any) {
+                console.error("Google Auth backend failed:", err);
+                const errorMessage = err?.data?.error || err?.message || 'Google authentication failed';
+                setError(errorMessage);
+            }
+        },
+        onError: (errorResponse) => {
+            console.error("Google Auth popup/client failed:", errorResponse);
+            setError('Google login failed. Please ensure you are not blocking popups or third-party cookies.');
+        }
+    });
+
+    return (
+        <button 
+            type="button" 
+            onClick={() => handleGoogleSignup()}
+            disabled={isLoading}
+            className={`w-full flex items-center justify-center gap-2 h-10 lg:h-12 rounded-lg border border-gray-200 transition-all font-bold text-slate-700 text-sm lg:text-base mb-2 px-4 whitespace-nowrap ${isLoading ? 'opacity-70 cursor-not-allowed bg-gray-50' : 'hover:bg-gray-50 hover:border-gray-300'}`}
+        >
+            {isLoading ? (
+                <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-gray-300 border-t-[#0d6cf2] rounded-full animate-spin"></div>
+                    <span>Processing...</span>
+                </div>
+            ) : (
+                <>
+                    <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+                    <span>Continue with Google</span>
+                </>
+            )}
+        </button>
+    );
+};
+
 const Signup = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -58,43 +105,25 @@ const Signup = () => {
                 navigate('/verification', { state: { from } });
             }
         } catch (err: any) {
-            setError(err.message || "Signup failed");
+            console.error("Signup failed:", err);
+            const errorMessage = err?.data?.error || err?.message || 'Signup failed';
+            setError(errorMessage);
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleGoogleSignup = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            try {
-                const result = await loginWithGoogle(tokenResponse.access_token);
-                
-                // If it's a new user, pre-fill form
-                if (result.isNewUser) {
-                    setFormData(prev => ({
-                        ...prev,
-                        name: result.fullName || '',
-                        email: result.email || ''
-                    }));
-                    setIsGoogleSignup(true);
-                    setGoogleId(result.googleId);
-                    
-                    // Smooth scroll to form or just alert
-                    console.log("Pre-filled from Google:", result);
-                } else {
-                    // Existing user logged in
-                    navigate('/feed');
-                }
-            } catch (err: any) {
-                console.error("Google Auth failed", err);
-                // Show specific backend error if available
-                setError(err.message || "Google authentication failed");
-            }
-        },
-        onError: () => {
-             setError("Google login was cancelled or failed");
+    const onGoogleSuccess = (result: any) => {
+        if (result.isNewUser) {
+            setFormData(prev => ({
+                ...prev,
+                name: result.fullName || '',
+                email: result.email || ''
+            }));
+            setIsGoogleSignup(true);
+            setGoogleId(result.googleId);
         }
-    });
+    };
 
     return (
         <div className="flex min-h-screen bg-white font-display overflow-hidden">
@@ -156,14 +185,17 @@ const Signup = () => {
                         {!isGoogleSignup && (
                             <>
                                 <div className="flex justify-center">
-                                    <button 
-                                        type="button" 
-                                        onClick={() => handleGoogleSignup()}
-                                        className="w-full flex items-center justify-center gap-2 h-10 lg:h-12 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all font-bold text-slate-700 text-sm lg:text-base mb-2 px-4 whitespace-nowrap"
-                                    >
-                                        <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-                                        <span className="">Continue with Google</span>
-                                    </button>
+                                    <GoogleSignupSection 
+                                        setError={setError}
+                                        loginWithGoogle={async (token: string) => {
+                                            const res = await loginWithGoogle(token);
+                                            onGoogleSuccess(res);
+                                            return res;
+                                        }}
+                                        navigate={navigate}
+                                        location={location}
+                                        isLoading={isGoogleLoggingIn}
+                                    />
                                 </div>
 
                                 <div className="relative flex py-1 items-center">

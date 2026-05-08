@@ -21,7 +21,7 @@ export const useAuth = () => {
   
   const [loginMutation, { isLoading: isLoggingIn }] = useLoginMutation();
   const [registerMutation, { isLoading: isRegistering }] = useRegisterMutation();
-  const [googleLoginMutation] = useGoogleLoginMutation();
+  const [googleLoginMutation, { isLoading: isGoogleLoggingIn }] = useGoogleLoginMutation();
   const [verifyOTPMutation] = useVerifyOTPMutation();
   const [resendOTPMutation] = useResendOTPMutation();
 
@@ -129,6 +129,7 @@ export const useAuth = () => {
     verifyOTP,
     resendOTP,
     isLoggingIn,
-    isRegistering
+    isRegistering,
+    isGoogleLoggingIn
   };
 };

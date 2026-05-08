@@ -5,7 +5,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-const GoogleLoginSection = ({ setError, loginWithGoogle, navigate, location }: any) => {
+const GoogleLoginSection = ({ setError, loginWithGoogle, navigate, location, isLoading }: any) => {
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             setError('');
@@ -14,11 +14,14 @@ const GoogleLoginSection = ({ setError, loginWithGoogle, navigate, location }: a
                 const from = location.state?.from || '/feed';
                 navigate(from, { replace: true });
             } catch (err: any) {
-                setError(err.message || 'Google authentication failed');
+                console.error("Google Auth backend failed:", err);
+                const errorMessage = err?.data?.error || err?.message || 'Google authentication failed';
+                setError(errorMessage);
             }
         },
-        onError: () => {
-            setError('Google authentication failed');
+        onError: (errorResponse) => {
+            console.error("Google Auth popup/client failed:", errorResponse);
+            setError('Google login failed. Please ensure you are not blocking popups or third-party cookies.');
         }
     });
 
@@ -26,10 +29,20 @@ const GoogleLoginSection = ({ setError, loginWithGoogle, navigate, location }: a
         <button 
             type="button" 
             onClick={() => handleGoogleLogin()}
-            className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700"
+            disabled={isLoading}
+            className={`flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 transition-all text-xs lg:text-sm font-bold text-slate-700 w-full ${isLoading ? 'opacity-70 cursor-not-allowed bg-gray-50' : 'hover:bg-gray-50 hover:border-gray-300'}`}
         >
-            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
-            <span className="hidden sm:inline">Google</span>
+            {isLoading ? (
+                <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-[#0d6cf2] rounded-full animate-spin"></div>
+                    <span>Signing in...</span>
+                </div>
+            ) : (
+                <>
+                    <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4" />
+                    <span>Google</span>
+                </>
+            )}
         </button>
     );
 };
@@ -37,13 +50,30 @@ const GoogleLoginSection = ({ setError, loginWithGoogle, navigate, location }: a
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { login, loginWithGoogle } = useAuth();
+    const { login, loginWithGoogle, user, isLoggingIn, isGoogleLoggingIn } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [selectedRole, setSelectedRole] = useState('Student');
     const [showRoleDropdown, setShowRoleDropdown] = useState(false);
+
+    // Auto-login effect
+    React.useEffect(() => {
+        if (user) {
+            const from = location.state?.from || '/feed';
+            // Determine redirect path based on user role
+            let redirectPath = from;
+            if (user.role === 'super_admin' || user.role === 'admin') {
+                redirectPath = '/superadmin';
+            } else if (user.role === 'counsellor') {
+                redirectPath = '/counsellor-dashboard';
+            } else if (user.role === 'vendor') {
+                redirectPath = `/university-panel/${user.id}`;
+            }
+            navigate(redirectPath, { replace: true });
+        }
+    }, [user, navigate, location]);
 
     const demoCredentials = {
         'Student': { email: 'alex.j@example.com', pass: '5678' },
@@ -87,7 +117,9 @@ const Login = () => {
                 navigate(from, { replace: true });
             }
         } catch (err: any) {
-            setError(err.message);
+            console.error("Login failed:", err);
+            const errorMessage = err?.data?.error || err?.message || 'Authentication failed';
+            setError(errorMessage);
         }
     };
 
@@ -258,9 +290,16 @@ const Login = () => {
                         </div>
 
                         {error && (
-                            <div className="bg-red-50 text-red-600 text-xs lg:text-sm p-2.5 rounded-lg border border-red-100 flex items-center gap-2">
-                                <span className="material-symbols-outlined text-[16px] lg:text-[18px]">error</span>
-                                {error}
+                            <div className="bg-red-50 text-red-600 text-xs lg:text-sm p-2.5 rounded-lg border border-red-100 flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-[16px] lg:text-[18px]">error</span>
+                                    <span>{error}</span>
+                                </div>
+                                {error.toLowerCase().includes('sign up') && (
+                                    <Link to="/signup" className="ml-6 lg:ml-7 text-[#0d6cf2] font-bold hover:underline flex items-center gap-1">
+                                        Sign up now <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                    </Link>
+                                )}
                             </div>
                         )}
 
@@ -313,8 +352,16 @@ const Login = () => {
                             <Link to="/forgot-password" className="text-xs lg:text-sm font-bold text-[#0d6cf2] hover:text-blue-700">Forgot password?</Link>
                         </div>
 
-                        <button className="w-full h-10 lg:h-12 bg-[#0d6cf2] hover:bg-blue-700 hover:shadow-md hover:shadow-blue-500/20 text-white text-sm lg:text-base font-bold rounded-lg transition-all">
-                            Sign in
+                        <button 
+                            disabled={isLoggingIn || isGoogleLoggingIn}
+                            className={`w-full h-10 lg:h-12 bg-[#0d6cf2] text-white text-sm lg:text-base font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${isLoggingIn ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-700 hover:shadow-md hover:shadow-blue-500/20'}`}
+                        >
+                            {isLoggingIn ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <span>Signing in...</span>
+                                </>
+                            ) : 'Sign in'}
                         </button>
 
                         <div className="relative flex py-1 items-center">
@@ -326,30 +373,25 @@ const Login = () => {
 
 
                         {/* Social Login */}
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="flex flex-col">
                             {GOOGLE_CLIENT_ID ? (
                                 <GoogleLoginSection 
                                     setError={setError} 
                                     loginWithGoogle={loginWithGoogle} 
                                     navigate={navigate} 
                                     location={location} 
+                                    isLoading={isGoogleLoggingIn}
                                 />
                             ) : (
                                 <button 
                                     type="button" 
                                     disabled
-                                    className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-100 bg-gray-50 cursor-not-allowed text-xs lg:text-sm font-bold text-slate-400 opacity-50"
+                                    className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-100 bg-gray-50 cursor-not-allowed text-xs lg:text-sm font-bold text-slate-400 opacity-50 w-full"
                                 >
                                     <img src="https://www.google.com/favicon.ico" alt="Google" className="w-4 h-4 grayscale" />
-                                    <span className="hidden sm:inline">Google</span>
+                                    <span>Google</span>
                                 </button>
                             )}
-                            <button type="button" className="flex items-center justify-center gap-2 h-9 lg:h-11 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all text-xs lg:text-sm font-bold text-slate-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0077b5" viewBox="0 0 16 16">
-                                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
-                                </svg>
-                                <span className="hidden sm:inline">LinkedIn</span>
-                            </button>
                         </div>
 
                         <button

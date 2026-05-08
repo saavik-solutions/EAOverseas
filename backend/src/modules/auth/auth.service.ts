@@ -43,8 +43,12 @@ export class AuthService {
       },
     });
 
-    if (!user || !user.passwordHash) {
-      throw new Error('Invalid credentials');
+    if (!user) {
+      throw new Error('No account found with this email. Please sign up first.');
+    }
+
+    if (!user.passwordHash) {
+      throw new Error('Please login with Google for this account or reset your password.');
     }
 
     if (!user.isActive) {
@@ -53,7 +57,7 @@ export class AuthService {
 
     const isValid = await bcrypt.compare(passwordHash, user.passwordHash);
     if (!isValid) {
-      throw new Error('Invalid credentials');
+      throw new Error('Incorrect password. Please try again.');
     }
 
     return user;
@@ -142,13 +146,14 @@ export class AuthService {
   }
 
   async googleAuth(data: { token: string }) {
-    // Verify the access token directly with Google
     const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: { Authorization: `Bearer ${data.token}` },
     });
     
     if (!userInfoRes.ok) {
-      throw new Error('Invalid Google access token');
+      const errorText = await userInfoRes.text();
+      console.error(`[AuthService] Google userinfo fetch failed: ${userInfoRes.status} ${errorText}`);
+      throw new Error(`Google authentication failed at the source: ${userInfoRes.statusText}`);
     }
 
     const googleUser = await userInfoRes.json();

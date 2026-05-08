@@ -12,13 +12,9 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <Provider store={store}>
-            {GOOGLE_CLIENT_ID ? (
-                <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                    <App />
-                </GoogleOAuthProvider>
-            ) : (
+            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID || '123456789-dummy.apps.googleusercontent.com'}>
                 <App />
-            )}
+            </GoogleOAuthProvider>
         </Provider>
     </StrictMode>,
 )

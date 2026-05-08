@@ -1,6 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { r2Client } from '../../lib/s3';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 export class UploadService {
   private bucket: string;
@@ -13,7 +13,7 @@ export class UploadService {
 
   async saveFile(file: any): Promise<string> {
     const fileExtension = file.filename.split('.').pop();
-    const key = `${uuidv4()}.${fileExtension}`;
+    const key = `${randomUUID()}.${fileExtension}`;
     
     // Read stream to buffer for S3 upload
     const buffer = await file.toBuffer();

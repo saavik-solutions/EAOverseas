@@ -33,13 +33,36 @@ export const universityService = {
         if (search) params.append('search', search);
         if (country && country !== 'All') params.append('country', country);
 
-        const res = await fetch(`${API_BASE}/api/universities?${params.toString()}`);
-        return handleResponse(res, 'Failed to fetch universities');
+        try {
+            const res = await fetch(`${API_BASE}/api/universities?${params.toString()}`);
+            if (res.ok) return await res.json();
+            throw new Error('API failed');
+        } catch (err) {
+            console.warn('[universityService] Fetch failed, using local fallback');
+            const saved = localStorage.getItem('ea_universities');
+            const unis = saved ? JSON.parse(saved) : [];
+            const filtered = unis.filter((u: any) => {
+                if (search && !u.name.toLowerCase().includes(search.toLowerCase())) return false;
+                if (country && country !== 'All' && u.country !== country) return false;
+                return true;
+            });
+            return { universities: filtered, total: filtered.length };
+        }
     },
 
     getById: async (id: string) => {
-        const res = await fetch(`${API_BASE}/api/universities/${id}`);
-        return handleResponse(res, 'Failed to fetch university details');
+        try {
+            const res = await fetch(`${API_BASE}/api/universities/${id}`);
+            if (res.ok) return await res.json();
+            throw new Error('API failed');
+        } catch (err) {
+            console.warn('[universityService] Fetch failed, using local fallback');
+            const saved = localStorage.getItem('ea_universities');
+            const unis = saved ? JSON.parse(saved) : [];
+            const uni = unis.find((u: any) => u.id === id || u.id === Number(id) || u._id === id);
+            if (uni) return uni;
+            throw new Error('University not found');
+        }
     },
 
     create: async (data: UniversityData) => {

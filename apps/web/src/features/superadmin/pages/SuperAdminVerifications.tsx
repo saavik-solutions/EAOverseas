@@ -272,9 +272,83 @@ const SuperAdminVerifications = () => {
                             </div>
 
                             <div 
-                                className="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed"
+                                className="prose prose-slate max-w-none text-slate-600 font-medium leading-relaxed mb-8"
                                 dangerouslySetInnerHTML={{ __html: selectedPost.content }}
                             />
+
+                            {/* Additional Metadata / Form Details */}
+                            <div className="space-y-6 pt-6 border-t border-slate-100">
+                                <h4 className="text-xs font-black text-[#2b6cee] uppercase tracking-widest">Submitted Form Data</h4>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Scholarship Details */}
+                                    {selectedPost.category?.toLowerCase() === 'scholarship' && (
+                                        <>
+                                            <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                                                <p className="text-[10px] font-black text-indigo-400 uppercase mb-1">Scholarship Amount</p>
+                                                <p className="text-sm font-black text-indigo-900">{selectedPost.metadata?.scholarshipAmount || 'Not specified'}</p>
+                                            </div>
+                                            <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                                                <p className="text-[10px] font-black text-indigo-400 uppercase mb-1">Application Deadline</p>
+                                                <p className="text-sm font-black text-indigo-900">{selectedPost.metadata?.scholarshipDeadline || 'Not specified'}</p>
+                                            </div>
+                                            <div className="col-span-full bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                                                <p className="text-[10px] font-black text-indigo-400 uppercase mb-1">Eligibility Criteria</p>
+                                                <p className="text-sm font-medium text-indigo-900">{selectedPost.metadata?.scholarshipEligibility || 'Not specified'}</p>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* Event / Webinar Details */}
+                                    {(selectedPost.category?.toLowerCase() === 'event' || selectedPost.category?.toLowerCase() === 'webinar') && (
+                                        <>
+                                            <div className="bg-pink-50 p-4 rounded-2xl border border-pink-100">
+                                                <p className="text-[10px] font-black text-pink-400 uppercase mb-1">Event Date & Time</p>
+                                                <p className="text-sm font-black text-pink-900">{selectedPost.metadata?.eventDate} at {selectedPost.metadata?.eventTime}</p>
+                                            </div>
+                                            <div className="bg-pink-50 p-4 rounded-2xl border border-pink-100">
+                                                <p className="text-[10px] font-black text-pink-400 uppercase mb-1">Venue / Link</p>
+                                                <p className="text-sm font-black text-pink-900">{selectedPost.metadata?.eventVenue || selectedPost.metadata?.webinarLink}</p>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* Program Details */}
+                                    {selectedPost.category?.toLowerCase() === 'program' && (
+                                        <>
+                                            <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                                                <p className="text-[10px] font-black text-emerald-400 uppercase mb-1">Program Name</p>
+                                                <p className="text-sm font-black text-emerald-900">{selectedPost.metadata?.programName}</p>
+                                            </div>
+                                            <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                                                <p className="text-[10px] font-black text-emerald-400 uppercase mb-1">Tuition Fee</p>
+                                                <p className="text-sm font-black text-emerald-900">{selectedPost.metadata?.tuitionFee}</p>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {/* Grid items / Highlights */}
+                                    {selectedPost.metadata?.grid && selectedPost.metadata.grid.length > 0 && (
+                                        <div className="col-span-full">
+                                            <p className="text-[10px] font-black text-slate-400 uppercase mb-3">Post Highlights</p>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                                {selectedPost.metadata.grid.map((item: any, i: number) => (
+                                                    <div key={i} className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                                        <p className="text-[9px] font-black text-slate-400 uppercase mb-0.5">{item.label}</p>
+                                                        <p className="text-xs font-black text-slate-900">{item.value}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Summary */}
+                                    <div className="col-span-full bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase mb-1">SEO / Summary Excerpt</p>
+                                        <p className="text-xs font-medium text-slate-600 italic">"{selectedPost.metadata?.summary || selectedPost.excerpt || 'No summary provided.'}"</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Modal Footer / Actions */}

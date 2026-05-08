@@ -141,11 +141,6 @@ const SuperAdminUniversityManagement = () => {
     const navigate = useNavigate();
     const itemsPerPage = 5;
 
-    const stats = [
-        { label: 'Active Partners', value: '98', icon: 'handshake', color: 'bg-blue-50 text-blue-600', trend: '82% of total' },
-        { label: 'Pending Requests', value: '12', icon: 'clock_loader_40', color: 'bg-amber-50 text-amber-600', trend: 'Requires attention', urgent: true },
-        { label: 'Suspended', value: '14', icon: 'block', color: 'bg-rose-50 text-rose-600', trend: '-2 since 2023' },
-    ];
 
     const [universities, setUniversities] = useState(() => {
         const saved = localStorage.getItem('ea_universities');
@@ -203,6 +198,14 @@ const SuperAdminUniversityManagement = () => {
         setSelectedFacilities([]);
     };
 
+    const suspendUniversity = (id: number) => {
+        if (window.confirm('Are you sure you want to suspend this university?')) {
+            setUniversities((prev: any) => 
+                prev.map((u: any) => u.id === id ? { ...u, status: 'Suspended' } : u)
+            );
+        }
+    };
+
     const deleteUniversity = (id: number) => {
         if (window.confirm('Are you sure you want to delete this university?')) {
             setUniversities(prev => prev.filter((u: any) => u.id !== id));
@@ -212,6 +215,10 @@ const SuperAdminUniversityManagement = () => {
     const filteredUniversities = universities.filter((uni: { name: string; country: string; status: string }) => {
         const matchesSearch = uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             uni.country.toLowerCase().includes(searchQuery.toLowerCase());
+        
+        // Exclude suspended universities from this main view
+        if (uni.status === 'Suspended') return false;
+        
         const matchesStatus = selectedStatus === 'All Status' || uni.status === selectedStatus;
         return matchesSearch && matchesStatus;
     });
@@ -221,17 +228,30 @@ const SuperAdminUniversityManagement = () => {
         currentPage * itemsPerPage
     );
 
+    // Calculate dynamic stats
+    const activeCount = universities.filter((u: any) => u.status === 'Active').length;
+    const pendingCount = universities.filter((u: any) => u.status === 'Pending').length;
+    const suspendedCount = universities.filter((u: any) => u.status === 'Suspended').length;
+
+    const stats = [
+        { label: 'Active Partners', value: activeCount.toString(), icon: 'handshake', color: 'bg-blue-50 text-blue-600', trend: `${Math.round((activeCount / (universities.length || 1)) * 100)}% of total` },
+        { label: 'Suspended', value: suspendedCount.toString(), icon: 'block', color: 'bg-rose-50 text-rose-600', trend: 'Restricted access' },
+    ];
+
     return (
         <SuperAdminLayout title="University Management">
             <div className="p-8 flex flex-col gap-6">
                 {/* KPI Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {stats.map((stat: { label: string; icon: string; color: string; urgent?: boolean; value: string; trend: string }) => {
-                        const isClickable = stat.label === 'Active Partners';
+                        const isClickable = stat.label === 'Active Partners' || stat.label === 'Suspended';
                         return (
                             <div 
                                 key={stat.label} 
-                                onClick={() => isClickable && navigate('/superadmin/universities/active')}
+                                onClick={() => {
+                                    if (stat.label === 'Active Partners') navigate('/superadmin/universities/active');
+                                    if (stat.label === 'Suspended') navigate('/superadmin/universities/suspended');
+                                }}
                                 className={`bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2 ${isClickable ? 'cursor-pointer hover:border-blue-300 hover:shadow-md transition-all' : ''}`}
                             >
                                 <div className="flex justify-between items-start">
@@ -279,7 +299,6 @@ const SuperAdminUniversityManagement = () => {
                                 <option value="All Status">All Status</option>
                                 <option value="Active">Active</option>
                                 <option value="Pending">Pending</option>
-                                <option value="Suspended">Suspended</option>
                             </select>
                         </div>
                         <div className="flex items-center gap-3">
@@ -392,13 +411,16 @@ const SuperAdminUniversityManagement = () => {
                                                 >
                                                     View Profile
                                                 </button>
-                                                <button
-                                                    onClick={() => deleteUniversity(uni.id)}
-                                                    className="size-8 flex items-center justify-center bg-rose-50 text-rose-500 rounded-lg hover:bg-rose-600 hover:text-white transition-all shadow-sm border border-rose-100"
-                                                    title="Delete University"
-                                                >
-                                                    <span className="material-symbols-outlined text-[18px]">delete</span>
-                                                </button>
+                                                {uni.status !== 'Suspended' && (
+                                                    <button
+                                                        onClick={() => suspendUniversity(uni.id)}
+                                                        className="size-8 flex items-center justify-center bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-600 hover:text-white transition-all shadow-sm border border-amber-100"
+                                                        title="Suspend University"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[18px]">block</span>
+                                                    </button>
+                                                )}
+
                                             </div>
                                         </td>
                                     </tr>

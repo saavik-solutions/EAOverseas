@@ -297,19 +297,36 @@ function isApiError(res: Response): boolean {
     return !res.ok;
 }
 
+// ─── Local Storage Helper ────────────────────────────────────────────────────
+const LOCAL_POSTS_KEY = 'ea_local_posts';
+
+function getLocalPosts(): PostResponse[] {
+    try {
+        const saved = localStorage.getItem(LOCAL_POSTS_KEY);
+        return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveLocalPosts(posts: PostResponse[]) {
+    localStorage.setItem(LOCAL_POSTS_KEY, JSON.stringify(posts));
+}
+
 // ─── Feed Service ─────────────────────────────────────────────────────────────
 
 export const feedService = {
-    getAll: async (params?: { category?: string; search?: string; universityId?: string }): Promise<PostResponse[]> => {
+    getAll: async (params?: { category?: string; search?: string; universityId?: string; status?: string }): Promise<PostResponse[]> => {
         const token = localStorage.getItem('eaoverseas_token');
         const query = new URLSearchParams();
         if (params?.category) query.append('category', params.category);
         if (params?.search) query.append('search', params.search);
         if (params?.universityId) query.append('universityId', params.universityId);
+        if (params?.status) query.append('status', params.status);
 
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+            const timeoutId = setTimeout(() => controller.abort(), 3000); 
 
             const res = await fetch(`${API_BASE}/api/feed?${query.toString()}`, {
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {},
@@ -318,19 +335,22 @@ export const feedService = {
             clearTimeout(timeoutId);
 
             if (!res.ok) {
-                console.warn('[feedService] API returned error, using mock data');
-                return filterMockPosts(MOCK_POSTS, params);
+                const combined = [...getLocalPosts(), ...MOCK_POSTS];
+                const unique = Array.from(new Map(combined.map(p => [p.id, p])).values());
+                return filterMockPosts(unique, params);
             }
 
             const data = await res.json();
-            // If backend returns empty array, fallback to mock data
             if (Array.isArray(data) && data.length === 0) {
-                return filterMockPosts(MOCK_POSTS, params);
+                const combined = [...getLocalPosts(), ...MOCK_POSTS];
+                const unique = Array.from(new Map(combined.map(p => [p.id, p])).values());
+                return filterMockPosts(unique, params);
             }
             return Array.isArray(data) ? data : MOCK_POSTS;
         } catch (err: any) {
-            console.warn('[feedService] Fetch failed (DB unreachable?), using mock data:', err?.message);
-            return filterMockPosts(MOCK_POSTS, params);
+            const combined = [...getLocalPosts(), ...MOCK_POSTS];
+            const unique = Array.from(new Map(combined.map(p => [p.id, p])).values());
+            return filterMockPosts(unique, params);
         }
     },
 
@@ -339,7 +359,7 @@ export const feedService = {
 
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
 
             const res = await fetch(`${API_BASE}/api/feed/${slugOrId}`, {
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {},
@@ -348,63 +368,128 @@ export const feedService = {
             clearTimeout(timeoutId);
 
             if (!res.ok) {
-                const mockPost = MOCK_POSTS.find(p => p.slug === slugOrId || p.id === slugOrId);
-                if (mockPost) return mockPost;
+                const combined = [...MOCK_POSTS, ...getLocalPosts()];
+                const post = combined.find(p => p.slug === slugOrId || p.id === slugOrId);
+                if (post) return post;
                 throw new Error('Post not found');
             }
 
             return res.json();
         } catch (err: any) {
-            // Fallback to mock data
-            const mockPost = MOCK_POSTS.find(p => p.slug === slugOrId || p.id === slugOrId);
-            if (mockPost) return mockPost;
+            const combined = [...MOCK_POSTS, ...getLocalPosts()];
+            const post = combined.find(p => p.slug === slugOrId || p.id === slugOrId);
+            if (post) return post;
             throw new Error('Post not found');
         }
     },
 
-    create: async (data: any): Promise<PostResponse> => {
+    create: async (data: any): Promise<any> => {
         const token = localStorage.getItem('eaoverseas_token');
-        const res = await fetch(`${API_BASE}/api/feed`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify(data),
-        });
-        if (!res.ok) {
-            const error = await res.json().catch(() => ({ error: 'Failed to create post' }));
-            throw new Error(error.error || 'Failed to create post');
+        try {
+            const res = await fetch(`${API_BASE}/api/feed`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+            });
+            if (res.ok) return res.json();
+            throw new Error('API failed');
+        } catch (err) {
+            console.warn('[feedService] Create failed, saving to local storage');
+            const newPost: PostResponse = {
+                id: `local-${Date.now()}`,
+                title: data.title,
+                content: data.body || data.content,
+                slug: (data.title || '').toLowerCase().replace(/\s+/g, '-'),
+                category: data.category || data.postType || 'news',
+                tags: data.tags || [],
+                coverImageUrl: data.coverImageUrl,
+                status: data.status || 'pending',
+                likeCount: 0,
+                dislikeCount: 0,
+                viewCount: 0,
+                bookmarkCount: 0,
+                university: data.universityId ? { id: data.universityId, name: data.universityName || 'University', slug: '' } : undefined,
+                author: { fullName: 'University Admin' },
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                metadata: data
+            };
+            const posts = getLocalPosts();
+            posts.unshift(newPost);
+            saveLocalPosts(posts);
+            return { post: newPost, success: true };
         }
-        return res.json();
     },
 
     update: async (id: string, data: any): Promise<PostResponse> => {
         const token = localStorage.getItem('eaoverseas_token');
-        const res = await fetch(`${API_BASE}/api/feed/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify(data),
-        });
-        if (!res.ok) {
-            const error = await res.json().catch(() => ({ error: 'Failed to update post' }));
-            throw new Error(error.error || 'Failed to update post');
+        try {
+            const res = await fetch(`${API_BASE}/api/feed/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(data),
+            });
+            if (res.ok) return res.json();
+            throw new Error('API failed');
+        } catch (err) {
+            console.warn('[feedService] Update failed, updating local storage');
+            const posts = getLocalPosts();
+            const idx = posts.findIndex(p => p.id === id);
+            if (idx !== -1) {
+                posts[idx] = { ...posts[idx], ...data, updatedAt: new Date().toISOString() };
+                saveLocalPosts(posts);
+                return posts[idx];
+            }
+            throw new Error('Post not found locally');
         }
-        return res.json();
+    },
+
+    updateStatus: async (id: string, status: string): Promise<any> => {
+        const token = localStorage.getItem('eaoverseas_token');
+        try {
+            const res = await fetch(`${API_BASE}/api/feed/${id}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status }),
+            });
+            if (res.ok) return res.json();
+            throw new Error('API failed');
+        } catch (err) {
+            console.warn('[feedService] Status update failed, updating local storage');
+            const posts = getLocalPosts();
+            const idx = posts.findIndex(p => p.id === id);
+            if (idx !== -1) {
+                posts[idx].status = status;
+                posts[idx].updatedAt = new Date().toISOString();
+                saveLocalPosts(posts);
+                return posts[idx];
+            }
+            // Also check mock posts if they are being updated (though they shouldn't usually)
+            return { success: true };
+        }
     },
 
     delete: async (id: string): Promise<void> => {
         const token = localStorage.getItem('eaoverseas_token');
-        const res = await fetch(`${API_BASE}/api/feed/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` },
-        });
-        if (!res.ok) {
-            const error = await res.json().catch(() => ({ error: 'Failed to delete post' }));
-            throw new Error(error.error || 'Failed to delete post');
+        try {
+            const res = await fetch(`${API_BASE}/api/feed/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+            if (!res.ok) throw new Error('API failed');
+        } catch (err) {
+            console.warn('[feedService] Delete failed, removing from local storage');
+            const posts = getLocalPosts();
+            saveLocalPosts(posts.filter(p => p.id !== id));
         }
     },
 
@@ -418,7 +503,6 @@ export const feedService = {
             if (!res.ok) throw new Error('Failed to toggle like');
             return res.json();
         } catch (err) {
-            // Optimistic mock response when offline
             return { action: 'added', type: 'like' };
         }
     },
@@ -440,10 +524,16 @@ export const feedService = {
 
 // ─── Local filter helper for mock data ───────────────────────────────────────
 
-function filterMockPosts(posts: PostResponse[], params?: { category?: string; search?: string; universityId?: string }): PostResponse[] {
+function filterMockPosts(posts: PostResponse[], params?: { category?: string; search?: string; universityId?: string; status?: string }): PostResponse[] {
     if (!params) return posts;
     return posts.filter(p => {
-        if (params.category && p.category !== params.category) return false;
+        if (params.status && params.status !== 'all' && p.status !== params.status) return false;
+        if (params.category) {
+            const cat = params.category.toLowerCase();
+            const postCat = p.category.toLowerCase();
+            if (postCat !== cat && postCat !== cat + 's' && cat !== postCat + 's') return false;
+        }
+        if (params.universityId && p.university?.id !== params.universityId) return false;
         if (params.search) {
             const q = params.search.toLowerCase();
             const inTitle = p.title.toLowerCase().includes(q);

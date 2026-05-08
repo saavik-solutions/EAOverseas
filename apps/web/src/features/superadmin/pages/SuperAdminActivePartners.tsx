@@ -29,6 +29,18 @@ const SuperAdminActivePartners = () => {
         }
     }, []);
 
+    const suspendUniversity = (id: number) => {
+        if (window.confirm('Are you sure you want to suspend this university?')) {
+            const saved = localStorage.getItem('ea_universities');
+            if (saved) {
+                const allUnis = JSON.parse(saved);
+                const updated = allUnis.map((u: any) => u.id === id ? { ...u, status: 'Suspended' } : u);
+                localStorage.setItem('ea_universities', JSON.stringify(updated));
+                setPartners(updated.filter((u: any) => u.status === 'Active'));
+            }
+        }
+    };
+
     const filteredPartners = (partners || []).filter(p => 
         (p.name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
         (p.country?.toLowerCase() || "").includes(searchQuery.toLowerCase())
@@ -133,6 +145,13 @@ const SuperAdminActivePartners = () => {
                                                         className="px-2 md:px-4 py-1.5 bg-[#2b6cee] text-white rounded-lg text-[9px] md:text-[11px] font-bold hover:bg-[#2b6cee]/90 transition-all shadow-md shadow-blue-100 whitespace-nowrap"
                                                     >
                                                         View Profile
+                                                    </button>
+                                                    <button
+                                                        onClick={() => suspendUniversity(uni.id)}
+                                                        className="size-7 md:size-8 flex items-center justify-center bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-600 hover:text-white transition-all shadow-sm border border-amber-100"
+                                                        title="Suspend University"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">block</span>
                                                     </button>
                                                 </div>
                                             </td>

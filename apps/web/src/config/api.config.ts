@@ -3,7 +3,7 @@
  * Single source of truth for all API URLs and endpoint mappings
  */
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6001';
 
 export const ENDPOINTS = {
   // Auth

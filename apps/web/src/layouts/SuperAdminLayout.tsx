@@ -204,8 +204,11 @@ const SuperAdminLayout: React.FC<SuperAdminLayoutProps> = ({ children, title = '
                             </button>
                             <div className="h-8 w-px bg-slate-200 mx-2"></div>
                             <button
-                                onClick={() => navigate('/login')}
-                                className="bg-rose-50 text-rose-600 px-4 py-2 rounded-lg hover:bg-rose-100 transition-all flex items-center gap-2 font-semibold"
+                                onClick={() => {
+                                    logout();
+                                    navigate('/login');
+                                }}
+                                className="bg-rose-50 text-rose-600 px-4 py-2 rounded-lg hover:bg-rose-100 transition-all flex items-center gap-2 font-semibold border border-rose-100/50"
                             >
                                 <span className="material-symbols-outlined text-[20px]">logout</span>
                                 Sign Out

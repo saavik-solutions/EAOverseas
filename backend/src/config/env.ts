@@ -37,7 +37,7 @@ export const env = {
   FROM_EMAIL: process.env.FROM_EMAIL || '',
 
   // Frontend
-  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
+  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5174',
 
   // Helpers
   get isDev() {

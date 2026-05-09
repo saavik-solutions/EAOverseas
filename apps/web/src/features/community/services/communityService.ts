@@ -1,6 +1,6 @@
-const API_BASE = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
-  ? 'http://localhost:4000/api/community'
-  : 'https://eaoverseas-v1.onrender.com/api/community';
+import { API_BASE_URL } from '@/config/api.config';
+
+const API_BASE = `${API_BASE_URL}/api/community`;
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('eaoverseas_token');

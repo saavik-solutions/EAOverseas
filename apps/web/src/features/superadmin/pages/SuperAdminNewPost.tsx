@@ -5,6 +5,7 @@ import { universityService, UniversityData } from '@/features/colleges/services/
 import { feedService } from '@/features/feed/services/feedService';
 import { usePosts } from '@/features/feed/services/PostsContext';
 import SuperAdminLayout from '@/layouts/SuperAdminLayout';
+import { ENDPOINTS } from '@/config/api.config';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type PostType = 'Article' | 'Scholarship' | 'Announcement' | 'Event' | 'Guide' | 'News' | 'Webinar' | 'Program';
@@ -185,7 +186,7 @@ const SuperAdminNewPost = () => {
 
         try {
             const token = localStorage.getItem('eaoverseas_token');
-            const res = await fetch('http://localhost:4000/api/upload/image', {
+            const res = await fetch(ENDPOINTS.UPLOAD.IMAGE, {
                 method: 'POST',
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {},
                 body: formData

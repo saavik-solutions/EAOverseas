@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SuperAdminLayout from '@/layouts/SuperAdminLayout';
+import { API_BASE_URL, ENDPOINTS } from '@/config/api.config';
 
 interface User {
     id: string;
@@ -29,7 +30,7 @@ const SuperAdminUserManagement = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('eaoverseas_token');
-            const res = await fetch('http://localhost:4000/api/admin/users', {
+            const res = await fetch(ENDPOINTS.ADMIN.USERS, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -51,7 +52,7 @@ const SuperAdminUserManagement = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('eaoverseas_token');
-            const res = await fetch('http://localhost:4000/api/admin/users', {
+            const res = await fetch(ENDPOINTS.ADMIN.USERS, {
                 method: 'POST',
                 headers: { 
                     'Authorization': `Bearer ${token}`,
@@ -76,7 +77,7 @@ const SuperAdminUserManagement = () => {
     const toggleUserStatus = async (id: string, currentStatus: boolean) => {
         try {
             const token = localStorage.getItem('eaoverseas_token');
-            await fetch(`http://localhost:4000/api/admin/users/${id}/status`, {
+            await fetch(ENDPOINTS.ADMIN.USER_STATUS(id), {
                 method: 'PATCH',
                 headers: { 
                     'Authorization': `Bearer ${token}`,

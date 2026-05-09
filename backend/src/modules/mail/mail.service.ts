@@ -154,7 +154,7 @@ export class MailService {
       console.log(`OTP email sent to ${email}`);
     } catch (error) {
       console.error(`Failed to send OTP email to ${email}:`, error);
-      throw new Error('Failed to send verification email');
+      // Don't throw — registration should still succeed. User can resend OTP later.
     }
   }
 }

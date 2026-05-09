@@ -296,6 +296,15 @@ exports.Prisma.FeedInteractionScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.FeedCommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  authorId: 'authorId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UniversityScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -689,6 +698,7 @@ exports.Prisma.ModelName = {
   UserDocument: 'UserDocument',
   FeedPost: 'FeedPost',
   FeedInteraction: 'FeedInteraction',
+  FeedComment: 'FeedComment',
   University: 'University',
   UniversityCourse: 'UniversityCourse',
   CourseRequirement: 'CourseRequirement',

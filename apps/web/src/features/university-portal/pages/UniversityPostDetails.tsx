@@ -6,6 +6,7 @@ import { universityService, UniversityData } from '@/features/colleges/services/
 import { usePosts, Post } from '@/features/feed/services/PostsContext';
 import UniversityLayout from '@/layouts/UniversityLayout';
 import EditPostModal from '@/features/university-portal/components/EditPostModal';
+import { ENDPOINTS } from '@/config/api.config';
 
 const TYPE_COLORS: Record<string, string> = {
     Article: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -257,7 +258,7 @@ const UniversityPostDetails = () => {
                                                         formData.append('file', file);
                                                         try {
                                                             const token = localStorage.getItem('eaoverseas_token');
-                                                            const res = await fetch('http://localhost:4000/api/upload/image', {
+                                                            const res = await fetch(ENDPOINTS.UPLOAD.IMAGE, {
                                                                 method: 'POST',
                                                                 headers: token ? { 'Authorization': `Bearer ${token}` } : {},
                                                                 body: formData

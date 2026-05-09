@@ -53,7 +53,7 @@ const GoogleSignupSection = ({ setError, loginWithGoogle, navigate, location, is
 const Signup = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { signup, loginWithGoogle } = useAuth();
+    const { signup, loginWithGoogle, isGoogleLoggingIn } = useAuth();
 
     const [formData, setFormData] = useState({
         name: '',

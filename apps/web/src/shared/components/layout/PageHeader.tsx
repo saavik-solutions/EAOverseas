@@ -66,6 +66,39 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actions, breadcrumbs = [
                         {actions}
                     </div>
                 )}
+
+                {/* Notifications */}
+                {user && (
+                    <div className="relative" ref={notificationRef}>
+                        <button
+                            onClick={toggleNotifications}
+                            className={`relative p-2 transition-colors rounded-full hover:bg-gray-100 ${showNotifications ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:text-blue-600'}`}
+                        >
+                            <span className={`material-symbols-outlined !text-[24px] ${showNotifications ? 'filled' : ''}`}>notifications</span>
+                            {unreadCount > 0 && (
+                                <span className="absolute top-2 right-2 size-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                            )}
+                        </button>
+
+                        {showNotifications && (
+                            <NotificationDropdown onClose={() => setShowNotifications(false)} />
+                        )}
+                    </div>
+                )}
+
+                {/* Sign Out Button */}
+                {user && (
+                    <button
+                        onClick={() => {
+                            logout();
+                            navigate('/login');
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-100 transition-all border border-rose-100/50 shadow-sm shadow-rose-100/20"
+                    >
+                        <span className="material-symbols-outlined !text-[18px]">logout</span>
+                        <span className="hidden sm:inline">Sign Out</span>
+                    </button>
+                )}
             </div>
         </header>
     );

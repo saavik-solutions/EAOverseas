@@ -19,11 +19,11 @@ const UniversityDirectory = () => {
         Intake: 'All'
     });
 
-    const universitiesData = useMemo(() => getCombinedUniversities(), []);
-    const countries = ['All', ...new Set(universitiesData.map((u: University) => u.country))];
-    const courseTypes = ['All', ...new Set(universitiesData.map((u: University) => u.courseType))];
+    const universitiesData = useMemo(() => getCombinedUniversities() || [], []);
+    const countries = ['All', ...new Set((universitiesData || []).map((u: University) => u.country).filter(Boolean))];
+    const courseTypes = ['All', ...new Set((universitiesData || []).map((u: University) => u.courseType).filter(Boolean))];
     const budgets = ['All', 'Budget', 'Moderate', 'Premium'];
-    const intakes = ['All', ...new Set(universitiesData.map((u: University) => u.intakeType))];
+    const intakes = ['All', ...new Set((universitiesData || []).map((u: University) => u.intakeType).filter(Boolean))];
 
     const filteredUniversities = useMemo(() => {
         return universitiesData

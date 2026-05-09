@@ -95,7 +95,7 @@ const DestinationsSection = () => {
                                     </div>
                                     <div className="stat-item">
                                         <span>🎓 Acceptance</span>
-                                        <span className="stat-val">{dest.acceptance}</span>
+                                        <span className="stat-val">{dest?.acceptance || 'N/A'}</span>
                                     </div>
                                     <div className="stat-item">
                                         <span>💰 Tuition</span>

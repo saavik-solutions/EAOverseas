@@ -4,6 +4,7 @@ import { useSavedItems } from '@/features/saved-items/context/SavedItemsContext'
 import { useNotification } from '@/features/notifications/context/NotificationContext';
 import { useAuthAction } from '@/shared/hooks/useAuthAction';
 import LoginModal from '@/features/auth/components/LoginModal';
+import { getCombinedUniversities } from '@/shared/utils/universityData';
 
 const CourseDetails = () => {
     const [searchParams] = useSearchParams();
@@ -11,6 +12,7 @@ const CourseDetails = () => {
     const location = useLocation();
     const courseTitle = searchParams.get('title');
     const universityName = searchParams.get('university');
+    const urlCourseId = searchParams.get('id');
 
     // Add auth action hook
     const { executeAction, isLoginModalOpen, closeLoginModal } = useAuthAction();
@@ -105,6 +107,36 @@ const CourseDetails = () => {
     ];
 
     const course = useMemo(() => {
+        // 0. Check dynamic universities first via ID or Name
+        const allUnis = getCombinedUniversities();
+        const foundUni = allUnis.find(u => u.name === universityName || String(u.id) === universityName);
+        if (foundUni && foundUni.courses) {
+            const foundCourse = foundUni.courses.find((c: any) => 
+                (urlCourseId && String(c.id) === urlCourseId) || 
+                (courseTitle && (c.name === courseTitle || c.title === courseTitle))
+            );
+            if (foundCourse) {
+                return {
+                    ...foundCourse,
+                    id: foundCourse.id,
+                    title: foundCourse.name || foundCourse.title,
+                    university: foundUni.name,
+                    location: foundUni.location || foundUni.city || "Location Unknown",
+                    match: foundUni.match || 85,
+                    duration: foundCourse.duration || "N/A",
+                    tuition: foundCourse.fee ? `$${foundCourse.fee} / year` : "N/A",
+                    intake: Array.isArray(foundCourse.intakes) ? foundCourse.intakes.join(', ') : "Rolling",
+                    intakeStatus: "Open",
+                    deadline: Array.isArray(foundCourse.deadlines) ? foundCourse.deadlines.join(', ') : "Varies",
+                    desc: foundCourse.overview || "Course details are being updated.",
+                    career: Array.isArray(foundCourse.outcomes) ? foundCourse.outcomes : [],
+                    type: foundCourse.level || "Degree",
+                    field: "General",
+                    academicRequirements: foundCourse.academicRequirements || []
+                };
+            }
+        }
+
         // 1. Use State Data if available (from SavedCourses)
         if (stateCourse) {
             // Attempt to merge with DB data if possible for richer details
@@ -125,18 +157,19 @@ const CourseDetails = () => {
                 desc: "Course details are being updated.",
                 career: [],
                 type: "Course",
-                field: "General"
+                field: "General",
+                academicRequirements: []
             };
         }
 
-        if (!courseTitle) return coursesDB[0]; // Default to first if no param
+        if (!courseTitle) return { ...coursesDB[0], academicRequirements: [] }; // Default to first if no param
 
         // 2. Try Exact Match First
         const foundExact = coursesDB.find(c =>
             c.title === courseTitle &&
             (universityName && c.university === universityName)
         );
-        if (foundExact) return foundExact;
+        if (foundExact) return { ...foundExact, academicRequirements: [] };
 
         // 3. Fallback: Find Course Base Info (for desc/career)
         // and overlay University details from similarCourses or URL
@@ -152,12 +185,13 @@ const CourseDetails = () => {
                 location: similarUni ? similarUni.loc : (courseBase.location || "Location Unknown"),
                 tuition: similarUni ? similarUni.tuition : (courseBase.tuition || "Tuition Varies"),
                 match: similarUni ? similarUni.match : (courseBase.match || 75),
-                intake: similarUni ? similarUni.intake : (courseBase.intake || "Rolling")
+                intake: similarUni ? similarUni.intake : (courseBase.intake || "Rolling"),
+                academicRequirements: []
             };
         }
 
-        return courseBase;
-    }, [courseTitle, universityName, coursesDB, similarCourses, stateCourse]);
+        return { ...courseBase, academicRequirements: [] };
+    }, [courseTitle, universityName, urlCourseId, stateCourse]);
 
     const containerRef = React.useRef(null);
 
@@ -277,19 +311,34 @@ const CourseDetails = () => {
                             </div>
 
                             <div className="flex flex-col gap-6">
-                                {/* Item 1 */}
-                                <div className="flex items-start gap-4">
-                                    <div className="size-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                                        <span className="material-symbols-outlined text-green-600 text-[18px]">check</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex justify-between items-start">
-                                            <h4 className="text-sm font-bold text-slate-900">Academic Background</h4>
-                                            <span className="px-2 py-0.5 rounded bg-green-100 text-green-700 text-[10px] font-bold uppercase">Match</span>
+                                {course.academicRequirements && Array.isArray(course.academicRequirements) && course.academicRequirements.length > 0 ? (
+                                    course.academicRequirements.map((req: string, i: number) => (
+                                        <div key={i} className="flex items-start gap-4">
+                                            <div className="size-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                                                <span className="material-symbols-outlined text-green-600 text-[18px]">check</span>
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <h4 className="text-sm font-bold text-slate-900">{req}</h4>
+                                                    <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-[10px] font-bold uppercase">Required</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <p className="text-xs text-slate-500 mt-1">Your BSc in Computer Science meets the prerequisite.</p>
-                                    </div>
-                                </div>
+                                    ))
+                                ) : (
+                                    <>
+                                        <div className="flex items-start gap-4">
+                                            <div className="size-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                                                <span className="material-symbols-outlined text-green-600 text-[18px]">check</span>
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <h4 className="text-sm font-bold text-slate-900">Academic Background</h4>
+                                                    <span className="px-2 py-0.5 rounded bg-green-100 text-green-700 text-[10px] font-bold uppercase">Match</span>
+                                                </div>
+                                                <p className="text-xs text-slate-500 mt-1">Your BSc in Computer Science meets the prerequisite.</p>
+                                            </div>
+                                        </div>
 
                                 {/* Item 2 */}
                                 <div className="flex items-start gap-4">
@@ -332,6 +381,8 @@ const CourseDetails = () => {
                                         <p className="text-xs text-slate-500 mt-1">September 2024 intake is currently open.</p>
                                     </div>
                                 </div>
+                                </>
+                                )}
                             </div>
                         </div>
 
@@ -349,7 +400,7 @@ const CourseDetails = () => {
                             <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 md:p-6 flex flex-col h-full">
                                 <h3 className="text-lg font-bold text-slate-900 mb-4">Career Outcomes</h3>
                                 <div className="flex flex-wrap gap-2 content-start">
-                                    {course.career.map((role, i) => (
+                                    {(course.career || []).map((role, i) => (
                                         <span key={i} className="px-3 py-1.5 bg-gray-100 rounded-lg text-xs font-bold text-gray-700">
                                             {role}
                                         </span>

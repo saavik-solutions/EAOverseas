@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import PageHeader from '@/shared/components/layout/PageHeader';
 import { universityService, UniversityData } from '@/features/colleges/services/universityService';
 import { feedService } from '@/features/feed/services/feedService';
@@ -151,6 +151,7 @@ const editorStyle = `
 const SuperAdminNewPost = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { id: editPostId } = useParams<{ id: string }>();
     const [form, setForm] = useState<PostForm>(DEFAULT_FORM);
     const [activeSection, setActiveSection] = useState<'content' | 'seo' | 'settings'>('content');
     const [universities, setUniversities] = useState<UniversityData[]>([]);
@@ -162,6 +163,7 @@ const SuperAdminNewPost = () => {
     const [benefitDesc, setBenefitDesc] = useState('');
     const [benefitIcon, setBenefitIcon] = useState('work');
     const [docInput, setDocInput] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const bodyEditableRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -329,11 +331,52 @@ const SuperAdminNewPost = () => {
     };
 
     useEffect(() => {
-        const fetchUnis = async () => {
+        const fetchUnisAndPost = async () => {
             try {
                 const data = await universityService.getAll();
                 const fetchedUnis = data.universities || [];
                 setUniversities(fetchedUnis);
+
+                // Handle Editing an Existing Post
+                if (editPostId) {
+                    const post = await feedService.getById(editPostId);
+                    if (post) {
+                        setForm(prev => ({
+                            ...prev,
+                            title: post.title || '',
+                            postType: (post.category ? post.category.charAt(0).toUpperCase() + post.category.slice(1).replace(/s$/, '') : 'Article') as PostType,
+                            status: (post.status === 'published' ? 'Published' : post.status === 'pending' ? 'Under Review' : 'Draft') as PostStatus,
+                            summary: post.metadata?.summary || '',
+                            body: post.content || '',
+                            coverImageUrl: post.coverImageUrl || '',
+                            universityId: post.university?.id || 'all',
+                            universityName: post.university?.name || 'All Universities',
+                            country: post.metadata?.location || post.university?.country || '',
+                            tags: post.tags || [],
+                            categories: post.metadata?.categories || [],
+                            scholarshipAmount: post.metadata?.scholarshipAmount || '',
+                            scholarshipDeadline: post.metadata?.scholarshipDeadline || '',
+                            scholarshipEligibility: post.metadata?.scholarshipEligibility || '',
+                            eventDate: post.metadata?.eventDate || '',
+                            eventTime: post.metadata?.eventTime || '',
+                            eventVenue: post.metadata?.eventVenue || '',
+                            eventRegistrationLink: post.metadata?.eventRegistrationLink || '',
+                            webinarLink: post.metadata?.webinarLink || '',
+                            webinarHost: post.metadata?.webinarHost || '',
+                            programName: post.metadata?.programName || '',
+                            programDuration: post.metadata?.programDuration || '',
+                            tuitionFee: post.metadata?.tuitionFee || '',
+                            grid: post.metadata?.grid || [],
+                            benefits: post.metadata?.benefits || [],
+                            documents: post.metadata?.documents || [],
+                            downloadBtn: post.metadata?.downloadBtn || { label: '', link: '' }
+                        }));
+                        if (bodyEditableRef.current) {
+                            bodyEditableRef.current.innerHTML = post.content || '';
+                        }
+                    }
+                    return; // Skip query params if editing
+                }
 
                 // Handle Pre-filling from URL params
                 const params = new URLSearchParams(location.search);
@@ -363,11 +406,11 @@ const SuperAdminNewPost = () => {
                     });
                 }
             } catch (err) {
-                console.error('Failed to fetch universities', err);
+                console.error('Failed to fetch data', err);
             }
         };
-        fetchUnis();
-    }, [location.search]);
+        fetchUnisAndPost();
+    }, [location.search, editPostId]);
 
     const set = (key: keyof PostForm) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setForm(prev => ({ ...prev, [key]: e.target.value }));
@@ -399,6 +442,8 @@ const SuperAdminNewPost = () => {
     const { addPost } = usePosts();
 
     const handleSubmit = async (submitStatus: PostStatus) => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         const postData = {
             ...form, // Include everything
             title: form.title,
@@ -407,16 +452,22 @@ const SuperAdminNewPost = () => {
             tags: form.tags,
             universityId: form.universityId === 'all' ? null : form.universityId,
             coverImageUrl: form.coverImageUrl,
-            status: submitStatus.toLowerCase()
+            status: submitStatus.toLowerCase(),
+            location: form.country // Explicitly map country to location for Feed.tsx compatibility
         };
 
         try {
-            const savedPost = await feedService.create(postData);
+            let savedPost: any;
+            if (editPostId) {
+                savedPost = await feedService.update(editPostId, postData);
+            } else {
+                savedPost = await feedService.create(postData);
+            }
 
             // Still sync with local context for immediate UI feedback in other parts
             const nextMock: any = {
                 ...postData,
-                id: savedPost.post?._id || `post-${Date.now()}`,
+                id: editPostId || savedPost.post?._id || savedPost.id || `post-${Date.now()}`,
                 label: form.postType,
                 institution: form.universityName,
                 grid: [
@@ -433,7 +484,9 @@ const SuperAdminNewPost = () => {
             addPost(nextMock);
             navigate('/superadmin/university-portal/posts-feed');
         } catch (err: any) {
-            alert(`Failed to create post: ${err.message}`);
+            alert(`Failed to ${editPostId ? 'update' : 'create'} post: ${err.message}`);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -446,18 +499,18 @@ const SuperAdminNewPost = () => {
         <style>{editorStyle}</style>
         <div className="flex-1 bg-slate-50 min-h-screen">
             <PageHeader
-                title="Create New Post"
+                title={editPostId ? "Edit Post" : "Create New Post"}
                 breadcrumbs={[
                     { label: 'Posts & Feed', link: '/superadmin/university-portal/posts-feed' },
-                    { label: 'New Post' }
+                    { label: editPostId ? 'Edit Post' : 'New Post' }
                 ]}
                 actions={
                     <div className="flex items-center gap-2">
-                        <button onClick={() => handleSubmit('Draft')} className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-100 transition">
+                        <button onClick={() => handleSubmit('Draft')} disabled={isSubmitting} className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-100 transition disabled:opacity-50">
                             Save Draft
                         </button>
-                        <button onClick={() => handleSubmit('Published')} className="px-4 py-2 text-sm font-bold text-white bg-[#2b6cee] rounded-lg hover:bg-blue-700 transition">
-                            Publish Now
+                        <button onClick={() => handleSubmit('Published')} disabled={isSubmitting} className="px-4 py-2 text-sm font-bold text-white bg-[#2b6cee] rounded-lg hover:bg-blue-700 transition disabled:opacity-50">
+                            {isSubmitting ? 'Saving...' : editPostId ? 'Save Changes' : 'Publish Now'}
                         </button>
                     </div>
                 }
@@ -896,10 +949,10 @@ const SuperAdminNewPost = () => {
                                 </select>
                             </Field>
                             <div className="flex flex-col gap-2 pt-2">
-                                <button onClick={() => handleSubmit('Published')} className="w-full py-2.5 text-sm font-bold text-white bg-[#2b6cee] rounded-xl hover:bg-blue-700 transition">
-                                    Publish Now
+                                <button onClick={() => handleSubmit('Published')} disabled={isSubmitting} className="w-full py-2.5 text-sm font-bold text-white bg-[#2b6cee] rounded-xl hover:bg-blue-700 transition disabled:opacity-50">
+                                    {isSubmitting ? 'Saving...' : editPostId ? 'Save Changes' : 'Publish Now'}
                                 </button>
-                                <button onClick={() => handleSubmit('Draft')} className="w-full py-2.5 text-sm font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition">
+                                <button onClick={() => handleSubmit('Draft')} disabled={isSubmitting} className="w-full py-2.5 text-sm font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition disabled:opacity-50">
                                     Save as Draft
                                 </button>
                             </div>

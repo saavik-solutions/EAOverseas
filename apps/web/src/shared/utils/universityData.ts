@@ -40,7 +40,8 @@ export const getCombinedUniversities = (): University[] => {
                     city: uni.city || 'Campus',
                     type: 'Partner University',
                     globalRanking: parseInt(uni.ranking?.replace(/[^0-9]/g, '')) || 100,
-                    coursesCount: uni.courses?.toString() || '0',
+                    courses: Array.isArray(uni.courses) ? uni.courses : [],
+                    coursesCount: Array.isArray(uni.courses) ? uni.courses.length.toString() : '0',
                     avgTuition: tuitionStr,
                     livingExpense: '$1,500',
                     intakes: 'Fall / Winter',
@@ -86,5 +87,8 @@ export const getCombinedUniversities = (): University[] => {
         }
     }
 
-    return [...staticUniversities, ...dynamicUnis];
+    const dynamicNames = new Set(dynamicUnis.map(u => u.name.toLowerCase()));
+    const filteredStatic = staticUniversities.filter(u => !dynamicNames.has(u.name.toLowerCase()));
+
+    return [...dynamicUnis, ...filteredStatic];
 };

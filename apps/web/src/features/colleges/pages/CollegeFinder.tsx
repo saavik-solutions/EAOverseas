@@ -1,28 +1,25 @@
-
-const staticUniversities = [];
+import { universitiesData as staticUniversities } from '@/features/content/data/universities';
 
 const getUniversitiesData = () => {
     const saved = localStorage.getItem('ea_universities');
-    if (!saved) return staticUniversities;
+    const adminUnis = saved ? JSON.parse(saved) : [];
+    
+    if (!Array.isArray(adminUnis)) return staticUniversities;
 
-    const adminUnis = JSON.parse(saved);
     const mappedAdminUnis = adminUnis.map((uni: any) => {
-        // Only map if it's not already in static (by name)
-        if (staticUniversities.find(s => s.name.toLowerCase() === uni.name.toLowerCase())) return null;
-
         const tuitionStr = uni.tuition || "$30k - $45k";
         const tuitionVal = parseInt(tuitionStr.replace(/[^0-9]/g, '')) * 1000 || 35000;
         
         return {
             id: `admin-${uni.id}`,
-            name: uni.name,
-            location: uni.location || `${uni.city || 'Campus'}, ${uni.country}`,
-            country: uni.country,
+            name: uni.name || 'Unknown University',
+            location: uni.location || `${uni.city || 'Campus'}, ${uni.country || 'Unknown'}`,
+            country: uni.country || 'Unknown',
             match: parseInt(uni.admissionChance) || 90,
-            ranking: parseInt(uni.ranking?.replace(/[^0-9]/g, '')) || 100,
+            ranking: parseInt(uni.ranking?.toString().replace(/[^0-9]/g, '')) || 100,
             tuitionVal: tuitionVal,
             image: uni.logo || null,
-            tags: [
+            tags: Array.isArray(uni.tags) ? uni.tags : [
                 { icon: "trophy", text: `${uni.ranking || 'Global Rank #100'}`, color: "text-blue-600" },
                 { icon: "payments", text: `${tuitionStr} / year`, color: "text-gray-400" },
                 { icon: "calendar_today", text: "Multiple Intakes", color: "text-gray-400" }
@@ -33,9 +30,26 @@ const getUniversitiesData = () => {
             },
             budgetCategory: tuitionVal > 50000 ? "premium" : tuitionVal > 40000 ? "high" : tuitionVal > 20000 ? "medium" : "low"
         };
-    }).filter(Boolean);
+    });
 
-    return [...mappedAdminUnis, ...staticUniversities];
+    const normalizedStatic = (staticUniversities || []).filter(Boolean).map((uni: any) => {
+        const tuitionStr = uni.avgTuition || "$30k - $45k";
+        const tuitionVal = uni.tuitionValue || 35000;
+        return {
+            ...uni,
+            location: uni.location || `${uni.city || 'Campus'}, ${uni.country || 'Unknown'}`,
+            match: 95,
+            ranking: uni.globalRanking || 100,
+            tuitionVal: tuitionVal,
+            stats: { 
+                acceptance: uni.acceptanceRate || "85%", 
+                salary: "N/A" 
+            },
+            budgetCategory: uni.budget?.toLowerCase() || 'medium'
+        };
+    });
+
+    return [...mappedAdminUnis, ...normalizedStatic].filter(Boolean);
 };
 
 const universitiesData = getUniversitiesData();
@@ -52,12 +66,12 @@ import LoginModal from '@/features/auth/components/LoginModal';
 const CollegeFinder = () => {
     // State
     const navigate = useNavigate();
-    const [currentView, setCurrentView] = useState('shortlisted');
+    const [currentView, setCurrentView] = useState('explore');
     const [searchQuery, setSearchQuery] = useState('');
     const [sortOption, setSortOption] = useState('match_high');
     const [filters, setFilters] = useState({
-        countries: ['USA', 'United Kingdom', 'Canada'],
-        budgets: ['medium', 'high']
+        countries: [],
+        budgets: []
     });
 
     const toggleFilter = (category, value) => {
@@ -75,8 +89,8 @@ const CollegeFinder = () => {
     const resetFilters = () => {
         executeAction(() => {
             setFilters({
-                countries: ['USA', 'United Kingdom', 'Canada', 'Australia', 'Germany'],
-                budgets: ['low', 'medium', 'high', 'premium']
+                countries: [],
+                budgets: []
             });
             setSearchQuery('');
         });
@@ -96,9 +110,8 @@ const CollegeFinder = () => {
             let matchesView = true;
             if (currentView === 'shortlisted') {
                 matchesView = uni.match >= 85;
-            } else {
-                matchesView = uni.match < 85;
             }
+            // else explore view shows all (matchesView remains true)
 
             return matchesCountry && matchesBudget && matchesSearch && matchesView;
         });
@@ -170,7 +183,7 @@ const CollegeFinder = () => {
                 <div className="space-y-4 border-b border-gray-100 pb-6 mb-6">
                     <h4 className="font-bold text-gray-900 text-base lg:text-lg">Country</h4>
                     <div className="space-y-3">
-                        {[...new Set(universitiesDataDynamic.map(u => u.country))].sort().map(country => (
+                        {(Array.isArray(universitiesDataDynamic) ? [...new Set(universitiesDataDynamic.map(u => u.country))] : []).sort().map(country => (
                             <label key={country} className="flex items-center gap-3 cursor-pointer group hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors">
                                 <div className={`size-5 lg:size-6 rounded border flex items-center justify-center transition-colors ${filters.countries.includes(country) ? 'bg-blue-600 border-blue-600' : 'border-gray-300 bg-white'}`}>
                                     {filters.countries.includes(country) && <span className="material-symbols-outlined text-white text-[16px] lg:text-[18px]">check</span>}
@@ -376,7 +389,7 @@ const CollegeFinder = () => {
                                                     </button>
                                                 </div>
                                                 <div className="flex flex-wrap gap-1.5 lg:gap-2 mb-3 lg:mb-4">
-                                                    {uni.tags.map((tag, i) => (
+                                                    {(uni.tags || []).map((tag, i) => (
                                                         <div key={i} className={`flex items-center gap-1 px-2 py-1 lg:px-3 lg:py-1.5 rounded bg-gray-50 border border-gray-100 ${tag.bg || ''} ${tag.border || ''}`}>
                                                             <span className={`material-symbols-outlined !text-[14px] lg:!text-[16px] ${tag.color}`}>{tag.icon}</span>
                                                             <span className="text-[10px] lg:text-xs font-medium text-gray-600 whitespace-nowrap">{tag.text}</span>
@@ -386,9 +399,9 @@ const CollegeFinder = () => {
 
                                                 <div className="pt-2 lg:pt-4 border-t border-gray-100 flex items-center justify-between gap-2 mt-auto">
                                                     <div className="flex items-center gap-3 text-[10px] lg:text-sm text-gray-500">
-                                                        <span>Acceptance: <strong className="text-gray-900">{uni.stats.acceptance}</strong></span>
+                                                        <span>Acceptance: <strong className="text-gray-900">{uni.stats?.acceptance || 'N/A'}</strong></span>
                                                         <span className="size-0.5 lg:size-1 bg-gray-300 rounded-full"></span>
-                                                        <span>Salary: <strong className="text-gray-900">{uni.stats.salary}</strong></span>
+                                                        <span>Salary: <strong className="text-gray-900">{uni.stats?.salary || 'N/A'}</strong></span>
                                                     </div>
                                                     <button
                                                         className="text-xs lg:text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-0.5 transition-colors"

@@ -43,22 +43,22 @@ const SuperAdminPostDetails = () => {
                 try {
                     const p: PostResponse = await feedService.getById(postId);
                     setPost({
-                        id: p._id,
+                        id: p.id || (p as any)._id,
                         label: p.category || 'Article',
                         labelColor: TYPE_COLORS[p.category || 'Article'],
                         title: p.title,
                         about: p.content,
-                        institution: p.authorId?.fullName || p.universityName || 'EA Overseas',
-                        logo: p.authorId?.profilePicture || p.universityLogo || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
-                        banner: p.mediaUrls?.[0] || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800&h=400&fit=crop',
-                        location: p.location || 'Global',
+                        institution: p.university?.name || (p as any).universityName || p.author?.fullName || (p as any).authorId?.name || 'EA Overseas',
+                        logo: p.university?.logoUrl || (p as any).universityLogo || p.author?.avatarUrl || (p as any).authorId?.avatarUrl || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
+                        banner: p.coverImageUrl || (p as any).mediaUrls?.[0] || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800&h=400&fit=crop',
+                        location: p.metadata?.location || (p as any).location || 'Global',
                         tags: p.tags || [],
                         category: p.category || 'Article',
-                        status: 'Published',
+                        status: p.status === 'published' ? 'Published' : p.status === 'pending' ? 'Under Review' : p.status === 'draft' ? 'Draft' : 'Published',
                         grid: p.metadata?.grid || [
                             { label: 'Views', value: (p.viewCount || 0).toLocaleString() },
-                            { label: 'Score', value: (p.score || 0).toString() },
-                            { label: 'Comments', value: (p.commentCount || 0).toString() }
+                            { label: 'Upvotes', value: (p.likeCount || (p as any).score || 0).toString() },
+                            { label: 'Comments', value: ((p as any).commentCount || 0).toString() }
                         ],
                         benefits: p.metadata?.benefits || [],
                         documents: p.metadata?.documents || [],
@@ -135,7 +135,7 @@ const SuperAdminPostDetails = () => {
                 ]}
                 actions={
                     <div className="flex items-center gap-2">
-                        <button className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 transition flex items-center gap-2">
+                        <button onClick={() => navigate(`/superadmin/university-portal/posts-feed/${post.id}/edit`)} className="px-4 py-2 text-sm font-bold text-slate-600 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 transition flex items-center gap-2">
                             <span className="material-symbols-outlined text-[18px]">edit</span>
                             Edit Post
                         </button>

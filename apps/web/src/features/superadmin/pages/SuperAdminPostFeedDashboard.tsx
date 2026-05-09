@@ -49,20 +49,20 @@ const SuperAdminPostFeedDashboard = () => {
 
             // Map API posts to UI Post interface
             const mapped: Post[] = feedRes.map((p: any) => ({
-                id: p._id,
+                id: p.id || p._id, // Support both MongoDB and PostgreSQL ids
                 title: p.title,
                 about: p.content,
-                institution: p.universityName || p.authorId?.name || 'EA Overseas',
-                logo: p.universityLogo || p.authorId?.avatarUrl || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
-                banner: p.mediaUrls?.[0] || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800&h=400&fit=crop',
-                location: p.location || 'Global',
+                institution: p.university?.name || p.universityName || p.author?.fullName || p.authorId?.name || 'EA Overseas',
+                logo: p.university?.logoUrl || p.universityLogo || p.author?.avatarUrl || p.authorId?.avatarUrl || 'https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=100&h=100&fit=crop',
+                banner: p.coverImageUrl || p.mediaUrls?.[0] || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800&h=400&fit=crop',
+                location: p.metadata?.location || p.location || 'Global',
                 tags: p.tags || [],
-                category: p.category || 'Article',
-                status: 'Published',
+                category: (p.category ? p.category.charAt(0).toUpperCase() + p.category.slice(1).replace(/s$/, '') : p.label) || 'Article',
+                status: p.status === 'published' ? 'Published' : p.status === 'pending' ? 'Under Review' : p.status === 'draft' ? 'Draft' : 'Published',
                 grid: [
-                    { label: 'Views', value: p.viewCount.toString() },
-                    { label: 'Upvotes', value: p.score.toString() },
-                    { label: 'Comments', value: p.commentCount.toString() }
+                    { label: 'Views', value: (p.viewCount || 0).toString() },
+                    { label: 'Upvotes', value: (p.likeCount || p.score || 0).toString() },
+                    { label: 'Comments', value: (p.commentCount || 0).toString() }
                 ]
             }));
             setApiPosts(mapped);

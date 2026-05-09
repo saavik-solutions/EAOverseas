@@ -84,7 +84,8 @@ const Feed = () => {
 
     const filteredPosts = posts.filter(post => {
         // 1. Filter by Country
-        const postCountry = getCountryFromLocation(post.metadata?.location);
+        const postLocation = post.metadata?.location || post.university?.country;
+        const postCountry = getCountryFromLocation(postLocation);
         const matchesCountry = activeCountry === 'All Countries' || postCountry === activeCountry || (activeCountry === 'Europe' && (post.tags || []).includes('Europe'));
 
         // 2. Filter by Topic (Pills)

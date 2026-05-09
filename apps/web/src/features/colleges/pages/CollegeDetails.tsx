@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSearchParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useNotification } from '@/features/notifications/context/NotificationContext';
 import { useAuthAction } from '@/shared/hooks/useAuthAction';
@@ -222,7 +222,11 @@ const CollegeDetails = () => {
                                     {/* Only show courses if data exists, otherwise show empty state */}
                                     {uni.courses && uni.courses.length > 0 ? (
                                         uni.courses.map((course: any, idx: number) => (
-                                            <div key={idx} className="p-4 md:p-5 rounded-xl border border-gray-200 hover:border-primary/30 hover:shadow-md transition-all bg-white group cursor-pointer">
+                                            <div 
+                                                key={idx} 
+                                                className="p-4 md:p-5 rounded-xl border border-gray-200 hover:border-primary/30 hover:shadow-md transition-all bg-white group cursor-pointer"
+                                                onClick={() => executeAction(() => navigate(`/course-details?id=${course.id}&university=${encodeURIComponent(uni.name)}`))}
+                                            >
                                                 <div className="flex justify-between items-start gap-4">
                                                     <div className="flex-1">
                                                         <h4 className="text-sm md:text-base font-bold text-gray-900 group-hover:text-primary transition-colors">{course.name}</h4>

@@ -102,6 +102,7 @@ import SuperAdminHolidayManagement from '@/features/superadmin/pages/SuperAdminH
 import SuperAdminHolidayDetails from '@/features/superadmin/pages/SuperAdminHolidayDetails';
 import SuperAdminActivePartners from '@/features/superadmin/pages/SuperAdminActivePartners';
 import SuperAdminStudentUniversities from '@/features/superadmin/pages/SuperAdminStudentUniversities';
+import SuperAdminCourseForm from '@/features/superadmin/pages/SuperAdminCourseForm';
 import SuperAdminStudentCourses from '@/features/superadmin/pages/SuperAdminStudentCourses';
 import SuperAdminStudentAccommodation from '@/features/superadmin/pages/SuperAdminStudentAccommodation';
 import SuperAdminApplicationDetails from '@/features/superadmin/pages/SuperAdminApplicationDetails';
@@ -304,8 +305,11 @@ function App() {
                              <Route path="/superadmin/consultant/profile/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantDetails /></ProtectedRoute>} />
                              <Route path="/superadmin/consultant/ratings/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminConsultantRatings /></ProtectedRoute>} />
                              <Route path="/superadmin/university/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminUniversityProfile /></ProtectedRoute>} />
+                             <Route path="/superadmin/university/:id/course/new" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminCourseForm /></ProtectedRoute>} />
+                             <Route path="/superadmin/university/:id/course/:courseId/edit" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminCourseForm /></ProtectedRoute>} />
                              <Route path="/superadmin/university-portal/posts-feed" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostFeedDashboard /></ProtectedRoute>} />
                              <Route path="/superadmin/university-portal/posts-feed/new" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminNewPost /></ProtectedRoute>} />
+                             <Route path="/superadmin/university-portal/posts-feed/:id/edit" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminNewPost /></ProtectedRoute>} />
                              <Route path="/superadmin/university-portal/posts-feed/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminPostDetails /></ProtectedRoute>} />
                              <Route path="/superadmin/consultants/holidays" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminHolidayManagement /></ProtectedRoute>} />
                              <Route path="/superadmin/consultants/holidays/:id" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><SuperAdminHolidayDetails /></ProtectedRoute>} />

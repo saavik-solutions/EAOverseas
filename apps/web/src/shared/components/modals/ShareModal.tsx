@@ -25,24 +25,24 @@ interface ShareModalProps {
 const ShareModal: React.FC<ShareModalProps> = ({
     isOpen,
     onClose,
-    title = "Share",
+    title = "Share Discussion",
     shareUrl,
     preview,
     postData
 }) => {
-    const [copyBtnText, setCopyBtnText] = useState('Copy Link');
+    const [copyBtnText, setCopyBtnText] = useState('Copy');
 
     if (!isOpen) return null;
 
     const copyToClipboard = () => {
         navigator.clipboard.writeText(shareUrl);
         setCopyBtnText('Copied!');
-        setTimeout(() => setCopyBtnText('Copy Link'), 2000);
+        setTimeout(() => setCopyBtnText('Copy'), 2000);
     };
 
     const shareToSocial = (platform: string) => {
         const encodedUrl = encodeURIComponent(shareUrl);
-        const encodedTitle = encodeURIComponent(preview.title);
+        const encodedTitle = encodeURIComponent(preview?.title || postData?.title || 'Share');
         let url = '';
 
         switch (platform) {
@@ -58,129 +58,98 @@ const ShareModal: React.FC<ShareModalProps> = ({
             case 'whatsapp':
                 url = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
                 break;
+            case 'telegram':
+                url = `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`;
+                break;
         }
         if (url) window.open(url, '_blank');
     };
 
-    const isDiscussion = title.toLowerCase().includes('discussion');
+    const displayTitle = postData?.title || preview?.title || 'testing';
+    const displaySubtitle = postData ? 'EAOverseas Community' : preview?.subtitle || 'EAOverseas Community';
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="bg-white rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 border border-gray-100 flex flex-col max-h-[95vh]">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white rounded-[24px] w-full max-w-[460px] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
-                    <h3 className="text-[17px] font-bold text-gray-900">{title}</h3>
-                    <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-400 hover:text-gray-600">
-                        <span className="material-symbols-outlined text-[20px]">close</span>
+                <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                    <h3 className="text-[18px] font-bold text-[#111827]">{title}</h3>
+                    <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-gray-600">
+                        <span className="material-symbols-outlined text-[24px]">close</span>
                     </button>
                 </div>
 
-                <div className="p-6 overflow-y-auto space-y-6 scrollbar-hide">
-                    {/* Post Snapshot Area (Scaled down for preview) */}
-                    {postData && (
-                        <div className="flex justify-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200 overflow-hidden py-6">
-                            <div className="scale-[0.65] origin-center -my-24">
-                                <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 w-[500px]">
-                                    <div className="flex items-center gap-3 mb-6">
-                                        <div className="size-12 rounded-full bg-gradient-to-br from-red-500 to-orange-600 text-white flex items-center justify-center text-[15px] font-black shrink-0 overflow-hidden shadow-sm border border-white/20">
-                                            {postData.avatar ? (
-                                                <img src={postData.avatar} alt="" className="w-full h-full object-cover" />
-                                            ) : (
-                                                postData.author.split(' ').map(n => n[0]).join('').toUpperCase()
-                                            )}
-                                        </div>
-                                        <div>
-                                            <p className="text-[15px] font-black text-gray-900 leading-none mb-1.5">{postData.author}</p>
-                                            <p className="text-[12px] font-bold text-gray-400 leading-none">{postData.time || new Date().toLocaleDateString()}</p>
-                                        </div>
-                                    </div>
-
-                                    <h2 className="text-3xl font-black text-gray-900 mb-4 tracking-tight leading-tight">
-                                        {postData.title}
-                                    </h2>
-                                    
-                                    <p className="text-[16px] text-gray-500 font-medium leading-relaxed mb-8 whitespace-pre-wrap">
-                                        {postData.content}
-                                    </p>
-
-                                    <div className="flex items-center gap-3">
-                                        <span className="px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[12px] font-black uppercase tracking-wider border border-blue-100">
-                                            {postData.category}
-                                        </span>
-                                        {postData.tags?.map(tag => (
-                                            <span key={tag} className="text-[12px] font-bold text-gray-400">
-                                                #{tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
+                <div className="p-8 flex flex-col gap-8">
+                    {/* Post Snapshot Card */}
+                    <div className="flex items-center gap-4 p-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
+                        <div className="w-16 h-16 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center shrink-0">
+                             {postData?.avatar || preview?.image ? (
+                                <img src={postData?.avatar || preview?.image} alt="" className="w-full h-full object-cover" />
+                             ) : (
+                                <div className="w-full h-full bg-gray-50"></div>
+                             )}
                         </div>
-                    )}
+                        <div className="flex flex-col">
+                            <h4 className="text-[16px] font-bold text-[#111827] leading-tight mb-1 line-clamp-1">{displayTitle}</h4>
+                            <p className="text-[13px] text-[#6b7280]">{displaySubtitle}</p>
+                        </div>
+                    </div>
 
                     {/* Social Share Buttons */}
-                    <div className="text-left">
-                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">SHARE TO SOCIAL</label>
-                        <div className="grid grid-cols-4 gap-3">
-                            <button
-                                onClick={() => shareToSocial('whatsapp')}
-                                className="aspect-[2/1] rounded-xl bg-[#25d366] flex items-center justify-center text-white hover:brightness-105 transition-all shadow-sm active:scale-[0.98]"
-                            >
-                                <i className="fa-brands fa-whatsapp text-xl"></i>
-                            </button>
-                            <button
-                                onClick={() => shareToSocial('linkedin')}
-                                className="aspect-[2/1] rounded-xl bg-[#0077b5] flex items-center justify-center text-white hover:brightness-105 transition-all shadow-sm active:scale-[0.98]"
-                            >
-                                <i className="fa-brands fa-linkedin-in text-xl"></i>
-                            </button>
-                            <button
-                                onClick={() => shareToSocial('twitter')}
-                                className="aspect-[2/1] rounded-xl bg-[#000000] flex items-center justify-center text-white hover:brightness-105 transition-all shadow-sm active:scale-[0.98]"
-                            >
-                                <i className="fa-brands fa-x-twitter text-xl"></i>
-                            </button>
-                            <button
-                                onClick={() => shareToSocial('facebook')}
-                                className="aspect-[2/1] rounded-xl bg-[#1877f2] flex items-center justify-center text-white hover:brightness-105 transition-all shadow-sm active:scale-[0.98]"
-                            >
-                                <i className="fa-brands fa-facebook-f text-xl"></i>
-                            </button>
-                        </div>
+                    <div className="flex justify-between items-center px-2">
+                        <button onClick={() => shareToSocial('whatsapp')} className="flex flex-col items-center gap-3 group">
+                            <div className="w-[52px] h-[52px] rounded-full bg-[#25d366] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                                <i className="fa-brands fa-whatsapp text-[28px]"></i>
+                            </div>
+                            <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider">WhatsApp</span>
+                        </button>
+                        
+                        <button onClick={() => shareToSocial('facebook')} className="flex flex-col items-center gap-3 group">
+                            <div className="w-[52px] h-[52px] rounded-full bg-[#1877f2] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                                <i className="fa-brands fa-facebook-f text-[24px]"></i>
+                            </div>
+                            <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider">Facebook</span>
+                        </button>
+                        
+                        <button onClick={() => shareToSocial('twitter')} className="flex flex-col items-center gap-3 group">
+                            <div className="w-[52px] h-[52px] rounded-full bg-[#000000] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                                <i className="fa-brands fa-x-twitter text-[24px]"></i>
+                            </div>
+                            <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider">Twitter/X</span>
+                        </button>
+                        
+                        <button onClick={() => shareToSocial('linkedin')} className="flex flex-col items-center gap-3 group">
+                            <div className="w-[52px] h-[52px] rounded-full bg-[#0077b5] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                                <i className="fa-brands fa-linkedin-in text-[24px]"></i>
+                            </div>
+                            <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider">LinkedIn</span>
+                        </button>
+                        
+                        <button onClick={() => shareToSocial('telegram')} className="flex flex-col items-center gap-3 group">
+                            <div className="w-[52px] h-[52px] rounded-full bg-[#229ED9] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                                <i className="fa-brands fa-telegram text-[26px] -ml-0.5"></i>
+                            </div>
+                            <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider">Telegram</span>
+                        </button>
                     </div>
 
-                    {/* Link Section */}
-                    <div className="text-left">
-                        <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">
-                            {isDiscussion ? 'DISCUSSION LINK' : 'SHARE LINK'}
-                        </label>
-                        <div className="flex gap-2">
-                            <div className="flex-1 flex items-center gap-3 px-3.5 py-2.5 bg-[#f8f9fa] border border-gray-200 rounded-xl relative group-focus-within:border-blue-400/50 transition-colors">
-                                <span className="material-symbols-outlined text-gray-400 text-[18px]">link</span>
-                                <input
-                                    readOnly
-                                    value={shareUrl}
-                                    className="bg-transparent border-none text-[14px] text-gray-600 w-full focus:ring-0 p-0 truncate font-medium"
-                                />
-                            </div>
+                    {/* Direct Link Section */}
+                    <div>
+                        <label className="block text-[12px] font-bold text-[#9ca3af] uppercase tracking-wider mb-2.5">DIRECT LINK</label>
+                        <div className="flex items-center justify-between p-1.5 bg-[#f3f4f6] border border-[#e5e7eb] rounded-xl focus-within:border-[#d1d5db] focus-within:bg-[#f9fafb] transition-colors">
+                            <input
+                                readOnly
+                                value={shareUrl}
+                                className="bg-transparent border-none text-[14px] text-[#4b5563] w-full focus:ring-0 px-3 outline-none truncate font-medium"
+                            />
                             <button
                                 onClick={copyToClipboard}
-                                className={`px-5 py-2.5 rounded-xl text-[14px] font-bold border transition-all shadow-sm shrink-0 ${copyBtnText === 'Copied!' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
+                                className={`px-5 py-2.5 rounded-lg text-[14px] font-bold bg-white border shadow-sm transition-colors shrink-0 ${copyBtnText === 'Copied!' ? 'text-[#059669] border-[#059669] bg-[#ecfdf5]' : 'text-[#111827] border-[#e5e7eb] hover:bg-gray-50'}`}
                             >
-                                {copyBtnText === 'Copied!' ? 'Copied' : 'Copy Link'}
+                                {copyBtnText}
                             </button>
                         </div>
                     </div>
-                </div>
-
-                {/* Footer Actions */}
-                <div className="p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end shrink-0">
-                    <button
-                        onClick={onClose}
-                        className="px-12 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all active:scale-95 shadow-md"
-                    >
-                        Done
-                    </button>
                 </div>
             </div>
         </div>

@@ -7,14 +7,30 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
-  // 1. Create Admin User
-  const adminPassword = await bcrypt.hash('Admin@123', 12);
+  // 1. Create Super Admin User
+  const superAdminPassword = await bcrypt.hash('Admin@123', 12);
+  const superadmin = await prisma.user.upsert({
+    where: { email: 'superadmin@eaoverseas.com' },
+    update: { passwordHash: superAdminPassword },
+    create: {
+      email: 'superadmin@eaoverseas.com',
+      passwordHash: superAdminPassword,
+      fullName: 'Super Admin',
+      role: Role.super_admin,
+      emailVerified: true,
+      authProvider: 'email',
+    },
+  });
+  console.log('Super Admin user created:', superadmin.email);
+
+  // 1.1 Create Legacy Admin User (From frontend demo credentials)
+  const legacyAdminPassword = await bcrypt.hash('Admin@123', 12);
   const admin = await prisma.user.upsert({
     where: { email: 'admin@eaoverseas.com' },
-    update: {},
+    update: { passwordHash: legacyAdminPassword },
     create: {
       email: 'admin@eaoverseas.com',
-      passwordHash: adminPassword,
+      passwordHash: legacyAdminPassword,
       fullName: 'System Admin',
       role: Role.super_admin,
       emailVerified: true,
@@ -23,13 +39,91 @@ async function main() {
   });
   console.log('Admin user created:', admin.email);
 
-  // 1.1 Create Student User
+  // 1.2 Create Chief Counsel User (Admin role)
+  const chiefPassword = await bcrypt.hash('CHIEF2026', 12);
+  const chief = await prisma.user.upsert({
+    where: { email: 'chief@counsel.com' },
+    update: { passwordHash: chiefPassword },
+    create: {
+      email: 'chief@counsel.com',
+      passwordHash: chiefPassword,
+      fullName: 'Chief Counsel',
+      role: Role.admin,
+      emailVerified: true,
+      authProvider: 'email',
+    },
+  });
+  console.log('Chief Counsel created:', chief.email);
+
+  // 1.3 Create Vendor User
+  const vendorPassword = await bcrypt.hash('VENDOR2026', 12);
+  const vendor = await prisma.user.upsert({
+    where: { email: 'vendor@services.com' },
+    update: { passwordHash: vendorPassword },
+    create: {
+      email: 'vendor@services.com',
+      passwordHash: vendorPassword,
+      fullName: 'Vendor Partner',
+      role: Role.vendor,
+      emailVerified: true,
+      authProvider: 'email',
+    },
+  });
+  console.log('Vendor user created:', vendor.email);
+
+  // 1.4 Create University User (Vendor role)
+  const univPassword = await bcrypt.hash('UNIV2026', 12);
+  const universityUser = await prisma.user.upsert({
+    where: { email: 'admin@university.edu' },
+    update: { passwordHash: univPassword },
+    create: {
+      email: 'admin@university.edu',
+      passwordHash: univPassword,
+      fullName: 'University Admin',
+      role: Role.vendor,
+      emailVerified: true,
+      authProvider: 'email',
+    },
+  });
+  console.log('University user created:', universityUser.email);
+
+  // 1.5 Create Counsellor User
+  const counsellorPassword = await bcrypt.hash('COUNSELLOR2026', 12);
+  const counsellor = await prisma.user.upsert({
+    where: { email: 'partner@counsellor.com' },
+    update: { passwordHash: counsellorPassword },
+    create: {
+      email: 'partner@counsellor.com',
+      passwordHash: counsellorPassword,
+      fullName: 'Expert Counsellor',
+      role: Role.counsellor,
+      emailVerified: true,
+      authProvider: 'email',
+    },
+  });
+  console.log('Counsellor user created:', counsellor.email);
+
+  // 1.6 Create Demo Student User
+  const demoStudentPassword = await bcrypt.hash('5678', 12);
+  const demoStudent = await prisma.user.upsert({
+    where: { email: 'alex.j@example.com' },
+    update: { passwordHash: demoStudentPassword },
+    create: {
+      email: 'alex.j@example.com',
+      passwordHash: demoStudentPassword,
+      fullName: 'Alex J',
+      role: Role.student,
+      emailVerified: true,
+      authProvider: 'email',
+    },
+  });
+  console.log('Demo Student created:', demoStudent.email);
+
+  // 1.7 Create Prasenjeet Student User
   const studentPassword = await bcrypt.hash('Student@123', 12);
   const student = await prisma.user.upsert({
     where: { email: 'prasenjeetspy@gmail.com' },
-    update: {
-      passwordHash: studentPassword
-    },
+    update: { passwordHash: studentPassword },
     create: {
       email: 'prasenjeetspy@gmail.com',
       passwordHash: studentPassword,

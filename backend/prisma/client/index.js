@@ -691,7 +691,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\saavi\\Downloads\\eaoverseas\\backend\\prisma\\client",
+      "value": "C:\\Users\\siddh\\OneDrive\\Desktop\\eaoversseas\\backend\\prisma\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -713,7 +713,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\saavi\\Downloads\\eaoverseas\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\siddh\\OneDrive\\Desktop\\eaoversseas\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -727,6 +727,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

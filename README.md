@@ -97,7 +97,12 @@ Use the following credentials to access the platform with different roles:
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
-| **Super Admin** | `admin@eaoverseas.com` | `Admin@123` |
+| **Super Admin** | `superadmin@eaoverseas.com` | `Admin@123` |
+| **Legacy Admin** | `admin@eaoverseas.com` | `Admin@123` |
+| **Chief Counsel** | `chief@counsel.com` | `CHIEF2026` |
+| **Vendor** | `vendor@services.com` | `VENDOR2026` |
+| **University Admin** | `admin@university.edu` | `UNIV2026` |
+| **Counsellor** | `partner@counsellor.com` | `COUNSELLOR2026` |
 | **Student** | `alex.j@example.com` | `5678` |
 
 ---

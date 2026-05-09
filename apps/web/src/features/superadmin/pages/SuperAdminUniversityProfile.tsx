@@ -1,12 +1,16 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import SuperAdminLayout from '@/layouts/SuperAdminLayout';
+import CoursePreviewModal from '../components/CoursePreviewModal';
+
 
 const SuperAdminUniversityProfile = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [showAllCourses, setShowAllCourses] = React.useState(false);
     const [isProfileEditing, setIsProfileEditing] = React.useState(false);
+    const [previewCourse, setPreviewCourse] = React.useState<any>(null);
+
 
     // Dynamic data loading from localStorage to ensure newly added universities are visible
     const [uni, setUni] = React.useState(() => {
@@ -250,7 +254,12 @@ const SuperAdminUniversityProfile = () => {
                         <div className="p-5 space-y-4 flex-1">
                             {uni && Array.isArray(uni.courses) && uni.courses.length > 0 ? (
                                 (showAllCourses ? uni.courses : uni.courses.slice(0, 3)).map((course: any, idx: number) => (
-                                    <div key={course.id || idx} className="group relative flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-[#2b6cee]/30 hover:bg-blue-50/20 transition-all">
+                                    <div 
+                                        key={course.id || idx} 
+                                        onClick={() => setPreviewCourse(course)}
+                                        className="group relative flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-[#2b6cee]/30 hover:bg-blue-50/20 transition-all cursor-pointer"
+                                    >
+
                                         <div className="flex flex-col gap-1">
                                             <div className="flex items-center gap-2">
                                                 <h4 className="text-sm font-bold text-slate-900">{typeof course.name === 'string' ? course.name : (typeof course.title === 'string' ? course.title : 'Untitled Course')}</h4>
@@ -263,9 +272,13 @@ const SuperAdminUniversityProfile = () => {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <button 
-                                                onClick={() => handleEditCourse(course)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditCourse(course);
+                                                }}
                                                 className="size-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-[#2b6cee] transition-all"
                                             >
+
                                                 <span className="material-symbols-outlined text-[18px]">edit</span>
                                             </button>
                                             <div className="size-8 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#2b6cee] group-hover:text-white transition-all">
@@ -338,7 +351,20 @@ const SuperAdminUniversityProfile = () => {
                     </section>
                 </div>
             </main>
+            {previewCourse && (
+                <CoursePreviewModal 
+                    isOpen={!!previewCourse} 
+                    onClose={() => setPreviewCourse(null)} 
+                    course={previewCourse}
+                    universityName={uni.name}
+                    onEdit={(c) => {
+                        setPreviewCourse(null);
+                        handleEditCourse(c);
+                    }}
+                />
+            )}
         </SuperAdminLayout>
+
     );
 };
 

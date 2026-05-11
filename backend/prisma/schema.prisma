@@ -35,13 +35,13 @@ model User {
   communityVotes    CommunityVote[]    @relation("CommunityVoter")
   educationHistory  EducationHistory[]
   emailOtps         EmailOTP[]
+  feedComments      FeedComment[]
   feedInteractions  FeedInteraction[]
   feedPosts         FeedPost[]
   refreshTokens     RefreshToken[]
   savedColleges     SavedCollege[]
   testScores        TestScore[]
   documents         UserDocument[]
-  feedComments      FeedComment[]
   profile           UserProfile?
 
   @@map("users")
@@ -215,8 +215,8 @@ model FeedPost {
   createdAt     DateTime          @default(now()) @map("created_at")
   updatedAt     DateTime          @updatedAt @map("updated_at")
   dislikeCount  Int               @default(0) @map("dislike_count")
-  interactions  FeedInteraction[]
   comments      FeedComment[]
+  interactions  FeedInteraction[]
   author        User              @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   university    University?       @relation(fields: [universityId], references: [id], onDelete: Cascade)
 
@@ -243,8 +243,8 @@ model FeedComment {
   content   String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  post      FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   @@map("feed_comments")
 }
@@ -645,7 +645,6 @@ enum TargetDegree {
   mba
   diploma
 }
-
 
 enum CommunityCategory {
   admissions

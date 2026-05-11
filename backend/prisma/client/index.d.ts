@@ -3040,13 +3040,13 @@ export namespace Prisma {
     communityVotes: number
     educationHistory: number
     emailOtps: number
+    feedComments: number
     feedInteractions: number
     feedPosts: number
     refreshTokens: number
     savedColleges: number
     testScores: number
     documents: number
-    feedComments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3059,13 +3059,13 @@ export namespace Prisma {
     communityVotes?: boolean | UserCountOutputTypeCountCommunityVotesArgs
     educationHistory?: boolean | UserCountOutputTypeCountEducationHistoryArgs
     emailOtps?: boolean | UserCountOutputTypeCountEmailOtpsArgs
+    feedComments?: boolean | UserCountOutputTypeCountFeedCommentsArgs
     feedInteractions?: boolean | UserCountOutputTypeCountFeedInteractionsArgs
     feedPosts?: boolean | UserCountOutputTypeCountFeedPostsArgs
     refreshTokens?: boolean | UserCountOutputTypeCountRefreshTokensArgs
     savedColleges?: boolean | UserCountOutputTypeCountSavedCollegesArgs
     testScores?: boolean | UserCountOutputTypeCountTestScoresArgs
     documents?: boolean | UserCountOutputTypeCountDocumentsArgs
-    feedComments?: boolean | UserCountOutputTypeCountFeedCommentsArgs
   }
 
   // Custom InputTypes
@@ -3145,6 +3145,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountFeedCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedCommentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountFeedInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeedInteractionWhereInput
   }
@@ -3184,26 +3191,19 @@ export namespace Prisma {
     where?: UserDocumentWhereInput
   }
 
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountFeedCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedCommentWhereInput
-  }
-
 
   /**
    * Count Type FeedPostCountOutputType
    */
 
   export type FeedPostCountOutputType = {
-    interactions: number
     comments: number
+    interactions: number
   }
 
   export type FeedPostCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    interactions?: boolean | FeedPostCountOutputTypeCountInteractionsArgs
     comments?: boolean | FeedPostCountOutputTypeCountCommentsArgs
+    interactions?: boolean | FeedPostCountOutputTypeCountInteractionsArgs
   }
 
   // Custom InputTypes
@@ -3220,15 +3220,15 @@ export namespace Prisma {
   /**
    * FeedPostCountOutputType without action
    */
-  export type FeedPostCountOutputTypeCountInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedInteractionWhereInput
+  export type FeedPostCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedCommentWhereInput
   }
 
   /**
    * FeedPostCountOutputType without action
    */
-  export type FeedPostCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FeedCommentWhereInput
+  export type FeedPostCountOutputTypeCountInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeedInteractionWhereInput
   }
 
 
@@ -3706,13 +3706,13 @@ export namespace Prisma {
     communityVotes?: boolean | User$communityVotesArgs<ExtArgs>
     educationHistory?: boolean | User$educationHistoryArgs<ExtArgs>
     emailOtps?: boolean | User$emailOtpsArgs<ExtArgs>
+    feedComments?: boolean | User$feedCommentsArgs<ExtArgs>
     feedInteractions?: boolean | User$feedInteractionsArgs<ExtArgs>
     feedPosts?: boolean | User$feedPostsArgs<ExtArgs>
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     savedColleges?: boolean | User$savedCollegesArgs<ExtArgs>
     testScores?: boolean | User$testScoresArgs<ExtArgs>
     documents?: boolean | User$documentsArgs<ExtArgs>
-    feedComments?: boolean | User$feedCommentsArgs<ExtArgs>
     profile?: boolean | User$profileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3765,13 +3765,13 @@ export namespace Prisma {
     communityVotes?: boolean | User$communityVotesArgs<ExtArgs>
     educationHistory?: boolean | User$educationHistoryArgs<ExtArgs>
     emailOtps?: boolean | User$emailOtpsArgs<ExtArgs>
+    feedComments?: boolean | User$feedCommentsArgs<ExtArgs>
     feedInteractions?: boolean | User$feedInteractionsArgs<ExtArgs>
     feedPosts?: boolean | User$feedPostsArgs<ExtArgs>
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     savedColleges?: boolean | User$savedCollegesArgs<ExtArgs>
     testScores?: boolean | User$testScoresArgs<ExtArgs>
     documents?: boolean | User$documentsArgs<ExtArgs>
-    feedComments?: boolean | User$feedCommentsArgs<ExtArgs>
     profile?: boolean | User$profileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3789,13 +3789,13 @@ export namespace Prisma {
       communityVotes: Prisma.$CommunityVotePayload<ExtArgs>[]
       educationHistory: Prisma.$EducationHistoryPayload<ExtArgs>[]
       emailOtps: Prisma.$EmailOTPPayload<ExtArgs>[]
+      feedComments: Prisma.$FeedCommentPayload<ExtArgs>[]
       feedInteractions: Prisma.$FeedInteractionPayload<ExtArgs>[]
       feedPosts: Prisma.$FeedPostPayload<ExtArgs>[]
       refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
       savedColleges: Prisma.$SavedCollegePayload<ExtArgs>[]
       testScores: Prisma.$TestScorePayload<ExtArgs>[]
       documents: Prisma.$UserDocumentPayload<ExtArgs>[]
-      feedComments: Prisma.$FeedCommentPayload<ExtArgs>[]
       profile: Prisma.$UserProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -4188,13 +4188,13 @@ export namespace Prisma {
     communityVotes<T extends User$communityVotesArgs<ExtArgs> = {}>(args?: Subset<T, User$communityVotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommunityVotePayload<ExtArgs>, T, "findMany"> | Null>
     educationHistory<T extends User$educationHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$educationHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationHistoryPayload<ExtArgs>, T, "findMany"> | Null>
     emailOtps<T extends User$emailOtpsArgs<ExtArgs> = {}>(args?: Subset<T, User$emailOtpsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailOTPPayload<ExtArgs>, T, "findMany"> | Null>
+    feedComments<T extends User$feedCommentsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findMany"> | Null>
     feedInteractions<T extends User$feedInteractionsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedInteractionPayload<ExtArgs>, T, "findMany"> | Null>
     feedPosts<T extends User$feedPostsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedPostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findMany"> | Null>
     refreshTokens<T extends User$refreshTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany"> | Null>
     savedColleges<T extends User$savedCollegesArgs<ExtArgs> = {}>(args?: Subset<T, User$savedCollegesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedCollegePayload<ExtArgs>, T, "findMany"> | Null>
     testScores<T extends User$testScoresArgs<ExtArgs> = {}>(args?: Subset<T, User$testScoresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestScorePayload<ExtArgs>, T, "findMany"> | Null>
     documents<T extends User$documentsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserDocumentPayload<ExtArgs>, T, "findMany"> | Null>
-    feedComments<T extends User$feedCommentsArgs<ExtArgs> = {}>(args?: Subset<T, User$feedCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findMany"> | Null>
     profile<T extends User$profileArgs<ExtArgs> = {}>(args?: Subset<T, User$profileArgs<ExtArgs>>): Prisma__UserProfileClient<$Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4735,6 +4735,26 @@ export namespace Prisma {
   }
 
   /**
+   * User.feedComments
+   */
+  export type User$feedCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedComment
+     */
+    select?: FeedCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedCommentInclude<ExtArgs> | null
+    where?: FeedCommentWhereInput
+    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
+    cursor?: FeedCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
+  }
+
+  /**
    * User.feedInteractions
    */
   export type User$feedInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4852,26 +4872,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserDocumentScalarFieldEnum | UserDocumentScalarFieldEnum[]
-  }
-
-  /**
-   * User.feedComments
-   */
-  export type User$feedCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedComment
-     */
-    select?: FeedCommentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedCommentInclude<ExtArgs> | null
-    where?: FeedCommentWhereInput
-    orderBy?: FeedCommentOrderByWithRelationInput | FeedCommentOrderByWithRelationInput[]
-    cursor?: FeedCommentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
   }
 
   /**
@@ -13602,8 +13602,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     dislikeCount?: boolean
-    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
     comments?: boolean | FeedPost$commentsArgs<ExtArgs>
+    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     university?: boolean | FeedPost$universityArgs<ExtArgs>
     _count?: boolean | FeedPostCountOutputTypeDefaultArgs<ExtArgs>
@@ -13658,8 +13658,8 @@ export namespace Prisma {
   }
 
   export type FeedPostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
     comments?: boolean | FeedPost$commentsArgs<ExtArgs>
+    interactions?: boolean | FeedPost$interactionsArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     university?: boolean | FeedPost$universityArgs<ExtArgs>
     _count?: boolean | FeedPostCountOutputTypeDefaultArgs<ExtArgs>
@@ -13672,8 +13672,8 @@ export namespace Prisma {
   export type $FeedPostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FeedPost"
     objects: {
-      interactions: Prisma.$FeedInteractionPayload<ExtArgs>[]
       comments: Prisma.$FeedCommentPayload<ExtArgs>[]
+      interactions: Prisma.$FeedInteractionPayload<ExtArgs>[]
       author: Prisma.$UserPayload<ExtArgs>
       university: Prisma.$UniversityPayload<ExtArgs> | null
     }
@@ -14062,8 +14062,8 @@ export namespace Prisma {
    */
   export interface Prisma__FeedPostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    interactions<T extends FeedPost$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedInteractionPayload<ExtArgs>, T, "findMany"> | Null>
     comments<T extends FeedPost$commentsArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedCommentPayload<ExtArgs>, T, "findMany"> | Null>
+    interactions<T extends FeedPost$interactionsArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeedInteractionPayload<ExtArgs>, T, "findMany"> | Null>
     author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     university<T extends FeedPost$universityArgs<ExtArgs> = {}>(args?: Subset<T, FeedPost$universityArgs<ExtArgs>>): Prisma__UniversityClient<$Result.GetResult<Prisma.$UniversityPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
@@ -14433,26 +14433,6 @@ export namespace Prisma {
   }
 
   /**
-   * FeedPost.interactions
-   */
-  export type FeedPost$interactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FeedInteraction
-     */
-    select?: FeedInteractionSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FeedInteractionInclude<ExtArgs> | null
-    where?: FeedInteractionWhereInput
-    orderBy?: FeedInteractionOrderByWithRelationInput | FeedInteractionOrderByWithRelationInput[]
-    cursor?: FeedInteractionWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FeedInteractionScalarFieldEnum | FeedInteractionScalarFieldEnum[]
-  }
-
-  /**
    * FeedPost.comments
    */
   export type FeedPost$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14470,6 +14450,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeedCommentScalarFieldEnum | FeedCommentScalarFieldEnum[]
+  }
+
+  /**
+   * FeedPost.interactions
+   */
+  export type FeedPost$interactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeedInteraction
+     */
+    select?: FeedInteractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeedInteractionInclude<ExtArgs> | null
+    where?: FeedInteractionWhereInput
+    orderBy?: FeedInteractionOrderByWithRelationInput | FeedInteractionOrderByWithRelationInput[]
+    cursor?: FeedInteractionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeedInteractionScalarFieldEnum | FeedInteractionScalarFieldEnum[]
   }
 
   /**
@@ -15613,8 +15613,8 @@ export namespace Prisma {
     content?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | FeedPostDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedComment"]>
 
   export type FeedCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15624,8 +15624,8 @@ export namespace Prisma {
     content?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | FeedPostDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feedComment"]>
 
   export type FeedCommentSelectScalar = {
@@ -15638,19 +15638,19 @@ export namespace Prisma {
   }
 
   export type FeedCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | FeedPostDefaultArgs<ExtArgs>
   }
   export type FeedCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | FeedPostDefaultArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
+    post?: boolean | FeedPostDefaultArgs<ExtArgs>
   }
 
   export type $FeedCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FeedComment"
     objects: {
-      post: Prisma.$FeedPostPayload<ExtArgs>
       author: Prisma.$UserPayload<ExtArgs>
+      post: Prisma.$FeedPostPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16023,8 +16023,8 @@ export namespace Prisma {
    */
   export interface Prisma__FeedCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    post<T extends FeedPostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeedPostDefaultArgs<ExtArgs>>): Prisma__FeedPostClient<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    post<T extends FeedPostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeedPostDefaultArgs<ExtArgs>>): Prisma__FeedPostClient<$Result.GetResult<Prisma.$FeedPostPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -29630,13 +29630,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteListRelationFilter
     educationHistory?: EducationHistoryListRelationFilter
     emailOtps?: EmailOTPListRelationFilter
+    feedComments?: FeedCommentListRelationFilter
     feedInteractions?: FeedInteractionListRelationFilter
     feedPosts?: FeedPostListRelationFilter
     refreshTokens?: RefreshTokenListRelationFilter
     savedColleges?: SavedCollegeListRelationFilter
     testScores?: TestScoreListRelationFilter
     documents?: UserDocumentListRelationFilter
-    feedComments?: FeedCommentListRelationFilter
     profile?: XOR<UserProfileNullableRelationFilter, UserProfileWhereInput> | null
   }
 
@@ -29666,13 +29666,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteOrderByRelationAggregateInput
     educationHistory?: EducationHistoryOrderByRelationAggregateInput
     emailOtps?: EmailOTPOrderByRelationAggregateInput
+    feedComments?: FeedCommentOrderByRelationAggregateInput
     feedInteractions?: FeedInteractionOrderByRelationAggregateInput
     feedPosts?: FeedPostOrderByRelationAggregateInput
     refreshTokens?: RefreshTokenOrderByRelationAggregateInput
     savedColleges?: SavedCollegeOrderByRelationAggregateInput
     testScores?: TestScoreOrderByRelationAggregateInput
     documents?: UserDocumentOrderByRelationAggregateInput
-    feedComments?: FeedCommentOrderByRelationAggregateInput
     profile?: UserProfileOrderByWithRelationInput
   }
 
@@ -29705,13 +29705,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteListRelationFilter
     educationHistory?: EducationHistoryListRelationFilter
     emailOtps?: EmailOTPListRelationFilter
+    feedComments?: FeedCommentListRelationFilter
     feedInteractions?: FeedInteractionListRelationFilter
     feedPosts?: FeedPostListRelationFilter
     refreshTokens?: RefreshTokenListRelationFilter
     savedColleges?: SavedCollegeListRelationFilter
     testScores?: TestScoreListRelationFilter
     documents?: UserDocumentListRelationFilter
-    feedComments?: FeedCommentListRelationFilter
     profile?: XOR<UserProfileNullableRelationFilter, UserProfileWhereInput> | null
   }, "id" | "email" | "googleId" | "studentId">
 
@@ -30532,8 +30532,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FeedPost"> | Date | string
     updatedAt?: DateTimeFilter<"FeedPost"> | Date | string
     dislikeCount?: IntFilter<"FeedPost"> | number
-    interactions?: FeedInteractionListRelationFilter
     comments?: FeedCommentListRelationFilter
+    interactions?: FeedInteractionListRelationFilter
     author?: XOR<UserRelationFilter, UserWhereInput>
     university?: XOR<UniversityNullableRelationFilter, UniversityWhereInput> | null
   }
@@ -30559,8 +30559,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     dislikeCount?: SortOrder
-    interactions?: FeedInteractionOrderByRelationAggregateInput
     comments?: FeedCommentOrderByRelationAggregateInput
+    interactions?: FeedInteractionOrderByRelationAggregateInput
     author?: UserOrderByWithRelationInput
     university?: UniversityOrderByWithRelationInput
   }
@@ -30589,8 +30589,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FeedPost"> | Date | string
     updatedAt?: DateTimeFilter<"FeedPost"> | Date | string
     dislikeCount?: IntFilter<"FeedPost"> | number
-    interactions?: FeedInteractionListRelationFilter
     comments?: FeedCommentListRelationFilter
+    interactions?: FeedInteractionListRelationFilter
     author?: XOR<UserRelationFilter, UserWhereInput>
     university?: XOR<UniversityNullableRelationFilter, UniversityWhereInput> | null
   }, "id" | "slug">
@@ -30718,8 +30718,8 @@ export namespace Prisma {
     content?: StringFilter<"FeedComment"> | string
     createdAt?: DateTimeFilter<"FeedComment"> | Date | string
     updatedAt?: DateTimeFilter<"FeedComment"> | Date | string
-    post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
     author?: XOR<UserRelationFilter, UserWhereInput>
+    post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
   }
 
   export type FeedCommentOrderByWithRelationInput = {
@@ -30729,8 +30729,8 @@ export namespace Prisma {
     content?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    post?: FeedPostOrderByWithRelationInput
     author?: UserOrderByWithRelationInput
+    post?: FeedPostOrderByWithRelationInput
   }
 
   export type FeedCommentWhereUniqueInput = Prisma.AtLeast<{
@@ -30743,8 +30743,8 @@ export namespace Prisma {
     content?: StringFilter<"FeedComment"> | string
     createdAt?: DateTimeFilter<"FeedComment"> | Date | string
     updatedAt?: DateTimeFilter<"FeedComment"> | Date | string
-    post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
     author?: XOR<UserRelationFilter, UserWhereInput>
+    post?: XOR<FeedPostRelationFilter, FeedPostWhereInput>
   }, "id">
 
   export type FeedCommentOrderByWithAggregationInput = {
@@ -32019,13 +32019,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -32055,13 +32055,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -32091,13 +32091,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -32127,13 +32127,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -33074,8 +33074,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     dislikeCount?: number
-    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
     comments?: FeedCommentCreateNestedManyWithoutPostInput
+    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutFeedPostsInput
     university?: UniversityCreateNestedOneWithoutFeedPostsInput
   }
@@ -33101,8 +33101,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     dislikeCount?: number
-    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
     comments?: FeedCommentUncheckedCreateNestedManyWithoutPostInput
+    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type FeedPostUpdateInput = {
@@ -33124,8 +33124,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
     comments?: FeedCommentUpdateManyWithoutPostNestedInput
+    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
     university?: UniversityUpdateOneWithoutFeedPostsNestedInput
   }
@@ -33151,8 +33151,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
     comments?: FeedCommentUncheckedUpdateManyWithoutPostNestedInput
+    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type FeedPostCreateManyInput = {
@@ -33281,8 +33281,8 @@ export namespace Prisma {
     content: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    post: FeedPostCreateNestedOneWithoutCommentsInput
     author: UserCreateNestedOneWithoutFeedCommentsInput
+    post: FeedPostCreateNestedOneWithoutCommentsInput
   }
 
   export type FeedCommentUncheckedCreateInput = {
@@ -33299,8 +33299,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: FeedPostUpdateOneRequiredWithoutCommentsNestedInput
     author?: UserUpdateOneRequiredWithoutFeedCommentsNestedInput
+    post?: FeedPostUpdateOneRequiredWithoutCommentsNestedInput
   }
 
   export type FeedCommentUncheckedUpdateInput = {
@@ -34858,6 +34858,12 @@ export namespace Prisma {
     none?: EmailOTPWhereInput
   }
 
+  export type FeedCommentListRelationFilter = {
+    every?: FeedCommentWhereInput
+    some?: FeedCommentWhereInput
+    none?: FeedCommentWhereInput
+  }
+
   export type FeedInteractionListRelationFilter = {
     every?: FeedInteractionWhereInput
     some?: FeedInteractionWhereInput
@@ -34892,12 +34898,6 @@ export namespace Prisma {
     every?: UserDocumentWhereInput
     some?: UserDocumentWhereInput
     none?: UserDocumentWhereInput
-  }
-
-  export type FeedCommentListRelationFilter = {
-    every?: FeedCommentWhereInput
-    some?: FeedCommentWhereInput
-    none?: FeedCommentWhereInput
   }
 
   export type UserProfileNullableRelationFilter = {
@@ -34946,6 +34946,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type FeedCommentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type FeedInteractionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -34967,10 +34971,6 @@ export namespace Prisma {
   }
 
   export type UserDocumentOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type FeedCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -37137,6 +37137,13 @@ export namespace Prisma {
     connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
   }
 
+  export type FeedCommentCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
+    createMany?: FeedCommentCreateManyAuthorInputEnvelope
+    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+  }
+
   export type FeedInteractionCreateNestedManyWithoutUserInput = {
     create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
@@ -37177,13 +37184,6 @@ export namespace Prisma {
     connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
     createMany?: UserDocumentCreateManyUserInputEnvelope
     connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-  }
-
-  export type FeedCommentCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
   }
 
   export type UserProfileCreateNestedOneWithoutUserInput = {
@@ -37255,6 +37255,13 @@ export namespace Prisma {
     connect?: EmailOTPWhereUniqueInput | EmailOTPWhereUniqueInput[]
   }
 
+  export type FeedCommentUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
+    createMany?: FeedCommentCreateManyAuthorInputEnvelope
+    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+  }
+
   export type FeedInteractionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
@@ -37295,13 +37302,6 @@ export namespace Prisma {
     connectOrCreate?: UserDocumentCreateOrConnectWithoutUserInput | UserDocumentCreateOrConnectWithoutUserInput[]
     createMany?: UserDocumentCreateManyUserInputEnvelope
     connect?: UserDocumentWhereUniqueInput | UserDocumentWhereUniqueInput[]
-  }
-
-  export type FeedCommentUncheckedCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
   }
 
   export type UserProfileUncheckedCreateNestedOneWithoutUserInput = {
@@ -37460,6 +37460,20 @@ export namespace Prisma {
     deleteMany?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
   }
 
+  export type FeedCommentUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
+    upsert?: FeedCommentUpsertWithWhereUniqueWithoutAuthorInput | FeedCommentUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: FeedCommentCreateManyAuthorInputEnvelope
+    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    update?: FeedCommentUpdateWithWhereUniqueWithoutAuthorInput | FeedCommentUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: FeedCommentUpdateManyWithWhereWithoutAuthorInput | FeedCommentUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
+  }
+
   export type FeedInteractionUpdateManyWithoutUserNestedInput = {
     create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
@@ -37542,20 +37556,6 @@ export namespace Prisma {
     update?: UserDocumentUpdateWithWhereUniqueWithoutUserInput | UserDocumentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserDocumentUpdateManyWithWhereWithoutUserInput | UserDocumentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
-  }
-
-  export type FeedCommentUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    upsert?: FeedCommentUpsertWithWhereUniqueWithoutAuthorInput | FeedCommentUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    update?: FeedCommentUpdateWithWhereUniqueWithoutAuthorInput | FeedCommentUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: FeedCommentUpdateManyWithWhereWithoutAuthorInput | FeedCommentUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
   }
 
   export type UserProfileUpdateOneWithoutUserNestedInput = {
@@ -37694,6 +37694,20 @@ export namespace Prisma {
     deleteMany?: EmailOTPScalarWhereInput | EmailOTPScalarWhereInput[]
   }
 
+  export type FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
+    upsert?: FeedCommentUpsertWithWhereUniqueWithoutAuthorInput | FeedCommentUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: FeedCommentCreateManyAuthorInputEnvelope
+    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+    update?: FeedCommentUpdateWithWhereUniqueWithoutAuthorInput | FeedCommentUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: FeedCommentUpdateManyWithWhereWithoutAuthorInput | FeedCommentUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
+  }
+
   export type FeedInteractionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<FeedInteractionCreateWithoutUserInput, FeedInteractionUncheckedCreateWithoutUserInput> | FeedInteractionCreateWithoutUserInput[] | FeedInteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: FeedInteractionCreateOrConnectWithoutUserInput | FeedInteractionCreateOrConnectWithoutUserInput[]
@@ -37776,20 +37790,6 @@ export namespace Prisma {
     update?: UserDocumentUpdateWithWhereUniqueWithoutUserInput | UserDocumentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserDocumentUpdateManyWithWhereWithoutUserInput | UserDocumentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserDocumentScalarWhereInput | UserDocumentScalarWhereInput[]
-  }
-
-  export type FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput> | FeedCommentCreateWithoutAuthorInput[] | FeedCommentUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: FeedCommentCreateOrConnectWithoutAuthorInput | FeedCommentCreateOrConnectWithoutAuthorInput[]
-    upsert?: FeedCommentUpsertWithWhereUniqueWithoutAuthorInput | FeedCommentUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: FeedCommentCreateManyAuthorInputEnvelope
-    set?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    disconnect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    delete?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
-    update?: FeedCommentUpdateWithWhereUniqueWithoutAuthorInput | FeedCommentUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: FeedCommentUpdateManyWithWhereWithoutAuthorInput | FeedCommentUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
   }
 
   export type UserProfileUncheckedUpdateOneWithoutUserNestedInput = {
@@ -37993,18 +37993,18 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type FeedInteractionCreateNestedManyWithoutPostInput = {
-    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
-    createMany?: FeedInteractionCreateManyPostInputEnvelope
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-  }
-
   export type FeedCommentCreateNestedManyWithoutPostInput = {
     create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
     connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
     createMany?: FeedCommentCreateManyPostInputEnvelope
     connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+  }
+
+  export type FeedInteractionCreateNestedManyWithoutPostInput = {
+    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
+    createMany?: FeedInteractionCreateManyPostInputEnvelope
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
   }
 
   export type UserCreateNestedOneWithoutFeedPostsInput = {
@@ -38019,18 +38019,18 @@ export namespace Prisma {
     connect?: UniversityWhereUniqueInput
   }
 
-  export type FeedInteractionUncheckedCreateNestedManyWithoutPostInput = {
-    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
-    createMany?: FeedInteractionCreateManyPostInputEnvelope
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-  }
-
   export type FeedCommentUncheckedCreateNestedManyWithoutPostInput = {
     create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
     connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
     createMany?: FeedCommentCreateManyPostInputEnvelope
     connect?: FeedCommentWhereUniqueInput | FeedCommentWhereUniqueInput[]
+  }
+
+  export type FeedInteractionUncheckedCreateNestedManyWithoutPostInput = {
+    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
+    createMany?: FeedInteractionCreateManyPostInputEnvelope
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
   }
 
   export type EnumFeedCategoryFieldUpdateOperationsInput = {
@@ -38046,20 +38046,6 @@ export namespace Prisma {
     set?: $Enums.PostStatus
   }
 
-  export type FeedInteractionUpdateManyWithoutPostNestedInput = {
-    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
-    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutPostInput | FeedInteractionUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: FeedInteractionCreateManyPostInputEnvelope
-    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    update?: FeedInteractionUpdateWithWhereUniqueWithoutPostInput | FeedInteractionUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: FeedInteractionUpdateManyWithWhereWithoutPostInput | FeedInteractionUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
-  }
-
   export type FeedCommentUpdateManyWithoutPostNestedInput = {
     create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
     connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
@@ -38072,6 +38058,20 @@ export namespace Prisma {
     update?: FeedCommentUpdateWithWhereUniqueWithoutPostInput | FeedCommentUpdateWithWhereUniqueWithoutPostInput[]
     updateMany?: FeedCommentUpdateManyWithWhereWithoutPostInput | FeedCommentUpdateManyWithWhereWithoutPostInput[]
     deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
+  }
+
+  export type FeedInteractionUpdateManyWithoutPostNestedInput = {
+    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
+    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutPostInput | FeedInteractionUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: FeedInteractionCreateManyPostInputEnvelope
+    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    update?: FeedInteractionUpdateWithWhereUniqueWithoutPostInput | FeedInteractionUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: FeedInteractionUpdateManyWithWhereWithoutPostInput | FeedInteractionUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
   }
 
   export type UserUpdateOneRequiredWithoutFeedPostsNestedInput = {
@@ -38092,20 +38092,6 @@ export namespace Prisma {
     update?: XOR<XOR<UniversityUpdateToOneWithWhereWithoutFeedPostsInput, UniversityUpdateWithoutFeedPostsInput>, UniversityUncheckedUpdateWithoutFeedPostsInput>
   }
 
-  export type FeedInteractionUncheckedUpdateManyWithoutPostNestedInput = {
-    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
-    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutPostInput | FeedInteractionUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: FeedInteractionCreateManyPostInputEnvelope
-    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
-    update?: FeedInteractionUpdateWithWhereUniqueWithoutPostInput | FeedInteractionUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: FeedInteractionUpdateManyWithWhereWithoutPostInput | FeedInteractionUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
-  }
-
   export type FeedCommentUncheckedUpdateManyWithoutPostNestedInput = {
     create?: XOR<FeedCommentCreateWithoutPostInput, FeedCommentUncheckedCreateWithoutPostInput> | FeedCommentCreateWithoutPostInput[] | FeedCommentUncheckedCreateWithoutPostInput[]
     connectOrCreate?: FeedCommentCreateOrConnectWithoutPostInput | FeedCommentCreateOrConnectWithoutPostInput[]
@@ -38118,6 +38104,20 @@ export namespace Prisma {
     update?: FeedCommentUpdateWithWhereUniqueWithoutPostInput | FeedCommentUpdateWithWhereUniqueWithoutPostInput[]
     updateMany?: FeedCommentUpdateManyWithWhereWithoutPostInput | FeedCommentUpdateManyWithWhereWithoutPostInput[]
     deleteMany?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
+  }
+
+  export type FeedInteractionUncheckedUpdateManyWithoutPostNestedInput = {
+    create?: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput> | FeedInteractionCreateWithoutPostInput[] | FeedInteractionUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: FeedInteractionCreateOrConnectWithoutPostInput | FeedInteractionCreateOrConnectWithoutPostInput[]
+    upsert?: FeedInteractionUpsertWithWhereUniqueWithoutPostInput | FeedInteractionUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: FeedInteractionCreateManyPostInputEnvelope
+    set?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    disconnect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    delete?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    connect?: FeedInteractionWhereUniqueInput | FeedInteractionWhereUniqueInput[]
+    update?: FeedInteractionUpdateWithWhereUniqueWithoutPostInput | FeedInteractionUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: FeedInteractionUpdateManyWithWhereWithoutPostInput | FeedInteractionUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: FeedInteractionScalarWhereInput | FeedInteractionScalarWhereInput[]
   }
 
   export type FeedPostCreateNestedOneWithoutInteractionsInput = {
@@ -38152,24 +38152,16 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedInteractionsInput, UserUpdateWithoutFeedInteractionsInput>, UserUncheckedUpdateWithoutFeedInteractionsInput>
   }
 
-  export type FeedPostCreateNestedOneWithoutCommentsInput = {
-    create?: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
-    connectOrCreate?: FeedPostCreateOrConnectWithoutCommentsInput
-    connect?: FeedPostWhereUniqueInput
-  }
-
   export type UserCreateNestedOneWithoutFeedCommentsInput = {
     create?: XOR<UserCreateWithoutFeedCommentsInput, UserUncheckedCreateWithoutFeedCommentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutFeedCommentsInput
     connect?: UserWhereUniqueInput
   }
 
-  export type FeedPostUpdateOneRequiredWithoutCommentsNestedInput = {
+  export type FeedPostCreateNestedOneWithoutCommentsInput = {
     create?: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: FeedPostCreateOrConnectWithoutCommentsInput
-    upsert?: FeedPostUpsertWithoutCommentsInput
     connect?: FeedPostWhereUniqueInput
-    update?: XOR<XOR<FeedPostUpdateToOneWithWhereWithoutCommentsInput, FeedPostUpdateWithoutCommentsInput>, FeedPostUncheckedUpdateWithoutCommentsInput>
   }
 
   export type UserUpdateOneRequiredWithoutFeedCommentsNestedInput = {
@@ -38178,6 +38170,14 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutFeedCommentsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeedCommentsInput, UserUpdateWithoutFeedCommentsInput>, UserUncheckedUpdateWithoutFeedCommentsInput>
+  }
+
+  export type FeedPostUpdateOneRequiredWithoutCommentsNestedInput = {
+    create?: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: FeedPostCreateOrConnectWithoutCommentsInput
+    upsert?: FeedPostUpsertWithoutCommentsInput
+    connect?: FeedPostWhereUniqueInput
+    update?: XOR<XOR<FeedPostUpdateToOneWithWhereWithoutCommentsInput, FeedPostUpdateWithoutCommentsInput>, FeedPostUncheckedUpdateWithoutCommentsInput>
   }
 
   export type UniversityCreatenotableAlumniInput = {
@@ -40132,6 +40132,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FeedCommentCreateWithoutAuthorInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    post: FeedPostCreateNestedOneWithoutCommentsInput
+  }
+
+  export type FeedCommentUncheckedCreateWithoutAuthorInput = {
+    id?: string
+    postId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeedCommentCreateOrConnectWithoutAuthorInput = {
+    where: FeedCommentWhereUniqueInput
+    create: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type FeedCommentCreateManyAuthorInputEnvelope = {
+    data: FeedCommentCreateManyAuthorInput | FeedCommentCreateManyAuthorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FeedInteractionCreateWithoutUserInput = {
     id?: string
     type: $Enums.InteractionType
@@ -40175,8 +40201,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     dislikeCount?: number
-    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
     comments?: FeedCommentCreateNestedManyWithoutPostInput
+    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
     university?: UniversityCreateNestedOneWithoutFeedPostsInput
   }
 
@@ -40200,8 +40226,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     dislikeCount?: number
-    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
     comments?: FeedCommentUncheckedCreateNestedManyWithoutPostInput
+    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type FeedPostCreateOrConnectWithoutAuthorInput = {
@@ -40347,32 +40373,6 @@ export namespace Prisma {
 
   export type UserDocumentCreateManyUserInputEnvelope = {
     data: UserDocumentCreateManyUserInput | UserDocumentCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FeedCommentCreateWithoutAuthorInput = {
-    id?: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    post: FeedPostCreateNestedOneWithoutCommentsInput
-  }
-
-  export type FeedCommentUncheckedCreateWithoutAuthorInput = {
-    id?: string
-    postId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FeedCommentCreateOrConnectWithoutAuthorInput = {
-    where: FeedCommentWhereUniqueInput
-    create: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type FeedCommentCreateManyAuthorInputEnvelope = {
-    data: FeedCommentCreateManyAuthorInput | FeedCommentCreateManyAuthorInput[]
     skipDuplicates?: boolean
   }
 
@@ -40747,6 +40747,34 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"EmailOTP"> | Date | string
   }
 
+  export type FeedCommentUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: FeedCommentWhereUniqueInput
+    update: XOR<FeedCommentUpdateWithoutAuthorInput, FeedCommentUncheckedUpdateWithoutAuthorInput>
+    create: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput>
+  }
+
+  export type FeedCommentUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: FeedCommentWhereUniqueInput
+    data: XOR<FeedCommentUpdateWithoutAuthorInput, FeedCommentUncheckedUpdateWithoutAuthorInput>
+  }
+
+  export type FeedCommentUpdateManyWithWhereWithoutAuthorInput = {
+    where: FeedCommentScalarWhereInput
+    data: XOR<FeedCommentUpdateManyMutationInput, FeedCommentUncheckedUpdateManyWithoutAuthorInput>
+  }
+
+  export type FeedCommentScalarWhereInput = {
+    AND?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
+    OR?: FeedCommentScalarWhereInput[]
+    NOT?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
+    id?: UuidFilter<"FeedComment"> | string
+    postId?: UuidFilter<"FeedComment"> | string
+    authorId?: UuidFilter<"FeedComment"> | string
+    content?: StringFilter<"FeedComment"> | string
+    createdAt?: DateTimeFilter<"FeedComment"> | Date | string
+    updatedAt?: DateTimeFilter<"FeedComment"> | Date | string
+  }
+
   export type FeedInteractionUpsertWithWhereUniqueWithoutUserInput = {
     where: FeedInteractionWhereUniqueInput
     update: XOR<FeedInteractionUpdateWithoutUserInput, FeedInteractionUncheckedUpdateWithoutUserInput>
@@ -40944,34 +40972,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"UserDocument"> | Date | string
   }
 
-  export type FeedCommentUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: FeedCommentWhereUniqueInput
-    update: XOR<FeedCommentUpdateWithoutAuthorInput, FeedCommentUncheckedUpdateWithoutAuthorInput>
-    create: XOR<FeedCommentCreateWithoutAuthorInput, FeedCommentUncheckedCreateWithoutAuthorInput>
-  }
-
-  export type FeedCommentUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: FeedCommentWhereUniqueInput
-    data: XOR<FeedCommentUpdateWithoutAuthorInput, FeedCommentUncheckedUpdateWithoutAuthorInput>
-  }
-
-  export type FeedCommentUpdateManyWithWhereWithoutAuthorInput = {
-    where: FeedCommentScalarWhereInput
-    data: XOR<FeedCommentUpdateManyMutationInput, FeedCommentUncheckedUpdateManyWithoutAuthorInput>
-  }
-
-  export type FeedCommentScalarWhereInput = {
-    AND?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
-    OR?: FeedCommentScalarWhereInput[]
-    NOT?: FeedCommentScalarWhereInput | FeedCommentScalarWhereInput[]
-    id?: UuidFilter<"FeedComment"> | string
-    postId?: UuidFilter<"FeedComment"> | string
-    authorId?: UuidFilter<"FeedComment"> | string
-    content?: StringFilter<"FeedComment"> | string
-    createdAt?: DateTimeFilter<"FeedComment"> | Date | string
-    updatedAt?: DateTimeFilter<"FeedComment"> | Date | string
-  }
-
   export type UserProfileUpsertWithoutUserInput = {
     update: XOR<UserProfileUpdateWithoutUserInput, UserProfileUncheckedUpdateWithoutUserInput>
     create: XOR<UserProfileCreateWithoutUserInput, UserProfileUncheckedCreateWithoutUserInput>
@@ -41068,13 +41068,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -41103,13 +41103,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -41154,13 +41154,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -41189,13 +41189,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -41225,12 +41225,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -41260,12 +41260,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -41311,12 +41311,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -41346,12 +41346,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -41380,13 +41380,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -41415,13 +41415,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -41466,13 +41466,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -41501,13 +41501,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -41537,13 +41537,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
   }
 
   export type UserUncheckedCreateWithoutProfileInput = {
@@ -41572,13 +41572,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
   }
 
   export type UserCreateOrConnectWithoutProfileInput = {
@@ -41623,13 +41623,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProfileInput = {
@@ -41658,13 +41658,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
   export type UserCreateWithoutTestScoresInput = {
@@ -41693,12 +41693,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -41728,12 +41728,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -41779,12 +41779,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -41814,12 +41814,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -41848,13 +41848,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -41883,13 +41883,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -41934,13 +41934,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -41969,13 +41969,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -42005,12 +42005,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -42040,12 +42040,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -42091,12 +42091,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -42126,37 +42126,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type FeedInteractionCreateWithoutPostInput = {
-    id?: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutFeedInteractionsInput
-  }
-
-  export type FeedInteractionUncheckedCreateWithoutPostInput = {
-    id?: string
-    userId: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-  }
-
-  export type FeedInteractionCreateOrConnectWithoutPostInput = {
-    where: FeedInteractionWhereUniqueInput
-    create: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput>
-  }
-
-  export type FeedInteractionCreateManyPostInputEnvelope = {
-    data: FeedInteractionCreateManyPostInput | FeedInteractionCreateManyPostInput[]
-    skipDuplicates?: boolean
   }
 
   export type FeedCommentCreateWithoutPostInput = {
@@ -42182,6 +42158,30 @@ export namespace Prisma {
 
   export type FeedCommentCreateManyPostInputEnvelope = {
     data: FeedCommentCreateManyPostInput | FeedCommentCreateManyPostInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeedInteractionCreateWithoutPostInput = {
+    id?: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutFeedInteractionsInput
+  }
+
+  export type FeedInteractionUncheckedCreateWithoutPostInput = {
+    id?: string
+    userId: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
+  }
+
+  export type FeedInteractionCreateOrConnectWithoutPostInput = {
+    where: FeedInteractionWhereUniqueInput
+    create: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput>
+  }
+
+  export type FeedInteractionCreateManyPostInputEnvelope = {
+    data: FeedInteractionCreateManyPostInput | FeedInteractionCreateManyPostInput[]
     skipDuplicates?: boolean
   }
 
@@ -42211,12 +42211,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -42246,12 +42246,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -42319,22 +42319,6 @@ export namespace Prisma {
     create: XOR<UniversityCreateWithoutFeedPostsInput, UniversityUncheckedCreateWithoutFeedPostsInput>
   }
 
-  export type FeedInteractionUpsertWithWhereUniqueWithoutPostInput = {
-    where: FeedInteractionWhereUniqueInput
-    update: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
-    create: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput>
-  }
-
-  export type FeedInteractionUpdateWithWhereUniqueWithoutPostInput = {
-    where: FeedInteractionWhereUniqueInput
-    data: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
-  }
-
-  export type FeedInteractionUpdateManyWithWhereWithoutPostInput = {
-    where: FeedInteractionScalarWhereInput
-    data: XOR<FeedInteractionUpdateManyMutationInput, FeedInteractionUncheckedUpdateManyWithoutPostInput>
-  }
-
   export type FeedCommentUpsertWithWhereUniqueWithoutPostInput = {
     where: FeedCommentWhereUniqueInput
     update: XOR<FeedCommentUpdateWithoutPostInput, FeedCommentUncheckedUpdateWithoutPostInput>
@@ -42349,6 +42333,22 @@ export namespace Prisma {
   export type FeedCommentUpdateManyWithWhereWithoutPostInput = {
     where: FeedCommentScalarWhereInput
     data: XOR<FeedCommentUpdateManyMutationInput, FeedCommentUncheckedUpdateManyWithoutPostInput>
+  }
+
+  export type FeedInteractionUpsertWithWhereUniqueWithoutPostInput = {
+    where: FeedInteractionWhereUniqueInput
+    update: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
+    create: XOR<FeedInteractionCreateWithoutPostInput, FeedInteractionUncheckedCreateWithoutPostInput>
+  }
+
+  export type FeedInteractionUpdateWithWhereUniqueWithoutPostInput = {
+    where: FeedInteractionWhereUniqueInput
+    data: XOR<FeedInteractionUpdateWithoutPostInput, FeedInteractionUncheckedUpdateWithoutPostInput>
+  }
+
+  export type FeedInteractionUpdateManyWithWhereWithoutPostInput = {
+    where: FeedInteractionScalarWhereInput
+    data: XOR<FeedInteractionUpdateManyMutationInput, FeedInteractionUncheckedUpdateManyWithoutPostInput>
   }
 
   export type UserUpsertWithoutFeedPostsInput = {
@@ -42388,12 +42388,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -42423,12 +42423,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -42576,12 +42576,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -42611,12 +42611,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -42721,12 +42721,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -42756,66 +42756,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type FeedPostCreateWithoutCommentsInput = {
-    id?: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    bookmarkCount?: number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    dislikeCount?: number
-    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
-    author: UserCreateNestedOneWithoutFeedPostsInput
-    university?: UniversityCreateNestedOneWithoutFeedPostsInput
-  }
-
-  export type FeedPostUncheckedCreateWithoutCommentsInput = {
-    id?: string
-    authorId: string
-    title: string
-    slug: string
-    content: string
-    excerpt?: string | null
-    coverImageUrl?: string | null
-    category: $Enums.FeedCategory
-    tags?: FeedPostCreatetagsInput | string[]
-    status?: $Enums.PostStatus
-    universityId?: string | null
-    isPinned?: boolean
-    viewCount?: number
-    likeCount?: number
-    bookmarkCount?: number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    dislikeCount?: number
-    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type FeedPostCreateOrConnectWithoutCommentsInput = {
-    where: FeedPostWhereUniqueInput
-    create: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
   }
 
   export type UserCreateWithoutFeedCommentsInput = {
@@ -42893,63 +42840,57 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutFeedCommentsInput, UserUncheckedCreateWithoutFeedCommentsInput>
   }
 
-  export type FeedPostUpsertWithoutCommentsInput = {
-    update: XOR<FeedPostUpdateWithoutCommentsInput, FeedPostUncheckedUpdateWithoutCommentsInput>
+  export type FeedPostCreateWithoutCommentsInput = {
+    id?: string
+    title: string
+    slug: string
+    content: string
+    excerpt?: string | null
+    coverImageUrl?: string | null
+    category: $Enums.FeedCategory
+    tags?: FeedPostCreatetagsInput | string[]
+    status?: $Enums.PostStatus
+    isPinned?: boolean
+    viewCount?: number
+    likeCount?: number
+    bookmarkCount?: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
+    author: UserCreateNestedOneWithoutFeedPostsInput
+    university?: UniversityCreateNestedOneWithoutFeedPostsInput
+  }
+
+  export type FeedPostUncheckedCreateWithoutCommentsInput = {
+    id?: string
+    authorId: string
+    title: string
+    slug: string
+    content: string
+    excerpt?: string | null
+    coverImageUrl?: string | null
+    category: $Enums.FeedCategory
+    tags?: FeedPostCreatetagsInput | string[]
+    status?: $Enums.PostStatus
+    universityId?: string | null
+    isPinned?: boolean
+    viewCount?: number
+    likeCount?: number
+    bookmarkCount?: number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dislikeCount?: number
+    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type FeedPostCreateOrConnectWithoutCommentsInput = {
+    where: FeedPostWhereUniqueInput
     create: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
-    where?: FeedPostWhereInput
-  }
-
-  export type FeedPostUpdateToOneWithWhereWithoutCommentsInput = {
-    where?: FeedPostWhereInput
-    data: XOR<FeedPostUpdateWithoutCommentsInput, FeedPostUncheckedUpdateWithoutCommentsInput>
-  }
-
-  export type FeedPostUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
-    author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
-    university?: UniversityUpdateOneWithoutFeedPostsNestedInput
-  }
-
-  export type FeedPostUncheckedUpdateWithoutCommentsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    slug?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
-    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
-    tags?: FeedPostUpdatetagsInput | string[]
-    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
-    universityId?: NullableStringFieldUpdateOperationsInput | string | null
-    isPinned?: BoolFieldUpdateOperationsInput | boolean
-    viewCount?: IntFieldUpdateOperationsInput | number
-    likeCount?: IntFieldUpdateOperationsInput | number
-    bookmarkCount?: IntFieldUpdateOperationsInput | number
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type UserUpsertWithoutFeedCommentsInput = {
@@ -43033,6 +42974,65 @@ export namespace Prisma {
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
+  export type FeedPostUpsertWithoutCommentsInput = {
+    update: XOR<FeedPostUpdateWithoutCommentsInput, FeedPostUncheckedUpdateWithoutCommentsInput>
+    create: XOR<FeedPostCreateWithoutCommentsInput, FeedPostUncheckedCreateWithoutCommentsInput>
+    where?: FeedPostWhereInput
+  }
+
+  export type FeedPostUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: FeedPostWhereInput
+    data: XOR<FeedPostUpdateWithoutCommentsInput, FeedPostUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type FeedPostUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
+    author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
+    university?: UniversityUpdateOneWithoutFeedPostsNestedInput
+  }
+
+  export type FeedPostUncheckedUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    excerpt?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: EnumFeedCategoryFieldUpdateOperationsInput | $Enums.FeedCategory
+    tags?: FeedPostUpdatetagsInput | string[]
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    universityId?: NullableStringFieldUpdateOperationsInput | string | null
+    isPinned?: BoolFieldUpdateOperationsInput | boolean
+    viewCount?: IntFieldUpdateOperationsInput | number
+    likeCount?: IntFieldUpdateOperationsInput | number
+    bookmarkCount?: IntFieldUpdateOperationsInput | number
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dislikeCount?: IntFieldUpdateOperationsInput | number
+    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
+  }
+
   export type FeedPostCreateWithoutUniversityInput = {
     id?: string
     title: string
@@ -43052,8 +43052,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     dislikeCount?: number
-    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
     comments?: FeedCommentCreateNestedManyWithoutPostInput
+    interactions?: FeedInteractionCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutFeedPostsInput
   }
 
@@ -43077,8 +43077,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     dislikeCount?: number
-    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
     comments?: FeedCommentUncheckedCreateNestedManyWithoutPostInput
+    interactions?: FeedInteractionUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type FeedPostCreateOrConnectWithoutUniversityInput = {
@@ -44034,12 +44034,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -44069,12 +44069,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -44175,12 +44175,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -44210,12 +44210,12 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -44329,13 +44329,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -44364,13 +44364,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -44486,13 +44486,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -44521,13 +44521,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -44648,13 +44648,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -44683,13 +44683,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -44838,13 +44838,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -44873,13 +44873,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -44957,13 +44957,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -44992,13 +44992,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -45098,13 +45098,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -45133,13 +45133,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -45210,13 +45210,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -45245,13 +45245,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -45338,13 +45338,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -45373,13 +45373,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -45424,13 +45424,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -45459,13 +45459,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedCreateNestedManyWithoutUserInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -45660,13 +45660,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -45695,13 +45695,13 @@ export namespace Prisma {
     communityVotes?: CommunityVoteUncheckedUpdateManyWithoutUserNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -45938,13 +45938,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostCreateNestedManyWithoutAuthorInput
     educationHistory?: EducationHistoryCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeCreateNestedManyWithoutUserInput
     testScores?: TestScoreCreateNestedManyWithoutUserInput
     documents?: UserDocumentCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentCreateNestedManyWithoutAuthorInput
     profile?: UserProfileCreateNestedOneWithoutUserInput
   }
 
@@ -45973,13 +45973,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUncheckedCreateNestedManyWithoutAuthorInput
     educationHistory?: EducationHistoryUncheckedCreateNestedManyWithoutUserInput
     emailOtps?: EmailOTPUncheckedCreateNestedManyWithoutUserInput
+    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     feedInteractions?: FeedInteractionUncheckedCreateNestedManyWithoutUserInput
     feedPosts?: FeedPostUncheckedCreateNestedManyWithoutAuthorInput
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     savedColleges?: SavedCollegeUncheckedCreateNestedManyWithoutUserInput
     testScores?: TestScoreUncheckedCreateNestedManyWithoutUserInput
     documents?: UserDocumentUncheckedCreateNestedManyWithoutUserInput
-    feedComments?: FeedCommentUncheckedCreateNestedManyWithoutAuthorInput
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -46118,13 +46118,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUpdateManyWithoutAuthorNestedInput
     educationHistory?: EducationHistoryUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUpdateOneWithoutUserNestedInput
   }
 
@@ -46153,13 +46153,13 @@ export namespace Prisma {
     communityPosts?: CommunityPostUncheckedUpdateManyWithoutAuthorNestedInput
     educationHistory?: EducationHistoryUncheckedUpdateManyWithoutUserNestedInput
     emailOtps?: EmailOTPUncheckedUpdateManyWithoutUserNestedInput
+    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     feedInteractions?: FeedInteractionUncheckedUpdateManyWithoutUserNestedInput
     feedPosts?: FeedPostUncheckedUpdateManyWithoutAuthorNestedInput
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     savedColleges?: SavedCollegeUncheckedUpdateManyWithoutUserNestedInput
     testScores?: TestScoreUncheckedUpdateManyWithoutUserNestedInput
     documents?: UserDocumentUncheckedUpdateManyWithoutUserNestedInput
-    feedComments?: FeedCommentUncheckedUpdateManyWithoutAuthorNestedInput
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
@@ -46289,6 +46289,14 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type FeedCommentCreateManyAuthorInput = {
+    id?: string
+    postId: string
+    content: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type FeedInteractionCreateManyUserInput = {
     id?: string
     postId: string
@@ -46364,14 +46372,6 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
-  }
-
-  export type FeedCommentCreateManyAuthorInput = {
-    id?: string
-    postId: string
-    content: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type ActionPlanUpdateWithoutUserInput = {
@@ -46762,6 +46762,30 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeedCommentUpdateWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    post?: FeedPostUpdateOneRequiredWithoutCommentsNestedInput
+  }
+
+  export type FeedCommentUncheckedUpdateWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedCommentUncheckedUpdateManyWithoutAuthorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    postId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type FeedInteractionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
@@ -46802,8 +46826,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
     comments?: FeedCommentUpdateManyWithoutPostNestedInput
+    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
     university?: UniversityUpdateOneWithoutFeedPostsNestedInput
   }
 
@@ -46827,8 +46851,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
     comments?: FeedCommentUncheckedUpdateManyWithoutPostNestedInput
+    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type FeedPostUncheckedUpdateManyWithoutAuthorInput = {
@@ -46997,37 +47021,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FeedCommentUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    post?: FeedPostUpdateOneRequiredWithoutCommentsNestedInput
-  }
-
-  export type FeedCommentUncheckedUpdateWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedCommentUncheckedUpdateManyWithoutAuthorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    postId?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedInteractionCreateManyPostInput = {
-    id?: string
-    userId: string
-    type: $Enums.InteractionType
-    createdAt?: Date | string
-  }
-
   export type FeedCommentCreateManyPostInput = {
     id?: string
     authorId: string
@@ -47036,25 +47029,11 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type FeedInteractionUpdateWithoutPostInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutFeedInteractionsNestedInput
-  }
-
-  export type FeedInteractionUncheckedUpdateWithoutPostInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FeedInteractionUncheckedUpdateManyWithoutPostInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type FeedInteractionCreateManyPostInput = {
+    id?: string
+    userId: string
+    type: $Enums.InteractionType
+    createdAt?: Date | string
   }
 
   export type FeedCommentUpdateWithoutPostInput = {
@@ -47079,6 +47058,27 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedInteractionUpdateWithoutPostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFeedInteractionsNestedInput
+  }
+
+  export type FeedInteractionUncheckedUpdateWithoutPostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeedInteractionUncheckedUpdateManyWithoutPostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumInteractionTypeFieldUpdateOperationsInput | $Enums.InteractionType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeedPostCreateManyUniversityInput = {
@@ -47138,8 +47138,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
     comments?: FeedCommentUpdateManyWithoutPostNestedInput
+    interactions?: FeedInteractionUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutFeedPostsNestedInput
   }
 
@@ -47163,8 +47163,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dislikeCount?: IntFieldUpdateOperationsInput | number
-    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
     comments?: FeedCommentUncheckedUpdateManyWithoutPostNestedInput
+    interactions?: FeedInteractionUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type FeedPostUncheckedUpdateManyWithoutUniversityInput = {
